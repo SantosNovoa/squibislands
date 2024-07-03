@@ -286,7 +286,14 @@ class Boss extends Model {
     /**
      * Gets the logs for a specified user for a specified attack method.
      */
-    public function getLogs($user, $method) {
+    public function getLogs($user, $method = 'all') {
+        if ($method == 'all') {
+            return UserBossAttack::where('user_id', $user->id)
+                ->where('boss_id', $this->id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
+        }
+
         return UserBossAttack::where('user_id', $user->id)
             ->where('boss_id', $this->id)
             ->where('attack_method', $method)
@@ -315,5 +322,21 @@ class Boss extends Model {
         }
 
         return $currentImage ?? $this->imageUrl;
+    }
+
+    /**
+     * Gets the leaderboard of the top players for this boss.
+     */
+    public function getLeaderboard($limit = null) {
+        if (!$limit) {
+            $limit = config('lorekeeper.boss_settings.leaderboard_limit');
+        }
+
+        return UserBossAttack::where('boss_id', $this->id)
+            ->selectRaw('user_id, SUM(damage) as total_damage')
+            ->groupBy('user_id')
+            ->orderBy('total_damage', 'DESC')
+            ->limit($limit)
+            ->get();
     }
 }

@@ -18,6 +18,12 @@ class BossAttackManager extends Service {
     |
     */
 
+    /**********************************************************************************************
+
+        GENERIC
+
+    **********************************************************************************************/
+
     /**
      * Generic attack method that handles sub calls and logging
      */
@@ -53,7 +59,11 @@ class BossAttackManager extends Service {
                     break;
             }
 
-            if ($damage > 0) {
+            if ($damage > 0 && $boss->type == 'Global') {
+                if ($boss->health <= 0 && !$boss->can_attack_after_defeat) {
+                    throw new \Exception('This boss has already been defeated.');
+                }
+                
                 $boss->current_health -= $damage;
                 $boss->save();
             }
@@ -62,8 +72,8 @@ class BossAttackManager extends Service {
                 'user_id' => $user->id,
                 'boss_id' => $boss->id,
                 'attack_method' => $method,
+                'damage' => $damage,
                 'data'    => [
-                    'damage' => $damage,
                     'logType' => $logType,
                     'log' => $log,
                 ]
@@ -77,6 +87,11 @@ class BossAttackManager extends Service {
         return $this->rollbackReturn(false);
     }
 
+    /**********************************************************************************************
+
+        ATTACK METHODS
+
+    **********************************************************************************************/
 
     /**
      * Daily login attack

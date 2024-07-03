@@ -30,4 +30,7 @@ return [
 
     // if you want to display rewards before the threshold is met
     'show_rewards_before_threshold' => true,
+
+    // how many players should be displayed on the leaderboard
+    'leaderboard_limit' => 5,
 ];

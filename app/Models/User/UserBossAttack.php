@@ -13,7 +13,7 @@ class UserBossAttack extends Model {
      * @var array
      */
     protected $fillable = [
-        'boss_id', 'user_id', 'attack_method', 'data',
+        'boss_id', 'user_id', 'attack_method', 'damage', 'data',
     ];
 
     /**
@@ -57,5 +57,18 @@ class UserBossAttack extends Model {
      */
     public function boss() {
         return $this->belongsTo(Boss::class);
+    }
+
+    /**********************************************************************************************
+
+        Attributes
+
+    **********************************************************************************************/
+
+    /**
+     * Returns the displayname of the attack method.
+     */
+    public function getAttackMethodDisplayNameAttribute() {
+        return config('lorekeeper.boss_settings.methods.'.$this->attack_method.'.name');
     }
 }

@@ -26,6 +26,11 @@
                 {{ $boss->total_health }} / {{ $boss->total_health }}
             </div>
         </div>
+        @if ($boss->type == 'User')
+            <div class="alert alert-warning">
+                <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
+            </div>
+        @endif
         <div class="world-entry-text">
             @if ($boss->description)
                 <div class="card">

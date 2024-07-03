@@ -9,17 +9,36 @@
 
     <div class="container col-lg-8 text-center">
         <div class="card">
-            <div class="h1 card-header">{!! $boss->displayName !!}</div>
+            <div class="h1 card-header">
+                <a href="{{$boss->url}}">
+                    {!! $boss->name !!}
+                </a>
+            </div>
             <div class="card-body">
                 @if ($boss->has_image)
                     <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
                 @endif
-                <div class="progress h5">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0"
-                        aria-valuemax="{{ $boss->total_health }}">
-                        {{ $boss->current_health }} / {{ $boss->total_health }}
+                @if ($boss->type == 'User')
+                    @php
+                        $currentDamage = $boss->total_health - $boss->getLogs(Auth::user())->sum('damage');
+                    @endphp
+                    <div class="progress h5">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($currentDamage / $boss->total_health) * 100 }}%" aria-valuenow="{{ $currentDamage }}" aria-valuemin="0"
+                            aria-valuemax="{{ $boss->total_health }}">
+                            {{ $currentDamage }} / {{ $boss->total_health }}
+                        </div>
                     </div>
-                </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
+                    </div>
+                @else
+                    <div class="progress h5">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0"
+                            aria-valuemax="{{ $boss->total_health }}">
+                            {{ $boss->current_health }} / {{ $boss->total_health }}
+                        </div>
+                    </div>
+                @endif
                 @if ($boss->description)
                     <div class="card mb-3">
                         <div class="card-body">
@@ -69,6 +88,8 @@
                         <div class="alert alert-danger">No attack methods available.</div>
                     @endif
                 </div>
+                <hr />
+                @include('boss._'.strtolower($boss->type).'_info', ['boss' => $boss])
             </div>
         </div>
     </div>

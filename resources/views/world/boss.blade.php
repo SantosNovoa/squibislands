@@ -23,7 +23,7 @@
                         @if ($boss->imageUrl)
                             <div class="col-md-3 world-entry-image">
                                 <a href="{{ $boss->imageUrl }}" data-lightbox="entry" data-title="{{ $boss->name }}">
-                                    <img src="{{ $boss->imageUrl }}" class="world-entry-image" alt="{{ $name }}" />
+                                    <img src="{{ $boss->imageUrl }}" class="world-entry-image" alt="{{ $boss->name }}" />
                                 </a>
                             </div>
                         @endif
@@ -40,7 +40,13 @@
                                 </div>
                             </div>
                             <div class="world-entry-text">
-                                {!! $boss->description !!}
+                                @if ($boss->description)
+                                    <div class="card">
+                                        <div class="card-body">
+                                            {!! $boss->description !!}
+                                        </div>
+                                    </div>
+                                @endif
                                 @if (!$boss->isActive())
                                     <div class="alert alert-secondary mt-3">
                                         <i class="fas fa-exclamation-triangle"></i> This boss has {{ $boss->current_health < 1 ? 'been defeated' : 'been challenged' }} and is no longer active.

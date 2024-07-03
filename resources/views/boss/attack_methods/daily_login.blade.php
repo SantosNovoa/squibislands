@@ -1,5 +1,5 @@
 
-@if ($boss->getLogs(Auth::user(), 'daily_login')->first()->created_at->diffInDays() > 0)
+@if (!$boss->getLogs(Auth::user(), 'daily_login')->first() || $boss->getLogs(Auth::user(), 'daily_login')->first()?->created_at?->diffInDays() > 0)
     {!! Form::open(['url' => 'boss/' . $boss->id . '/attack/' . $attackMethod]) !!}
         <div class="text-center">
             {!! Form::submit('Attack', ['class' => 'btn btn-primary btn-block btn-sm']) !!}

@@ -49,6 +49,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->foreignId('boss_id')->constrained()->onDelete('cascade');
             $table->string('attack_method')->nullable()->default(null);
+            $table->integer('damage')->default(0);
             $table->json('data')->nullable()->default(null);
 
             $table->timestamps();

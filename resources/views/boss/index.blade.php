@@ -7,7 +7,7 @@
 @section('content')
     {!! breadcrumbs(['Boss' => 'boss']) !!}
 
-    <h1>Current Boss</h1>
+    <h1>Current Boss{{ $bosses->count() == 1 ? '' : 'es' }}</h1>
 
     @if (!$bosses->count())
         <div class="alert alert-info">No current boss.</div>
@@ -15,13 +15,18 @@
         <div class="row justify-content-center">
             @foreach ($bosses as $boss)
                 <div class="col-md-6">
-                    <div class="card mb-3 text-center">
+                    <div class="card mb-3 text-center h-100">
                         <div class="card-header h3">
                             {!! $boss->displayName !!}
                         </div>
                         <div class="card-body">
                             @if ($boss->has_image)
                                 <img src="{{ $boss->imageUrl }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                            @endif
+                            @if ($boss->type == 'User')
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
+                                </div>
                             @endif
                             <div class="progress h5">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}"
