@@ -46,10 +46,12 @@ return new class extends Migration
 
         Schema::create('user_boss_attacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('user_id');
             $table->foreignId('boss_id')->constrained()->onDelete('cascade');
+            $table->string('attack_method')->nullable()->default(null);
             $table->json('data')->nullable()->default(null);
-            $table->timestamp('created_at')->useCurrent();
+
+            $table->timestamps();
         });
     }
 
@@ -60,6 +62,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('user_boss_attacks');
         Schema::dropIfExists('boss_rewards');
         Schema::dropIfExists('bosses');
     }

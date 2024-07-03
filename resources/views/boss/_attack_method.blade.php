@@ -6,5 +6,6 @@
     <div class="card-body">
         <div class="mb-2">{{ config('lorekeeper.boss_settings.methods.' . $attackMethod . '.description') }}</div>
         @include('boss.attack_methods.' . $attackMethod, ['boss' => $boss])
+        {{-- some methods have automatic attack functions, so we include the form on a per-method basis --}}
     </div>
 </div>

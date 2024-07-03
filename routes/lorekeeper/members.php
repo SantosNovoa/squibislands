@@ -232,4 +232,5 @@ Route::group(['prefix' => 'comments', 'namespace' => 'Comments'], function () {
 Route::group(['prefix' => 'boss'], function () {
     Route::get('/','BossController@getIndex');
     Route::get('{name}','BossController@getBoss');
+    Route::post('{id}/attack/{attack_method}','BossController@handleBossAttack');
 });

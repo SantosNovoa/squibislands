@@ -34,6 +34,27 @@
                     </div>
                 </div>
             @endif
+            @if ($boss->isActive() && $boss->stage_images && $boss->getCurrentImage() != $boss->imageUrl)
+                <h5>Boss Stages</h5>
+                <div class="row mt-3">
+                    @php
+                        $sortedStages = $boss->getStageImages();
+                        krsort($sortedStages);
+                    @endphp
+                    @foreach ($sortedStages as $health => $stageImage)
+                        @if ($boss->current_health <= $health)
+                            <div class="col-md-2">
+                                <a href="{{ $stageImage['image'] }}" data-lightbox="entry" data-title="{{ $health }}">
+                                    <img src="{{ $stageImage['image'] }}" class="img-fluid my-auto" alt="{{ $health }}" />
+                                </a>
+                                <div class="text-center mt-2">
+                                    {{ $health }}% Health
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            @endif
             @if (!$boss->isActive())
                 <div class="alert alert-secondary mt-3">
                     <i class="fas fa-exclamation-triangle"></i> This boss has {{ $boss->current_health < 1 ? 'been defeated' : 'been challenged' }} and is no longer active.

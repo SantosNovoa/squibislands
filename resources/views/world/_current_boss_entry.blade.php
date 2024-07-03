@@ -1,8 +1,8 @@
 <div class="row world-entry">
     @if ($boss->has_image)
         <div class="mx-auto">
-            <a href="{{ $boss->imageUrl }}" class="" data-lightbox="entry" data-title="{{ $boss->name }}">
-                <img src="{{ $boss->imageUrl }}" class="world-entry-image" alt="{{ $boss->name }}" style="max-width: 250px; max-height: 250px;" />
+            <a href="{{ $boss->getCurrentImage() }}" class="" data-lightbox="entry" data-title="{{ $boss->name }}">
+                <img src="{{ $boss->getCurrentImage() }}" class="world-entry-image" alt="{{ $boss->name }}" style="max-width: 250px; max-height: 250px;" />
             </a>
         </div>
     @endif

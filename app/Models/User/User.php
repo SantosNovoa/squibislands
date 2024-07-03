@@ -195,6 +195,13 @@ class User extends Authenticatable implements MustVerifyEmail {
         return $this->hasMany(CommentLike::class);
     }
 
+    /**
+     * Gets the user's boss attack logs.
+     */
+    public function bossAttacks() {
+        return $this->hasMany(UserBossAttacks::class);
+    }
+
     /**********************************************************************************************
 
         SCOPES

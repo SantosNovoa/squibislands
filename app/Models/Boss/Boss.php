@@ -3,6 +3,7 @@
 namespace App\Models\Boss;
 
 use Carbon\Carbon;
+use App\Models\User\UserBossAttack;
 use Illuminate\Database\Eloquent\Model;
 
 class Boss extends Model {
@@ -43,7 +44,7 @@ class Boss extends Model {
         'attack_methods' => 'array',
     ];
 
-        /**
+    /**
      * Validation rules for creation.
      *
      * @var array
@@ -280,5 +281,39 @@ class Boss extends Model {
      */
     public function isActive() {
         return $this->is_active && (!$this->start_at || $this->start_at < Carbon::now()) && (!$this->end_at || $this->end_at > Carbon::now());
+    }
+
+    /**
+     * Gets the logs for a specified user for a specified attack method.
+     */
+    public function getLogs($user, $method) {
+        return UserBossAttack::where('user_id', $user->id)
+            ->where('boss_id', $this->id)
+            ->where('attack_method', $method)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+    }
+
+    /**
+     * Gets the bosses current image based on current_health and available stages.
+     */
+    public function getCurrentImage() {
+        if (!$this->stage_images) {
+            return $this->imageUrl;
+        }
+
+        $healthPercent = round(($this->current_health / $this->total_health) * 100);
+        $currentImage = null;
+        $sortedStages = $this->getStageImages();
+        krsort($sortedStages);
+        foreach ($sortedStages as $health => $image) {
+            if ($healthPercent <= $health) {
+                $currentImage = $image['image'];
+            } else {
+                break;
+            }
+        }
+
+        return $currentImage ?? $this->imageUrl;
     }
 }

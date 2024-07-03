@@ -1,3 +1,7 @@
+@php
+    $data = $boss->getAttackMethodInformation('daily_login');
+@endphp
+
 <div class="card mb-3">
     <div class="card-header h4">Daily Login Attack Method</div>
     <div class="card-body">
@@ -7,12 +11,12 @@
         <p>If you want the damage to be determined by, for example, a specific currency rewarded during prompts, use the earned_currency attack method.</p>
         <div class="row">
             <div class="col-md-6 form-group">
-                {!! Form::label('attack_methods_info[daily_login_min_damage]', 'Min Damage') !!}
-                {!! Form::number('attack_methods_info[daily_login_min_damage]', null, ['class' => 'form-control', 'placeholder' => 'Minimum Damage', 'required', 'min' => 1]) !!}
+                {!! Form::label('attack_methods_info[daily_login][min_damage]', 'Min Damage') !!}
+                {!! Form::number('attack_methods_info[daily_login][min_damage]', $data['min_damage'] ?? null, ['class' => 'form-control', 'placeholder' => 'Minimum Damage', 'min' => 1]) !!}
             </div>
             <div class="col-md-6 form-group">
-                {!! Form::label('attack_methods_info[daily_login_max_damage]', 'Max Damage (Optional)') !!}
-                {!! Form::number('attack_methods_info[daily_login_max_damage]', null, ['class' => 'form-control', 'placeholder' => 'Maximum Damage', 'min' => 1]) !!}
+                {!! Form::label('attack_methods_info[daily_login][max_damage]', 'Max Damage (Optional)') !!}
+                {!! Form::number('attack_methods_info[daily_login][max_damage]', $data['max_damage'] ?? null, ['class' => 'form-control', 'placeholder' => 'Maximum Damage', 'min' => 1]) !!}
             </div>
         </div>
     </div>
