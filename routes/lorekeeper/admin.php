@@ -238,6 +238,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+
+    // BOSSES
+    Route::get('bosses', 'BossController@getBossIndex');
+    Route::get('bosses/create', 'BossController@getCreateBoss');
+    Route::get('bosses/edit/{id}', 'BossController@getEditBoss');
+    Route::get('bosses/delete/{id}', 'BossController@getDeleteBoss');
+    Route::post('bosses/create', 'BossController@postCreateEditBoss');
+    Route::post('bosses/edit/{id?}', 'BossController@postCreateEditBoss');
+    Route::post('bosses/delete/{id}', 'BossController@postDeleteBoss');
 });
 
 // PAGES

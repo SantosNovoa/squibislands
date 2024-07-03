@@ -26,6 +26,7 @@ class Item extends Model {
      * @var string
      */
     protected $table = 'items';
+    
     /**
      * Validation rules for creation.
      *

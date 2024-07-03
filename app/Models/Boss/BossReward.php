@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Models\Prompt;
+namespace App\Models\Boss;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\Loot\LootTable;
-use App\Models\Model;
 use App\Models\Raffle\Raffle;
 
-class PromptReward extends Model {
+class BossReward extends Model {
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'prompt_id', 'rewardable_type', 'rewardable_id', 'quantity',
+        'boss_id', 'rewardable_type', 'rewardable_id', 'quantity', 'threshold',
     ];
 
     /**
@@ -23,7 +24,14 @@ class PromptReward extends Model {
      *
      * @var string
      */
-    protected $table = 'prompt_rewards';
+    protected $table = 'boss_rewards';
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**
      * Validation rules for creation.
@@ -54,7 +62,7 @@ class PromptReward extends Model {
     **********************************************************************************************/
 
     /**
-     * Get the reward attached to the prompt reward.
+     * Get the reward attached to the boss reward.
      */
     public function reward() {
         switch ($this->rewardable_type) {

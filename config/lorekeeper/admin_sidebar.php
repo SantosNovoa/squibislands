@@ -194,6 +194,10 @@ return [
                 'name' => 'Items',
                 'url'  => 'admin/data/items',
             ],
+            [
+                'name' => 'Bosses',
+                'url'  => 'admin/data/bosses',
+            ],
         ],
     ],
     'Raffles'    => [

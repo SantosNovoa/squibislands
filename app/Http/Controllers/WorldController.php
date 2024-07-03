@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Boss\Boss;
 use App\Models\Character\CharacterCategory;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
@@ -403,6 +404,61 @@ class WorldController extends Controller {
 
         return view('world.character_categories', [
             'categories' => $query->visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
+        ]);
+    }
+
+    /**
+     * Shows the bosses page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBosses(Request $request) {
+        $query = Boss::query();
+        $data = $request->only(['name', 'sort']);
+        if (isset($data['name'])) {
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+        }
+
+        if (isset($data['sort'])) {
+            switch ($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+            }
+        } else {
+            $query->sortAlphabetical();
+        }
+
+        return view('world.bosses', [
+            'bosses'        => $query->orderBy('id')->paginate(20)->appends($request->query()),
+            'currentBosses' => Boss::active()->get(),
+        ]);
+    }
+
+    /**
+     * Gets an inactive bosses world page.
+     * 
+     * @param string $name
+     * 
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBoss($name) {
+        $boss = Boss::where('name', $name)->first();
+        if (!$boss) {
+            abort(404);
+        }
+
+        return view('world.boss', [
+            'boss' => $boss,
         ]);
     }
 }
