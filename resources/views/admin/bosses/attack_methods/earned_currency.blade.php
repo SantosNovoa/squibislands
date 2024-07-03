@@ -1,6 +1,6 @@
 @php
     $currencies = ['any' => 'Any Currency'] + \App\Models\Currency\Currency::pluck('name', 'id')->toArray();
-    
+
     $data = $boss->getAttackMethodInformation('earned_currency');
 @endphp
 

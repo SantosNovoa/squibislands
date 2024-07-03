@@ -13,7 +13,7 @@
         <div class="alert alert-info">No current boss.</div>
     @else
         <div class="row justify-content-center">
-            @foreach($bosses as $boss)
+            @foreach ($bosses as $boss)
                 <div class="col-md-6">
                     <div class="card mb-3 text-center">
                         <div class="card-header h3">
@@ -24,7 +24,8 @@
                                 <img src="{{ $boss->imageUrl }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
                             @endif
                             <div class="progress h5">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}"
+                                    aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
                                     {{ $boss->current_health }} / {{ $boss->total_health }}
                                 </div>
                             </div>

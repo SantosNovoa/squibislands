@@ -70,8 +70,8 @@
                                 @else
                                     <div class="alert alert-info mt-3">
                                         <i class="fas fa-calendar"></i> This boss is active
-                                        {!! $boss->start_at ? 'from '. pretty_date($boss->start_at) : 'from the beginning of time' !!}
-                                        {!! $boss->end_at ? 'until '. pretty_date($boss->end_at) : 'until the end of time' !!}.
+                                        {!! $boss->start_at ? 'from ' . pretty_date($boss->start_at) : 'from the beginning of time' !!}
+                                        {!! $boss->end_at ? 'until ' . pretty_date($boss->end_at) : 'until the end of time' !!}.
                                     </div>
                                 @endif
                             </div>

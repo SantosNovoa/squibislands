@@ -50,7 +50,7 @@
                 @foreach ($boss->getStageImages() as $key => $stageImage)
                     <div class="form-group d-flex">
                         <img src="{{ $stageImage['image'] }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
-                        {!! Form::hidden('old_stage_images['.$key.']', $stageImage['image']) !!}
+                        {!! Form::hidden('old_stage_images[' . $key . ']', $stageImage['image']) !!}
                         <div class="form-control my-auto mx-2 text-center">
                             {{ $key }}
                         </div>
@@ -82,7 +82,7 @@
         {!! Form::label('Description (Optional)') !!}
         {!! Form::textarea('description', $boss->description, ['class' => 'form-control wysiwyg']) !!}
     </div>
-    
+
     <div class="row">
         <div class="col-md-6 form-group">
             {!! Form::label('start_at', 'Start Time (Optional)') !!} {!! add_help('Prompts cannot be submitted to the queue before the starting time.') !!}
@@ -127,7 +127,7 @@
 
         @if ($boss->attack_methods && isset($boss->attack_methods['methods']))
             @foreach ($boss->attack_methods['methods'] as $method)
-                @include('admin.bosses.attack_methods.'.$method)
+                @include('admin.bosses.attack_methods.' . $method)
             @endforeach
         @endif
     @else

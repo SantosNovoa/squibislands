@@ -15,7 +15,8 @@
             {!! $boss->name !!}
         </h3>
         <div class="progress h5">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0"
+                aria-valuemax="{{ $boss->total_health }}">
                 {{ $boss->current_health }} / {{ $boss->total_health }}
             </div>
         </div>
@@ -30,8 +31,8 @@
             @if ($boss->start_at || $boss->end_at)
                 <div class="alert alert-info mt-3">
                     <i class="fas fa-calendar"></i> This boss is active
-                    {!! $boss->start_at ? 'from '. pretty_date($boss->start_at) : 'from the beginning of time' !!}
-                    {!! $boss->end_at ? 'until '. pretty_date($boss->end_at) : 'until the end of time' !!}.
+                    {!! $boss->start_at ? 'from ' . pretty_date($boss->start_at) : 'from the beginning of time' !!}
+                    {!! $boss->end_at ? 'until ' . pretty_date($boss->end_at) : 'until the end of time' !!}.
                 </div>
             @endif
             @if (isset($boss->idUrl) && $boss->idUrl)
