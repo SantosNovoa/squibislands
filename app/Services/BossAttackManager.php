@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\User\UserBossAttack;
 use App\Models\Boss\Boss;
 use App\Models\Boss\BossReward;
+use App\Models\Currency\Currency;
+use App\Models\Item\Item;
+use App\Models\User\UserBossAttack;
+use App\Models\User\UserItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 
@@ -27,7 +30,7 @@ class BossAttackManager extends Service {
     /**
      * Generic attack method that handles sub calls and logging
      */
-    public function attackBoss($boss, $user, $method) {
+    public function attackBoss($boss, $user, $method, $requestData = null) {
         DB::beginTransaction();
 
         try {
@@ -38,22 +41,30 @@ class BossAttackManager extends Service {
 
             switch ($method) {
                 case 'donate_currency':
-                    $damage = $this->attackSpendCurrency($boss, $user);
-                    $logType = 'Spending Specified Currency';
+                    if(!$damage = $this->attackDonateCurrency($boss, $user, $requestData)) {
+                        throw new \Exception('Could not complete attack.');
+                    }
+                    $logType = 'Donating Currency';
+                    $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' by donating ' . $requestData['currency_quantity'] . ' ' . Currency::find($requestData['currency_id'])->name . '.';
                     break;
                 case 'daily_login':
-                    $damage = $this->attackDailyLogin($boss, $user);
+                    if(!$damage = $this->attackDailyLogin($boss, $user)) {
+                        throw new \Exception('Could not complete attack.');
+                    }
                     $logType = 'Daily Login';
                     $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' using the daily login attack method.';
                     break;
                 case 'donate_item':
-                    $damage = $this->attackDonateItem($boss, $user);
-                    $logType = 'Donating Items';
+                    if (!$damage = $this->attackDonateItem($boss, $user, $requestData)) {
+                        throw new \Exception('Could not complete attack.');
+                    }
+                    $logType = 'Donating Item';
+                    $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' by donating ' . $requestData['item_quantity'] . ' ' . Item::find($requestData['item_id'])->name . '.';
                     break;
-                case 'donation_shop':
-                    $damage = $this->attackDonationShop($boss, $user);
-                    $logType = 'Donation Shop';
-                    break;
+                // case 'donation_shop':
+                //     $damage = $this->attackDonationShop($boss, $user);
+                //     $logType = 'Donation Shop';
+                //     break;
                 default:
                     throw new \Exception('Invalid attack method.');
                     break;
@@ -83,7 +94,7 @@ class BossAttackManager extends Service {
             
             $boss->current_health -= $damage;
             $boss->save();
-        }
+        } // dont log if its a user type, since we sum the damage in the user boss attack log
 
         $log = UserBossAttack::create([
             'user_id' => $user->id,
@@ -135,7 +146,7 @@ class BossAttackManager extends Service {
                     }
                 } else {
                     if (isset($currencyRewards[$data['currency_id']])) {
-                        $damage = $currencyRewards[$data['currency_id']]['quantity'] ?? 0;
+                        $damage = isset($currencyRewards[$data['currency_id']]['quantity']) ? $currencyRewards[$data['currency_id']]['quantity'] : 0;
                     }
                 }
             } else {
@@ -194,5 +205,126 @@ class BossAttackManager extends Service {
         }
 
         return $min;
+    }
+
+    /**
+     * Donate currency attack.
+     * 
+     * @param Boss $boss
+     * @param User $user
+     * @param array $requestData
+     * 
+     * @return int
+     */
+    private function attackDonateCurrency($boss, $user, $requestData) {
+        DB::beginTransaction();
+
+        try {
+            $data = $boss->getAttackMethodInformation('donate_currency');
+            if (!$data || !$data['damage_ratio']) {
+                throw new \Exception('No data found for this attack method.');
+            }
+
+            if (!isset($requestData['currency_id'])) {
+                throw new \Exception('No currency selected.');
+            }
+
+            if (!isset($requestData['currency_quantity'])) {
+                throw new \Exception('No quantity selected.');
+            }
+
+            // 1 is an option instead of erroring in the case of 'any' currency
+            $ratio = $data['damage_ratio'][$requestData['currency_id']] ?? 1;
+
+            // make sure quantity can be integer divided by ratio (ex we want damage to be whole numbers)
+            if ($requestData['currency_quantity'] % $ratio != 0) {
+                throw new \Exception('Invalid quantity.');
+            }
+
+            $service = new CurrencyManager;
+            if (!$service->debitCurrency($user, null, 'Boss Attack', 'Donated currency to ' . $boss->name, Currency::find($requestData['currency_id']), $requestData['currency_quantity'])) {
+                throw new \Exception('You do not have enough of this currency to donate.');
+            }
+
+            return $this->commitReturn($requestData['currency_quantity'] * $ratio);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+
+    /**
+     * Donate item attack.
+     * 
+     * @param Boss $boss
+     * @param User $user
+     * @param array $requestData
+     * 
+     * @return int
+     */
+    private function attackDonateItem($boss, $user, $requestData) {
+        DB::beginTransaction();
+
+        try {
+            $data = $boss->getAttackMethodInformation('donate_item');
+            if (!$data || !$data['damage_per_item']) {
+                throw new \Exception('No data found for this attack method.');
+            }
+
+            $item = Item::find($requestData['item_id']);
+            if (!$item) {
+                throw new \Exception('Invalid item.');
+            }
+
+            if (!isset($requestData['item_quantity']) || $requestData['item_quantity'] <= 0) {
+                throw new \Exception('No quantity selected.');
+            }
+
+            // find the damage for this item, based on rarity if it has one
+            $rarity = $item->rarity ? $item->rarity->id : 'no rarity';
+            $damage = $data['damage_per_item'][$rarity] ?? 0;
+
+            if (!$damage) {
+                throw new \Exception('No damage found for this item.');
+            }
+
+            $service = new InventoryManager;
+            $userItemSum = UserItem::where('user_id', $user->id)->where('item_id', $item->id)->sum('count');
+            if ($userItemSum < $requestData['item_quantity']) {
+                throw new \Exception('You do not have enough of this item to donate.');
+            }
+
+            $count = $requestData['item_quantity'];
+            while ($count > 0) {
+                $userItem = UserItem::where('user_id', $user->id)->where('item_id', $item->id)->where('count', '>', 0)->first();
+                if (!$userItem) {
+                    throw new \Exception('You do not have enough of this item to donate.');
+                }
+
+                $quantity = $userItem->count;
+                if ($quantity >= $count) {
+                    $quantity = $count;
+                }
+
+                if (!$service->debitStack($user, 'Boss Attack', [
+                        'data' => 'Donated item to attack the boss ' . $boss->name
+                    ], $userItem, $quantity)) {
+                        foreach ($service->errors()->getMessages()['error'] as $error) {
+                            flash($error)->error();
+                        }
+                    throw new \Exception('You do not have enough of this item to donate.');
+                }
+
+                $count -= $quantity;
+            }
+
+            return $this->commitReturn($damage);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
     }
 }
