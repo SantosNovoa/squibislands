@@ -22,10 +22,10 @@ return [
             'name' => 'Donating Items',
             'description' => 'Donating items to the boss deals damage.',
         ],
-        'donation_shop' => [
-            'name' => 'Donation Shop',
-            'description' => 'Purchasing items from the donation shop deals damage.',
-        ],
+        // 'donation_shop' => [
+        //     'name' => 'Donation Shop',
+        //     'description' => 'Donating items from the donation shop deals damage.',
+        // ],
     ],
 
     // if you want to display rewards before the threshold is met
