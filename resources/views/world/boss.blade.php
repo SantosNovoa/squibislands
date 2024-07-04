@@ -83,6 +83,47 @@
                                         {!! $boss->end_at ? 'until ' . pretty_date($boss->end_at) : 'until the end of time' !!}.
                                     </div>
                                 @endif
+                                <h3>
+                                    Rewards
+                                    @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
+                                        {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
+                                    @endif
+                                </h3>
+                                @if ($boss->is_rewards_only_for_participants)
+                                    <div class="text-danger text-right">Rewards are only available to participants.</div>
+                                @endif
+                                @if (!count($boss->rewards))
+                                    No rewards.
+                                @else
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th width="60%">Reward</th>
+                                                <th width="20%">Amount</th>
+                                                <th width="20%">Threshold</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (config('lorekeeper.boss_settings.show_rewards_before_threshold'))
+                                                @foreach ($boss->rewards as $reward)
+                                                    <tr>
+                                                        <td>{!! $reward->reward->displayName !!}</td>
+                                                        <td>{{ $reward->quantity }}</td>
+                                                        <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', (($boss->current_health / $boss->total_health - 1) * 100))->get() as $reward)
+                                                    <tr>
+                                                        <td>{!! $reward->reward->displayName !!}</td>
+                                                        <td>{{ $reward->quantity }}</td>
+                                                        <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                @endif
                             </div>
                         </div>
                     </div>

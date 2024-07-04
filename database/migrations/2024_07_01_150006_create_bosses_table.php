@@ -38,7 +38,7 @@ return new class extends Migration {
             $table->string('rewardable_type');
             $table->unsignedBigInteger('rewardable_id');
             $table->integer('quantity');
-            $table->integer('threshold')->nullable()->default(null);
+            $table->integer('threshold')->default(0);
         });
 
         Schema::create('user_boss_attacks', function (Blueprint $table) {

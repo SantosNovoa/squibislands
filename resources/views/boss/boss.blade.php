@@ -49,6 +49,14 @@
                         </div>
                     </div>
                 @endif
+                @if (!$boss->isActive())
+                    <div class="alert alert-secondary mt-3">
+                        <i class="fas fa-exclamation-triangle"></i> This boss has {{ $boss->current_health < 1 ? 'been defeated' : 'been challenged' }} and is no longer active.
+                        @if ($boss->end_at)
+                            This boss was active until {!! pretty_date($boss->end_at) !!}.
+                        @endif
+                    </div>
+                @endif
                 <div class="row">
                     @if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat)
                         <div class="col-md-12">
@@ -91,7 +99,7 @@
                                             </tr>
                                         @endforeach
                                     @else
-                                        @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '>', ($boss->current_health / $boss->total_health) * 100)->get() as $reward)
+                                        @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', (($boss->current_health / $boss->total_health - 1) * 100) )->get() as $reward)
                                             <tr>
                                                 <td>{!! $reward->reward->displayName !!}</td>
                                                 <td>{{ $reward->quantity }}</td>

@@ -39,7 +39,7 @@ class BossController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
-        $boss = Boss::active(Auth::user() ?? Auth::user())->where('name', $name)->first();
+        $boss = Boss::visible(Auth::user() ?? Auth::user())->where('name', $name)->first();
 
         if (!$boss) {
             flash('Boss not found.')->error();
@@ -81,7 +81,7 @@ class BossController extends Controller {
      * @param mixed $id
      */
     public function handleClaimRewards(BossAttackManager $service, $id) {
-        $boss = Boss::active(Auth::user() ?? null)->find($id);
+        $boss = Boss::visible(Auth::user() ?? null)->find($id);
         if (!$boss) {
             abort(404);
         }

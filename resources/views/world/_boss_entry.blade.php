@@ -96,7 +96,6 @@
                     {!! $boss->end_at ? 'until ' . pretty_date($boss->end_at) : 'until the end of time' !!}.
                 </div>
             @endif
-            {{-- show_rewards_before_threshold --}}
             <h3>
                 Rewards
                 @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
@@ -127,7 +126,7 @@
                                 </tr>
                             @endforeach
                         @else
-                            @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '>', ($boss->current_health / $boss->total_health) * 100)->get() as $reward)
+                            @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', (($boss->current_health / $boss->total_health - 1) * 100))->get() as $reward)
                                 <tr>
                                     <td>{!! $reward->reward->displayName !!}</td>
                                     <td>{{ $reward->quantity }}</td>

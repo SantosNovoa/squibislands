@@ -278,7 +278,7 @@ class BossService extends Service {
                     'rewardable_type' => $type,
                     'rewardable_id'   => $data['rewardable_id'][$key],
                     'quantity'        => $data['quantity'][$key],
-                    'threshold'       => $data['threshold'][$key] ?? 100,
+                    'threshold'       => $data['threshold'][$key] ?? 0,
                 ]);
             }
         }
