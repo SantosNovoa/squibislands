@@ -1,6 +1,10 @@
 @php
     $data = $boss->getAttackMethodInformation('donate_currency');
-    $currencies = ['any' => 'Any Currency'] + \App\Models\Currency\Currency::where('is_user_owned', 1)->pluck('name', 'id')->toArray();
+    $currencies =
+        ['any' => 'Any Currency'] +
+        \App\Models\Currency\Currency::where('is_user_owned', 1)
+            ->pluck('name', 'id')
+            ->toArray();
 @endphp
 
 <div class="card mb-3">
@@ -17,17 +21,19 @@
                 @php $currency = \App\Models\Currency\Currency::find($currencyId); @endphp
                 <div class="form-group">
                     {!! Form::label('Damage Ratio For ' . $currency->name) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
-                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio]['.$currencyId.']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
+                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
                 </div>
 
                 <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>
             @endforeach
         @else
             @foreach ($currencies as $currencyId => $currencyName)
-                @if ($loop->first) @continue @endif
+                @if ($loop->first)
+                    @continue
+                @endif
                 <div class="form-group">
                     {!! Form::label('Damage Ratio For ' . $currencyName) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
-                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio]['.$currencyId.']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
+                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
                 </div>
 
                 <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>

@@ -23,12 +23,12 @@
                     </div>
                 </div>
                 <a class="btn btn-block btn-primary my-3" href="{{ $boss->idUrl }}">View Boss</a>
-                @php 
+                @php
                     $data = $boss->getAttackMethodInformation('prompt');
                 @endphp
                 @if ($data['damage_calculation_method'] == 'input')
                     <p>This bosses damage is calculated independently of the currency system. Please enter the damage you would like to do to this boss.</p>
-                    {!! Form::number('boss_damage['.$boss->id.']', null, ['class' => 'form-control', 'placeholder' => 'Enter Damage']) !!}
+                    {!! Form::number('boss_damage[' . $boss->id . ']', null, ['class' => 'form-control', 'placeholder' => 'Enter Damage']) !!}
                 @elseif ($data['damage_calculation_method'] == 'currency')
                     @if ($data['currency_id'] != 'any')
                         <p>The damage done to this boss will be determined by the amount of {!! \App\Models\Currency\Currency::find($data['currency_id'])->displyName !!} this prompt earns.</p>

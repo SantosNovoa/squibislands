@@ -82,7 +82,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($submission->data['bosses'] as $id=>$boss)
+                    @foreach ($submission->data['bosses'] as $id => $boss)
                         <tr>
                             <td>{!! \App\Models\Boss\Boss::find($id)?->displayName !!}</td>
                             <td>{{ isset($boss['damage']) ? $boss['damage'] : 'N/A' }}</td>

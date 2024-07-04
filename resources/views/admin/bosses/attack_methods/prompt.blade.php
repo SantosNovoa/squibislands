@@ -1,7 +1,11 @@
 @php
     $prompts = ['any' => 'Any Prompt'] + \App\Models\Prompt\Prompt::pluck('name', 'id')->toArray();
     $promptCategories = \App\Models\Prompt\PromptCategory::pluck('name', 'id')->toArray();
-    $currencies = ['any' => 'Any Currency'] + \App\Models\Currency\Currency::where('is_user_owned', 1)->pluck('name', 'id')->toArray();
+    $currencies =
+        ['any' => 'Any Currency'] +
+        \App\Models\Currency\Currency::where('is_user_owned', 1)
+            ->pluck('name', 'id')
+            ->toArray();
 
     $data = $boss->getAttackMethodInformation('prompt');
 @endphp
@@ -23,7 +27,10 @@
 
         <div class="form-group">
             {!! Form::label('Damage Calculation Method') !!}
-            {!! Form::select('attack_methods_info[prompt][damage_calculation_method]', ['currency' => 'Based on Currency', 'input' => 'Staff Input'], $data['damage_calculation_method'] ?? null, ['class' => 'form-control prompt-damage-calculation', 'placeholder' => 'Damage Calculation Method']) !!}
+            {!! Form::select('attack_methods_info[prompt][damage_calculation_method]', ['currency' => 'Based on Currency', 'input' => 'Staff Input'], $data['damage_calculation_method'] ?? null, [
+                'class' => 'form-control prompt-damage-calculation',
+                'placeholder' => 'Damage Calculation Method',
+            ]) !!}
         </div>
 
         <div class="form-group prompt-currency hide">

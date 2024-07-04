@@ -10,7 +10,7 @@
     <div class="container col-lg-10 text-center">
         <div class="card">
             <div class="h1 card-header">
-                <a href="{{$boss->url}}">
+                <a href="{{ $boss->url }}">
                     @if ($boss->is_staff_only)
                         <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
                     @endif
@@ -36,8 +36,8 @@
                     </div>
                 @else
                     <div class="progress h5">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0"
-                            aria-valuemax="{{ $boss->total_health }}">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}"
+                            aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
                             {{ $boss->current_health }} / {{ $boss->total_health }}
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                     @endif
                     <div class="col-md-{{ $boss->current_health <= 0 && !$boss->can_attack_after_defeat ? '12' : '9' }}">
                         <h3>
-                            Rewards 
+                            Rewards
                             @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
                                 {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
                             @endif
@@ -113,7 +113,7 @@
                                         </div>
                                     @else
                                         {!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}
-                                            {!! Form::submit('Claim Rewards', ['class' => 'btn btn-primary btn-block col-md-8 mx-auto']) !!}
+                                        {!! Form::submit('Claim Rewards', ['class' => 'btn btn-primary btn-block col-md-8 mx-auto']) !!}
                                         {!! Form::close() !!}
                                     @endif
                                 @endif
@@ -134,7 +134,7 @@
                     @endif
                 </div>
                 <hr />
-                @include('boss._'.strtolower($boss->type).'_info', ['boss' => $boss])
+                @include('boss._' . strtolower($boss->type) . '_info', ['boss' => $boss])
             </div>
         </div>
     </div>

@@ -98,7 +98,7 @@
             @endif
             {{-- show_rewards_before_threshold --}}
             <h3>
-                Rewards 
+                Rewards
                 @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
                     {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
                 @endif

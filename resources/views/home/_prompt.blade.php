@@ -7,7 +7,7 @@
             @endforeach
         </ul>
     </div>
-@endif 
+@endif
 
 <div class="card">
     <div class="card-body">
