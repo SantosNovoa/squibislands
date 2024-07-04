@@ -8,7 +8,10 @@
         <x-admin-edit title="Boss" :object="$boss" />
         <h3>
             @if (!$boss->is_active)
-                <i class="fas fa-eye-slash mr-1"></i>
+                <i class="fas fa-eye-slash mr-1" data-toggle="tooltip" title="Inactive - you can still see this as staff"></i>
+            @endif
+            @if ($boss->is_staff_only)
+                <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
             @endif
             {!! $boss->name !!}
             @if ($boss->isActive())

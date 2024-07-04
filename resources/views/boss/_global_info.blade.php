@@ -36,7 +36,7 @@
                 <p>
                     You have dealt {{ $boss->getLogs(Auth::user())->sum('damage') }} damage to this boss.
                     <br/>
-                    That's {{ number_format($boss->getLogs(Auth::user())->sum('damage') / ($boss->total_health - $boss->current_health) * 100, 2) }}% of the total damage dealt to this boss!
+                    That's {{ number_format($boss->getLogs(Auth::user())->sum('damage') / $boss->logs()->sum('damage') * 100, 2) }}% of the total damage dealt to this boss!
                 </p>
                 <table class="table table-sm">
                     <thead>

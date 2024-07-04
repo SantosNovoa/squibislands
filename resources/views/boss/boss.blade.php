@@ -7,10 +7,13 @@
 @section('content')
     {!! breadcrumbs(['Boss' => 'boss', $boss->displayName => 'boss/' . $boss->name]) !!}
 
-    <div class="container col-lg-8 text-center">
+    <div class="container col-lg-10 text-center">
         <div class="card">
             <div class="h1 card-header">
                 <a href="{{$boss->url}}">
+                    @if ($boss->is_staff_only)
+                        <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
+                    @endif
                     {!! $boss->name !!}
                 </a>
             </div>

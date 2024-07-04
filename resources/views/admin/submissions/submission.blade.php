@@ -73,6 +73,13 @@
 
         {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm']) !!}
 
+        @if ($submission->prompt_id && isset($submission->data['bosses']) && $submission->data['bosses'])
+            <h2>Boss{{ count($submission->data['bosses']) > 1 ? 'es' : '' }}</h2>
+            @foreach ($submission->data['bosses'] as $id=>$damage)
+                @include('admin.bosses.attack_methods.widgets.prompt', ['boss' => \App\Models\Boss\Boss::find($id)])
+            @endforeach
+        @endif
+
         <h2>Rewards</h2>
         @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
         @if ($submission->prompt_id)

@@ -38,6 +38,7 @@ class BossService extends Service {
             if (Boss::where('name', $data['name'])->exists()) {
                 throw new \Exception('The name has already been taken.');
             }
+
             $data = $this->populateData($data);
 
             $image = null;
@@ -50,7 +51,9 @@ class BossService extends Service {
                 $data['has_image'] = 0;
             }
 
-            $boss = Boss::create(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'attack_methods']));
+            $boss = Boss::create(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only',
+            ]));
 
             if (!$this->logAdminAction($user, 'Created Boss', 'Created '.$boss->displayName)) {
                 throw new \Exception('Failed to log admin action.');
@@ -98,7 +101,9 @@ class BossService extends Service {
                 unset($data['image']);
             }
 
-            $boss->update(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'attack_methods']));
+            $boss->update(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only',
+            ]));
 
             // we don't need to worry about unset etc here
             // because we're updating after the general data
@@ -169,7 +174,19 @@ class BossService extends Service {
             $data['total_health'] = 1;
         }
         if (!isset($data['current_health'])) {
-            $data['current_health'] = $data['total_health'];
+            $data['current_health'] = 0;
+        }
+        if (!isset($data['is_active'])) {
+            $data['is_active'] = 0;
+        }
+        if (!isset($data['can_attack_after_defeat'])) {
+            $data['can_attack_after_defeat'] = 0;
+        }
+        if (!isset($data['is_rewards_only_for_participants'])) {
+            $data['is_rewards_only_for_participants'] = 0;
+        }
+        if (!isset($data['is_staff_only'])) {
+            $data['is_staff_only'] = 0;
         }
 
         if (isset($data['remove_image'])) {

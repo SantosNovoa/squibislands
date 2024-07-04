@@ -16,6 +16,7 @@ class Boss extends Model {
     protected $fillable = [
         'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health',
         'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'stage_images', 'attack_methods',
+        'is_staff_only',
     ];
 
     /**
@@ -77,6 +78,13 @@ class Boss extends Model {
         return $this->hasMany(BossReward::class, 'boss_id');
     }
 
+    /**
+     * Get all of the logs associated with this boss.
+     */
+    public function logs() {
+        return $this->hasMany(UserBossAttack::class, 'boss_id');
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -90,8 +98,32 @@ class Boss extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeActive($query) {
+    public function scopeVisible($query, $user = null) {
+        if ($user && $user->hasPower('manage_data')) {
+            return $query;
+        }
+        
         return $query->where('is_active', 1)
+            ->where('is_staff_only', 0)
+            ->where(function ($query) {
+                $query->whereNull('start_at')->orWhere('start_at', '<', Carbon::now());
+            }); // we dont care about end_date on visible
+    }
+
+    /**
+     * Scope a query to only include active bosses.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query, $user = null) {
+        if ($user && $user->hasPower('manage_data')) {
+            return $query;
+        }
+
+        return $query->where('is_active', 1)
+            ->where('is_staff_only', 0)
             ->where(function ($query) {
                 $query->whereNull('start_at')->orWhere('start_at', '<', Carbon::now());
             })->where(function ($query) {
@@ -286,7 +318,7 @@ class Boss extends Model {
     /**
      * Gets the logs for a specified user for a specified attack method.
      */
-    public function getLogs($user, $method = 'all') {
+    public function getLogs($user = null, $method = 'all') {
         if ($method == 'all') {
             return UserBossAttack::where('user_id', $user->id)
                 ->where('boss_id', $this->id)

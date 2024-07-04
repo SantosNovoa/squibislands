@@ -26,7 +26,7 @@ class BossController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getIndex() {
-        $bosses = Boss::active()->orderBy('name')->get();
+        $bosses = Boss::active(Auth::user() ?? Auth::user())->orderBy('name')->get();
 
         return view('boss.index', [
             'bosses' => $bosses,
@@ -41,7 +41,7 @@ class BossController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
-        $boss = Boss::active()->where('name', $name)->first();
+        $boss = Boss::active(Auth::user() ?? Auth::user())->where('name', $name)->first();
 
         if (!$boss) {
             flash('Boss not found.')->error();

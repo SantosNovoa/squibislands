@@ -14,9 +14,12 @@
     @else
         <div class="row justify-content-center">
             @foreach ($bosses as $boss)
-                <div class="col-md-6">
-                    <div class="card mb-3 text-center h-100">
+                <div class="col-md-6 mb-4">
+                    <div class="card text-center h-100">
                         <div class="card-header h3">
+                            @if ($boss->is_staff_only)
+                                <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
+                            @endif
                             {!! $boss->displayName !!}
                         </div>
                         <div class="card-body">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Facades\Settings;
 use App\Http\Controllers\Controller;
+use App\Models\Boss\Boss;
 use App\Models\Character\Character;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
@@ -16,6 +17,7 @@ use App\Models\User\UserItem;
 use App\Services\SubmissionManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class SubmissionController extends Controller {
     /*
@@ -167,9 +169,24 @@ class SubmissionController extends Controller {
             return response(404);
         }
 
+        $promptBosses = [];
+        $bosses = Boss::active(Auth::user() ?? null)->get();
+        foreach ($bosses as $boss) {
+            $data = $boss->getAttackMethodInformation('prompt');
+            if (!$data) {
+                continue;
+            }
+
+            if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) || 
+                (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
+                $promptBosses[] = $boss;
+            }
+        }
+
         return view('home._prompt', [
             'prompt' => $prompt,
             'count'  => Submission::where('prompt_id', $id)->where('status', 'Approved')->where('user_id', Auth::user()->id)->count(),
+            'bosses' => $promptBosses,
         ]);
     }
 

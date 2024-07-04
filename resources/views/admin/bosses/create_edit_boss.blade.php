@@ -95,15 +95,19 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 form-group">
+        <div class="col-md-3 form-group">
             {!! Form::checkbox('is_active', 1, $boss->id ? $boss->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_active', 'Is Active', ['class' => 'form-check-label ml-3']) !!}
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-3 form-group">
+            {!! Form::checkbox('is_staff_only', 1, $boss->id ? $boss->is_staff_only : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::label('is_staff_only', 'Is Staff Only', ['class' => 'form-check-label ml-3']) !!}
+        </div>
+        <div class="col-md-3 form-group">
             {!! Form::checkbox('can_attack_after_defeat', 1, $boss->can_attack_after_defeat, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('can_attack_after_defeat', 'Can Attack After Defeat', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is checked, users can attack the boss after it has been defeated.') !!}
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-3 form-group">
             {!! Form::checkbox('is_rewards_only_for_participants', 1, $boss->is_rewards_only_for_participants, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_rewards_only_for_participants', 'Rewards Only for Participants', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is checked, only users who have attacked the boss will receive rewards.') !!}
         </div>

@@ -37,7 +37,7 @@ class BossAttackManager extends Service {
             $log = '';
 
             switch ($method) {
-                case 'spend_currency':
+                case 'donate_currency':
                     $damage = $this->attackSpendCurrency($boss, $user);
                     $logType = 'Spending Specified Currency';
                     break;
@@ -59,24 +59,92 @@ class BossAttackManager extends Service {
                     break;
             }
 
-            if ($damage > 0 && $boss->type == 'Global') {
-                if ($boss->health <= 0 && !$boss->can_attack_after_defeat) {
-                    throw new \Exception('This boss has already been defeated.');
-                }
-                
-                $boss->current_health -= $damage;
-                $boss->save();
+            $this->attack($boss, $method, $damage, $user, [
+                'logType' => $logType,
+                'log' => $log,
+            ]);
+
+            return $this->commitReturn($damage);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Generic attack method
+     */
+    private function attack($boss, $method, $damage, $user, $data) {
+        if ($damage > 0 && $boss->type == 'Global') {
+            if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat) {
+                throw new \Exception('This boss has already been defeated.');
+            }
+            
+            $boss->current_health -= $damage;
+            $boss->save();
+        }
+
+        $log = UserBossAttack::create([
+            'user_id' => $user->id,
+            'boss_id' => $boss->id,
+            'attack_method' => $method,
+            'damage' => $damage,
+            'data'    => $data
+        ]);
+    }
+
+    /**********************************************************************************************
+
+        PUBLIC ATTACK METHODS
+
+    **********************************************************************************************/
+
+    /**
+     * Prompt attack method.
+     * 
+     * @param Boss $boss
+     * @param Submission $submission
+     * 
+     * @return int
+     */
+    public function attackPrompt($boss, $submission, $submissionData, $rewards = null) {
+        DB::beginTransaction();
+
+        try {
+            $data = $boss->getAttackMethodInformation('prompt');
+            if (!$data || !$data['damage_calculation_method']) {
+                throw new \Exception('No data found for this attack method.');
             }
 
-            $log = UserBossAttack::create([
-                'user_id' => $user->id,
-                'boss_id' => $boss->id,
-                'attack_method' => $method,
-                'damage' => $damage,
-                'data'    => [
-                    'logType' => $logType,
-                    'log' => $log,
-                ]
+            $damage = 0;
+            if ($data['damage_calculation_method'] == 'input') {
+                if (!isset($submissionData['boss_damage']) && !isset($submissionData['boss_damage'][$boss->id])) {
+                    throw new \Exception('No damage input found.');
+                }
+                $damage = $submissionData['boss_damage'][$boss->id];
+            } else if ($data['damage_calculation_method'] == 'currency') {
+                $currencyRewards = $rewards['currencies'] ?? [];
+                if (!isset($data['currency_id'])) {
+                    throw new \Exception('No currency set.');
+                }
+
+                if ($data['currency_id'] == 'any') {
+                    foreach ($currencyRewards as $currencyId => $asset) {
+                        $damage += $asset['quantity'];
+                    }
+                } else {
+                    if (isset($currencyRewards[$data['currency_id']])) {
+                        $damage = $currencyRewards[$data['currency_id']]['quantity'] ?? 0;
+                    }
+                }
+            } else {
+                throw new \Exception('Invalid damage calculation method.');
+            }
+
+            $this->attack($boss, 'prompt', $damage, $submission->user, [
+                'logType' => 'Prompt Attack',
+                'log' => 'Dealt ' . $damage . ' damage to ' . $boss->name . ' using the prompt attack method.',
             ]);
 
             return $this->commitReturn($damage);
@@ -89,7 +157,7 @@ class BossAttackManager extends Service {
 
     /**********************************************************************************************
 
-        ATTACK METHODS
+        PRIVATE ATTACK METHODS
 
     **********************************************************************************************/
 

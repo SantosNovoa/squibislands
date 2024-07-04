@@ -10,9 +10,9 @@ return [
             'name' => 'Earning Specified Currency',
             'description' => 'Earning the specified currency deals damage.',
         ],
-        'spend_currency' => [
-            'name' => 'Spending Specified Currency',
-            'description' => 'Spending the specified currency deals damage.',
+        'donate_currency' => [
+            'name' => 'Donating  Currency',
+            'description' => 'Donating currency to the boss deals damage.'
         ],
         'daily_login' => [
             'name' => 'Daily Login',

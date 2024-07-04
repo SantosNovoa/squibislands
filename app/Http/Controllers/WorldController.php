@@ -413,7 +413,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBosses(Request $request) {
-        $query = Boss::query();
+        $query = Boss::query()->visible(Auth::user() ?? null);
         $data = $request->only(['name', 'sort']);
         if (isset($data['name'])) {
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
@@ -440,7 +440,7 @@ class WorldController extends Controller {
 
         return view('world.bosses', [
             'bosses'        => $query->orderBy('id')->paginate(20)->appends($request->query()),
-            'currentBosses' => Boss::active()->get(),
+            'currentBosses' => Boss::active(Auth::user() ?? null)->get(),
         ]);
     }
 
@@ -452,7 +452,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
-        $boss = Boss::where('name', $name)->first();
+        $boss = Boss::query()->visible(Auth::check() ? Auth::user() : null)->where('name', $name)->first();
         if (!$boss) {
             abort(404);
         }

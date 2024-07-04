@@ -11,8 +11,8 @@
     <h3>Current Boss{{ $currentBosses->count() == 1 ? '' : 'es' }}</h3>
     <div class="row justify-content-center">
         @foreach ($currentBosses as $currentBoss)
-            <div class="col-md-5">
-                <div class="card mb-3 h-100">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
                     <div class="card-body">
                         @include('world._current_boss_entry', ['boss' => $currentBoss])
                     </div>
