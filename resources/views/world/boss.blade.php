@@ -113,7 +113,7 @@
                                                     </tr>
                                                 @endforeach
                                             @else
-                                                @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', (($boss->current_health / $boss->total_health - 1) * 100))->get() as $reward)
+                                                @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', ($boss->current_health / $boss->total_health - 1) * 100)->get() as $reward)
                                                     <tr>
                                                         <td>{!! $reward->reward->displayName !!}</td>
                                                         <td>{{ $reward->quantity }}</td>
