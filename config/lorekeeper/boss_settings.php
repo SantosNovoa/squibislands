@@ -6,10 +6,10 @@ return [
             'name' => 'Prompt Submissions',
             'description' => 'Submitting to a designated prompt, prompt category, or ANY prompt deals damage determined by staff.',
         ],
-        'earned_currency' => [
-            'name' => 'Earning Specified Currency',
-            'description' => 'Earning the specified currency deals damage.',
-        ],
+        // 'earned_currency' => [
+        //     'name' => 'Earning Specified Currency',
+        //     'description' => 'Earning the specified currency deals damage.',
+        // ],
         'donate_currency' => [
             'name' => 'Donating  Currency',
             'description' => 'Donating currency to the boss deals damage.'

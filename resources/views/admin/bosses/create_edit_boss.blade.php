@@ -100,7 +100,7 @@
             {!! Form::label('is_active', 'Is Active', ['class' => 'form-check-label ml-3']) !!}
         </div>
         <div class="col-md-3 form-group">
-            {!! Form::checkbox('is_staff_only', 1, $boss->id ? $boss->is_staff_only : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::checkbox('is_staff_only', 1, $boss->id ? $boss->is_staff_only : 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_staff_only', 'Is Staff Only', ['class' => 'form-check-label ml-3']) !!}
         </div>
         <div class="col-md-3 form-group">
