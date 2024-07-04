@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-3 form-group">
             {!! Form::checkbox('is_active', 1, $boss->id ? $boss->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_active', 'Is Active', ['class' => 'form-check-label ml-3']) !!}
@@ -110,6 +110,15 @@
         <div class="col-md-3 form-group">
             {!! Form::checkbox('is_rewards_only_for_participants', 1, $boss->is_rewards_only_for_participants, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_rewards_only_for_participants', 'Rewards Only for Participants', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is checked, only users who have attacked the boss will receive rewards.') !!}
+        </div>
+        <div class="col-md-12 form-group text-center">
+            <p class="text-left">
+                This checkbox is recommended to be turned on after the boss has been defeated.
+                <br />
+                Users will be able to claim all rewards up to the current threshold. If more items become available to claim, they will be unable to claim them.
+            </p>
+            {!! Form::checkbox('allow_users_to_claim_rewards', 1, $boss->allow_users_to_claim_rewards, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::label('allow_users_to_claim_rewards', 'Allow Users to Claim Rewards', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is checked, users can claim rewards from the boss up to the current threshold.') !!}
         </div>
     </div>
 

@@ -24,7 +24,6 @@ return new class extends Migration
             $table->timestamp('start_at')->nullable()->default(null);
             $table->timestamp('end_at')->nullable()->default(null);
 
-            // maybe a data column for json data
             $table->integer('total_health');
             $table->integer('current_health');
             $table->json('attack_methods')->nullable()->default(null);
@@ -34,6 +33,8 @@ return new class extends Migration
 
             $table->boolean('can_attack_after_defeat')->default(false); // if set to true the boss can be attacked until the end_at date
             $table->boolean('is_rewards_only_for_participants')->default(false);
+            $table->boolean('is_staff_only')->default(false);
+            $table->boolean('allow_users_to_claim_rewards')->default(false);
         });
 
         Schema::create('boss_rewards', function (Blueprint $table) {
@@ -54,6 +55,16 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
+        // general logs for things like rewards, etc, and for any future data that needs to be stored
+        Schema::create('user_boss_logs', function (Blueprint $table) {
+            $table->id();
+            $table->integer('user_id');
+            $table->foreignId('boss_id')->constrained()->onDelete('cascade');
+            $table->json('data')->nullable()->default(null);
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -63,6 +74,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('user_boss_logs');
         Schema::dropIfExists('user_boss_attacks');
         Schema::dropIfExists('boss_rewards');
         Schema::dropIfExists('bosses');

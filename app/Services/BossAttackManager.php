@@ -7,6 +7,7 @@ use App\Models\Boss\BossReward;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\User\UserBossAttack;
+use App\Models\User\UserBossLog;
 use App\Models\User\UserItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
@@ -321,6 +322,68 @@ class BossAttackManager extends Service {
             }
 
             return $this->commitReturn($damage);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**********************************************************************************************
+
+        REWARDS
+
+    **********************************************************************************************/
+
+    /**
+     * Claim rewards for a boss.
+     */
+    public function claimRewards($boss, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!$boss->allow_users_to_claim_rewards) {
+                throw new \Exception('You cannot claim rewards for this boss.');
+            }
+
+            $userBossAttacks = UserBossAttack::where('user_id', $user->id)->where('boss_id', $boss->id)->get();
+            if ($boss->is_rewards_only_for_participants  && $userBossAttacks->isEmpty()) {
+                throw new \Exception('You have not attacked this boss - rewards are only for participants.');
+            }
+
+            // get the % of damage done to the boss overall
+            $currentHealth = $boss->current_health < 0 ? 0 : $boss->current_health;
+            $threshold = ($boss->total_health - $currentHealth) / $boss->total_health * 100;
+            // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
+            $bossRewards = $boss->rewards->where('threshold', '<=', $threshold);
+            if ($bossRewards->isEmpty()) {
+                throw new \Exception('There are no rewards to claim.');
+            }
+
+            $assets = createAssetsArray(false);
+            foreach ($bossRewards as $reward) {
+                addAsset($assets, $reward->reward, $reward->quantity);
+            }
+
+            $logType = 'Boss Rewards';
+            $data = [
+                'data' => 'Received rewards for defeating the boss ' . $boss->displayName,
+            ];
+            if (!$rewards = fillUserAssets($assets, null, $user, $logType, $data)) {
+                throw new \Exception('Failed to distribute rewards to user.');
+            }
+
+            flash('You have received: '.createRewardsString($assets));
+
+            UserBossLog::create([
+                'user_id' => $user->id,
+                'boss_id' => $boss->id,
+                'data' => [
+                    'rewards' => getDataReadyAssets($assets),
+                ],
+            ]);
+
+            return $this->commitReturn(true);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }

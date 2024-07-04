@@ -93,7 +93,7 @@ class BossController extends Controller {
         $data = $request->only([
             'name', 'description', 'remove_image', 'image', 'stage_images', 'stage_image_health', 'old_stage_images', 'is_active', 'start_at', 'end_at',
             'total_health', 'current_health', 'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'attack_methods', 'attack_methods_info',
-            'rewardable_type', 'rewardable_id', 'quantity', 'threshold', 'is_staff_only',
+            'rewardable_type', 'rewardable_id', 'quantity', 'threshold', 'is_staff_only', 'allow_users_to_claim_rewards',
         ]);
         if ($id && $service->updateBoss(Boss::find($id), $data, Auth::user())) {
             flash('Boss updated successfully.')->success();

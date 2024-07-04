@@ -4,6 +4,7 @@ namespace App\Models\Boss;
 
 use Carbon\Carbon;
 use App\Models\User\UserBossAttack;
+use App\Models\User\UserBossLog;
 use Illuminate\Database\Eloquent\Model;
 
 class Boss extends Model {
@@ -16,7 +17,7 @@ class Boss extends Model {
     protected $fillable = [
         'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health',
         'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'stage_images', 'attack_methods',
-        'is_staff_only',
+        'is_staff_only', 'allow_users_to_claim_rewards',
     ];
 
     /**
@@ -370,5 +371,23 @@ class Boss extends Model {
             ->orderBy('total_damage', 'DESC')
             ->limit($limit)
             ->get();
+    }
+
+    /**
+     * Returns whether a user participated in this boss.
+     */
+    public function hasUserParticipated($user) {
+        return UserBossAttack::where('user_id', $user->id)
+            ->where('boss_id', $this->id)
+            ->exists();
+    }
+
+    /**
+     * Returns whether a user has claimed rewards for this boss.
+     */
+    public function hasUserClaimedRewards($user) {
+        return UserBossLog::where('user_id', $user->id)
+            ->where('boss_id', $this->id)
+            ->exists();
     }
 }

@@ -30,7 +30,7 @@
                 ]) !!}</td>
                 <td class="loot-row-select"></td>
                 <td>{!! Form::text('quantity[]', 1, ['class' => 'form-control']) !!}</td>
-                <td>{!! Form::number('threshold[]', null, ['class' => 'form-control', 'max' => 100, 'min' => 0]) !!}</td>
+                <td>{!! Form::number('threshold[]', 100, ['class' => 'form-control', 'max' => 100, 'min' => 0]) !!}</td>
                 <td class="text-right"><a href="#" class="btn btn-danger remove-loot-button">Remove</a></td>
             </tr>
         </tbody>

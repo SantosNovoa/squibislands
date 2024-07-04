@@ -52,7 +52,7 @@ class BossService extends Service {
             }
 
             $boss = Boss::create(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
-                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards',
             ]));
 
             if (!$this->logAdminAction($user, 'Created Boss', 'Created '.$boss->displayName)) {
@@ -63,7 +63,7 @@ class BossService extends Service {
                 $this->handleImage($image, $boss->imagePath, $boss->imageFileName);
             }
             $this->processStageImages($data, $boss);
-            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $boss);
+            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'threshold']), $boss);
 
             return $this->commitReturn($boss);
         } catch (\Exception $e) {
@@ -102,7 +102,7 @@ class BossService extends Service {
             }
 
             $boss->update(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
-                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards',
             ]));
 
             // we don't need to worry about unset etc here
@@ -113,7 +113,7 @@ class BossService extends Service {
                 $this->handleImage($image, $boss->imagePath, $boss->imageFileName);
             }
             $this->processStageImages($data, $boss); // we leave it outside the if statement because we want to update the stage images even if there's no image
-            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $boss);
+            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'threshold']), $boss);
 
             if (!$this->logAdminAction($user, 'Updated Boss', 'Updated '.$boss->displayName)) {
                 throw new \Exception('Failed to log admin action.');
@@ -187,6 +187,9 @@ class BossService extends Service {
         }
         if (!isset($data['is_staff_only'])) {
             $data['is_staff_only'] = 0;
+        }
+        if (!isset($data['allow_users_to_claim_rewards'])) {
+            $data['allow_users_to_claim_rewards'] = 0;
         }
 
         if (isset($data['remove_image'])) {
@@ -280,7 +283,7 @@ class BossService extends Service {
                     'rewardable_type' => $type,
                     'rewardable_id'   => $data['rewardable_id'][$key],
                     'quantity'        => $data['quantity'][$key],
-                    'threshold'       => $data['threshold'][$key] ?? null,
+                    'threshold'       => $data['threshold'][$key] ?? 100,
                 ]);
             }
         }

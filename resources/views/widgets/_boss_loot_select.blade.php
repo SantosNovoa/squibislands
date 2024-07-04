@@ -30,7 +30,7 @@
             <th width="30%">Reward</th>
             <th width="20%">Quantity</th>
             <th width="10%">
-                Threshold {!! add_help('The HP % the boss must be at or below for this reward to be given. Leave blank for any %.') !!}
+                Threshold {!! add_help('The HP % the boss must be at or below for this reward to be given. Leave at 100 to be guaranteed.') !!}
             </th>
             <th width="10%"></th>
         </tr>

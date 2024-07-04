@@ -50,32 +50,74 @@
                     </div>
                 @endif
                 <div class="row">
-                    <div class="col-md-3 d-flex">
-                        <a class="btn btn-block btn-primary my-auto" data-toggle="collapse" href="#attack-methods" role="button" aria-expanded="false" aria-controls="attack-methods">
-                            Challenge Boss
-                        </a>
-                    </div>
-                    <div class="col-md-9">
-                        <h3>Rewards</h3>
+                    @if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat)
+                        <div class="col-md-12">
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle"></i> This boss has been defeated and cannot be attacked again.
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-md-3 d-flex">
+                            <a class="btn btn-block btn-primary my-auto" data-toggle="collapse" href="#attack-methods" role="button" aria-expanded="false" aria-controls="attack-methods">
+                                Challenge Boss
+                            </a>
+                        </div>
+                    @endif
+                    <div class="col-md-{{ $boss->current_health <= 0 && !$boss->can_attack_after_defeat ? '12' : '9' }}">
+                        <h3>
+                            Rewards 
+                            @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
+                                {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
+                            @endif
+                        </h3>
                         @if (!count($boss->rewards))
                             No rewards.
                         @else
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th width="70%">Reward</th>
-                                        <th width="30%">Amount</th>
+                                        <th width="60%">Reward</th>
+                                        <th width="20%">Amount</th>
+                                        <th width="20%">Threshold</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($boss->rewards as $reward)
-                                        <tr>
-                                            <td>{!! $reward->reward->displayName !!}</td>
-                                            <td>{{ $reward->quantity }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if (config('lorekeeper.boss_settings.show_rewards_before_threshold'))
+                                        @foreach ($boss->rewards as $reward)
+                                            <tr>
+                                                <td>{!! $reward->reward->displayName !!}</td>
+                                                <td>{{ $reward->quantity }}</td>
+                                                <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '>', ($boss->current_health / $boss->total_health) * 100)->get() as $reward)
+                                            <tr>
+                                                <td>{!! $reward->reward->displayName !!}</td>
+                                                <td>{{ $reward->quantity }}</td>
+                                                <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
+                            @if ($boss->allow_users_to_claim_rewards)
+                                @if ($boss->is_rewards_only_for_participants && !$boss->isUserParticipant(Auth::user()))
+                                    <div class="alert alert-danger">
+                                        <i class="fas fa-exclamation-triangle"></i> You must participate in the battle to claim rewards.
+                                    </div>
+                                @else
+                                    @if ($boss->hasUserClaimedRewards(Auth::user()))
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check"></i> You have already claimed your rewards.
+                                        </div>
+                                    @else
+                                        {!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}
+                                            {!! Form::submit('Claim Rewards', ['class' => 'btn btn-primary btn-block col-md-8 mx-auto']) !!}
+                                        {!! Form::close() !!}
+                                    @endif
+                                @endif
+                            @endif
                         @endif
                     </div>
                 </div>

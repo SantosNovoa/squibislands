@@ -97,7 +97,12 @@
                 </div>
             @endif
             {{-- show_rewards_before_threshold --}}
-            <h3>Rewards</h3>
+            <h3>
+                Rewards 
+                @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
+                    {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
+                @endif
+            </h3>
             @if ($boss->is_rewards_only_for_participants)
                 <div class="text-danger text-right">Rewards are only available to participants.</div>
             @endif
