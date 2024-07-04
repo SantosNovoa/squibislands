@@ -2,11 +2,10 @@
 
 namespace App\Models\User;
 
-use App\Models\Model;
 use App\Models\Boss\Boss;
+use App\Models\Model;
 
 class UserBossAttack extends Model {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -24,13 +23,6 @@ class UserBossAttack extends Model {
     protected $table = 'user_boss_attacks';
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = true;
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -38,6 +30,13 @@ class UserBossAttack extends Model {
     protected $casts = [
         'data' => 'array',
     ];
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = true;
 
     /**********************************************************************************************
 

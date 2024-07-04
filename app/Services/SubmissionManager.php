@@ -16,8 +16,8 @@ use App\Models\Submission\SubmissionCharacter;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SubmissionManager extends Service {
@@ -89,8 +89,8 @@ class SubmissionManager extends Service {
                     if (!$data) {
                         continue;
                     }
-        
-                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) || 
+
+                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) ||
                         (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
                         $promptBosses[$boss->id] = [
                             'damage' => null,
@@ -177,8 +177,8 @@ class SubmissionManager extends Service {
                     if (!$data) {
                         continue;
                     }
-        
-                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) || 
+
+                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) ||
                         (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
                         $promptBosses[$boss->id] = [
                             'damage' => null,

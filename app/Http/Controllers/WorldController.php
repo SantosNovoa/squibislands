@@ -446,9 +446,9 @@ class WorldController extends Controller {
 
     /**
      * Gets an inactive bosses world page.
-     * 
+     *
      * @param string $name
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {

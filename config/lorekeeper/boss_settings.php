@@ -3,7 +3,7 @@
 return [
     'methods' => [
         'prompt' => [
-            'name' => 'Prompt Submissions',
+            'name'        => 'Prompt Submissions',
             'description' => 'Submitting to a designated prompt, prompt category, or ANY prompt deals damage determined by staff.',
         ],
         // 'earned_currency' => [
@@ -11,15 +11,15 @@ return [
         //     'description' => 'Earning the specified currency deals damage.',
         // ],
         'donate_currency' => [
-            'name' => 'Donating  Currency',
-            'description' => 'Donating currency to the boss deals damage.'
+            'name'        => 'Donating  Currency',
+            'description' => 'Donating currency to the boss deals damage.',
         ],
         'daily_login' => [
-            'name' => 'Daily Login',
+            'name'        => 'Daily Login',
             'description' => 'Logging in daily deals damage, as long as the user interacts with the boss.',
         ],
         'donate_item' => [
-            'name' => 'Donating Items',
+            'name'        => 'Donating Items',
             'description' => 'Donating items to the boss deals damage.',
         ],
         // 'donation_shop' => [

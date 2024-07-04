@@ -4,8 +4,8 @@ namespace App\Services;
 
 use App\Models\Boss\Boss;
 use App\Models\Boss\BossReward;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class BossService extends Service {
     /*
@@ -139,7 +139,6 @@ class BossService extends Service {
         DB::beginTransaction();
 
         try {
-
             dd('asdnlasdlksa');
             if (!$this->logAdminAction($user, 'Deleted Boss', 'Deleted '.$boss->name)) {
                 throw new \Exception('Failed to log admin action.');
@@ -205,11 +204,9 @@ class BossService extends Service {
 
     /**
      * Process the stage images for bosses.
-     * 
+     *
      * @param array                 $data
      * @param \App\Models\Boss\Boss $boss
-     * 
-     * @return void
      */
     private function processStageImages($data, $boss) {
         $imageData = [];
@@ -241,15 +238,13 @@ class BossService extends Service {
 
     /**
      * Process the attack methods & information for the boss.
-     * 
+     *
      * @param array                 $data
      * @param \App\Models\Boss\Boss $boss
-     * 
-     * @return void
      */
     private function processAttackMethods($data, $boss) {
         $information = [
-            'methods' => isset($data['attack_methods']) ? $data['attack_methods'] : [],
+            'methods'     => $data['attack_methods'] ?? [],
             'information' => [],
         ];
 
@@ -269,7 +264,7 @@ class BossService extends Service {
     /**
      * Processes user input for creating/updating boss rewards.
      *
-     * @param array                     $data
+     * @param array                 $data
      * @param \App\Models\Boss\Boss $boss
      */
     private function populateRewards($data, $boss) {

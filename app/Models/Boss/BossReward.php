@@ -2,14 +2,13 @@
 
 namespace App\Models\Boss;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
+use Illuminate\Database\Eloquent\Model;
 
 class BossReward extends Model {
-
     /**
      * The attributes that are mass assignable.
      *

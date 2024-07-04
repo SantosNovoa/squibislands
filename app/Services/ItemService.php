@@ -217,10 +217,10 @@ class ItemService extends Service {
             $item->update([
                 'data' => json_encode([
                     'rarity_id' => isset($data['rarity_id']) && $data['rarity_id'] ? $data['rarity_id'] : null,
-                    'uses'    => isset($data['uses']) && $data['uses'] ? $data['uses'] : null,
-                    'release' => isset($data['release']) && $data['release'] ? $data['release'] : null,
-                    'prompts' => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
-                    'resell'  => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
+                    'uses'      => isset($data['uses']) && $data['uses'] ? $data['uses'] : null,
+                    'release'   => isset($data['release']) && $data['release'] ? $data['release'] : null,
+                    'prompts'   => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
+                    'resell'    => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
                 ]), // rarity, availability info (original source, purchase locations, drop locations)
             ]);
 
@@ -280,10 +280,10 @@ class ItemService extends Service {
             $item->update([
                 'data' => json_encode([
                     'rarity_id'  => isset($data['rarity_id']) && $data['rarity_id'] ? $data['rarity_id'] : null,
-                    'uses'    => isset($data['uses']) && $data['uses'] ? $data['uses'] : null,
-                    'release' => isset($data['release']) && $data['release'] ? $data['release'] : null,
-                    'prompts' => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
-                    'resell'  => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
+                    'uses'       => isset($data['uses']) && $data['uses'] ? $data['uses'] : null,
+                    'release'    => isset($data['release']) && $data['release'] ? $data['release'] : null,
+                    'prompts'    => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
+                    'resell'     => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
                 ]), // rarity, availability info (original source, purchase locations, drop locations)
             ]);
 

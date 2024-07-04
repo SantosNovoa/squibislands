@@ -4,13 +4,11 @@ namespace App\Http\Controllers\Admin\Data;
 
 use App\Http\Controllers\Controller;
 use App\Models\Boss\Boss;
-use App\Models\Boss\BossReward;
 use App\Services\BossService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BossController extends Controller {
-
     /*
     |--------------------------------------------------------------------------
     | Admin / Boss Controller
@@ -50,8 +48,9 @@ class BossController extends Controller {
      */
     public function getCreateBoss() {
         $attackMethods = collect(config('lorekeeper.boss_settings.methods'))->map(function ($method, $key) {
-            return $method['name'] . ' - ' . $method['description'];
+            return $method['name'].' - '.$method['description'];
         });
+
         return view('admin.bosses.create_edit_boss', [
             'boss'          => new Boss,
             'attackMethods' => $attackMethods,
@@ -72,11 +71,12 @@ class BossController extends Controller {
         }
 
         $attackMethods = collect(config('lorekeeper.boss_settings.methods'))->mapWithKeys(function ($method, $key) {
-            return [$key => $method['name'] . ' - ' . $method['description']];
+            return [$key => $method['name'].' - '.$method['description']];
         });
+
         return view('admin.bosses.create_edit_boss', [
             'boss'          => $boss,
-            'attackMethods' => $attackMethods
+            'attackMethods' => $attackMethods,
         ]);
     }
 

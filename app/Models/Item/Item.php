@@ -4,9 +4,9 @@ namespace App\Models\Item;
 
 use App\Models\Model;
 use App\Models\Prompt\Prompt;
+use App\Models\Rarity;
 use App\Models\Shop\Shop;
 use App\Models\User\User;
-use App\Models\Rarity;
 
 class Item extends Model {
     /**
@@ -27,7 +27,7 @@ class Item extends Model {
      * @var string
      */
     protected $table = 'items';
-    
+
     /**
      * Validation rules for creation.
      *

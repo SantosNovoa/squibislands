@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Settings;
 use App\Models\Boss\Boss;
 use App\Models\User\User;
 use App\Services\BossAttackManager;
@@ -10,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BossController extends Controller {
-
     /*
     |--------------------------------------------------------------------------
     | Boss Controller
@@ -35,9 +33,9 @@ class BossController extends Controller {
 
     /**
      * Shows the boss page.
-     * 
+     *
      * @param string $name
-     * 
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
@@ -56,6 +54,9 @@ class BossController extends Controller {
 
     /**
      * Handles the user attacking a boss.
+     *
+     * @param mixed $id
+     * @param mixed $attack_method
      */
     public function handleBossAttack(Request $request, BossAttackManager $service, $id, $attack_method) {
         $boss = Boss::active(Auth::user() ?? null)->find($id);
@@ -76,6 +77,8 @@ class BossController extends Controller {
 
     /**
      * Handles the user claiming rewards from a boss.
+     *
+     * @param mixed $id
      */
     public function handleClaimRewards(BossAttackManager $service, $id) {
         $boss = Boss::active(Auth::user() ?? null)->find($id);

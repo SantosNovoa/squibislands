@@ -2,13 +2,12 @@
 
 namespace App\Models\Boss;
 
-use Carbon\Carbon;
 use App\Models\User\UserBossAttack;
 use App\Models\User\UserBossLog;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Boss extends Model {
-
     /**
      * The attributes that are mass assignable.
      *
@@ -28,23 +27,23 @@ class Boss extends Model {
     protected $table = 'bosses';
 
     /**
-     * Whether the model contains timestamps to be saved and updated.
-     *
-     * @var string
-     */
-    public $timestamps = false;
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'start_at' => 'datetime',
-        'end_at'   => 'datetime',
-        'stage_images' => 'array',
+        'start_at'       => 'datetime',
+        'end_at'         => 'datetime',
+        'stage_images'   => 'array',
         'attack_methods' => 'array',
     ];
+
+    /**
+     * Whether the model contains timestamps to be saved and updated.
+     *
+     * @var string
+     */
+    public $timestamps = false;
 
     /**
      * Validation rules for creation.
@@ -96,6 +95,7 @@ class Boss extends Model {
      * Scope a query to only include active bosses.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed|null                            $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -103,7 +103,7 @@ class Boss extends Model {
         if ($user && $user->hasPower('manage_data')) {
             return $query;
         }
-        
+
         return $query->where('is_active', 1)
             ->where('is_staff_only', 0)
             ->where(function ($query) {
@@ -115,6 +115,7 @@ class Boss extends Model {
      * Scope a query to only include active bosses.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param mixed|null                            $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -181,6 +182,7 @@ class Boss extends Model {
         if ($this->isActive()) {
             return '<a href="'.$this->idUrl.'" class="display-boss">'.$this->name.'</a>';
         }
+
         return '<a href="'.$this->url.'">'.$this->name.'</a>';
     }
 
@@ -204,6 +206,8 @@ class Boss extends Model {
 
     /**
      * Gets the file name of the model's image.
+     *
+     * @param mixed $healthPercent
      *
      * @return string
      */
@@ -290,7 +294,7 @@ class Boss extends Model {
         $images = [];
         foreach ($this->stage_images as $health => $image_name) {
             $images[$health] = [
-                'image' => asset($this->imageDirectory.'/'.$image_name),
+                'image'      => asset($this->imageDirectory.'/'.$image_name),
                 'image_name' => $image_name,
             ];
         }
@@ -300,13 +304,15 @@ class Boss extends Model {
 
     /**
      * Returns the information, or lack thereof, for a specific attack method.
+     *
+     * @param mixed $method
      */
     public function getAttackMethodInformation($method) {
         if (!in_array($method, $this->attack_methods['methods'])) {
             return [];
         }
 
-        return isset($this->attack_methods['information'][$method]) ? $this->attack_methods['information'][$method] : [];
+        return $this->attack_methods['information'][$method] ?? [];
     }
 
     /**
@@ -318,6 +324,9 @@ class Boss extends Model {
 
     /**
      * Gets the logs for a specified user for a specified attack method.
+     *
+     * @param mixed|null $user
+     * @param mixed      $method
      */
     public function getLogs($user = null, $method = 'all') {
         if ($method == 'all') {
@@ -359,6 +368,8 @@ class Boss extends Model {
 
     /**
      * Gets the leaderboard of the top players for this boss.
+     *
+     * @param mixed|null $limit
      */
     public function getLeaderboard($limit = null) {
         if (!$limit) {
@@ -375,6 +386,8 @@ class Boss extends Model {
 
     /**
      * Returns whether a user participated in this boss.
+     *
+     * @param mixed $user
      */
     public function hasUserParticipated($user) {
         return UserBossAttack::where('user_id', $user->id)
@@ -384,6 +397,8 @@ class Boss extends Model {
 
     /**
      * Returns whether a user has claimed rewards for this boss.
+     *
+     * @param mixed $user
      */
     public function hasUserClaimedRewards($user) {
         return UserBossLog::where('user_id', $user->id)

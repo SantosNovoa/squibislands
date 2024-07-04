@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Models\Boss\Boss;
-use App\Models\Boss\BossReward;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\User\UserBossAttack;
 use App\Models\User\UserBossLog;
 use App\Models\User\UserItem;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Arr;
 
 class BossAttackManager extends Service {
     /*
@@ -29,43 +27,47 @@ class BossAttackManager extends Service {
     **********************************************************************************************/
 
     /**
-     * Generic attack method that handles sub calls and logging
+     * Generic attack method that handles sub calls and logging.
+     *
+     * @param mixed      $boss
+     * @param mixed      $user
+     * @param mixed      $method
+     * @param mixed|null $requestData
      */
     public function attackBoss($boss, $user, $method, $requestData = null) {
         DB::beginTransaction();
 
         try {
-
             $damage = 0;
             $logType = '';
             $log = '';
 
             switch ($method) {
                 case 'donate_currency':
-                    if(!$damage = $this->attackDonateCurrency($boss, $user, $requestData)) {
+                    if (!$damage = $this->attackDonateCurrency($boss, $user, $requestData)) {
                         throw new \Exception('Could not complete attack.');
                     }
                     $logType = 'Donating Currency';
-                    $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' by donating ' . $requestData['currency_quantity'] . ' ' . Currency::find($requestData['currency_id'])->name . '.';
+                    $log = 'Dealt '.$damage.' damage to '.$boss->name.' by donating '.$requestData['currency_quantity'].' '.Currency::find($requestData['currency_id'])->name.'.';
                     break;
                 case 'daily_login':
-                    if(!$damage = $this->attackDailyLogin($boss, $user)) {
+                    if (!$damage = $this->attackDailyLogin($boss, $user)) {
                         throw new \Exception('Could not complete attack.');
                     }
                     $logType = 'Daily Login';
-                    $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' using the daily login attack method.';
+                    $log = 'Dealt '.$damage.' damage to '.$boss->name.' using the daily login attack method.';
                     break;
                 case 'donate_item':
                     if (!$damage = $this->attackDonateItem($boss, $user, $requestData)) {
                         throw new \Exception('Could not complete attack.');
                     }
                     $logType = 'Donating Item';
-                    $log = 'Dealt ' . $damage . ' damage to ' . $boss->name . ' by donating ' . $requestData['item_quantity'] . ' ' . Item::find($requestData['item_id'])->name . '.';
+                    $log = 'Dealt '.$damage.' damage to '.$boss->name.' by donating '.$requestData['item_quantity'].' '.Item::find($requestData['item_id'])->name.'.';
                     break;
-                // case 'donation_shop':
-                //     $damage = $this->attackDonationShop($boss, $user);
-                //     $logType = 'Donation Shop';
-                //     break;
+                    // case 'donation_shop':
+                    //     $damage = $this->attackDonationShop($boss, $user);
+                    //     $logType = 'Donation Shop';
+                    //     break;
                 default:
                     throw new \Exception('Invalid attack method.');
                     break;
@@ -73,7 +75,7 @@ class BossAttackManager extends Service {
 
             $this->attack($boss, $method, $damage, $user, [
                 'logType' => $logType,
-                'log' => $log,
+                'log'     => $log,
             ]);
 
             return $this->commitReturn($damage);
@@ -84,28 +86,6 @@ class BossAttackManager extends Service {
         return $this->rollbackReturn(false);
     }
 
-    /**
-     * Generic attack method
-     */
-    private function attack($boss, $method, $damage, $user, $data) {
-        if ($damage > 0 && $boss->type == 'Global') {
-            if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat) {
-                throw new \Exception('This boss has already been defeated.');
-            }
-            
-            $boss->current_health -= $damage;
-            $boss->save();
-        } // dont log if its a user type, since we sum the damage in the user boss attack log
-
-        $log = UserBossAttack::create([
-            'user_id' => $user->id,
-            'boss_id' => $boss->id,
-            'attack_method' => $method,
-            'damage' => $damage,
-            'data'    => $data
-        ]);
-    }
-
     /**********************************************************************************************
 
         PUBLIC ATTACK METHODS
@@ -114,10 +94,12 @@ class BossAttackManager extends Service {
 
     /**
      * Prompt attack method.
-     * 
-     * @param Boss $boss
+     *
+     * @param Boss       $boss
      * @param Submission $submission
-     * 
+     * @param mixed      $submissionData
+     * @param mixed|null $rewards
+     *
      * @return int
      */
     public function attackPrompt($boss, $submission, $submissionData, $rewards = null) {
@@ -135,7 +117,7 @@ class BossAttackManager extends Service {
                     throw new \Exception('No damage input found.');
                 }
                 $damage = $submissionData['boss_damage'][$boss->id];
-            } else if ($data['damage_calculation_method'] == 'currency') {
+            } elseif ($data['damage_calculation_method'] == 'currency') {
                 $currencyRewards = $rewards['currencies'] ?? [];
                 if (!isset($data['currency_id'])) {
                     throw new \Exception('No currency set.');
@@ -147,7 +129,7 @@ class BossAttackManager extends Service {
                     }
                 } else {
                     if (isset($currencyRewards[$data['currency_id']])) {
-                        $damage = isset($currencyRewards[$data['currency_id']]['quantity']) ? $currencyRewards[$data['currency_id']]['quantity'] : 0;
+                        $damage = $currencyRewards[$data['currency_id']]['quantity'] ?? 0;
                     }
                 }
             } else {
@@ -156,7 +138,7 @@ class BossAttackManager extends Service {
 
             $this->attack($boss, 'prompt', $damage, $submission->user, [
                 'logType' => 'Prompt Attack',
-                'log' => 'Dealt ' . $damage . ' damage to ' . $boss->name . ' using the prompt attack method.',
+                'log'     => 'Dealt '.$damage.' damage to '.$boss->name.' using the prompt attack method.',
             ]);
 
             return $this->commitReturn($damage);
@@ -169,16 +151,109 @@ class BossAttackManager extends Service {
 
     /**********************************************************************************************
 
+        REWARDS
+
+    **********************************************************************************************/
+
+    /**
+     * Claim rewards for a boss.
+     *
+     * @param mixed $boss
+     * @param mixed $user
+     */
+    public function claimRewards($boss, $user) {
+        DB::beginTransaction();
+
+        try {
+            if (!$boss->allow_users_to_claim_rewards) {
+                throw new \Exception('You cannot claim rewards for this boss.');
+            }
+
+            $userBossAttacks = UserBossAttack::where('user_id', $user->id)->where('boss_id', $boss->id)->get();
+            if ($boss->is_rewards_only_for_participants && $userBossAttacks->isEmpty()) {
+                throw new \Exception('You have not attacked this boss - rewards are only for participants.');
+            }
+
+            // get the % of damage done to the boss overall
+            $currentHealth = $boss->current_health < 0 ? 0 : $boss->current_health;
+            $threshold = ($boss->total_health - $currentHealth) / $boss->total_health * 100;
+            // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
+            $bossRewards = $boss->rewards->where('threshold', '<=', $threshold);
+            if ($bossRewards->isEmpty()) {
+                throw new \Exception('There are no rewards to claim.');
+            }
+
+            $assets = createAssetsArray(false);
+            foreach ($bossRewards as $reward) {
+                addAsset($assets, $reward->reward, $reward->quantity);
+            }
+
+            $logType = 'Boss Rewards';
+            $data = [
+                'data' => 'Received rewards for defeating the boss '.$boss->displayName,
+            ];
+            if (!$rewards = fillUserAssets($assets, null, $user, $logType, $data)) {
+                throw new \Exception('Failed to distribute rewards to user.');
+            }
+
+            flash('You have received: '.createRewardsString($assets));
+
+            UserBossLog::create([
+                'user_id' => $user->id,
+                'boss_id' => $boss->id,
+                'data'    => [
+                    'rewards' => getDataReadyAssets($assets),
+                ],
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Generic attack method.
+     *
+     * @param mixed $boss
+     * @param mixed $method
+     * @param mixed $damage
+     * @param mixed $user
+     * @param mixed $data
+     */
+    private function attack($boss, $method, $damage, $user, $data) {
+        if ($damage > 0 && $boss->type == 'Global') {
+            if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat) {
+                throw new \Exception('This boss has already been defeated.');
+            }
+
+            $boss->current_health -= $damage;
+            $boss->save();
+        } // dont log if its a user type, since we sum the damage in the user boss attack log
+
+        $log = UserBossAttack::create([
+            'user_id'       => $user->id,
+            'boss_id'       => $boss->id,
+            'attack_method' => $method,
+            'damage'        => $damage,
+            'data'          => $data,
+        ]);
+    }
+
+    /**********************************************************************************************
+
         PRIVATE ATTACK METHODS
 
     **********************************************************************************************/
 
     /**
-     * Daily login attack
-     * 
+     * Daily login attack.
+     *
      * @param Boss $boss
      * @param User $user
-     * 
+     *
      * @return int
      */
     private function attackDailyLogin($boss, $user) {
@@ -188,7 +263,7 @@ class BossAttackManager extends Service {
             ->where('attack_method', 'daily_login')
             ->where('created_at', '>=', now()->subDay())
             ->count();
-        
+
         if ($logs) {
             throw new \Exception('You have already attacked this boss today.');
         }
@@ -210,11 +285,11 @@ class BossAttackManager extends Service {
 
     /**
      * Donate currency attack.
-     * 
-     * @param Boss $boss
-     * @param User $user
+     *
+     * @param Boss  $boss
+     * @param User  $user
      * @param array $requestData
-     * 
+     *
      * @return int
      */
     private function attackDonateCurrency($boss, $user, $requestData) {
@@ -243,7 +318,7 @@ class BossAttackManager extends Service {
             }
 
             $service = new CurrencyManager;
-            if (!$service->debitCurrency($user, null, 'Boss Attack', 'Donated currency to ' . $boss->name, Currency::find($requestData['currency_id']), $requestData['currency_quantity'])) {
+            if (!$service->debitCurrency($user, null, 'Boss Attack', 'Donated currency to '.$boss->name, Currency::find($requestData['currency_id']), $requestData['currency_quantity'])) {
                 throw new \Exception('You do not have enough of this currency to donate.');
             }
 
@@ -255,14 +330,13 @@ class BossAttackManager extends Service {
         return $this->rollbackReturn(false);
     }
 
-
     /**
      * Donate item attack.
-     * 
-     * @param Boss $boss
-     * @param User $user
+     *
+     * @param Boss  $boss
+     * @param User  $user
      * @param array $requestData
-     * 
+     *
      * @return int
      */
     private function attackDonateItem($boss, $user, $requestData) {
@@ -310,11 +384,11 @@ class BossAttackManager extends Service {
                 }
 
                 if (!$service->debitStack($user, 'Boss Attack', [
-                        'data' => 'Donated item to attack the boss ' . $boss->name
-                    ], $userItem, $quantity)) {
-                        foreach ($service->errors()->getMessages()['error'] as $error) {
-                            flash($error)->error();
-                        }
+                    'data' => 'Donated item to attack the boss '.$boss->name,
+                ], $userItem, $quantity)) {
+                    foreach ($service->errors()->getMessages()['error'] as $error) {
+                        flash($error)->error();
+                    }
                     throw new \Exception('You do not have enough of this item to donate.');
                 }
 
@@ -322,68 +396,6 @@ class BossAttackManager extends Service {
             }
 
             return $this->commitReturn($damage);
-        } catch (\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-
-        return $this->rollbackReturn(false);
-    }
-
-    /**********************************************************************************************
-
-        REWARDS
-
-    **********************************************************************************************/
-
-    /**
-     * Claim rewards for a boss.
-     */
-    public function claimRewards($boss, $user) {
-        DB::beginTransaction();
-
-        try {
-            if (!$boss->allow_users_to_claim_rewards) {
-                throw new \Exception('You cannot claim rewards for this boss.');
-            }
-
-            $userBossAttacks = UserBossAttack::where('user_id', $user->id)->where('boss_id', $boss->id)->get();
-            if ($boss->is_rewards_only_for_participants  && $userBossAttacks->isEmpty()) {
-                throw new \Exception('You have not attacked this boss - rewards are only for participants.');
-            }
-
-            // get the % of damage done to the boss overall
-            $currentHealth = $boss->current_health < 0 ? 0 : $boss->current_health;
-            $threshold = ($boss->total_health - $currentHealth) / $boss->total_health * 100;
-            // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
-            $bossRewards = $boss->rewards->where('threshold', '<=', $threshold);
-            if ($bossRewards->isEmpty()) {
-                throw new \Exception('There are no rewards to claim.');
-            }
-
-            $assets = createAssetsArray(false);
-            foreach ($bossRewards as $reward) {
-                addAsset($assets, $reward->reward, $reward->quantity);
-            }
-
-            $logType = 'Boss Rewards';
-            $data = [
-                'data' => 'Received rewards for defeating the boss ' . $boss->displayName,
-            ];
-            if (!$rewards = fillUserAssets($assets, null, $user, $logType, $data)) {
-                throw new \Exception('Failed to distribute rewards to user.');
-            }
-
-            flash('You have received: '.createRewardsString($assets));
-
-            UserBossLog::create([
-                'user_id' => $user->id,
-                'boss_id' => $boss->id,
-                'data' => [
-                    'rewards' => getDataReadyAssets($assets),
-                ],
-            ]);
-
-            return $this->commitReturn(true);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
