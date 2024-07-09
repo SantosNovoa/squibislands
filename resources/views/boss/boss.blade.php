@@ -99,51 +99,52 @@
                                             </tr>
                                         @endforeach
                                     @else
-                                        @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=', ($boss->current_health / $boss->total_health - 1) * 100)->get() as $reward)
-<tr>
+                                        @foreach ($boss->rewards()->whereNull('threshold')->orWhere('threshold', '<=',
+                                            (($boss->current_health / $boss->total_health - 1) * 100))->get() as $reward)
+                                            <tr>
                                                 <td>{!! $reward->reward->displayName !!}</td>
                                                 <td>{{ $reward->quantity }}</td>
                                                 <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
                                             </tr>
-@endforeach
-@endif
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                             @if ($boss->allow_users_to_claim_rewards)
                                 @if ($boss->is_rewards_only_for_participants && !$boss->isUserParticipant(Auth::user()))
-<div class="alert alert-danger">
+                                    <div class="alert alert-danger">
                                         <i class="fas fa-exclamation-triangle"></i> You must participate in the battle to claim rewards.
                                     </div>
-@else
-@if ($boss->hasUserClaimedRewards(Auth::user()))
-<div class="alert alert-success">
+                                @else
+                                    @if ($boss->hasUserClaimedRewards(Auth::user()))
+                                        <div class="alert alert-success">
                                             <i class="fas fa-check"></i> You have already claimed your rewards.
                                         </div>
-@else
-{!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}
+                                    @else
+                                        {!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}
                                         {!! Form::submit('Claim Rewards', ['class' => 'btn btn-primary btn-block col-md-8 mx-auto']) !!}
                                         {!! Form::close() !!}
-@endif
-@endif
+                                    @endif
+                                @endif
                             @endif
                         @endif
                     </div>
                 </div>
                 <div class="collapse mt-3" id="attack-methods">
                     @if ($boss->attack_methods && count($boss->attack_methods['methods']))
-<h3>Attack Methods</h3>
+                        <h3>Attack Methods</h3>
                         @foreach ($boss->attack_methods['methods'] as $attackMethod)
-    <div class="text-left">
-                                    @include('boss._attack_method', ['attackMethod' => $attackMethod, 'boss' => $boss])
-                                </div>
-     @endforeach
-                                        @else
-                                            <div class="alert alert-danger">No attack methods available.</div>
-                                        @endif
-                                        </div>
-                                        <hr />
-                                        @include('boss._' . strtolower($boss->type) . '_info', ['boss' => $boss])
-                                        </div>
-                                        </div>
-                                        </div>
-                                    @endsection)
+                            <div class="text-left">
+                                @include('boss._attack_method', ['attackMethod' => $attackMethod, 'boss' => $boss])
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="alert alert-danger">No attack methods available.</div>
+                    @endif
+                </div>
+                <hr />
+                @include('boss._' . strtolower($boss->type) . '_info', ['boss' => $boss])
+            </div>
+        </div>
+    </div>
+@endsection
