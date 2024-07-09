@@ -111,7 +111,7 @@
                                 </tbody>
                             </table>
                             @if ($boss->allow_users_to_claim_rewards)
-                                @if ($boss->is_rewards_only_for_participants && !$boss->isUserParticipant(Auth::user()))
+                                @if ($boss->is_rewards_only_for_participants && !$boss->hasUserParticipated(Auth::user()))
                                     <div class="alert alert-danger">
                                         <i class="fas fa-exclamation-triangle"></i> You must participate in the battle to claim rewards.
                                     </div>
