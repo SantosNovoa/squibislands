@@ -3,7 +3,10 @@
         <tr>
             <th width="60%">Reward</th>
             <th width="20%">Amount</th>
-            <th width="20%">Threshold</th>
+            <th width="20%">
+                Threshold
+                {!! add_help('The threshold is the percentage damage the boss must have taken for this reward to be available.') !!}
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -12,10 +15,7 @@
                 <tr>
                     <td>{!! $reward->reward->displayName !!}</td>
                     <td>{{ $reward->quantity }}</td>
-                    <td>
-                        {{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}
-                        {!! add_help('The threshold is the percentage damage the boss must have taken for this reward to be available.') !!}
-                    </td>
+                    <td>{{ $reward->threshold ? $reward->threshold . '%' : 'Any' }}</td>
                 </tr>
             @endforeach
         @else
