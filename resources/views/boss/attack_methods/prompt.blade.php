@@ -11,7 +11,7 @@
     @else
         @php
             $prompts = \App\Models\Prompt\Prompt::whereIn('id', $data['prompt_ids'] ?? [])
-                ->orWhere('prompt_category_id', $data['prompt_category_ids'])
+                ->orWhere('prompt_category_id', $data['prompt_category_ids'] ?? [])
                 ->get();
         @endphp
         <ul class="mb-0">
