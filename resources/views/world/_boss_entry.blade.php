@@ -129,9 +129,12 @@
                             @php
                                 $damagePercentage = (($boss->total_health - $boss->current_health) / $boss->total_health) * 100;
 
-                                $rewards = $boss->rewards()->where(function ($query) use ($damagePercentage) {
-                                    $query->whereNull('threshold')->orWhere('threshold', '<=', $damagePercentage);
-                                })->get();
+                                $rewards = $boss
+                                    ->rewards()
+                                    ->where(function ($query) use ($damagePercentage) {
+                                        $query->whereNull('threshold')->orWhere('threshold', '<=', $damagePercentage);
+                                    })
+                                    ->get();
                             @endphp
                             @foreach ($rewards as $reward)
                                 <tr>
