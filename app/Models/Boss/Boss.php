@@ -100,7 +100,7 @@ class Boss extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query, $user = null) {
-        if ($user && $user->hasPower('manage_data')) {
+        if ($user && $user->hasPower('edit_data')) {
             return $query;
         }
 
@@ -120,7 +120,7 @@ class Boss extends Model {
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive($query, $user = null) {
-        if ($user && $user->hasPower('manage_data')) {
+        if ($user && $user->hasPower('edit_data')) {
             return $query;
         }
 
