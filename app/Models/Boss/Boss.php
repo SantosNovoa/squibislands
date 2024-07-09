@@ -378,6 +378,7 @@ class Boss extends Model {
 
         return UserBossAttack::where('boss_id', $this->id)
             ->selectRaw('user_id, SUM(damage) as total_damage')
+            ->having('total_damage', '>', 0)
             ->groupBy('user_id')
             ->orderBy('total_damage', 'DESC')
             ->limit($limit)
