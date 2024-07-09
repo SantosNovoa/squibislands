@@ -243,7 +243,7 @@ class Boss extends Model {
      * @return string
      */
     public function getUrlAttribute() {
-        return url('world/bosses/'.$this->name);
+        return url('world/bosses/'.str_replace(' ', '-', $this->name));
     }
 
     /**
@@ -253,10 +253,10 @@ class Boss extends Model {
      */
     public function getIdUrlAttribute() {
         if ($this->isActive()) {
-            return url('boss/'.$this->name);
+            return url('boss/'.str_replace(' ', '-', $this->name));
         }
 
-        return url('world/bosses/'.$this->name);
+        return url('world/bosses/'.str_replace(' ', '-', $this->name));
     }
 
     /**

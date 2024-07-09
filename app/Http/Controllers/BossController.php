@@ -39,6 +39,7 @@ class BossController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
+        $name = str_replace('-', ' ', $name);
         $boss = Boss::visible(Auth::user() ?? Auth::user())->where('name', $name)->first();
 
         if (!$boss) {
