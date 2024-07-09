@@ -175,10 +175,9 @@ class BossAttackManager extends Service {
             }
 
             // get the % of damage done to the boss overall
-            $currentHealth = $boss->current_health < 0 ? 0 : $boss->current_health;
-            $threshold = ($boss->total_health - $currentHealth) / $boss->total_health * 100;
+            $damagePercentage = (($boss->total_health - $boss->current_health) / $boss->total_health) * 100;
             // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
-            $bossRewards = $boss->rewards->where('threshold', '=<', $threshold);
+            $bossRewards = $boss->rewards->where('threshold', '<=', $damagePercentage);
             if ($bossRewards->isEmpty()) {
                 throw new \Exception('There are no rewards to claim.');
             }
