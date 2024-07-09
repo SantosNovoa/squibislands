@@ -452,6 +452,7 @@ class WorldController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getBoss($name) {
+        $name = str_replace('-', ' ', $name);
         $boss = Boss::query()->visible(Auth::check() ? Auth::user() : null)->where('name', $name)->first();
         if (!$boss) {
             abort(404);

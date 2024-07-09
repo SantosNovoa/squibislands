@@ -85,13 +85,13 @@ class SubmissionManager extends Service {
                 $promptBosses = [];
                 $bosses = Boss::active(Auth::user() ?? null)->get();
                 foreach ($bosses as $boss) {
-                    $data = $boss->getAttackMethodInformation('prompt');
-                    if (!$data) {
+                    $bossData = $boss->getAttackMethodInformation('prompt');
+                    if (!$bossData) {
                         continue;
                     }
 
-                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) ||
-                        (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
+                    if ((isset($bossData['prompt_ids']) && (in_array($prompt->id, $bossData['prompt_ids']) || in_array('any', $bossData['prompt_ids']))) ||
+                        (isset($bossData['prompt_category_ids']) && in_array($prompt->prompt_category_id, $bossData['prompt_category_ids']))) {
                         $promptBosses[$boss->id] = [
                             'damage' => null,
                         ];
@@ -173,13 +173,13 @@ class SubmissionManager extends Service {
                 $promptBosses = [];
                 $bosses = Boss::active(Auth::user() ?? null)->get();
                 foreach ($bosses as $boss) {
-                    $data = $boss->getAttackMethodInformation('prompt');
-                    if (!$data) {
+                    $bossData = $boss->getAttackMethodInformation('prompt');
+                    if (!$bossData) {
                         continue;
                     }
 
-                    if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) ||
-                        (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
+                    if ((isset($bossData['prompt_ids']) && (in_array($prompt->id, $bossData['prompt_ids']) || in_array('any', $bossData['prompt_ids']))) ||
+                        (isset($bossData['prompt_category_ids']) && in_array($prompt->prompt_category_id, $bossData['prompt_category_ids']))) {
                         $promptBosses[$boss->id] = [
                             'damage' => null,
                         ];
@@ -530,7 +530,7 @@ class SubmissionManager extends Service {
                         throw new \Exception('Failed to attack boss.');
                     }
 
-                    $submissionBosses[$id]['damage'] = $damage;
+                    $submissionBosses[$id]['damage'] = $damage['damage']; // this is to allow 0 values
                 }
             }
 

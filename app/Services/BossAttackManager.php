@@ -141,7 +141,7 @@ class BossAttackManager extends Service {
                 'log'     => 'Dealt '.$damage.' damage to '.$boss->name.' using the prompt attack method.',
             ]);
 
-            return $this->commitReturn($damage);
+            return $this->commitReturn(['damage' => $damage]);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }

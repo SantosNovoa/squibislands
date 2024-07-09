@@ -177,7 +177,7 @@ class SubmissionController extends Controller {
                 continue;
             }
 
-            if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('all', $data['prompt_ids']))) ||
+            if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('any', $data['prompt_ids']))) ||
                 (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
                 $promptBosses[] = $boss;
             }

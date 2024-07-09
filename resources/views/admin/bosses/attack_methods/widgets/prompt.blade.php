@@ -31,7 +31,7 @@
                     {!! Form::number('boss_damage[' . $boss->id . ']', null, ['class' => 'form-control', 'placeholder' => 'Enter Damage']) !!}
                 @elseif ($data['damage_calculation_method'] == 'currency')
                     @if ($data['currency_id'] != 'any')
-                        <p>The damage done to this boss will be determined by the amount of {!! \App\Models\Currency\Currency::find($data['currency_id'])->displyName !!} this prompt earns.</p>
+                        <p>The damage done to this boss will be determined by the amount of {!! \App\Models\Currency\Currency::find($data['currency_id'])->displayName !!} this prompt earns.</p>
                     @else
                         <p>The damage done to this boss will be determined by the amount of currency this prompt earns.</p>
                     @endif

@@ -35,8 +35,10 @@
             @if ($boss->getLogs(Auth::user())->isNotEmpty())
                 <p>
                     You have dealt {{ $boss->getLogs(Auth::user())->sum('damage') }} damage to this boss.
-                    <br />
-                    That's {{ number_format(($boss->getLogs(Auth::user())->sum('damage') / $boss->logs()->sum('damage')) * 100, 2) }}% of the total damage dealt to this boss!
+                    @if ($boss->getLogs(Auth::user())->sum('damage') > 0)
+                        <br />
+                        That's {{ number_format(($boss->getLogs(Auth::user())->sum('damage') / $boss->logs()->sum('damage')) * 100, 2) }}% of the total damage dealt to this boss!
+                    @endif
                 </p>
                 <table class="table table-sm">
                     <thead>

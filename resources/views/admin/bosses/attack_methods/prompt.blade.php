@@ -33,7 +33,7 @@
             ]) !!}
         </div>
 
-        <div class="form-group prompt-currency hide">
+        <div class="form-group prompt-currency {{ isset($data['currency_id']) ? '' : 'hide' }}">
             {!! Form::label('Currency') !!}
             {!! Form::select('attack_methods_info[prompt][currency_id]', $currencies, $data['currency_id'] ?? null, ['class' => 'form-control', 'placeholder' => 'Choose a Currency']) !!}
         </div>
