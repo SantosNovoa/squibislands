@@ -27,7 +27,8 @@
                     ->where(function ($query) use ($damagePercentage) {
                         $query->whereNull('threshold')->orWhere('threshold', '<=', $damagePercentage);
                     })
-                    ->get()->sortBy('threshold');
+                    ->get()
+                    ->sortBy('threshold');
             @endphp
             @foreach ($rewards as $reward)
                 <tr>
