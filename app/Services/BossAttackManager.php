@@ -203,7 +203,7 @@ class BossAttackManager extends Service {
                 // we need to make a new $assets since we might only have some of the rewards in the current $assets
                 $dataAssets = createAssetsArray(false);
                 $rewards = $boss->rewards()->where('threshold', '<=', $damagePercentage)->get();
-                foreach($rewards as $reward) {
+                foreach ($rewards as $reward) {
                     addAsset($dataAssets, $reward->reward, $reward->quantity);
                 }
                 $userBossLog->update([
