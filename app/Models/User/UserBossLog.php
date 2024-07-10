@@ -12,7 +12,7 @@ class UserBossLog extends Model {
      * @var array
      */
     protected $fillable = [
-        'boss_id', 'user_id', 'data',
+        'boss_id', 'user_id', 'data', 'threshold',
     ];
 
     /**

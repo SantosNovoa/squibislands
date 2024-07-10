@@ -81,7 +81,7 @@
                         @if (!count($boss->rewards))
                             No rewards.
                         @else
-                            @include('boss._boss_rewards', ['boss' => $boss])
+                            @include('boss._boss_rewards', ['boss' => $boss, 'user' => Auth::user()])
                             @if ($boss->allow_users_to_claim_rewards)
                                 @if ($boss->is_rewards_only_for_participants && !$boss->hasUserParticipated(Auth::user()))
                                     <div class="alert alert-danger">
@@ -90,7 +90,7 @@
                                 @else
                                     @if ($boss->hasUserClaimedRewards(Auth::user()))
                                         <div class="alert alert-success">
-                                            <i class="fas fa-check"></i> You have already claimed your rewards.
+                                            <i class="fas fa-check"></i> You have already claimed all available rewards.
                                         </div>
                                     @else
                                         {!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}

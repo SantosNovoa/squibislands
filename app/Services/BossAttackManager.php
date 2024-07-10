@@ -175,9 +175,11 @@ class BossAttackManager extends Service {
             }
 
             // get the % of damage done to the boss overall
+            $userBossLog = UserBossLog::where('user_id', $user->id)->where('boss_id', $boss->id)->first();
             $damagePercentage = (($boss->total_health - $boss->current_health) / $boss->total_health) * 100;
             // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
-            $bossRewards = $boss->rewards->where('threshold', '<=', $damagePercentage);
+            // -1 so 'any' threshold is always valid
+            $bossRewards = $boss->rewards()->where('threshold', '>', $userBossLog?->threshold ?: -1)->where('threshold', '<=', $damagePercentage)->get();
             if ($bossRewards->isEmpty()) {
                 throw new \Exception('There are no rewards to claim.');
             }
@@ -197,13 +199,29 @@ class BossAttackManager extends Service {
 
             flash('You have received: '.createRewardsString($assets));
 
-            UserBossLog::create([
-                'user_id' => $user->id,
-                'boss_id' => $boss->id,
-                'data'    => [
-                    'rewards' => getDataReadyAssets($assets),
-                ],
-            ]);
+            if ($userBossLog) {
+                // we need to make a new $assets since we might only have some of the rewards in the current $assets
+                $dataAssets = createAssetsArray(false);
+                $rewards = $boss->rewards()->where('threshold', '<=', $damagePercentage)->get();
+                foreach($rewards as $reward) {
+                    addAsset($dataAssets, $reward->reward, $reward->quantity);
+                }
+                $userBossLog->update([
+                    'data' => [
+                        'rewards' => getDataReadyAssets($dataAssets),
+                    ],
+                    'threshold' => $damagePercentage,
+                ]);
+            } else {
+                UserBossLog::create([
+                    'user_id' => $user->id,
+                    'boss_id' => $boss->id,
+                    'data'    => [
+                        'rewards' => getDataReadyAssets($assets),
+                    ],
+                    'threshold' => $damagePercentage,
+                ]);
+            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

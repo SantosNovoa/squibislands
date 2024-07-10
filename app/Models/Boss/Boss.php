@@ -402,8 +402,20 @@ class Boss extends Model {
      * @param mixed $user
      */
     public function hasUserClaimedRewards($user) {
+        $damagePercentage = (($this->total_health - $this->current_health) / $this->total_health) * 100;
         return UserBossLog::where('user_id', $user->id)
             ->where('boss_id', $this->id)
+            ->where('threshold', '>=', $damagePercentage)
+            ->exists();
+    }
+
+    /**
+     * Returns whether a user has claimed rewards of a specific threshold for this boss.
+     */
+    public function hasUserClaimedRewardsForThreshold($user, $threshold) {
+        return UserBossLog::where('user_id', $user->id)
+            ->where('boss_id', $this->id)
+            ->where('threshold', '>=', $threshold)
             ->exists();
     }
 }
