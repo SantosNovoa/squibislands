@@ -13,7 +13,11 @@
         <div class="form-group">
             {!! Form::label('Currency') !!}
             <p>You can add ratios after the currencies are selected.</p>
-            {!! Form::select('attack_methods_info[donate_currency][currency_ids][]', $currencies, isset($data['currency_ids']) ? $data['currency_ids'] : null, ['class' => 'form-control method-selectize', 'placeholder' => 'Designated Currency', 'multiple']) !!}
+            {!! Form::select('attack_methods_info[donate_currency][currency_ids][]', $currencies, isset($data['currency_ids']) ? $data['currency_ids'] : null, [
+                'class' => 'form-control method-selectize',
+                'placeholder' => 'Designated Currency',
+                'multiple',
+            ]) !!}
         </div>
 
         @if (isset($data['currency_ids']))
