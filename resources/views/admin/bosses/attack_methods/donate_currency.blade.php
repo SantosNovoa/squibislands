@@ -13,31 +13,35 @@
         <div class="form-group">
             {!! Form::label('Currency') !!}
             <p>You can add ratios after the currencies are selected.</p>
-            {!! Form::select('attack_methods_info[donate_currency][currency_ids][]', $currencies, $data['currency_ids'] ?? null, ['class' => 'form-control method-selectize', 'placeholder' => 'Designated Currency', 'multiple']) !!}
+            {!! Form::select('attack_methods_info[donate_currency][currency_ids][]', $currencies, isset($data['currency_ids']) ? $data['currency_ids'] : null, ['class' => 'form-control method-selectize', 'placeholder' => 'Designated Currency', 'multiple']) !!}
         </div>
 
-        @if (!in_array('any', $data['currency_ids']))
-            @foreach ($data['currency_ids'] as $currencyId)
-                @php $currency = \App\Models\Currency\Currency::find($currencyId); @endphp
-                <div class="form-group">
-                    {!! Form::label('Damage Ratio For ' . $currency->name) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
-                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
-                </div>
+        @if (isset($data['currency_ids']))
+            @if (!in_array('any', $data['currency_ids']))
+                @foreach ($data['currency_ids'] as $currencyId)
+                    @php $currency = \App\Models\Currency\Currency::find($currencyId); @endphp
+                    <div class="form-group">
+                        {!! Form::label('Damage Ratio For ' . $currency->name) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
+                        {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
+                    </div>
 
-                <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>
-            @endforeach
+                    <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>
+                @endforeach
+            @else
+                @foreach ($currencies as $currencyId => $currencyName)
+                    @if ($loop->first)
+                        @continue
+                    @endif
+                    <div class="form-group">
+                        {!! Form::label('Damage Ratio For ' . $currencyName) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
+                        {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
+                    </div>
+
+                    <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>
+                @endforeach
+            @endif
         @else
-            @foreach ($currencies as $currencyId => $currencyName)
-                @if ($loop->first)
-                    @continue
-                @endif
-                <div class="form-group">
-                    {!! Form::label('Damage Ratio For ' . $currencyName) !!} {!! add_help('The ratio of damage done to the boss per currency donated.') !!}
-                    {!! Form::number('attack_methods_info[donate_currency][damage_ratio][' . $currencyId . ']', $data['damage_ratio'][$currencyId] ?? 1, ['class' => 'form-control damage-ratio', 'min' => 0.1, 'step' => 0.01]) !!}
-                </div>
-
-                <p class="mb-1 damage-ratio" data-id="{{ $currencyId }}"></p>
-            @endforeach
+            <div class="alert alert-info">Select currencies to add damage ratio(s).</div>
         @endif
     </div>
 </div>

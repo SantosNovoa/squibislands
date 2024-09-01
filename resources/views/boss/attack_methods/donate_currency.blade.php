@@ -1,10 +1,14 @@
 @php
     $data = $boss->getAttackMethodInformation('donate_currency');
-    $donateableCurrencies = in_array('any', $data['currency_ids'])
-        ? \App\Models\Currency\Currency::pluck('name', 'id')->toArray()
-        : \App\Models\Currency\Currency::whereIn('id', $data['currency_ids'])
-            ->pluck('name', 'id')
-            ->toArray();
+    if (isset($data['currency_ids'])) {
+        $donateableCurrencies = in_array('any', $data['currency_ids'])
+            ? \App\Models\Currency\Currency::pluck('name', 'id')->toArray()
+            : \App\Models\Currency\Currency::whereIn('id', $data['currency_ids'])
+                ->pluck('name', 'id')
+                ->toArray();
+    } else {
+        $donateableCurrencies = [];
+    }
 @endphp
 
 @if (!$boss->getAttackMethodInformation('donate_currency'))
