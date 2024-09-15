@@ -278,7 +278,7 @@ class BossAttackManager extends Service {
         $logs = UserBossAttack::where('user_id', $user->id)
             ->where('boss_id', $boss->id)
             ->where('attack_method', 'daily_login')
-            ->where('created_at', '>=', now()->subDay())
+            ->whereDate('created_at', now())
             ->count();
 
         if ($logs) {
