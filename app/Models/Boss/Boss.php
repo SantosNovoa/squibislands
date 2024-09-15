@@ -440,7 +440,7 @@ class Boss extends Model {
         } else {
             $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round($this->current_health / $this->total_health * 100);
             if ($user) {
-                $currentHealth = $boss->total_health - $boss->getLogs(Auth::user())->sum('damage');
+                $currentHealth = $this->total_health - $this->getLogs(Auth::user())->sum('damage');
             } else {
                 $currentHealth = $this->current_health;
             }
