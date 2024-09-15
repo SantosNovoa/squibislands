@@ -76,6 +76,11 @@
             {!! Form::label('Type') !!} {!! add_help('This is the type of boss.') !!}
             {!! Form::select('type', ['User' => 'Per-User', 'Global' => 'Global'], $boss->type ?? 'Global', ['class' => 'form-control method-selectize']) !!}
         </div>
+        <div class="col form-group">
+            {!! Form::label('is_reversed', 'Is HP Display Reversed?', ['class' => 'form-check-label mb-2']) !!} {!! add_help('If this is checked, the HP display will be reversed, ex. 0% HP will be displayed as 100% HP.') !!}
+            <br />
+            {!! Form::checkbox('is_reversed', 1, $boss->is_reversed, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+        </div>
     </div>
 
     <div class="form-group">

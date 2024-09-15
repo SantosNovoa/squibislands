@@ -22,25 +22,12 @@
                     <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
                 @endif
                 @if ($boss->type == 'User')
-                    @php
-                        $currentDamage = $boss->total_health - $boss->getLogs(Auth::user())->sum('damage');
-                    @endphp
-                    <div class="progress h5">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($currentDamage / $boss->total_health) * 100 }}%" aria-valuenow="{{ $currentDamage }}" aria-valuemin="0"
-                            aria-valuemax="{{ $boss->total_health }}">
-                            {{ $currentDamage }} / {{ $boss->total_health }}
-                        </div>
-                    </div>
+                    {!! $boss->healthBar(false, Auth::user()) !!}
                     <div class="alert alert-warning">
                         <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
                     </div>
                 @else
-                    <div class="progress h5">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}"
-                            aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
-                            {{ $boss->current_health }} / {{ $boss->total_health }}
-                        </div>
-                    </div>
+                    {!! $boss->healthBar() !!}
                 @endif
                 @if ($boss->description)
                     <div class="card mb-3">
@@ -57,7 +44,7 @@
                         @endif
                     </div>
                 @endif
-                <div class="row">
+                <div class="row mb-3">
                     @if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat)
                         <div class="col-md-12">
                             <div class="alert alert-danger">
@@ -102,7 +89,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="collapse mt-3" id="attack-methods">
+                <div class="collapse" id="attack-methods">
                     @if ($boss->attack_methods && count($boss->attack_methods['methods']))
                         <h3>Attack Methods</h3>
                         @foreach ($boss->attack_methods['methods'] as $attackMethod)

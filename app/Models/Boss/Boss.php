@@ -16,7 +16,7 @@ class Boss extends Model {
     protected $fillable = [
         'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health',
         'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'stage_images', 'attack_methods',
-        'is_staff_only', 'allow_users_to_claim_rewards',
+        'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
     ];
 
     /**
@@ -422,4 +422,38 @@ class Boss extends Model {
             ->where('threshold', '>=', $threshold)
             ->exists();
     }
+
+    /**
+     * Returns the Boss's current health progress bar.
+     * 
+     * @param mixed $user
+     * 
+     * @return string
+     */
+    public function healthBar($isDisplay = false, $user = null) {
+        $isReverse = $this->is_reversed;
+        if ($isDisplay) {
+            $width = $isReverse ? 0 : 100;
+            $currentHealth = $isReverse ? 0 : $this->total_health;
+            $innerText = $isReverse ? 0 . ' / ' . $this->total_health : $this->current_health . ' / ' . $this->total_health;
+        } else {
+            $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round($this->current_health / $this->total_health * 100);
+            if ($user) {
+                $currentHealth = $boss->total_health - $boss->getLogs(Auth::user())->sum('damage');
+            } else {
+                $currentHealth = $this->current_health;
+            }
+
+            $innerText = $isReverse ? 
+                '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt."></i> ' .  $this->total_health - $this->current_health . ' / ' . $this->total_health . '</div>' :
+                $this->current_health . ' / ' . $this->total_health;
+        }
+
+        return 
+            '<div class="progress h5">' .
+                '<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: ' . $width . '%" aria-valuenow="' . $currentHealth . '" aria-valuemin="0" aria-valuemax="' . $this->total_health . '">' .
+                    $innerText .
+                '</div>' .
+            '</div>';
+    }   
 }

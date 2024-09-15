@@ -15,14 +15,9 @@
             @if ($boss->is_staff_only)
                 <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
             @endif
-            {!! $boss->name !!}
+            {!! $boss->displayName !!}
         </h3>
-        <div class="progress h5">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}" aria-valuemin="0"
-                aria-valuemax="{{ $boss->total_health }}">
-                {{ $boss->current_health }} / {{ $boss->total_health }}
-            </div>
-        </div>
+        {!! $boss->healthBar() !!}
         @if ($boss->type == 'User')
             <div class="alert alert-warning">
                 <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
@@ -30,7 +25,7 @@
         @endif
         <div class="world-entry-text">
             @if ($boss->start_at || $boss->end_at)
-                <div class="alert alert-info mt-3">
+                <div class="alert alert-info">
                     <i class="fas fa-calendar"></i> This boss is active
                     {!! $boss->start_at ? 'from ' . pretty_date($boss->start_at) : 'from the beginning of time' !!}
                     {!! $boss->end_at ? 'until ' . pretty_date($boss->end_at) : 'until the end of time' !!}.

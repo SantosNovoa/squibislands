@@ -13,7 +13,7 @@
             @if ($boss->is_staff_only)
                 <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
             @endif
-            {!! $boss->name !!}
+            {!! $boss->displayName !!}
             @if ($boss->isActive())
                 <a href="{{ $boss->idUrl }}" class="world-entry-search text-muted">
                     <i class="fas fa-crosshairs"></i> Challenge Boss
@@ -24,11 +24,7 @@
                 </a>
             @endif
         </h3>
-        <div class="progress h5">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 100%" aria-valuenow="{{ $boss->total_health }}" aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
-                {{ $boss->total_health }} / {{ $boss->total_health }}
-            </div>
-        </div>
+        {!! $boss->healthBar(!$boss->is_active) !!}
         @if ($boss->type == 'User')
             <div class="alert alert-warning">
                 <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
@@ -64,7 +60,7 @@
                 </div>
             @endif
             @if (!$boss->isActive())
-                <div class="alert alert-secondary mt-3">
+                <div class="alert alert-secondary">
                     <i class="fas fa-exclamation-triangle"></i> This boss has {{ $boss->current_health < 1 ? 'been defeated' : 'been challenged' }} and is no longer active.
                     @if ($boss->end_at)
                         This boss was active until {!! pretty_date($boss->end_at) !!}.

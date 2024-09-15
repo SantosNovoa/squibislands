@@ -51,8 +51,9 @@ class BossService extends Service {
                 $data['has_image'] = 0;
             }
 
-            $boss = Boss::create(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
-                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards',
+            $boss = Boss::create(Arr::only($data, [
+                'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
             ]));
 
             if (!$this->logAdminAction($user, 'Created Boss', 'Created '.$boss->displayName)) {
@@ -101,8 +102,9 @@ class BossService extends Service {
                 unset($data['image']);
             }
 
-            $boss->update(Arr::only($data, ['name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
-                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards',
+            $boss->update(Arr::only($data, [
+                'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
+                'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
             ]));
 
             // we don't need to worry about unset etc here
@@ -189,6 +191,9 @@ class BossService extends Service {
         }
         if (!isset($data['allow_users_to_claim_rewards'])) {
             $data['allow_users_to_claim_rewards'] = 0;
+        }
+        if (!isset($data['is_reversed'])) {
+            $data['is_reversed'] = 0;
         }
 
         if (isset($data['remove_image'])) {

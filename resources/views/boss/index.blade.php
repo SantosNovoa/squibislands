@@ -31,12 +31,7 @@
                                     <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
                                 </div>
                             @endif
-                            <div class="progress h5">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ ($boss->current_health / $boss->total_health) * 100 }}%" aria-valuenow="{{ $boss->current_health }}"
-                                    aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
-                                    {{ $boss->current_health }} / {{ $boss->total_health }}
-                                </div>
-                            </div>
+                            {!! $boss->healthBar() !!}
                             <a class="btn btn-block btn-primary mt-3" href="{{ $boss->idUrl }}">View Boss</a>
                         </div>
                     </div>

@@ -35,13 +35,9 @@
                                 @if ($boss->is_staff_only)
                                     <i class="fas fa-crown mr-1" data-toggle="tooltip" title="Staff Only"></i>
                                 @endif
-                                {!! $boss->name !!}
+                                {!! $boss->displayName !!}
                             </h1>
-                            <div class="progress h5">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 100%" aria-valuenow="{{ $boss->total_health }}" aria-valuemin="0" aria-valuemax="{{ $boss->total_health }}">
-                                    {{ $boss->total_health }} / {{ $boss->total_health }}
-                                </div>
-                            </div>
+                            {!! $boss->healthBar(!$boss->is_active) !!}
                             <div class="world-entry-text">
                                 @if ($boss->description)
                                     <div class="card">
