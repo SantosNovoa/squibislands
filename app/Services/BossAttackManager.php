@@ -54,6 +54,10 @@ class BossAttackManager extends Service {
                     if (!$damage = $this->attackDailyLogin($boss, $user)) {
                         throw new \Exception('Could not complete attack.');
                     }
+                    if (!isset($damage['damage'])) {
+                        throw new \Exception('Invalid damage.');
+                    }
+                    $damage = $damage['damage'];
                     $logType = 'Daily Login';
                     $log = 'Dealt '.$damage.' damage to '.$boss->name.' using the daily login attack method.';
                     break;
@@ -293,11 +297,16 @@ class BossAttackManager extends Service {
         $min = $data['min_damage'] ?? 0;
         $max = $data['max_damage'] ?? 0;
 
-        if ($max) {
-            return mt_rand($min, $max);
+        if ($min > $max || $min < 0 || $max < 0) {
+            throw new \Exception('Invalid damage range.');
         }
 
-        return $min;
+        // we have to return as an array to allow 0 damage
+        if ($max) {
+            return ['damage' => mt_rand($min, $max)];
+        }
+
+        return ['damage' => $min];
     }
 
     /**

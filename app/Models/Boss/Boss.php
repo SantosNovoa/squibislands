@@ -438,16 +438,17 @@ class Boss extends Model {
             $currentHealth = $isReverse ? 0 : $this->total_health;
             $innerText = $isReverse ? 0 .' / '.$this->total_health : $this->current_health.' / '.$this->total_health;
         } else {
-            $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round($this->current_health / $this->total_health * 100);
             if ($user) {
-                $currentHealth = $this->total_health - $this->getLogs($user)->sum('damage');
+                $width = $isReverse ? round($this->getLogs($user)->sum('damage') / $this->total_health * 100) : round($this->total_health - $this->getLogs($user)->sum('damage') / $this->total_health * 100);
+                $currentHealth = $isReverse ? $this->getLogs($user)->sum('damage') : $this->total_health - $this->getLogs($user)->sum('damage');
             } else {
-                $currentHealth = $this->current_health;
+                $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round($this->current_health / $this->total_health * 100);
+                $currentHealth = $isReverse ? $this->total_health - $this->current_health : $this->current_health;
             }
 
             $innerText = $isReverse ?
-                '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt."></i> '.$this->total_health - $this->current_health.' / '.$this->total_health.'</div>' :
-                $this->current_health.' / '.$this->total_health;
+                '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt."></i> '.$currentHealth.' / '.$this->total_health.'</div>' :
+                $currentHealth.' / '.$this->total_health;
         }
 
         return

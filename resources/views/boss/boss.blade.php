@@ -22,7 +22,7 @@
                     <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
                 @endif
                 @if ($boss->type == 'User')
-                    {!! $boss->healthBar(false, Auth::user()) !!}
+                    {!! $boss->healthBar(false, Auth::user() ?? null) !!}
                     <div class="alert alert-warning">
                         <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
                     </div>
