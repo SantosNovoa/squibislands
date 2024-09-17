@@ -6,6 +6,7 @@ use App\Models\User\UserBossAttack;
 use App\Models\User\UserBossLog;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Boss extends Model {
     /**
@@ -351,7 +352,11 @@ class Boss extends Model {
             return $this->imageUrl;
         }
 
-        $healthPercent = round(($this->current_health / $this->total_health) * 100);
+        if ($this->type == 'Global' || !Auth::check()) {
+            $healthPercent = round(($this->current_health / $this->total_health) * 100);
+        } else {
+            $healthPercent = round((($this->total_health - $this->getLogs(Auth::user())->sum('damage')) / $this->total_health) * 100);
+        }
         $currentImage = null;
         $sortedStages = $this->getStageImages();
         krsort($sortedStages);
