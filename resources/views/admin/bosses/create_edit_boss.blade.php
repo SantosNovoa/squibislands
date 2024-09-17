@@ -25,7 +25,7 @@
     <div class="row">
         <div class="col-md-6 form-group">
             @if ($boss->has_image)
-                <img src="{{ $boss->imageUrl }}" class="img-thumbnail mb-2" style="max-width: 100px; max-height: 100px;">
+                <img src="{{ $boss->imageUrl }}" class="img-thumbnail mb-2" style="max-width: 100px; max-height: 100px; object-fit: contain;">
             @endif
             {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
             <div>{!! Form::file('image') !!}</div>
@@ -49,7 +49,7 @@
             <div class="stage-images">
                 @foreach ($boss->getStageImages() as $key => $stageImage)
                     <div class="form-group d-flex">
-                        <img src="{{ $stageImage['image'] }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                        <img src="{{ $stageImage['image'] }}" class="img-thumbnail w-50" style="max-width: 150px; max-height: 100px; object-fit: contain;">
                         {!! Form::hidden('old_stage_images[' . $key . ']', $stageImage['image']) !!}
                         <div class="form-control my-auto mx-2 text-center">
                             {{ $key }}
@@ -172,10 +172,10 @@
     @include('widgets._boss_loot_select_row', ['showLootTables' => true, 'showRaffles' => true])
 
     <div class="stage-image-row hide">
-        <div class="form-group d-flex">
-            {!! Form::file('stage_images[]') !!}
-            {!! Form::number('stage_image_health[]', null, ['class' => 'form-control mx-2 col-6', 'placeholder' => 'Health %', 'max' => 100, 'min' => 0]) !!}
-            <div class="btn btn-danger remove-stage-image">Remove</div>
+        <div class="form-group d-flex" style="flex-wrap: wrap;">
+            {!! Form::file('stage_images[]', ['class' => 'mb-2']) !!}
+            {!! Form::number('stage_image_health[]', null, ['class' => 'form-control col-5 mr-2 col-sm-12 col-md-5 mb-2', 'placeholder' => 'Health %', 'max' => 100, 'min' => 0]) !!}
+            <div class="btn btn-danger remove-stage-image mb-2">Remove</div>
         </div>
     </div>
 
@@ -200,7 +200,7 @@
             });
 
             $('.add-stage-image').on('click', function() {
-                let stageImageRow = $('.stage-image-row').clone();
+                let stageImageRow = $('.stage-image-row').children().clone();
                 stageImageRow.removeClass('hide');
                 stageImageRow.removeClass('stage-image-row');
                 $('.stage-images').append(stageImageRow);

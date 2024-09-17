@@ -19,7 +19,7 @@
             </div>
             <div class="card-body">
                 @if ($boss->has_image)
-                    <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                    <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3 img-fluid w-75">
                 @endif
                 @if ($boss->type == 'User')
                     {!! $boss->healthBar(false, Auth::user() ?? null) !!}
