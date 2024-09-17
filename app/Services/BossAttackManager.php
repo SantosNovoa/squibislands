@@ -384,7 +384,7 @@ class BossAttackManager extends Service {
             }
 
             // find the damage for this item, based on rarity if it has one
-            $rarity = $item->rarity ? $item->rarity->id : 'no rarity';
+            $rarity = $item->rarity ? $item->rarity->id : 'no_rarity';
             $damage = $data['damage_per_item'][$rarity] ?? 0;
 
             if (!$damage) {
