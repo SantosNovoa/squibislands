@@ -439,15 +439,16 @@ class Boss extends Model {
             $innerText = $isReverse ? 0 .' / '.$this->total_health : $this->current_health.' / '.$this->total_health;
         } else {
             if ($user) {
-                $width = $isReverse ? round($this->getLogs($user)->sum('damage') / $this->total_health * 100) : round($this->total_health - $this->getLogs($user)->sum('damage') / $this->total_health * 100);
+                $width = $isReverse ? round(($this->getLogs($user)->sum('damage') / $this->total_health) * 100) : round((($this->total_health - $this->getLogs($user)->sum('damage')) / $this->total_health) * 100);
                 $currentHealth = $isReverse ? $this->getLogs($user)->sum('damage') : $this->total_health - $this->getLogs($user)->sum('damage');
             } else {
-                $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round($this->current_health / $this->total_health * 100);
+                $width = $isReverse ? round($this->total_health - $this->current_health / $this->total_health * 100) : round(($this->current_health / $this->total_health) * 100);
                 $currentHealth = $isReverse ? $this->total_health - $this->current_health : $this->current_health;
             }
 
             $innerText = $isReverse ?
-                '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt."></i> '.$currentHealth.' / '.$this->total_health.'</div>' :
+                '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt." style="line-height: 0 !important;"></i> '
+                .$currentHealth.' / '.$this->total_health.'</div>' :
                 $currentHealth.' / '.$this->total_health;
         }
 

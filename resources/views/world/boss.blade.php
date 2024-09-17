@@ -37,7 +37,7 @@
                                 @endif
                                 {!! $boss->displayName !!}
                             </h1>
-                            {!! $boss->healthBar(!$boss->is_active) !!}
+                            {!! $boss->healthBar(!$boss->is_active, Auth::user() ?? null) !!}
                             <div class="world-entry-text">
                                 @if ($boss->description)
                                     <div class="card">
