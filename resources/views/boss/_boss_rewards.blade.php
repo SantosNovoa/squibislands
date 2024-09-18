@@ -32,8 +32,8 @@
             @endforeach
         @else
             @php
-                if ($boss->type == 'Global'|| !Auth::check()) {
-                        $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
+                if ($boss->type == 'Global' || !Auth::check()) {
+                    $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
                 } else {
                     $damagePercentage = round((($boss->total_health - $boss->getLogs(Auth::user())->sum('damage')) / $boss->total_health) * 100);
                 }
