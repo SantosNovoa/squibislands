@@ -8,20 +8,22 @@
     {!! breadcrumbs(['World' => 'world', 'Bosses' => 'world/bosses']) !!}
     <h1>Bosses</h1>
 
-    <h3>Current Boss{{ $currentBosses->count() == 1 ? '' : 'es' }}</h3>
-    <div class="row justify-content-center">
-        @foreach ($currentBosses as $currentBoss)
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        @include('world._current_boss_entry', ['boss' => $currentBoss])
+    @if ($currentBosses->count())
+        <h3>Current Boss{{ $currentBosses->count() == 1 ? '' : 'es' }}</h3>
+        <div class="row justify-content-center">
+            @foreach ($currentBosses as $currentBoss)
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            @include('world._current_boss_entry', ['boss' => $currentBoss])
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
+        </div>
 
-    <hr />
+        <hr />
+    @endif
 
     <div>
         {!! Form::open(['method' => 'GET', 'class' => '']) !!}

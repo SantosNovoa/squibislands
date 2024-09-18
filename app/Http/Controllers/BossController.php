@@ -24,7 +24,9 @@ class BossController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getIndex() {
-        $bosses = Boss::active(Auth::user() ?? Auth::user())->orderBy('name')->get();
+        $bosses = Boss::active(Auth::user() ?? null)->get()->filter(function ($boss) {
+            return $boss->isActive();
+        });
 
         return view('boss.index', [
             'bosses' => $bosses,

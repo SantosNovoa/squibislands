@@ -24,7 +24,7 @@
                 </a>
             @endif
         </h3>
-        {!! $boss->healthBar(!$boss->is_active) !!}
+        {!! $boss->healthBar(!$boss->is_active, Auth::user() ?? null) !!}
         @if ($boss->type == 'User')
             <div class="alert alert-warning">
                 <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
@@ -44,12 +44,18 @@
                     @php
                         $sortedStages = $boss->getStageImages();
                         krsort($sortedStages);
+
+                        if ($boss->type == 'Global' || !Auth::check()) {
+                            $healthPercent = round(($boss->current_health / $boss->total_health) * 100);
+                        } else {
+                            $healthPercent = round((($boss->total_health - $boss->getLogs(Auth::user())->sum('damage')) / $boss->total_health) * 100);
+                        }
                     @endphp
                     @foreach ($sortedStages as $health => $stageImage)
-                        @if ($boss->current_health <= $health)
+                        @if ($healthPercent <= $health)
                             <div class="col-md-2">
                                 <a href="{{ $stageImage['image'] }}" data-lightbox="entry" data-title="{{ $health }}">
-                                    <img src="{{ $stageImage['image'] }}" class="img-fluid my-auto" alt="{{ $health }}" />
+                                    <img src="{{ $stageImage['image'] }}" class="img-thumbnail" alt="{{ $health }}" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
                                 </a>
                                 <div class="text-center mt-2">
                                     {{ $health }}% Health

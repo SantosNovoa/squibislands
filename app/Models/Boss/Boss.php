@@ -320,7 +320,9 @@ class Boss extends Model {
      * Returns if this boss is active or not.
      */
     public function isActive() {
-        return $this->is_active && (!$this->start_at || $this->start_at < Carbon::now()) && (!$this->end_at || $this->end_at > Carbon::now());
+        return $this->is_active && 
+            (!$this->start_at || $this->start_at < Carbon::now()) && (!$this->end_at || $this->end_at > Carbon::now()) &&
+            ($this->type == 'User' || ($this->current_health > 0 || ($this->current_health <= 0 && $this->can_attack_after_defeat)));
     }
 
     /**
@@ -445,9 +447,9 @@ class Boss extends Model {
         if ($isDisplay) {
             $width = $isReverse ? 0 : 100;
             $currentHealth = $isReverse ? 0 : $this->total_health;
-            $innerText = $isReverse ? 0 .' / '.$this->total_health : $this->current_health.' / '.$this->total_health;
+            $innerText = $isReverse ? 0 .' / '.$this->total_health : $this->total_health.' / '.$this->total_health;
         } else {
-            if ($user) {
+            if ($this->type == 'User' && $user) {
                 $width = $isReverse ? round(($this->getLogs($user)->sum('damage') / $this->total_health) * 100) : round((($this->total_health - $this->getLogs($user)->sum('damage')) / $this->total_health) * 100);
                 $currentHealth = $isReverse ? $this->getLogs($user)->sum('damage') : $this->total_health - $this->getLogs($user)->sum('damage');
             } else {
@@ -459,6 +461,10 @@ class Boss extends Model {
                 '<div class="d-flex justify-content-center"><i class="fas fa-exchange-alt mr-1" data-toggle="tooltip" title="This Boss has a reversed health bar, meaning the health bar will fill up as damage is dealt." style="line-height: 0 !important;"></i> '
                 .$currentHealth.' / '.$this->total_health.'</div>' :
                 $currentHealth.' / '.$this->total_health;
+        }
+
+        if ($width < 0) {
+            $width = 0;
         }
 
         return

@@ -31,7 +31,7 @@
                                     <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
                                 </div>
                             @endif
-                            {!! $boss->healthBar() !!}
+                            {!! $boss->healthBar(false, Auth::user() ?? null) !!} {{-- false, since if its displayed here its certaintly active --}}
                             <a class="btn btn-block btn-primary mt-3" href="{{ $boss->idUrl }}">View Boss</a>
                         </div>
                     </div>

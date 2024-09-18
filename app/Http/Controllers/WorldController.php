@@ -438,9 +438,14 @@ class WorldController extends Controller {
             $query->sortAlphabetical();
         }
 
+        // make sure isActive attribute is set
+        $currentBosses = Boss::active(Auth::user() ?? null)->get()->filter(function ($boss) {
+            return $boss->isActive();
+        });
+
         return view('world.bosses', [
             'bosses'        => $query->orderBy('id')->paginate(20)->appends($request->query()),
-            'currentBosses' => Boss::active(Auth::user() ?? null)->get(),
+            'currentBosses' => $currentBosses,
         ]);
     }
 
