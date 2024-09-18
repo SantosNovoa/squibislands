@@ -407,10 +407,10 @@ class Boss extends Model {
      * @param mixed $user
      */
     public function hasUserClaimedRewards($user) {
-        if ($boss->type == 'Global' || !Auth::check()) {
+        if ($boss->type == 'Global') {
             $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
         } else {
-            $damagePercentage = round(($boss->getLogs(Auth::user())->sum('damage') / $boss->total_health) * 100);
+            $damagePercentage = round(($boss->getLogs($user)->sum('damage') / $boss->total_health) * 100);
         }
 
         return UserBossLog::where('user_id', $user->id)
