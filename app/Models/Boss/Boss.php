@@ -320,7 +320,7 @@ class Boss extends Model {
      * Returns if this boss is active or not.
      */
     public function isActive() {
-        return $this->is_active && 
+        return $this->is_active &&
             (!$this->start_at || $this->start_at < Carbon::now()) && (!$this->end_at || $this->end_at > Carbon::now()) &&
             ($this->type == 'User' || ($this->current_health > 0 || ($this->current_health <= 0 && $this->can_attack_after_defeat)));
     }
