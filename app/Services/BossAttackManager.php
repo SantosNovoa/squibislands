@@ -180,7 +180,11 @@ class BossAttackManager extends Service {
 
             // get the % of damage done to the boss overall
             $userBossLog = UserBossLog::where('user_id', $user->id)->where('boss_id', $boss->id)->first();
-            $damagePercentage = (($boss->total_health - $boss->current_health) / $boss->total_health) * 100;
+            if ($boss->type == 'Global') {
+                $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
+            } else {
+                $damagePercentage = round(($boss->getLogs($user)->sum('damage') / $boss->total_health) * 100);
+            }
             // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
             // -1 so 'any' threshold is always valid
             $bossRewards = $boss->rewards()->where('threshold', '>', $userBossLog?->threshold ?: -1)->where('threshold', '<=', $damagePercentage)->get();
