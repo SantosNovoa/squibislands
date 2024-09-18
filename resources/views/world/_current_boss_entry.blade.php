@@ -18,6 +18,11 @@
             {!! $boss->displayName !!}
         </h3>
         {!! $boss->healthBar(!$boss->is_active, Auth::user() ?? null) !!}
+        @if ($boss->type == 'User')
+            <div class="alert alert-warning">
+                <i class="fas fa-user"></i> This boss is an individual challenge, with each user having their own battle.
+            </div>
+        @endif
         <div class="world-entry-text">
             @if ($boss->start_at || $boss->end_at)
                 <div class="alert alert-info">
