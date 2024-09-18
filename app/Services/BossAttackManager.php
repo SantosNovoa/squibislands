@@ -421,6 +421,8 @@ class BossAttackManager extends Service {
                 $count -= $quantity;
             }
 
+            $damage *= $requestData['item_quantity']; // multiply by quantity
+
             return $this->commitReturn($damage);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
