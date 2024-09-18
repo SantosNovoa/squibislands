@@ -32,7 +32,7 @@
         @endif
         <div class="world-entry-text">
             @if ($boss->description)
-                <div class="card">
+                <div class="card mb-3">
                     <div class="card-body">
                         {!! $boss->description !!}
                     </div>
@@ -40,7 +40,7 @@
             @endif
             @if ($boss->isActive() && $boss->stage_images && $boss->getCurrentImage() != $boss->imageUrl)
                 <h5>Boss Stages</h5>
-                <div class="row mt-3">
+                <div class="row mt-2">
                     @php
                         $sortedStages = $boss->getStageImages();
                         krsort($sortedStages);
@@ -74,7 +74,7 @@
                 </div>
                 @if ($boss->stage_images)
                     <h5>Boss Stages</h5>
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         @php
                             $sortedStages = $boss->getStageImages();
                             krsort($sortedStages);

@@ -1,7 +1,7 @@
 <h3>Global Boss Information</h3>
 <div class="row">
     <div class="col-md-4">
-        <div class="card">
+        <div class="card mb-3">
             <h5 class="mt-3">Leaderboard</h5>
             @if ($boss->getLeaderboard()->isEmpty())
                 <p>No users have challenged this boss yet.</p>

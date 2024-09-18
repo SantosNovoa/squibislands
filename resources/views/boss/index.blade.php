@@ -24,7 +24,7 @@
                         </div>
                         <div class="card-body">
                             @if ($boss->has_image)
-                                <img src="{{ $boss->imageUrl }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px;">
+                                <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3" style="max-width: 250px; max-height: 250px; object-fit: contain;">
                             @endif
                             @if ($boss->type == 'User')
                                 <div class="alert alert-warning">
