@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+use App\Facades\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
@@ -34,22 +35,34 @@ class UserController extends Controller {
      * Create a new controller instance.
      */
     public function __construct() {
-        parent::__construct();
-        $name = Route::current()->parameter('name');
+    parent::__construct();
+
+    $route = \Route::current();
+
+    // Prevent artisan commands like route:list from crashing
+    if ($route && $route->parameter('name')) {
+        $name = $route->parameter('name');
         $this->user = User::where('name', $name)->first();
-        // check previous usernames (only grab the latest change)
+
+        // Check previous usernames (only grab the latest change)
         if (!$this->user) {
-            $this->user = UserUpdateLog::whereIn('type', ['Username Changed', 'Name/Rank Change'])->where('data', 'like', '%"old_name":"'.$name.'"%')->orderBy('id', 'DESC')->first()->user ?? null;
+            $this->user = UserUpdateLog::whereIn('type', ['Username Changed', 'Name/Rank Change'])
+                ->where('data', 'like', '%"old_name":"'.$name.'"%')
+                ->orderBy('id', 'DESC')
+                ->first()
+                ->user ?? null;
         }
+
         if (!$this->user) {
             abort(404);
         }
 
         View::share('sublists', Sublist::orderBy('sort', 'DESC')->get());
-
         $this->user->updateCharacters();
         $this->user->updateArtDesignCredits();
     }
+}
+
 
     /**
      * Shows a user's profile.
@@ -70,11 +83,13 @@ class UserController extends Controller {
         }
 
         return view('user.profile', [
-            'user'       => $this->user,
-            'name'       => $name,
-            'items'      => $this->user->items()->where('count', '>', 0)->orderBy('user_items.updated_at', 'DESC')->take(4)->get(),
-            'characters' => $characters,
-            'aliases'    => $aliases->orderBy('is_primary_alias', 'DESC')->orderBy('site')->get(),
+            'user'                  => $this->user,
+            'name'                  => $name,
+            'items'                 => $this->user->items()->where('count', '>', 0)->orderBy('user_items.updated_at', 'DESC')->take(4)->get(),
+            'characters'            => $characters,
+            'user_enabled'          => Settings::get('WE_user_locations'),
+            'user_factions_enabled' => Settings::get('WE_user_factions'),
+            'aliases'               => $aliases->orderBy('is_primary_alias', 'DESC')->orderBy('site')->get(),
         ]);
     }
 
