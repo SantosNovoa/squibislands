@@ -126,7 +126,9 @@
         {!! Form::close() !!}
     </div>
 
-    <div class="card p-3 mb-2">
+@include('widgets._staff_profile_form', ['user' => $user, 'adminView' => 1])
+
+<div class="card p-3 mb-2">
         <h3>Birthdate</h3>
         @if ($user->birthday)
             <p>This user's birthday is set to {{ format_date($user->birthday, false) }}.</p>
@@ -173,4 +175,11 @@
             <p>No aliases found.</p>
         @endif
     </div>
+@endsection
+
+@section('scripts')
+@parent
+    @if(Auth::user()->isStaff)
+        @include('js._website_links_js')
+    @endif
 @endsection
