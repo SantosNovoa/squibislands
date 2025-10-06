@@ -14,7 +14,9 @@ class ParsePostRequestFields {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function handle(Request $request, Closure $next) {
-        if ($request->isMethod('post')) {
+        if (!$request->isMethod('post')) {
+        return $next($request);
+        }
             $excludedFields = ['_token', 'password', 'email', 'description', 'text', 'criteria'];
             $strippedFields = ['name', 'title'];
 
@@ -41,7 +43,7 @@ class ParsePostRequestFields {
             }
 
             $request->merge($parsedFields);
-        }
+        
 
         return $next($request);
     }
