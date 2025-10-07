@@ -13,6 +13,8 @@ use App\Models\User\User;
 use App\Services\ItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Recipe\Recipe;
+
 
 class ItemController extends Controller {
     /*
@@ -344,9 +346,16 @@ class ItemController extends Controller {
             abort(404);
         }
 
+        if (class_exists(\App\Models\Recipe\Recipe::class)) {
+            $recipes = \App\Models\Recipe\Recipe::orderBy('name')->pluck('name', 'id');
+        } else {
+            $recipes = collect(); // fallback to an empty collection
+        }
+
         return view('admin.items.edit_tag', [
             'item' => $item,
             'tag'  => $tag,
+            'recipes' => $recipes,
         ] + $tag->getEditData());
     }
 

@@ -1,3 +1,6 @@
+@php
+    $visible = $visible ?? true;
+@endphp
 <div class="row world-entry">
     @if ($imageUrl)
         <div class="col-md-3 world-entry-image">
