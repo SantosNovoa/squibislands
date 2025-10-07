@@ -18,6 +18,7 @@ use App\Models\User\User;
 use App\Models\Recipe\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Character\CharacterTransformation as Transformation;
 
 class WorldController extends Controller {
     /*
@@ -543,8 +544,7 @@ class WorldController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecipes(Request $request)
-    {
+    public function getRecipes(Request $request) {
         $query = Recipe::query();
         $data = $request->only(['name', 'sort']);
         if(isset($data['name']))
@@ -583,8 +583,7 @@ class WorldController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecipe($id)
-    {
+    public function getRecipe($id) {
         $recipe = Recipe::where('id', $id)->first();
         if(!$recipe) abort(404);
 
@@ -593,6 +592,22 @@ class WorldController extends Controller {
             'imageUrl' => $recipe->imageUrl,
             'name' => $recipe->displayName,
             'description' => $recipe->parsed_description,
+        ]);
+    }
+     /**
+     * Shows the Transformations page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTransformations(Request $request) {
+        $query = Transformation::query();
+        $name = $request->get('name');
+        if ($name) {
+            $query->where('name', 'LIKE', '%'.$name.'%');
+        }
+
+        return view('world.transformations', [
+            'transformations' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
 }

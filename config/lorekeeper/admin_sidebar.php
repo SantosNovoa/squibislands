@@ -216,7 +216,11 @@ return [
             ],
             [
                 'name' => 'Recipes',
-                'url' => 'admin/data/recipes'
+                'url'  => 'admin/data/recipes'
+            ],
+            [
+                'name' => 'Transformations',
+                'url'  => 'admin/data/transformations',
             ],
         ]
     ],

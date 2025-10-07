@@ -16,6 +16,7 @@ use App\Models\Species\Subtype;
 use App\Models\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Character\CharacterTransformation as Transformation;
 
 class BrowseController extends Controller {
     /*
@@ -226,7 +227,7 @@ class BrowseController extends Controller {
         }
 
         // Search only main images
-        if (!$request->get('search_images')) {
+        if (!$request->get('search_images') && !$request->get('transformation_id') && !$request->get('has_transformation')) {
             $imageQuery->whereIn('id', $query->pluck('character_image_id')->toArray());
         }
 
@@ -245,7 +246,13 @@ class BrowseController extends Controller {
                 });
             }
         }
-        if ($request->get('artist')) {
+        if ($request->get('transformation_id')) {
+            $imageQuery->where('transformation_id', $request->get('transformation_id'));
+        }
+        if ($request->get('has_transformation')) {
+            $imageQuery->whereNotNull('transformation_id');
+        }
+        if($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             $imageQuery->whereHas('artists', function ($query) use ($artist) {
                 $query->where('user_id', $artist->id);
@@ -337,6 +344,7 @@ class BrowseController extends Controller {
             'features'    => Feature::getDropdownItems(),
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'transformations' => [0 => 'Any '.ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -566,7 +574,7 @@ class BrowseController extends Controller {
         }
 
         // Search only main images
-        if (!$request->get('search_images')) {
+        if (!$request->get('search_images') && !$request->get('transformation_id') && !$request->get('has_transformation')) {
             $imageQuery->whereIn('id', $query->pluck('character_image_id')->toArray());
         }
 
@@ -585,7 +593,13 @@ class BrowseController extends Controller {
                 });
             }
         }
-        if ($request->get('artist')) {
+        if ($request->get('transformation_id')) {
+            $imageQuery->where('transformation_id', $request->get('transformation_id'));
+        }
+        if ($request->get('has_transformation')) {
+            $imageQuery->whereNotNull('transformation_id');
+        }
+        if($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             $imageQuery->whereHas('artists', function ($query) use ($artist) {
                 $query->where('user_id', $artist->id);
@@ -660,6 +674,7 @@ class BrowseController extends Controller {
             'sublist'     => $sublist,
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'transformations' => [0 => 'Any '.ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);
     }
 }
