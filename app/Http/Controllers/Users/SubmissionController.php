@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Users;
 
 use App\Facades\Settings;
+use DB;
+use Config;
+use App\Models\Submission\SubmissionCharacter;
+use App\Models\Recipe\Recipe;
 use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
@@ -371,6 +375,7 @@ class SubmissionController extends Controller {
             'items'                 => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies'            => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
             'raffles'               => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'recipes'               => Recipe::orderBy('name')->pluck('name', 'id'),
             'page'                  => 'submission',
             'expanded_rewards'      => config('lorekeeper.extensions.character_reward_expansion.expanded'),
             'awards'                => Award::orderBy('name')->released()->where('is_user_owned', 1)->pluck('name', 'id'),
@@ -406,6 +411,7 @@ class SubmissionController extends Controller {
             'items'                 => Item::orderBy('name')->released()->pluck('name', 'id'),
             'inventory'             => $inventory,
             'raffles'               => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'recipes'               => Recipe::orderBy('name')->pluck('name', 'id'),
             'page'                  => 'submission',
             'expanded_rewards'      => config('lorekeeper.extensions.character_reward_expansion.expanded'),
             'selectedInventory'     => isset($submission->data['user']) ? parseAssetData($submission->data['user']) : null,

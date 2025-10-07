@@ -116,7 +116,11 @@ return [
                 'name' => 'Award Grants',
                 'url'  => 'admin/grants/awards',
             ],
-        ],
+            [
+                'name' => 'Recipe Grants',
+                'url' => 'admin/grants/recipes'
+            ],
+        ]
     ],
     'Masterlist' => [
         'power' => 'manage_characters',
@@ -210,7 +214,11 @@ return [
                 'name' => 'Items',
                 'url'  => 'admin/data/items',
             ],
-        ],
+            [
+                'name' => 'Recipes',
+                'url' => 'admin/data/recipes'
+            ],
+        ]
     ],
     'WorldExpansion' => [
         'power' => 'manage_world',

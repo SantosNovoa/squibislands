@@ -74,8 +74,8 @@
         {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm']) !!}
 
         <h2>Rewards</h2>
-        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true])
-        @if ($submission->prompt_id)
+        @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+        @if($submission->prompt_id)
             <div class="mb-3">
                 @include('home._prompt', ['prompt' => $submission->prompt, 'staffView' => true])
             </div>
@@ -219,14 +219,14 @@
                         </td>
                     @endif
 
-                    <td class="d-flex align-items-center">
-                        {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2  character-rewardable-quantity']) !!}
-                        <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        @include('widgets._loot_select_row', ['showLootTables' => true, 'showRaffles' => true])
+                <td class="d-flex align-items-center">
+                    {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2  character-rewardable-quantity']) !!}
+                    <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
         <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -276,10 +276,10 @@
 @endsection
 
 @section('scripts')
-    @parent
-    @if ($submission->status == 'Pending')
-        @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
-        @include('js._character_select_js')
+@parent
+@if($submission->status == 'Pending')
+    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+    @include('js._character_select_js')
 
         <script>
             $(document).ready(function() {
