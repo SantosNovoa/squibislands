@@ -33,8 +33,6 @@ class Kernel extends ConsoleKernel {
             ->everyMinute();          
         $schedule->command('distribute-birthday-rewards')
             ->monthly();
-        $schedule->command('clean-donations')
-            ->everyMinute();
     }
 
     /**

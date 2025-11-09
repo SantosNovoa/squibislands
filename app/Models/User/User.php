@@ -2,7 +2,6 @@
 
 namespace App\Models\User;
 
-Use Config;
 use App\Models\Award\AwardLog;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterBookmark;
@@ -590,34 +589,6 @@ class User extends Authenticatable implements MustVerifyEmail {
             return true;
         }
     }
-
-    /**
-     * Check if user can collect from the donation shop.
-     *
-     * @return int
-     */
-
-    public function getDonationShopCooldownAttribute() {
-        $log = ItemLog::where('recipient_id', $this->id)
-            ->where('log_type', 'Collected from Donation Shop')
-            ->latest()
-            ->first();
-
-        if (!$log) return null;
-
-        $todayMidnight = Carbon::today();
-        $tomorrowMidnight = Carbon::tomorrow();
-
-        // If last collected before today → no cooldown
-        if ($log->created_at->lt($todayMidnight)) {
-            return null;
-        }
-
-        // Otherwise return the Carbon time of next reset (midnight)
-        return $tomorrowMidnight;
-    }
-
-
 
     /**
      * Checks if the user can change faction.

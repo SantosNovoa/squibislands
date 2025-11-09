@@ -75,7 +75,7 @@ class GrantController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postItems(Request $request, InventoryManager $service) {
-        $data = $request->only(['names', 'item_ids', 'quantities', 'data', 'disallow_transfer', 'direct_donate', 'notes']);
+        $data = $request->only(['names', 'item_ids', 'quantities', 'data', 'disallow_transfer', 'notes']);
         if ($service->grantItems($data, Auth::user())) {
             flash('Items granted successfully.')->success();
         } else {
@@ -107,7 +107,8 @@ class GrantController extends Controller {
      * @param  App\Services\InventoryManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRecipes(Request $request, RecipeService $service) {
+    public function postRecipes(Request $request, RecipeService $service)
+    {
         $data = $request->only(['names', 'recipe_ids', 'data']);
         if($service->grantRecipes($data, Auth::user())) {
             flash('Recipes granted successfully.')->success();

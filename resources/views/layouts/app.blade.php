@@ -102,10 +102,10 @@
         <main class="container-fluid">
             <div class="row">
 
-                {{-- <div class="sidebar col-lg-2" id="sidebar">
+                <div class="sidebar col-lg-2" id="sidebar">
                     @yield('sidebar')
-                </div> --}}
-                <div class="main-content p-4">
+                </div>
+                <div class="main-content col-lg-8 p-4">
                     <div>
                         @if (Settings::get('is_maintenance_mode'))
                             <div class="alert alert-secondary">
@@ -127,21 +127,13 @@
                         @yield('content')
                     </div>
 
-                    {{-- <div class="site-footer mt-4" id="footer">
+                    <div class="site-footer mt-4" id="footer">
                         @include('layouts._footer')
-                    </div> --}}
+                    </div>
                 </div>
             </div>
 
         </main>
-
-        <div class="sidebar" id="sidebar">
-            @yield('sidebar')
-        </div>
-
-        <div class="site-footer mt-4" id="footer">
-            @include('layouts._footer')
-         </div>
 
 
         <div class="modal fade" id="modal" tabindex="-1" role="dialog">
