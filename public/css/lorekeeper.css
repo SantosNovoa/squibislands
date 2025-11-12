@@ -12,6 +12,14 @@
     font-family: Lato;
     src: url(../webfonts/Lato-Regular.ttf)
 }
+@font-face {
+    font-family: DynaPuff;
+    src: url(../webfonts/DynaPuff-VariableFont_wdth\,wght.ttf);
+}
+@font-face {
+    font-family: CherryBombOne;
+    src: url(../webfonts/CherryBombOne-Regular.ttf)
+}
 
 /**************************************************************************************************
 
@@ -22,7 +30,7 @@
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: DynaPuff, serif;
     font-weight: bold;
 }
 
@@ -81,31 +89,56 @@ body {
 **************************************************************************************************/
 
 #app {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 310px 1fr 310px; /* three columns */
+    grid-template-rows: auto auto 1fr auto; /* four rows */
+    gap: 25px;
     min-height: 100vh;
     background-color: #ddd;
+    background-image: url(../images/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-attachment: fixed;
 }
+
 
 main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     word-wrap: break-word;
+    grid-area: 3 / 2 / 4 / 3;
+    background-color: rgba(255, 255, 255, 0);
+    border-radius: 15px;
 }
 
 main > .row {
     flex-grow: 1;
 }
 
+
 .main-content {
-    background-color: white;
-    box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
+    background-color: rgba(240, 240, 240, 0.521);
     display: flex;
     flex-direction: column;
+    width: 100%;
+    border-radius: 15px;
 }
 
 /* Header */
+
+#header {
+   grid-area: 1 / 1 / 2 / 4; 
+}
+
+#headerNav {
+    background: linear-gradient(to right, rgba(4, 18, 65, 0.8), rgba(7, 31, 109, 0.8), rgba(10, 45, 160, 0.8), rgba(42, 136, 252, 0.8)) !important;
+}
+
+.nav-link {
+    color: white !important;
+}
 
 .site-header-image {
     /*background-color: #eee;*/
@@ -116,43 +149,45 @@ main > .row {
 
 .navbar .navbar-brand, .navbar .nav-item {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: CherryBombOne, serif;
 }
 
 .navbar .row { width: 100%; }
 
+nav {
+   grid-area: 2 / 2 / 3 / 3;
+   border-radius: 15px;
+}
+
 /* Sidebar */
 
 .sidebar {
-    text-align: right;
+    text-align: center;
     padding-right: 0px;
+    grid-area: 3 / 1 / 4 / 2;
 }
 
 .sidebar ul {
     list-style-type: none;
-    display: inline-block;
-    padding-top: 30px;
 }
 
 .sidebar ul li {
     background-color: white;
-    border-top-left-radius: .25rem;
-    border-bottom-left-radius: .25rem;
     margin-bottom: 1em;
     padding: 0.4em 0;
-
+    border-radius: 15px;
     box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
 }
 
 .sidebar .sidebar-header,
 .sidebar .sidebar-section .sidebar-section-header {
     text-transform: uppercase;
-    font-family: Roboto Condensed, serif;
+    font-family: DynaPuff, serif !important;
     font-weight: bold;
 }
 
 .sidebar .sidebar-header {
-    background-color: #343a40;
+    background-color:  rgba(7, 31, 109, 0.8);
 }
 .sidebar .sidebar-header a {
     color: white;
@@ -175,7 +210,6 @@ main > .row {
 }
 .sidebar a:hover {
     color: #16181b;
-    background-color: #f8f9fa;
 }
 .sidebar a:hover, .sidebar a:active, .sidebar a:focus, .sidebar a:link {
     text-decoration: none;
@@ -287,6 +321,10 @@ main > .row {
 }
 
 /* Footer */
+
+#footer {
+    grid-area: 4 / 1 / 5 / 4;
+}
 
 .site-footer {
     text-align: center;
@@ -778,6 +816,22 @@ tr.accountbound {
     margin: 1%;
     max-width: 90%;
 }
+
+@keyframes bounce {
+    70% { transform: translateY(0) scale(1, 1); }
+    80% { transform: translateY(-15%) scale(1.05, 0.95); } 
+    90% { transform: translateY(0) scale(0.95, 1.05); }  
+    95% { transform: translateY(-7%) scale(1.02, 0.98); } 
+    97% { transform: translateY(0) scale(0.98, 1.02); }
+    99% { transform: translateY(-3%) scale(1.01, 0.99); }
+    100% { transform: translateY(0) scale(1, 1); }
+}
+
+#header #logo {
+    animation: bounce 6s ease-in-out infinite; 
+    transform-origin: center bottom; 
+}
+
 /* RECIPES ***************************************************************************************/
 .recipe-image {
     width: 150px;

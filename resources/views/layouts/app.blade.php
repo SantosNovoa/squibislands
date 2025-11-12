@@ -92,7 +92,7 @@
 <body>
     <div id="app">
         <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');">
-            <img id="logo" src="{{ asset('images/logo.png') }}">
+            <a href="{{ url('/') }}"><img id="logo" src="{{ asset('images/logo.png') }}"></a>
         </div>
         @include('layouts._nav')
         @if (View::hasSection('sidebar'))
@@ -101,11 +101,7 @@
 
         <main class="container-fluid">
             <div class="row">
-
-                <div class="sidebar col-lg-2" id="sidebar">
-                    @yield('sidebar')
-                </div>
-                <div class="main-content col-lg-8 p-4">
+                <div class="main-content p-4">
                     <div>
                         @if (Settings::get('is_maintenance_mode'))
                             <div class="alert alert-secondary">
@@ -126,14 +122,18 @@
                         @include('flash::message')
                         @yield('content')
                     </div>
-
-                    <div class="site-footer mt-4" id="footer">
-                        @include('layouts._footer')
-                    </div>
                 </div>
             </div>
 
         </main>
+
+        <div class="sidebar" id="sidebar">
+                    @yield('sidebar')
+        </div>
+
+        <div class="site-footer mt-4" id="footer">
+                        @include('layouts._footer')
+        </div>
 
 
         <div class="modal fade" id="modal" tabindex="-1" role="dialog">
