@@ -469,8 +469,7 @@ function LiveClock($LCtimezone = NULL)
     $LCtimezone = Carbon\Carbon::now($date);
 
     $LCcode = '<span class="LiveClock" LiveClockOffset="'.$LCtimezone->utcOffset().'"></span>';
-    $LCtz = '<abbr data-toggle="tooltip" title="UTC'.$LCtimezone->timezone->toOffsetName().'">' . strtoupper($LCtimezone->timezone->getAbbreviatedName($LCtimezone->isDST())) . '</abbr>';
-    return $LCcode . " " . $LCtz;
+    return $LCcode;
 }
 
 /**

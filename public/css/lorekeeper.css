@@ -119,7 +119,7 @@ main > .row {
 
 
 .main-content {
-    background-color: rgba(240, 240, 240, 0.521);
+    background-color: rgba(203, 232, 249, 0.7);
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -155,8 +155,35 @@ main > .row {
 .navbar .row { width: 100%; }
 
 nav {
-   grid-area: 2 / 2 / 3 / 3;
    border-radius: 15px;
+}
+
+.nav-container  {
+  grid-area: 2 / 2 / 3 / 3;
+}
+
+.clock-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 2.4rem;
+  right: 0;
+  top: 210px;
+}
+
+.time {
+  padding: 8px 2px 8px 8px;
+  border-radius: 15px 0 0;
+  background-color: rgba(7, 31, 109, 0.8);
+  font-family: CherryBombOne, serif;
+  color: white;
+}
+
+.am-pm {
+  padding: 8px 8px 8px 2px;
+  border-radius: 0 15px 0 0;
+  background-color: rgba(7, 31, 109, 0.8);
+  font-family: CherryBombOne, serif;
+  color: white;
 }
 
 /* Sidebar */
@@ -172,7 +199,7 @@ nav {
 }
 
 .sidebar ul li {
-    background-color: white;
+    background-color: rgba(222, 243, 255, 0.9);
     margin-bottom: 1em;
     padding: 0.4em 0;
     border-radius: 15px;
@@ -239,6 +266,51 @@ nav {
 }
 
 @media (max-width: 991px) {
+    #app {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    main {
+        grid-area: unset;
+        margin: 0;
+        padding: 15px;
+    }
+    
+    nav {
+        grid-area: unset;
+        margin: 0;
+    }
+    
+    .sidebar {
+        grid-area: unset;
+        position: fixed; /* Changed from absolute */
+        padding-left: 0px;
+        text-align: left;
+        background-color: #ddd;
+        z-index: 3;
+        right: 0px;
+        bottom: 0px;
+        top: 0px;
+        overflow-y: scroll;
+        width: 250px; /* Add a fixed width */
+        left: -250px; /* Hide it off-screen by its width */
+        transition: left 0.2s;
+    }
+    
+    .sidebar.active {
+        left: 0%; /* Slide in when active */
+    }
+    
+    #header {
+        grid-area: unset;
+    }
+    
+    #footer {
+        grid-area: unset;
+    }
+
     .site-header-image {
         display: none;
     }
@@ -250,9 +322,10 @@ nav {
     .site-mobile-header {
         display: block;
         position: fixed;
-		top: 3.45rem;
+        top: 3.45rem;
         z-index: 4;
         width: 100%;
+        background-color: #ddd; /* Add background so it's visible */
     }
 
     #headerNav {
@@ -267,23 +340,6 @@ nav {
 
     main.container-fluid > .row {
         position: relative;
-    }
-    .sidebar {
-        position: absolute;
-        padding-left: 0px;
-        text-align: left;
-        background-color: #ddd;
-        z-index: 3;
-        right: 0px;
-        bottom: 0px;
-        top: 0px;
-        overflow-y: scroll;
-
-        left: -100%;
-        transition: left 0.2s;
-    }
-    .sidebar.active {
-        left: 0%;
     }
 
     .sidebar > ul {
@@ -302,24 +358,22 @@ nav {
         border-radius: 0;
         margin-bottom: 1em;
         padding: 0.4em 0;
-
         box-shadow: none;
     }
 
-	/*fix for screen being over-wide on mobile*/
-	.row {
-		margin:0; max-width:100%;
-	}
+    /*fix for screen being over-wide on mobile*/
+    .row {
+        margin:0; max-width:100%;
+    }
 
-	.container-fluid {
-		padding:0px;
-	}
+    .container-fluid {
+        padding:0px;
+    }
 
-	.site-footer .navbar .navbar-nav {
-		flex-wrap: wrap; justify-content: center;
-	}
+    .site-footer .navbar .navbar-nav {
+        flex-wrap: wrap; justify-content: center;
+    }
 }
-
 /* Footer */
 
 #footer {
@@ -371,11 +425,15 @@ nav {
 }
 
 .nav-tabs .nav-link.active {
-    background-color: transparent;
+    background-color: #194581;
 }
 .nav-tabs .nav-link {
     text-transform: uppercase;
     font-family: Roboto Condensed, serif;
+}
+
+.nav-tabs {
+    background-color: rgb(31 70 129 / 80%);
 }
 
 .display-user, .display-character {
@@ -580,8 +638,20 @@ tr.outflow {
     max-width: 100%;
 }
 
+.card {
+    border: none !important;
+}
+
+.card-header {
+    background-color: rgb(31 70 129 / 80%) !important;
+}
+
+.card-body {
+    background-color: rgba(222, 243, 255, 0.9) !important;
+}
+
 .character-bio .nav-tabs.card-header-tabs .active {
-    background-color: white;
+    background-color: #194581;
 }
 
 /* INVENTORY *************************************************************************************/
@@ -770,6 +840,10 @@ tr.accountbound {
     width: 100px;
 }
 
+.img-thumbnail {
+    background-color: #f8fafc00;
+    border: none !important;
+}
 
 @media (min-width: 768px) {
     .fb-md-50 { flex-basis:50%; }

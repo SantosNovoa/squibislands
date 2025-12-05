@@ -36,7 +36,7 @@ return [
     | site wherever the name needs to be displayed.
     |
     */
-    'site_name'                                         => 'Lorekeeper',
+    'site_name'                                         => 'Squib Islands',
 
     /*
     |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ return [
     | It is not, however, displayed on the site itself. This should be kept short and snappy!
     |
     */
-    'site_desc'                                         => 'A Lorekeeper ARPG',
+    'site_desc'                                         => 'A Closed Species ARPG',
 
     /*
     |--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ return [
 
     'reset_character_status_on_transfer'                => 0,
     'reset_character_profile_on_transfer'               => 0,
-    'clear_myo_slot_name_on_approval'                   => 0,
+    'clear_myo_slot_name_on_approval'                   => 1,
 
     /*
     |--------------------------------------------------------------------------
@@ -180,7 +180,7 @@ return [
     |
     */
     'store_masterlist_fullsizes'                        => 0,
-    'masterlist_fullsizes_cap'                          => 0,
+    'masterlist_fullsizes_cap'                          => 2000,
     'masterlist_fullsizes_format'                       => null,
 
     /*
