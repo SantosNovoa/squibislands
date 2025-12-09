@@ -256,7 +256,7 @@ nav {
 
 @media (max-width: 767px) {
 	.site-mobile-header {
-		top: 54px !important;
+		top: 53px !important;
     }
 
     .timestamp {
@@ -281,21 +281,30 @@ nav {
     nav {
         grid-area: unset;
         margin: 0;
+        border-radius: 0;
+    }
+
+    .clock-container {
+        display: none;
+    }
+
+    .main-content {
+        border-radius: 0;
     }
     
     .sidebar {
         grid-area: unset;
-        position: fixed; /* Changed from absolute */
+        position: fixed;
         padding-left: 0px;
         text-align: left;
         background-color: #ddd;
-        z-index: 3;
+        z-index: 6; /* CHANGED: Higher than navbar (5) and mobile header (4) */
         right: 0px;
         bottom: 0px;
-        top: 0px;
+        top: 6.45rem; /* CHANGED: Start below fixed navbar + mobile header */
         overflow-y: scroll;
-        width: 250px; /* Add a fixed width */
-        left: -250px; /* Hide it off-screen by its width */
+        width: 100%; /* CHANGED: Full width instead of 250px */
+        left: -100%; /* CHANGED: Hide full width off-screen */
         transition: left 0.2s;
     }
     
@@ -325,13 +334,14 @@ nav {
         top: 3.45rem;
         z-index: 4;
         width: 100%;
-        background-color: #ddd; /* Add background so it's visible */
+        background-color: rgba(7, 31, 109, 0.8) !important;
     }
 
     #headerNav {
         position: fixed;
         z-index: 5;
         width: 100%;
+        background: linear-gradient(to right, rgb(4, 18, 65), rgb(7, 31, 109), rgb(10, 45, 160), rgb(42, 137, 252)) !important;
     }
 
     main.container-fluid {
