@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Sales\Sales;
+use App\Models\News;
 use App\Models\SitePage;
 use App\Models\Species\Species;
 use App\Models\Character\Character;
@@ -55,6 +56,7 @@ class HomeController extends Controller {
             'featuredChars'       => $featured,
             'featuredFirst'       => Arr::first($specieses),
             'saleses'             => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
+            'newses'              => News::visible()->orderBy('updated_at', 'DESC')->take(2)->get(),
         ]);
     }
 
