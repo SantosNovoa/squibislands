@@ -77,6 +77,10 @@
                     {!! Form::label('is_gift_writing_allowed', 'Gift Writing Status: ') !!}
                     {!! Form::select('is_gift_writing_allowed', [0 => 'Any', 2 => 'Ask First', 1 => 'Yes', 3 => 'Yes OR Ask First'], Request::get('is_gift_writing_allowed'), ['class' => 'form-control', 'style' => 'width: 250px']) !!}
                 </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('theme', ucfirst(__('character_theme.theme')).': ') !!} 
+                    {!! Form::text('theme', Request::get('theme'), ['class'=> 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a '. ucfirst(__('character_theme.theme'))]) !!}
+                </div>
             @endif
             <br />
             {{-- Setting the width and height on the toggles as they don't seem to calculate correctly if the div is collapsed. --}}
@@ -173,6 +177,9 @@
                     </div>
                     <div class="small">
                         {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!} ・ {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $character->displayOwner !!}
+                        @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                            {!! $character->image->theme ? ' ・ ' . $character->image->theme : '' !!}
+                        @endif
                     </div>
                 </div>
             @endforeach
@@ -187,6 +194,9 @@
                 <th>Name</th>
                 <th>Rarity</th>
                 <th>{{ ucfirst(__('lorekeeper.species')) }}</th>
+                @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                    <th>{{ucfirst(__('character_theme.theme'))}}</th>
+                @endif
                 <th>Created</th>
             </tr>
         </thead>
@@ -201,6 +211,9 @@
                     </td>
                     <td>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'None' !!}</td>
                     <td>{!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}</td>
+                    @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                        <td>{!! $character->image->theme ? $character->image->theme : '---' !!}</td>
+                    @endif
                     <td>{!! format_date($character->created_at) !!}</td>
                 </tr>
             @endforeach

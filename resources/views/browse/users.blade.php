@@ -46,7 +46,7 @@
         {!! Form::close() !!}
     </div>
     {!! $users->render() !!}
-    <div class="mb-4 logs-table">
+    {{-- <div class="mb-4 logs-table">
         <div class="logs-table-header">
             <div class="row">
                 <div class="col-12 col-md-4">
@@ -83,7 +83,36 @@
                 </div>
             @endforeach
         </div>
-    </div>
+    </div> --}}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Primary Alias</th>
+                <th>Rank</th>
+                <th>Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($users as $user)
+                <tr>
+                    <td>
+                        {!! $user->displayName !!}
+                    </td>
+                    <td>
+                        {!! $user->displayAlias !!}
+                    </td>
+                    <td>
+                        {!! $user->rank->displayName !!}
+                    </td>
+                    <td>
+                        {!! pretty_date($user->created_at, false) !!}
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
     {!! $users->render() !!}
 
     <div class="text-center mt-4 small text-muted">{{ $users->total() }} result{{ $users->total() == 1 ? '' : 's' }} found.</div>

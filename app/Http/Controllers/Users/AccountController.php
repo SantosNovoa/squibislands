@@ -85,7 +85,7 @@ class AccountController extends Controller {
             'user_faction_enabled' => Settings::get('WE_user_factions'),
             'char_enabled'         => Settings::get('WE_character_locations'),
             'char_faction_enabled' => Settings::get('WE_character_factions'),
-            'location_interval'    => $interval[Settings::get('WE_change_timelimit')],
+            'location_interval' => $interval[Settings::get('WE_change_timelimit') ?? 0] ?? 'never',
             'links' => $links ? $links : null,
         ]);
     }

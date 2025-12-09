@@ -436,14 +436,17 @@ nav {
 
 .nav-tabs .nav-link.active {
     background-color: #194581;
+    border: 1px solid rgb(255, 255, 255);
+    border-bottom: none;
 }
 .nav-tabs .nav-link {
     text-transform: uppercase;
     font-family: Roboto Condensed, serif;
-}
-
-.nav-tabs {
-    background-color: rgb(31 70 129 / 80%);
+    background-color: rgba(69, 96, 138, 0.8);
+    border-top-right-radius: .45rem;
+    border-top-left-radius: .45rem;
+    border: 1px solid rgb(255, 255, 255);
+    border-bottom: none;
 }
 
 .display-user, .display-character {
@@ -631,6 +634,65 @@ tr.outflow {
     margin-bottom: -.6rem;
     vertical-align: middle;
     color: #fff;
+}
+
+
+/* TABLES *****************************************************************************************/
+thead {
+    background-color: rgba(222, 243, 255, 0.9);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.table tbody tr {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(7, 31, 109, 0.8) !important;
+    color: rgba(222, 243, 255, 0.9) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) a {
+    color: rgba(222, 243, 255, 0.9) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) a:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(222, 243, 255, 0.9) !important;
+}
+
+
+.table {
+    border-radius: 15px;
+    overflow: hidden; /* Important! Clips the corners */
+}
+
+/* Round the top corners of the first row */
+.table thead tr:first-child th:first-child {
+    border-top-left-radius: 15px;
+}
+
+.table thead tr:first-child th:last-child {
+    border-top-right-radius: 15px;
+}
+
+/* Round the bottom corners of the last row */
+.table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 15px;
+}
+
+.table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 15px;
 }
 
 
@@ -920,3 +982,6 @@ tr.accountbound {
 .recipe-image {
     width: 150px;
 }
+
+
+
