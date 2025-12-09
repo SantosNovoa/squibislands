@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gallery\GallerySubmission;
+use App\Models\Sales\Sales;
 use App\Models\SitePage;
 use App\Models\Species\Species;
 use App\Models\Character\Character;
@@ -53,6 +54,7 @@ class HomeController extends Controller {
             'gallerySubmissions'  => $gallerySubmissions,
             'featuredChars'       => $featured,
             'featuredFirst'       => Arr::first($specieses),
+            'saleses'             => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
         ]);
     }
 
