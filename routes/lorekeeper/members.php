@@ -264,3 +264,16 @@ Route::group(['prefix' => __('awards.awardcase'), 'namespace' => 'Users'], funct
 
     Route::get('selector', 'AwardCaseController@getSelector');
 });
+
+/**************************************************************************************************
+    Mail
+**************************************************************************************************/
+Route::group(['prefix' => 'mail', 'namespace' => 'Users'], function () {
+    Route::get('/', 'MailController@getIndex');
+    Route::get('staff-sent/view/{id}', 'MailController@getModMail');
+    Route::get('view/{id}', 'MailController@getUserMail');
+    Route::post('view/{id}', 'MailController@postCreateUserMail');
+
+    Route::get('new', 'MailController@getCreateUserMail');
+    Route::post('new/{id?}', 'MailController@postCreateUserMail');
+});

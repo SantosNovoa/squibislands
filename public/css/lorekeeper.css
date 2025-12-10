@@ -638,8 +638,12 @@ tr.outflow {
 
 
 /* TABLES *****************************************************************************************/
+table {
+    line-height: 1 !important;
+}
+
 thead {
-    background-color: rgba(222, 243, 255, 0.9);
+    background-color: rgba(187, 210, 230, 0.5) !important;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -647,7 +651,8 @@ thead {
 }
 
 .table-striped tbody tr:nth-of-type(even) {
-    background-color: rgba(255, 255, 255, 0.9) !important;
+    /* background-color: rgba(255, 255, 255, 0.9) !important; */
+    background-color: rgba(187, 210, 230, 0.5) !important;
 }
 
 .table tbody tr {
@@ -655,11 +660,11 @@ thead {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(7, 31, 109, 0.8) !important;
-    color: rgba(222, 243, 255, 0.9) !important;
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    /* color: rgba(222, 243, 255, 0.9) !important; */
 }
 
-.table-striped tbody tr:nth-of-type(odd) a {
+/* .table-striped tbody tr:nth-of-type(odd) a {
     color: rgba(222, 243, 255, 0.9) !important;
 }
 
@@ -669,7 +674,7 @@ thead {
 
 .table-striped tbody tr:nth-of-type(even) {
     background-color: rgba(222, 243, 255, 0.9) !important;
-}
+} */
 
 
 .table {
@@ -693,6 +698,10 @@ thead {
 
 .table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 15px;
+}
+
+.table th {
+    border-top: 1px solid #dee2e600;
 }
 
 

@@ -11,12 +11,22 @@
 @section('profile-content')
     {!! breadcrumbs(['Users' => 'users', $user->name => $user->url]) !!}
 
+    @if (Auth::check() && Auth::user()->id != $user->id && config('lorekeeper.mod_mail.allow_user_mail'))
+        <a class="btn btn-primary btn-sm float-right" href="{{ url('mail/new?recipient_id=' . $user->id) }}"><i class="fas fa-envelope"></i> Message User</a>
+    @endif
+
     @if (mb_strtolower($user->name) != mb_strtolower($name))
         <div class="alert alert-info">This user has changed their name to <strong>{{ $user->name }}</strong>.</div>
     @endif
 
     @if ($user->is_banned)
         <div class="alert alert-danger">This user has been banned.</div>
+    @endif
+
+    @if (Auth::check() && Auth::user()->isStaff)
+        <div class="alert alert-warning">
+            This user has received {{ $user->settings->strike_count }} strike{{ $user->settings->strike_count == 1 ? '' : 's' }}.
+        </div>
     @endif
 
     @if ($user->is_deactivated)

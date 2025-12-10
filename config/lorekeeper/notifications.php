@@ -486,4 +486,10 @@ return [
         'message' => 'You have received a staff grant of the crafting recipe {recipe_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Unlocked Recipes</a>)',
         'url' => 'crafting'
     ],
+    // DIRECT_MESSAGE_RECEIVED
+    1005 => [
+        'name'    => 'Direct Message Received',
+        'message' => '<a href="{sender_url}">{sender_name}</a> has sent you a direct message with the subject line: "{subject}". <a href="{url}">See Context</a>.',
+        'url'     => 'mail/view/{mail_id}',
+    ],
 ];

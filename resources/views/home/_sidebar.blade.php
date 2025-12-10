@@ -22,6 +22,10 @@
         <div class="sidebar-item"><a href="{{ url('world/recipes') }}" class="{{ set_active('world/recipes') }}">All Recipes</a></div>
     </li>
     <li class="sidebar-section">
+        <div class="sidebar-section-header">Mail</div>
+        <div class="sidebar-item"><a href="{{ url('mail') }}" class="{{ set_active('mail*') }}">All Mail</a></div>
+    </li>
+    <li class="sidebar-section">
         <div class="sidebar-section-header">Reports</div>
         <div class="sidebar-item"><a href="{{ url('reports') }}" class="{{ set_active('reports*') }}">Reports</a></div>
     </li>

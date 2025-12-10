@@ -72,4 +72,8 @@ return [
         'description' => 'Allow rank to edit world information related to the World Expansion extension.',
     ],
 
+    'send_mod_mail' => [
+        'name'        => 'Send Mod Mail',
+        'description' => 'Allow rank to send mod mail to other site members.',
+    ],
 ];

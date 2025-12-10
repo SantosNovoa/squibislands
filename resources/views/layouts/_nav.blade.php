@@ -55,6 +55,9 @@
                                 <a class="dropdown-item" href="{{ url('bank') }}">
                                     Bank
                                 </a>
+                                <a class="dropdown-item" href="{{ url('mail') }}">
+                                    Direct Messages
+                                </a>
                                 <a class="dropdown-item" href="{{ url('awardcase') }}">
                                     {{ ucfirst(__('awards.awards')) }}
                                 </a>
