@@ -226,6 +226,10 @@ return [
                 'name' => 'Transformations',
                 'url'  => 'admin/data/transformations',
             ],
+            [
+                'name' => 'Criteria Rewards',
+                'url'  => 'admin/data/criteria',
+            ]
         ]
     ],
     'WorldExpansion' => [

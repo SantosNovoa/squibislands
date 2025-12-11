@@ -652,7 +652,7 @@ thead {
 
 .table-striped tbody tr:nth-of-type(even) {
     /* background-color: rgba(255, 255, 255, 0.9) !important; */
-    background-color: rgba(187, 210, 230, 0.5) !important;
+    background-color: rgb(131 176 215 / 50%) !important;
 }
 
 .table tbody tr {
@@ -678,8 +678,12 @@ thead {
 
 
 .table {
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden; /* Important! Clips the corners */
+}
+
+.table thead th {
+    border-bottom: none !important;
 }
 
 /* Round the top corners of the first row */

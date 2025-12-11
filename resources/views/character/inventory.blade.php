@@ -44,6 +44,11 @@
                     @foreach ($categoryItems->chunk(4) as $chunk)
                         <div class="row mb-3">
                             @foreach ($chunk as $itemId => $stack)
+                                <?php
+                                $canName = $stack->first()->category->can_name;
+                                $stackName = $stack->first()->pivot->pluck('stack_name', 'id')->toArray()[$stack->first()->pivot->id];
+                                $stackNameClean = htmlentities($stackName);
+                                ?>
                                 <div class="col-sm-3 col-6 text-center inventory-item" data-id="{{ $stack->first()->pivot->id }}"
                                     data-name="{!! $stack->first()->category->can_name && $stack->first()->pivot->stack_name ? htmlentities($stack->first()->pivot->stack_name) . ' [' : null !!}{{ $character->name ? $character->name : $character->slug }}'s {{ $stack->first()->name }}{!! $stack->first()->category->can_name && $stack->first()->pivot->stack_name ? ']' : null !!}">
                                     <div class="mb-1">
