@@ -8,7 +8,7 @@ use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 
 class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
-    protected $scopes = [];
+    protected $scopes = ['user'];
 
     public function getRedirectUrl() {
         return $this->redirectUrl;
