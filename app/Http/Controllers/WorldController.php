@@ -307,6 +307,51 @@ class WorldController extends Controller {
         ]);
     }
 
+
+    /**
+     * Shows a subtype's visual trait list.
+     *
+     * @param mixed $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getSubtypeFeatures($id) {
+        $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
+        $rarities = Rarity::orderBy('sort', 'ASC')->get();
+        $subtype = Subtype::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
+        if (!$subtype) {
+            abort(404);
+        }
+        if (!config('lorekeeper.extensions.visual_trait_index.enable_subtype_index')) {
+            abort(404);
+        }
+        $features = count($categories) ?
+            $subtype->features()
+                ->visible(Auth::check() ? Auth::user() : null)
+                ->where('display_separate', 1)
+                ->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
+                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
+                ->orderBy('has_image', 'DESC')
+                ->orderBy('name')
+                ->get()
+                ->groupBy(['feature_category_id', 'id']) :
+            $subtype->features()
+                ->visible(Auth::check() ? Auth::user() : null)
+                ->where('display_separate', 1)
+                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
+                ->orderBy('has_image', 'DESC')
+                ->orderBy('name')
+                ->get()
+                ->groupBy(['feature_category_id', 'id']);
+        
+        return view('world.subtype_features', [
+            'subtype'    => $subtype,
+            'categories' => $categories->keyBy('id'),
+            'rarities'   => $rarities->keyBy('id'),
+            'features'   => $features,
+        ]);
+    }
+
     /**
      * Shows a subtype's visual trait list.
      *
