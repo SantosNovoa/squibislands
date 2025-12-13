@@ -1000,27 +1000,3 @@ tr.accountbound {
 .recipe-image {
     width: 150px;
 }
-
-
-/* NUCLEAR FIX for selectize dropdowns */
-* {
-    overflow: visible !important;
-}
-
-.selectize-dropdown,
-.selectize-dropdown.form-control {
-    position: absolute !important;
-    z-index: 999999 !important;
-}
-
-.selectize-control.dropdown-active {
-    z-index: 999999 !important;
-    position: relative !important;
-}
-
-/* Make parent row also high z-index when dropdown is open */
-.selectize-control.dropdown-active,
-.selectize-control.dropdown-active ~ * {
-    position: relative !important;
-    z-index: 999998 !important;
-}
