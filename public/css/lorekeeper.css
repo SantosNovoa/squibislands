@@ -1002,31 +1002,25 @@ tr.accountbound {
 }
 
 
-
-/* fix for drop downs being hidden *********************/
+/* NUCLEAR FIX for selectize dropdowns */
+* {
+    overflow: visible !important;
+}
 
 .selectize-dropdown,
 .selectize-dropdown.form-control {
     position: absolute !important;
-    z-index: 99999 !important;
-}
-
-.selectize-control {
-    position: relative !important;
-    z-index: 1 !important;
+    z-index: 999999 !important;
 }
 
 .selectize-control.dropdown-active {
-    z-index: 99999 !important;
+    z-index: 999999 !important;
+    position: relative !important;
 }
 
-.table-responsive,
-table {
-    overflow: visible !important;
+/* Make parent row also high z-index when dropdown is open */
+.selectize-control.dropdown-active,
+.selectize-control.dropdown-active ~ * {
+    position: relative !important;
+    z-index: 999998 !important;
 }
-
-.loot-table-row,
-.loot-table {
-    overflow: visible !important;
-}
-
