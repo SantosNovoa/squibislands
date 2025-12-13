@@ -35,10 +35,10 @@ return [
      *  Trait Modals addition - Moif
      */
     'visual_trait_index'                  => [
-        'enable_species_index'   => 0, // Enables the Species Trait Index
-        'enable_subtype_index'   => 0, // Enables the Subtype Trait Index
+        'enable_species_index'   => 1, // Enables the Species Trait Index
+        'enable_subtype_index'   => 1, // Enables the Subtype Trait Index
         'enable_universal_index' => 0, // Enables the Universal Trait Index
-        'trait_modals'           => 0, // Enables modals when you click on a trait for more info instead of linking to the traits page
+        'trait_modals'           => 1, // Enables modals when you click on a trait for more info instead of linking to the traits page
     ],
 
     // Character Status Badges - Juni
@@ -62,7 +62,7 @@ return [
     ],
 
     // Group Traits By Category - Uri
-    'traits_by_category' => 0,
+    'traits_by_category' => 1,
 
     // Scroll To Top - Uri
     'scroll_to_top' => 1, // 1 - On, 0 - off
@@ -129,9 +129,9 @@ return [
     // Character Themes extension
 
     'character_theme' => [
-        'is_required' => 0, //Is having a theme for a character mandatory? 0 for No, 1 for Yes.
+        'is_required' => 1, //Is having a theme for a character mandatory? 0 for No, 1 for Yes.
         'is_unique' => 0, // Are these themes unique across characters? (Only one character can have "black cat" for example). Players can always skirt around this by changing wording slightly, so remember to check definitively in design updates. 0 for No, 1 for Yes.
-        'show_on_masterlist' => 0, // Does the theme show on the masterlist alongside rarity/species? 0 for No, 1 for Yes.
+        'show_on_masterlist' => 1, // Does the theme show on the masterlist alongside rarity/species? 0 for No, 1 for Yes.
     ],
 
 
