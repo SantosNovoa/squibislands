@@ -1003,3 +1003,30 @@ tr.accountbound {
 
 
 
+/* fix for drop downs being hidden *********************/
+
+.selectize-dropdown,
+.selectize-dropdown.form-control {
+    position: absolute !important;
+    z-index: 99999 !important;
+}
+
+.selectize-control {
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.selectize-control.dropdown-active {
+    z-index: 99999 !important;
+}
+
+.table-responsive,
+table {
+    overflow: visible !important;
+}
+
+.loot-table-row,
+.loot-table {
+    overflow: visible !important;
+}
+
