@@ -98,7 +98,7 @@ class Character extends Model {
     public static $updateRules = [
         'character_category_id' => 'required',
         'number'                => 'required',
-        'slug'                  => 'required',
+        'slug'                  => 'required|alpha_dash',
         'description'           => 'nullable',
         'sale_value'            => 'nullable',
         'image'                 => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
