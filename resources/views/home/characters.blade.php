@@ -66,6 +66,11 @@
 {!! Form::close() !!}
 
 
+<div class="mobile-handle handle-clone badge badge-primary rounded-circle hide">
+    <i class="fas fa-hand-point-up" aria-hidden="true"></i>
+    <span class="sr-only">Drag Handle</span>
+</div>
+
 @endsection
 @section('scripts')
     <script>
@@ -103,6 +108,24 @@
                 }
             });
             $("#sortable").disableSelection();
+
+            function isTouch() {
+                try {
+                    document.createEvent("TouchEvent");
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            if (isTouch()) {
+                $('#sortable').children().each(function() {
+                    var $clone = $('.handle-clone').clone();
+                    $(this).append($clone);
+                    $clone.removeClass('hide handle-clone');
+                });
+                $("#sortable").sortable("option", "handle", ".mobile-handle");
+            }
         });
     </script>
 @endsection
