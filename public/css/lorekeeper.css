@@ -968,3 +968,17 @@ tr.accountbound {
     width: 150px;
 }
 
+/* SELECTED CHARACTER ***************************************************************************************/
+
+.selected-character {
+    width: 100%;
+    max-width: min(500px, 90vw);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+}
+
+
+
+
+

@@ -11,7 +11,7 @@ class UserSettings extends Model {
      * @var array
      */
     protected $fillable = [
-        'is_fto', 'submission_count', 'banned_at', 'ban_reason', 'birthday_setting', 'strike_count',
+        'is_fto', 'submission_count', 'banned_at', 'ban_reason', 'birthday_setting', 'strike_count', 'selected_character_id',
         'deactivate_reason', 'deactivated_at',
     ];
 
@@ -50,5 +50,13 @@ class UserSettings extends Model {
      */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the character the user has selected if appropriate.
+     */
+    public function selectedCharacter()
+    {
+        return $this->belongsTo('App\Models\Character\Character', 'selected_character_id')->visible();
     }
 }

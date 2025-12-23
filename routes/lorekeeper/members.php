@@ -77,6 +77,8 @@ Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function () {
     Route::post('folder/create', 'CharacterController@postCreateEditFolder');
     Route::post('folder/edit/{id}', 'CharacterController@postCreateEditFolder');
     Route::post('folder/delete/{id}', 'CharacterController@postDeleteFolder');
+    Route::post('select-character', 'CharacterController@postSelectCharacter');
+
     Route::get('transfers/{type}', 'CharacterController@getTransfers');
     Route::post('transfer/act/{id}', 'CharacterController@postHandleTransfer');
 

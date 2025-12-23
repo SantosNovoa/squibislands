@@ -42,5 +42,42 @@
     @if (!$user->is_deactivated || (Auth::check() && Auth::user()->isStaff))
         @include('user._profile_content', ['user' => $user, 'deactivated' => $user->is_deactivated])
     @endif
+    @if(isset($user->profile->parsed_text))
+        <div class="card mb-3" style="clear:both;">
+            <div class="card-body">
+                {!! $user->profile->parsed_text !!}
+            </div>
+        </div>
+    @endif
+
+<!-- Uncomment this to restore the original character display.
+    <h2>
+        {{-- <a href="{{ $user->url.'/characters' }}">Characters</a> --}}
+        {{-- @if(isset($sublists) && $sublists->count() > 0)
+            @foreach($sublists as $sublist)
+            / <a href="{{ $user->url.'/sublist/'.$sublist->key }}">{{ $sublist->name }}</a>
+            @endforeach
+        @endif --}}
+    </h2>
+
+    {{-- @foreach($characters->take(4)->get()->chunk(4) as $chunk)
+        <div class="row mb-4">
+            @foreach($chunk as $character)
+                <div class="col-md-3 col-6 text-center">
+                    <div>
+                        <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="{{ $character->fullName }}" /></a>
+                    </div>
+                    <div class="mt-1">
+                        <a href="{{ $character->url }}" class="h5 mb-0"> @if(!$character->is_visible) <i class="fas fa-eye-slash"></i> @endif {{ $character->fullName }}</a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endforeach --}}
+
+    {{-- <div class="text-right"><a href="{{ $user->url.'/characters' }}">View all...</a></div> --}}
+    <hr>
+    <br><br>
+-->
 
 @endsection
