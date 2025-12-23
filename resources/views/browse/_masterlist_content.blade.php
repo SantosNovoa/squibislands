@@ -118,7 +118,7 @@
             @if (!$isMyo)
                 {!! Form::select(
                     'sort',
-                    ['number_desc' => 'Number Descending', 'number_asc' => 'Number Ascending', 'id_desc' => 'Newest First', 'id_asc' => 'Oldest First', 'sale_value_desc' => 'Highest Sale Value', 'sale_value_asc' => 'Lowest Sale Value'],
+                    ['id_desc' => 'Newest First', 'number_asc' => 'Number Ascending', 'number_desc' => 'Number Descending', 'id_asc' => 'Oldest First', 'sale_value_desc' => 'Highest Sale Value', 'sale_value_asc' => 'Lowest Sale Value'],
                     Request::get('sort'),
                     ['class' => 'form-control'],
                 ) !!}

@@ -37,7 +37,7 @@ class Character extends Model {
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
         'is_myo_slot', 'name', 'trade_id', 'owner_url',
-        'home_id', 'home_changed', 'faction_id', 'faction_changed',
+        'home_id', 'home_changed', 'faction_id', 'faction_changed', 'folder_id',
     ];
 
     /**
@@ -219,6 +219,14 @@ class Character extends Model {
      */
     public function awards() {
         return $this->belongsToMany('App\Models\Award\Award', 'character_awards')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_awards.deleted_at');
+    }
+
+    /**
+     * Gets which folder the character currently resides in.
+     */
+    public function folder()
+    {
+        return $this->belongsTo('App\Models\Character\CharacterFolder', 'folder_id');
     }
 
     /**********************************************************************************************

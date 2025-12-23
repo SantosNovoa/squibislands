@@ -11,7 +11,7 @@
         <div class="container-fluid">
 
             <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('lorekeeper.settings.site_name', 'Lorekeeper') }}
+                <i class="fa-solid fa-sailboat"></i>
             </a>
             
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

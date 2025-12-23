@@ -24,8 +24,8 @@ class PostRequestThrottleMiddleware {
         }
 
         $key = $request->user()?->id ?: $request->ip();
-        $maxAttempts = 1;
-        $decaySeconds = 10;
+        $maxAttempts = 10;
+        $decaySeconds = 1;
 
         if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
             flash('Too many requests - please try again later.')->error()->important();
