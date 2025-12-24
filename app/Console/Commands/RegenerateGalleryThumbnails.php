@@ -36,7 +36,7 @@ class RegenerateGalleryThumbnails extends Command
                             config('lorekeeper.settings.masterlist_thumbnails.height'),
                             'center',
                             false,
-                            '#ffffff'
+                            null
                         )
                         ->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
                 }
