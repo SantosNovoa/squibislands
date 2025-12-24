@@ -502,7 +502,9 @@ class CharacterManager extends Service {
             }
 
             // Resize to fit the thumbnail size
-            $image->fit(config('lorekeeper.settings.masterlist_thumbnails.width'), config('lorekeeper.settings.masterlist_thumbnails.height'));
+            $image->resize(config('lorekeeper.settings.masterlist_thumbnails.width'), config('lorekeeper.settings.masterlist_thumbnails.height'), function ($constraint) {
+                $constraint->aspectRatio();
+            });
         }
 
         // Save the thumbnail
