@@ -874,6 +874,7 @@ class GalleryManager extends Service {
         $canvas = Image::canvas(
             config('lorekeeper.settings.masterlist_thumbnails.width'),
             config('lorekeeper.settings.masterlist_thumbnails.height'),
+            null
         );
         $canvas->insert($thumbnail, 'center');
         $canvas->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
