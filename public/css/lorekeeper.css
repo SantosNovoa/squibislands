@@ -989,7 +989,41 @@ tr.accountbound {
     object-fit: contain;
 }
 
+/* PROFILE DROPDOWN MENU ***************************************************************************************/
 
 
+.dropdown-menu-two-column.show {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+}
 
+/* DROPDOWN MENU ***************************************************************************************/
+
+.dropdown-menu {
+    background-color: rgb(222, 243, 255) !important;
+}
+
+.dropdown-item:hover {
+    background-color: #b5c9d5 !important;
+}
+.text-warning {
+    color: #3095ef !important;
+}
+
+a.text-warning:hover,
+a.text-warning:focus {
+    color: #2680d4 !important;
+}
+
+
+.img-thumbnail {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* DROPDOWN MENU ***************************************************************************************/
+
+.img-thumbnail:hover {
+    transform: scale(1.10) translateY(-5px);
+    cursor: pointer;
+}
 
