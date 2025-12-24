@@ -23,9 +23,20 @@ class RegenerateGalleryThumbnails extends Command
             try {
                 if (file_exists($submission->imagePath.'/'.$submission->imageFileName)) {
                     Image::make($submission->imagePath.'/'.$submission->imageFileName)
-                        ->fit(
+                        ->resize(
                             config('lorekeeper.settings.masterlist_thumbnails.width'),
-                            config('lorekeeper.settings.masterlist_thumbnails.height')
+                            config('lorekeeper.settings.masterlist_thumbnails.height'),
+                            function ($constraint) {
+                                $constraint->aspectRatio();
+                                $constraint->upsize();
+                            }
+                        )
+                        ->resizeCanvas(
+                            config('lorekeeper.settings.masterlist_thumbnails.width'),
+                            config('lorekeeper.settings.masterlist_thumbnails.height'),
+                            'center',
+                            false,
+                            '#ffffff'
                         )
                         ->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
                 }

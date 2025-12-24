@@ -859,14 +859,25 @@ class GalleryManager extends Service {
             $image->save($submission->imagePath.'/'.$submission->imageFileName, 100, config('lorekeeper.settings.gallery_images_format'));
         }
 
-        // Process thumbnail
-        // Process thumbnail - make uniform squares like masterlist
-        Image::make($submission->imagePath.'/'.$submission->imageFileName)
-            ->fit(
-                config('lorekeeper.settings.masterlist_thumbnails.width'),
-                config('lorekeeper.settings.masterlist_thumbnails.height')
-            )
-            ->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
+        // Process thumbnail - uniform squares with no cropping
+        $thumbnail = Image::make($submission->imagePath.'/'.$submission->imageFileName);
+        $thumbnail->resize(
+            config('lorekeeper.settings.masterlist_thumbnails.width'),
+            config('lorekeeper.settings.masterlist_thumbnails.height'),
+            function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            }
+        );
+
+        // Create square canvas and center image
+        $canvas = Image::canvas(
+            config('lorekeeper.settings.masterlist_thumbnails.width'),
+            config('lorekeeper.settings.masterlist_thumbnails.height'),
+            '#ffffff'
+        );
+        $canvas->insert($thumbnail, 'center');
+        $canvas->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
 
         return $submission;
     }
