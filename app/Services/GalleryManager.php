@@ -860,11 +860,12 @@ class GalleryManager extends Service {
         }
 
         // Process thumbnail
+        // Process thumbnail - make uniform squares like masterlist
         Image::make($submission->imagePath.'/'.$submission->imageFileName)
-            ->resize(null, config('lorekeeper.settings.masterlist_thumbnails.height'), function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
+            ->fit(
+                config('lorekeeper.settings.masterlist_thumbnails.width'),
+                config('lorekeeper.settings.masterlist_thumbnails.height')
+            )
             ->save($submission->thumbnailPath.'/'.$submission->thumbnailFileName);
 
         return $submission;
