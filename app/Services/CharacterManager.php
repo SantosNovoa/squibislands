@@ -1404,7 +1404,11 @@ class CharacterManager extends Service {
 
             // Update the character's profile
             if (!$character->is_myo_slot) {
-                $character->name = $data['name'];
+                // give a detailed error
+                if (isset($data['name']) && strlen($data['name']) > 50) {
+                    throw new \Exception('Character name is too long! Please keep it under 50 characters.');
+                }
+            $character->name = $data['name'];
             }
             $character->save();
 
