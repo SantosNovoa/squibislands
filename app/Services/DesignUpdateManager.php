@@ -381,6 +381,11 @@ class DesignUpdateManager extends Service {
                 throw new \Exception('Please select a rarity.');
             }
 
+            if (config('lorekeeper.extensions.character_theme.is_required') && (!isset($data['theme']) || trim($data['theme']) == '')) {
+                throw new \Exception('Theme is required! Please provide a theme for your character.');
+            }
+
+
             $rarity = ($request->character->is_myo_slot && $request->character->image->rarity_id) ? $request->character->image->rarity : Rarity::find($data['rarity_id']);
             $species = ($request->character->is_myo_slot && $request->character->image->species_id) ? $request->character->image->species : Species::find($data['species_id']);
             if (isset($data['subtype_id']) && $data['subtype_id']) {
