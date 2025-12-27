@@ -67,11 +67,11 @@
                     </div>
                 @endif
                 @if ($image->transformation_id)
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-4">
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-5">
                             <h5>{{ ucfirst(__('transformations.form')) }} {!! add_help('The main image is always the active image') !!}</h5>
                         </div>
-                        <div class="col-lg-8 col-md-6 col-8">
+                        <div class="col-lg-8 col-7 pl-1">
                             <a href="{{ $image->transformation->url }}">
                                 {!! $image->transformation->displayName !!}
                             </a>
@@ -79,16 +79,18 @@
                         </div>
                     </div>
                 @endif
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-4">
+                <div class="row no-gutters">
+                    <div class="col-lg-4 col-5">
                         <h5>Rarity</h5>
                     </div>
                     <div class="col-lg-8 col-7 pl-1">{!! $image->rarity_id ? $image->rarity->displayName : 'None' !!}</div>
                 </div>
                 @if($image->theme)
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 col-4"><h5>{{ucfirst(__('character_theme.theme'))}}</h5></div>
-                        <div class="col-lg-8 col-md-6 col-8">{!! $image->theme !!}</div>
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-5">
+                            <h5>{{ucfirst(__('character_theme.theme'))}}</h5>
+                        </div>
+                        <div class="col-lg-8 col-7 pl-1">{!! $image->theme !!}</div>
                     </div>
                 @endif
 
