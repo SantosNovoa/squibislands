@@ -42,13 +42,6 @@
     @if (!$user->is_deactivated || (Auth::check() && Auth::user()->isStaff))
         @include('user._profile_content', ['user' => $user, 'deactivated' => $user->is_deactivated])
     @endif
-    @if(isset($user->profile->parsed_text))
-        <div class="card mb-3" style="clear:both;">
-            <div class="card-body">
-                {!! $user->profile->parsed_text !!}
-            </div>
-        </div>
-    @endif
 
 <!-- Uncomment this to restore the original character display.
     <h2>
