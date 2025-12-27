@@ -143,7 +143,7 @@
         <div class="row">
             @foreach ($chunk as $character)
                 <div class="col-md-3 col-6 text-center">
-                    <div>
+                    <div class="masterlist-thumbnail">
                         <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
                     </div>
                     <div class="mt-1">

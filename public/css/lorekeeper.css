@@ -1016,11 +1016,16 @@ a.text-warning:focus {
 }
 
 
+/* masterlist ***************************************************************************************/
+
+.masterlist-thumbnail {
+    min-height: 250px;
+    min-width: 250px;
+}
+
 .img-thumbnail {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* DROPDOWN MENU ***************************************************************************************/
 
 .img-thumbnail:hover {
     transform: scale(1.10) translateY(-5px);

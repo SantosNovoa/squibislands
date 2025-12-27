@@ -73,6 +73,9 @@
                             <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
                                 Trait Index
                             </a>
+                            <a class="dropdown-item" href="{{ url('info/companions') }}">
+                                Companions
+                            </a>
                         </div>
                     </li>
 
@@ -130,7 +133,7 @@
                                 <a class="dropdown-item" href="{{ url('gallery') }}">
                                     Galleries
                                 </a>
-                                <div class="dropdown-divider"></div>
+                                {{-- <div class="dropdown-divider"></div> --}}
                                 <a class="dropdown-item" href="{{ url('shops') }}">
                                     Shops
                                 </a>
