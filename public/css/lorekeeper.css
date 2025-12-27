@@ -1029,12 +1029,14 @@ a.text-warning:focus {
 
 @media (min-width: 768px) {
     .masterlist-thumbnail {
+        max-height: 200px;
         width: 200px;
     }
 }
 
 @media (min-width: 992px) {
     .masterlist-thumbnail {
+        max-height: 200px;
         width: 250px;
     }
 }
