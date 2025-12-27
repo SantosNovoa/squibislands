@@ -67,7 +67,7 @@
                 </div>
             @endif
             @if ($user_enabled && isset($user->home_id))
-                <div class="row no-gutters col-md-6">
+                <div class="row no-gutters col-md-3">
                     <div class="col-md-4 col-4">
                         <h5>Home</h5>
                     </div>
