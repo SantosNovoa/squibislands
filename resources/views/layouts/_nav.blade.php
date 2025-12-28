@@ -24,11 +24,11 @@
                     <li class="nav-item dropdown">
                         @if (Auth::check() && Auth::user()->is_news_unread && config('lorekeeper.extensions.navbar_news_notif') || Auth::check() && Auth::user()->is_sales_unread && config('lorekeeper.extensions.navbar_news_notif'))
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle text-warning" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <i class="fas fa-bell"></i><strong>Official</strong>
+                            <i class="fas fa-bell"></i><span class="nav-text"><strong>Official</strong></span>
                         </a>
                         @else
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Official
+                            <i class="fa-solid fa-envelope"></i> <span class="nav-text">Official</span>
                         </a>
                         @endif
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
@@ -57,7 +57,7 @@
 
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Species
+                            <i class="fa-solid fa-paw"></i> <span class="nav-text">Species</span>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
@@ -81,7 +81,7 @@
 
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Info
+                            <i class="fa-solid fa-circle-info"></i> <span class="nav-text">Info</span>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
@@ -108,7 +108,7 @@
 
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Masterlist
+                                <i class="fa-solid fa-rectangle-list"></i> <span class="nav-text">Masterlist</span>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
@@ -124,7 +124,7 @@
                     @if (Auth::check())
                         <li class="nav-item dropdown">
                             <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                Activities
+                                <i class="fa-solid fa-gamepad"></i> <span class="nav-text">Activities</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
                                 <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
@@ -148,7 +148,7 @@
                     @endif
                     <li class="nav-item dropdown">
                         <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            Community
+                            <i class="fa-solid fa-user-group"></i> <span class="nav-text">Community</span>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="browseDropdown">

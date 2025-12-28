@@ -3,7 +3,7 @@
 @include('widgets._sales')
 @include('widgets._news', ['textPreview' => true])
 
-<div class="row justify-content-center">
+{{-- <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-body text-center">
@@ -66,6 +66,6 @@
             </ul>
         </div>
     </div>
-</div>
+</div> --}}
 
 @include('widgets._recent_gallery_submissions', ['gallerySubmissions' => $gallerySubmissions])
