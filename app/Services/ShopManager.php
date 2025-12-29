@@ -67,16 +67,6 @@ class ShopManager extends Service {
                     throw new \Exception('Sorry! You can\'t use coupons on limited stock items');
                 }
 
-            if ($shopStock->purchase_limit && $quantity > $shopStock->purchase_limit) {
-                throw new \Exception('The quantity specified exceeds the amount of this item you can buy.');
-            }
-
-            if (isset($data['use_coupon'])) {
-                // check if the the stock is limited stock
-                if ($shopStock->is_limited_stock && !Settings::get('limited_stock_coupon_settings')) {
-                    throw new \Exception('Sorry! You can\'t use coupons on limited stock items');
-                }
-
                 if (!isset($data['coupon'])) {
                     throw new \Exception('Please select a coupon to use.');
                 }

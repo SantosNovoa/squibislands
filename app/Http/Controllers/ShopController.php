@@ -158,9 +158,9 @@ class ShopController extends Controller {
             $userOwned = $service->getUserOwned($stock, Auth::user());
         }
 
-        if ($shop->use_coupons) {
-            $couponId = ItemTag::where('tag', 'coupon')->where('is_active', 1); // Removed get()
-            $itemIds = $couponId->pluck('item_id'); // Could be combined with above
+        if ($shop->use_coupons && Auth::check()) {
+            $couponId = ItemTag::where('tag', 'coupon')->where('is_active', 1)->get();
+            $itemIds = $couponId->pluck('item_id');
             // get rid of any itemIds that are not in allowed_coupons
             if ($shop->allowed_coupons && count(json_decode($shop->allowed_coupons, 1))) {
                 $itemIds = $itemIds->filter(function ($itemId) use ($shop) {
