@@ -277,6 +277,9 @@ nav {
     padding-top: 0 !important;
 }
 
+.navbar .fa-crown {
+    font-size: 0.9rem !important;
+}
 
 @media (max-width: 1539px) {
     .navbar .nav-text {
@@ -290,7 +293,7 @@ nav {
 }
 
 @media (min-width: 1540px) {
-    .navbar .nav-link:not(.text-warning) i {
+    .navbar .nav-link:not(.text-warning):has(.nav-text) i {
         display: none;
     }
 }
@@ -303,12 +306,6 @@ nav {
     .navbar .nav-link {
         padding-left: 1rem;
         padding-right: 1rem;
-    }
-}
-
-@media (min-width: 1540px) {
-    .navbar .nav-link i {
-        display: none;
     }
 }
 

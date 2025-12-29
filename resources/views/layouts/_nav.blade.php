@@ -158,8 +158,11 @@
                             <a class="dropdown-item" href="https://discord.gg/whc3mVZJMp" target="_blank" rel="noopener noreferrer">
                                 Discord
                             </a>
-                            <a class="dropdown-item" href="{{ url('info/terms') }}">
-                                TOS
+                            <a class="dropdown-item" href="https://www.deviantart.com/squibtank">
+                                Devianart
+                            </a>
+                            <a class="dropdown-item" href="https://ko-fi.com/squibislands">
+                                Ko-fi Shop
                             </a>
                         </div>
                     </li>
