@@ -9,10 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
 use App\Models\Currency\Currency;
+use App\Models\Element\Element;
 use App\Models\Item\Item;
 use App\Models\Loot\LootTable;
 use App\Models\Prompt\PromptCategory;
 use App\Models\Raffle\Raffle;
+use App\Models\Skill\Skill;
 use App\Models\Submission\Submission;
 use App\Services\SubmissionManager;
 use Illuminate\Http\Request;
@@ -77,6 +79,7 @@ class SubmissionController extends Controller {
             'expanded_rewards' => config('lorekeeper.extensions.character_reward_expansion.expanded'),
             'characters'       => Character::visible(Auth::check() ? Auth::user() : null)->myo(0)->orderBy('slug', 'DESC')->get()->pluck('fullName', 'slug')->toArray(),
             'awardsrow'        => Award::all()->keyBy('id'),
+            'skills'           => Skill::pluck('name', 'id')->toArray(),
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items'               => Item::orderBy('name')->pluck('name', 'id'),
@@ -87,6 +90,7 @@ class SubmissionController extends Controller {
             'count'               => Submission::where('prompt_id', $submission->prompt_id)->where('status', 'Approved')->where('user_id', $submission->user_id)->count(),
             'awards'              => Award::orderBy('name')->released()->where('is_user_owned', 1)->pluck('name', 'id'),
             'characterAwards'     => Award::orderBy('name')->released()->where('is_character_owned', 1)->pluck('name', 'id'),
+            'elements'            => Element::orderBy('name')->pluck('name', 'id'),
         ] : []));
     }
 
@@ -140,6 +144,7 @@ class SubmissionController extends Controller {
             'expanded_rewards' => config('lorekeeper.extensions.character_reward_expansion.expanded'),
             'characters'       => Character::visible(Auth::check() ? Auth::user() : null)->myo(0)->orderBy('slug', 'DESC')->get()->pluck('fullName', 'slug')->toArray(),
             'awardsrow'        => Award::all()->keyBy('id'),
+            'skills'           => Skill::pluck('name', 'id')->toArray(),
         ] + ($submission->status == 'Pending' ? [
             'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
             'items'               => Item::orderBy('name')->pluck('name', 'id'),
@@ -164,7 +169,8 @@ class SubmissionController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSubmission(Request $request, SubmissionManager $service, $id, $action) {
-        $data = $request->only(['slug',  'character_rewardable_quantity', 'character_rewardable_id',  'character_rewardable_type', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments', 'criterion']);
+        $data = $request->only(['slug',  'character_rewardable_quantity', 'character_rewardable_id',  'character_rewardable_type', 'character_currency_id', 'rewardable_type', 'rewardable_id', 'quantity', 'staff_comments', 
+        'criterion', 'character_is_focus', 'skill_id', 'skill_quantity',]);
         if ($action == 'reject' && $service->rejectSubmission($request->only(['staff_comments']) + ['id' => $id], Auth::user())) {
             flash('Submission rejected successfully.')->success();
         } elseif ($action == 'cancel' && $service->cancelSubmission($request->only(['staff_comments']) + ['id' => $id], Auth::user())) {

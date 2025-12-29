@@ -76,6 +76,10 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('group_currency', 1, 'ID of the group currency to award from gallery submissions (if enabled).');
 
         $this->addSiteSetting('max_strike_count', 3, 'Number of strikes a user can have before being automatically banned.');
+        
+        $this->addSiteSetting('claymore_cooldown', 0, 'Number of days to add to the cooldown timer when a pet/weapon/gear is attached.');
+
+        $this->addSiteSetting('stamina_per_object', 15, 'Max stamina per user / character. May take a bit for every user / character to reflect this change.');
 
         $this->addSiteSetting('is_maintenance_mode', 0, '0: Site is normal, 1: Users without the Has Maintenance Access power will be redirected to the home page.');
         
@@ -92,6 +96,12 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('can_transfer_currency_directly', 1, 'Whether or not users can directly transfer currency to other users without trading. 0: Users cannot directly transfer currency. 1: Direct currency transfers are allowed.');
 
         $this->addSiteSetting('can_transfer_items_directly', 1, 'Whether or not users can directly transfer items to other users without trading. 0: Users cannot directly transfer items. 1: Direct item transfers are allowed.');
+        
+        $this->addSiteSetting('shop_type', 0, '0: Default, 1: Collapsible.');
+
+        $this->addSiteSetting('coupon_settings', 0, '0: Percentage is taken from total (e.g 20% from 2 items costing a total of 100 = 80), 1: Percentage is taken from item (e.g 20% from 2 items costing a total of 100 = 90)');
+
+        $this->addSiteSetting('limited_stock_coupon_settings', 0, '0: Does not allow coupons to be used on limited stock items, 1: Allows coupons to be used on limited stock items');
 
         $this->line("\nSite settings up to date!");
     }

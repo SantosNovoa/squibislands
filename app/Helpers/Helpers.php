@@ -531,3 +531,12 @@ function allAttachments($model) {
 
     return $totals;
 }
+/**
+ * Gets the displayName attribute from a given model.
+ *
+ * @param mixed $model
+ * @param mixed $id
+ */
+function getDisplayName($model, $id) {
+    return $model::find($id)?->displayName;
+}

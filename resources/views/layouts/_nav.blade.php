@@ -69,12 +69,21 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('info/squib_design') }}">
                                 Design Guide
+                            <a class="dropdown-item" href="{{ url('pets') }}">
+                                My Pets
+                            </a>
                             </a>
                             <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
                                 Trait Index
                             </a>
                             <a class="dropdown-item" href="{{ url('info/companions') }}">
                                 Companions
+                            </a>
+                            <a class="dropdown-item" href="{{ url('userstats') }}">
+                                Stat Information
+                            </a>
+                            <a class="dropdown-item" href="{{ url('comments/liked') }}">
+                                Liked Comments
                             </a>
                         </div>
                     </li>

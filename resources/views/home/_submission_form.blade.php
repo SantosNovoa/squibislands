@@ -218,7 +218,7 @@
     @endif
 </div>
 
-@include('widgets._character_select', ['characterCurrencies' => $characterCurrencies, 'showLootTables' => false])
+@include('widgets._character_select', ['characterCurrencies' => $characterCurrencies, 'showLootTables' => false, 'showElements' => true])
 @if ($isClaim)
     @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => false, 'showRaffles' => true, 'showRecipes' => true])
 @else

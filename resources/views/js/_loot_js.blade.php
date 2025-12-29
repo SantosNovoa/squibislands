@@ -3,7 +3,12 @@ $( document ).ready(function() {
     var $lootTable  = $('#lootTableBody');
     var $lootRow = $('#lootRow').find('.loot-row');
     var $itemSelect = $('#lootRowData').find('.item-select');
+    var $PetSelect = $('#lootRowData').find('.pet-select');
+    var $WeaponSelect = $('#lootRowData').find('.weapon-select');
+    var $GearSelect = $('#lootRowData').find('.gear-select');
     var $currencySelect = $('#lootRowData').find('.currency-select');
+    var $statSelect = $('#lootRowData').find('.stat-select');
+    var $claymoreSelect = $('#lootRowData').find('.claymore-select');
     var $awardSelect = $('#lootRowData').find('.award-select');
     @if($showLootTables)
         var $tableSelect = $('#lootRowData').find('.table-select');
@@ -34,6 +39,11 @@ $( document ).ready(function() {
             if (val == 'Item') $clone = $itemSelect.clone();
             else if (val == 'Currency') $clone = $currencySelect.clone();
             else if (val == 'Award') $clone = $awardSelect.clone();
+            else if (val == 'Pet') $clone = $PetSelect.clone();
+            else if (val == 'Weapon') $clone = $WeaponSelect.clone();
+            else if (val == 'Gear') $clone = $GearSelect.clone();
+            else if (val == 'Points') $clone = $statSelect.clone();
+            else if (val == 'Exp') $clone = $claymoreSelect.clone();
             @if ($showLootTables)
                 else if (val == 'LootTable') $clone = $tableSelect.clone();
             @endif
@@ -55,8 +65,13 @@ $( document ).ready(function() {
 
                 var $clone = null;
                 if (val == 'Item') $clone = $itemSelect.clone();
+                else if (val == 'Pet') $clone = $PetSelect.clone();
                 else if (val == 'Currency') $clone = $currencySelect.clone();
                 else if (val == 'Award') $clone = $awardSelect.clone();
+                else if (val == 'Weapon') $clone = $WeaponSelect.clone();
+                else if (val == 'Gear') $clone = $GearSelect.clone();
+                else if (val == 'Points') $clone = $statSelect.clone();
+                else if (val == 'Exp') $clone = $claymoreSelect.clone();
                 @if ($showLootTables)
                     else if (val == 'LootTable') $clone = $tableSelect.clone();
                 @endif
