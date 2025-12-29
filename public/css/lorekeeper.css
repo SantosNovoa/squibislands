@@ -780,16 +780,13 @@ thead {
 }
 
 .card {
-    border: none !important;
+    background-color: rgba(222, 243, 255, 0.9) !important;
 }
 
 .card-header {
     background-color: rgb(31 70 129 / 80%) !important;
 }
 
-.card-body {
-    background-color: rgba(222, 243, 255, 0.9) !important;
-}
 
 .character-bio .nav-tabs.card-header-tabs .active {
     background-color: #194581;
@@ -1128,5 +1125,7 @@ a.text-warning:focus {
     display: flex;
     flex-direction: column;
     justify-content: end;
-}
+} 
+
+
 
