@@ -314,7 +314,7 @@ class BrowseController extends Controller {
 
         switch ($request->get('sort')) {
             default:
-                $query->orderBy('characters.number', 'DESC');
+                $query->orderBy('characters.id', 'DESC');
                 break;
             case 'number_desc':
                 $query->orderBy('characters.number', 'DESC');
@@ -639,7 +639,7 @@ class BrowseController extends Controller {
 
         switch ($request->get('sort')) {
             default:
-                $query->orderBy('characters.number', 'DESC');
+                $query->orderBy('characters.id', 'DESC');
                 break;
             case 'number_desc':
                 $query->orderBy('characters.number', 'DESC');
