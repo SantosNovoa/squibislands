@@ -637,6 +637,40 @@ class UserController extends Controller {
         ]);
     }
 
+     /**
+     * Shows a user's awardcase.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserAwardCase($name)
+    {
+        $categories = AwardCategory::orderBy('sort', 'DESC')->get();
+        $awards = count($categories) ?
+            $this->user->awards()
+                ->where('count', '>', 0)
+                ->orderByRaw('FIELD(award_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
+                ->orderBy('name')
+                ->orderBy('updated_at')
+                ->get()
+                ->groupBy(['award_category_id', 'id']) :
+            $this->user->awards()
+                ->where('count', '>', 0)
+                ->orderBy('name')
+                ->orderBy('updated_at')
+                ->get()
+                ->groupBy(['award_category_id', 'id']);
+        return view('user.awardcase', [
+            'user' => $this->user,
+            'categories' => $categories->keyBy('id'),
+            'awards' => $awards,
+            'userOptions' => User::where('id', '!=', $this->user->id)->orderBy('name')->pluck('name', 'id')->toArray(),
+            'user' => $this->user,
+            'logs' => $this->user->getAwardLogs(),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
     /**
      * Shows a user's gallery submission favorites.
      *
