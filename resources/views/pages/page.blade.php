@@ -7,7 +7,7 @@
 @section('content')
     <x-admin-edit title="Page" :object="$page" />
     {!! breadcrumbs([$page->title => $page->url]) !!}
-    <h1>{{ $page->title }}</h1>
+    <h1 class="text-center">{{ $page->title }}</h1>
     <div class="mb-4">
     @if(Auth::check() && Auth::user()->isStaff)
         <div><strong>Created:</strong> {!! format_date($page->created_at) !!}</div>
