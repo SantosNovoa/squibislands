@@ -43,7 +43,6 @@ class ShopController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getShop($id) {
-        $categories = ItemCategory::visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->get();
         $shop = Shop::where('id', $id)->where('is_active', 1)->first();
 
         if (!$shop) {
@@ -62,7 +61,6 @@ class ShopController extends Controller {
         if ($shop->is_restricted) {
             if (!Auth::check()) {
                 flash('You must be logged in to enter this shop.')->error();
-
                 return redirect()->to('/shops');
             }
             foreach ($shop->limits as $limit) {
@@ -71,7 +69,6 @@ class ShopController extends Controller {
 
                 if (!$check) {
                     flash('You require a '.$limit->item->name.' to enter this store.')->error();
-
                     return redirect()->to('/shops');
                 }
             }
@@ -80,42 +77,50 @@ class ShopController extends Controller {
         if ($shop->is_fto) {
             if (!Auth::check()) {
                 flash('You must be logged in to enter this shop.')->error();
-
                 return redirect()->to('/shops');
             }
             if (!Auth::user()->settings->is_fto && !Auth::user()->isStaff) {
                 flash('You must be a FTO to enter this shop.')->error();
-
                 return redirect()->to('/shops');
             }
         }
 
-        // get all types of stock in the shop
+        // v3 lk for backward compatibility with items
+        $categories = ItemCategory::visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->get();
+        $query = $shop->displayStock()->where(function ($query) use ($categories) {
+            $query->whereIn('item_category_id', $categories->pluck('id')->toArray())
+                ->orWhereNull('item_category_id');
+        });
+        $items = count($categories) ? $query->orderByRaw('FIELD(item_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')->orderBy('name')->get()->groupBy('item_category_id') : $shop->displayStock()->orderBy('name')->get()->groupBy('item_category_id');
+
+        // c&c for multiple stock types
         $stock_types = ShopStock::where('shop_id', $shop->id)->pluck('stock_type')->unique();
         $stocks = [];
+        $allCategories = collect();
+
         foreach ($stock_types as $type) {
-            // get the model for the stock type (item, pet, etc)
             $type = strtolower($type);
             $model = getAssetModelString($type);
-            // get the category of the stock
+            
             if (!class_exists($model.'Category')) {
                 $stock = $shop->displayStock($model, $type)->where('stock_type', $type)->orderBy('name')->get()->groupBy($type.'_category_id');
                 $stocks[$type] = $stock;
-                continue; // If the category model doesn't exist, skip it
+                continue;
             }
-            // check if visible method exists on the category model
+            
             if (method_exists($model.'Category', 'visible')) {
                 $stock_category = ($model.'Category')::visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->get();
             } else {
                 $stock_category = ($model.'Category')::orderBy('sort', 'DESC')->get();
             }
-            // order the stock
+
+            $allCategories = $allCategories->merge($stock_category->keyBy('id'));
+
             $stock = count($stock_category) ? $shop->displayStock($model, $type)->where('stock_type', $type)
                 ->orderByRaw('FIELD('.$type.'_category_id,'.implode(',', $stock_category->pluck('id')->toArray()).')')
                 ->orderBy('name')->get()->groupBy($type.'_category_id')
             : $shop->displayStock($model, $type)->where('stock_type', $type)->orderBy('name')->get()->groupBy($type.'_category_id');
 
-            // make it so key "" appears last
             $stock = $stock->sortBy(function ($item, $key) {
                 return $key == '' ? 1 : 0;
             });
@@ -126,11 +131,12 @@ class ShopController extends Controller {
         return view('shops.shop', [
             'shop'       => $shop,
             'stocks'     => $stocks,
+            'items'      => $items, //  v3 items
+            'categories' => $categories->keyBy('id'), //  v3 categories
             'shops'      => Shop::where('is_active', 1)->orderBy('sort', 'DESC')->get(),
             'currencies' => Currency::whereIn('id', ShopStock::where('shop_id', $shop->id)->pluck('currency_id')->toArray())->get()->keyBy('id'),
         ]);
     }
-
     /**
      * Gets the shop stock modal.
      *
