@@ -318,17 +318,18 @@
                 dataType: "text"
             }).done(function(res) {
                 $("#transformations").html(res);
-
-            // Check stats
-            $.ajax({
-                type: "GET",
-                url: "{{ url('admin/masterlist/check-stats') }}?species=" + species + "&subtype=" + subtype,
-                dataType: "text"
-            }).done(function(res) {
-                $("#stats").html(res);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
+
+            // // Check stats
+            // $.ajax({
+            //     type: "GET",
+            //     url: "{{ url('admin/masterlist/check-stats') }}?species=" + species + "&subtype=" + subtype,
+            //     dataType: "text"
+            // }).done(function(res) {
+            //     $("#stats").html(res);
+            // }).fail(function(jqXHR, textStatus, errorThrown) {
+            //     alert("AJAX call failed: " + textStatus + ", " + errorThrown);
+            // });
         });
 
         $("#subtypes").change(function() {
