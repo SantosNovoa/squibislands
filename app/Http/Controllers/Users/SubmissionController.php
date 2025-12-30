@@ -12,6 +12,7 @@ use App\Models\Award\Award;
 use App\Models\Character\Character;
 use App\Models\Criteria\Criterion;
 use App\Models\Currency\Currency;
+use App\Models\Gallery\Gallery;
 use App\Models\Gallery\GalleryCollaborator;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Element\Element;
@@ -118,18 +119,22 @@ class SubmissionController extends Controller {
             'closed'  => $closed,
             'isClaim' => false,
         ] + ($closed ? [] : [
-            'submission'          => new Submission,
-            'prompts'             => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
-            'characterCurrencies' => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
-            'categories'          => ItemCategory::visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->get(),
-            'item_filter'         => Item::orderBy('name')->released()->get()->keyBy('id'),
-            'items'               => Item::orderBy('name')->released()->pluck('name', 'id'),
-            'character_items'     => Item::whereIn('item_category_id', ItemCategory::where('is_character_owned', 1)->pluck('id')->toArray())->orderBy('name')->released()->pluck('name', 'id'),
-            'currencies'          => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'inventory'           => $inventory,
-            'page'                => 'submission',
-            'elements'            => Element::orderBy('name')->pluck('name', 'id'),
-            'expanded_rewards'    => config('lorekeeper.extensions.character_reward_expansion.expanded'),
+            'submission'             => new Submission,
+            'prompts'                => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
+            'characterCurrencies'    => Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id'),
+            'categories'             => ItemCategory::visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->get(),
+            'item_filter'            => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items'                  => Item::orderBy('name')->released()->pluck('name', 'id'),
+            'character_items'        => Item::whereIn('item_category_id', ItemCategory::where('is_character_owned', 1)->pluck('id')->toArray())->orderBy('name')->released()->pluck('name', 'id'),
+            'currencies'             => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'inventory'              => $inventory,
+            'page'                   => 'submission',
+            'elements'               => Element::orderBy('name')->pluck('name', 'id'),
+            'expanded_rewards'       => config('lorekeeper.extensions.character_reward_expansion.expanded'),
+            'galleries'              => Gallery::where('submissions_open', 1)->orderBy('sort')->pluck('name', 'id'),
+            'gallerySubmissions'     => $gallerySubmissions,
+            'criteria'               => Criterion::all(),
+            'userGallerySubmissions' => $gallerySubmissions,
         ]));
     }
 
