@@ -70,7 +70,7 @@
                             <a class="dropdown-item" href="{{ url('info/squib_design') }}">
                                 Design Guide
                             <a class="dropdown-item" href="{{ url('pets') }}">
-                                My Pets
+                                Pets
                             </a>
                             </a>
                             <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
@@ -79,12 +79,9 @@
                             <a class="dropdown-item" href="{{ url('info/companions') }}">
                                 Companions
                             </a>
-                            <a class="dropdown-item" href="{{ url('userstats') }}">
+                            {{-- <a class="dropdown-item" href="{{ url('userstats') }}">
                                 Stat Information
-                            </a>
-                            <a class="dropdown-item" href="{{ url('comments/liked') }}">
-                                Liked Comments
-                            </a>
+                            </a> --}}
                         </div>
                     </li>
 
@@ -168,7 +165,7 @@
                                 Discord
                             </a>
                             <a class="dropdown-item" href="https://www.deviantart.com/squibtank">
-                                Devianart
+                                Deviantart
                             </a>
                             <a class="dropdown-item" href="https://ko-fi.com/squibislands">
                                 Ko-fi Shop
@@ -235,8 +232,8 @@
                                     <a class="dropdown-item" href="{{ url('bank') }}">
                                         Bank
                                     </a>
-                                    <a class="dropdown-item" href="{{ url('awardcase') }}">
-                                        Awards
+                                    <a class="dropdown-item" href="{{ url('badgecase') }}">
+                                        Badges
                                     </a>
                                     <a class="dropdown-item" href="{{ url('characters') }}">
                                         Characters
@@ -246,6 +243,9 @@
                                     </a>
                                     <a class="dropdown-item" href="{{ url('designs') }}">
                                         Design Approvals
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url('pets') }}">
+                                        Pets
                                     </a>
                                 </div>
                                 <div class="dropdown-column">
@@ -260,6 +260,9 @@
                                     </a>
                                     <a class="dropdown-item" href="{{ url('account/bookmarks') }}">
                                         Bookmarks
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url('comments/liked') }}">
+                                        Liked Comments
                                     </a>
                                     <a class="dropdown-item" href="{{ url('account/settings') }}">
                                         Settings

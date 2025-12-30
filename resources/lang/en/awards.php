@@ -17,12 +17,12 @@ return [
     /
     */
 
-    'award'   => 'award',                         // use __
-    'awards'  => 'awards',                       // use __
-    'awards_' => 'award|awards',                // Use trans_choice instead of __
+    'award'   => 'badge',                          // use __
+    'awards'  => 'badges',                       // use __
+    'awards_' => 'badge|badges',                // Use trans_choice instead of __
 
-    'awardcase'   => 'awardcase',                 // use __
-    'awardcases'  => 'awardcases',               // use __
-    'awardcases_' => 'awardcase|awardcases',    // Use trans_choice instead of __
+    'awardcase'   => 'badgecase',                 // use __
+    'awardcases'  => 'badgecases',               // use __
+    'awardcases_' => 'badgecase|badgecases',    // Use trans_choice instead of __
 
 ];
