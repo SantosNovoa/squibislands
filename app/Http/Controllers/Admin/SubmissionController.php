@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Config;
 use App\Models\Item\ItemCategory;
 use App\Models\Recipe\Recipe;
+use Carbon\Carbon;
+use App\Models\Prompt\Prompt;
 use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
@@ -91,6 +93,8 @@ class SubmissionController extends Controller {
             'awards'              => Award::orderBy('name')->released()->where('is_user_owned', 1)->pluck('name', 'id'),
             'characterAwards'     => Award::orderBy('name')->released()->where('is_character_owned', 1)->pluck('name', 'id'),
             'elements'            => Element::orderBy('name')->pluck('name', 'id'),
+            'prompt'              => $prompt,
+            'limit'               => $limit
         ] : []));
     }
 

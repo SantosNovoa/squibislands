@@ -67,14 +67,59 @@ class SubmissionManager extends Service {
                     throw new \Exception('This prompt may only be submitted to by staff members.');
                 }
 
-                //level req
+                // Level requirement check
                 if ($prompt->level_req) {
                     if (!$user->level || $user->level->current_level < $prompt->level_req) {
                         throw new \Exception('You are not high enough level to enter this prompt');
                     }
                 }
+
+                // Prompt limit checks (from extension)
+                if ($prompt->limit) {
+                    // Check that the user hasn't hit the prompt submission limit
+                    $count['all'] = Submission::submitted($prompt->id, $user->id)->count();
+                    $count['Hour'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfHour())->count();
+                    $count['Day'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfDay())->count();
+                    $count['Week'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfWeek())->count();
+                    $count['Month'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfMonth())->count();
+                    $count['Year'] = Submission::submitted($prompt->id, $user->id)->where('created_at', '>=', now()->startOfYear())->count();
+
+                    // If limit by character is on, multiply by number of characters
+                    if ($prompt->limit_character) {
+                        $limit = $prompt->limit * Character::visible()->where('is_myo_slot', 0)->where('user_id', $user->id)->count();
+                    } else {
+                        $limit = $prompt->limit;
+                    }
+
+                    // Check if limit exceeded
+                    if ($prompt->limit_period) {
+                        if ($count[$prompt->limit_period] >= $limit) {
+                            throw new \Exception('You have already submitted to this prompt the maximum number of times.');
+                        }
+                    } elseif ($count['all'] >= $limit) {
+                        throw new \Exception('You have already submitted to this prompt the maximum number of times.');
+                    }
+                }
             } else {
                 $prompt = null;
+            }
+
+            // The character identification comes in both the slug field and as character IDs
+            if (isset($data['slug'])) {
+                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
+                if (count($characters) != count($data['slug'])) {
+                    throw new \Exception('One or more of the selected characters do not exist.');
+                }
+            } else {
+                $characters = [];
+            }
+
+            // Get a list of rewards
+            $promptRewards = createAssetsArray();
+            if (!$isClaim) {
+                foreach ($prompt->rewards as $reward) {
+                    addAsset($promptRewards, $reward->reward, $reward->quantity);
+                }
             }
 
             $withCriteriaSelected = isset($data['criterion']) ? array_filter($data['criterion'], function ($obj) {
@@ -86,7 +131,7 @@ class SubmissionManager extends Service {
                 $data['criterion'] = null;
             }
 
-            // Create the submission itself.
+            // Create the submission itself
             $submission = Submission::create([
                 'user_id'   => $user->id,
                 'url'       => $data['url'] ?? null,
@@ -97,7 +142,7 @@ class SubmissionManager extends Service {
                 'prompt_id' => $prompt->id,
             ]));
 
-            // Set items that have been attached.
+            // Set items that have been attached
             $assets = $this->createUserAttachments($submission, $data, $user);
             $userAssets = $assets['userAssets'];
             $promptRewards = $assets['promptRewards'];
@@ -110,7 +155,7 @@ class SubmissionManager extends Service {
                 ] + (config('lorekeeper.settings.allow_gallery_submissions_on_prompts') ? ['gallery_submission_id' => $data['gallery_submission_id'] ?? null] : [])),
             ]);
 
-            // Set characters that have been attached.
+            // Set characters that have been attached
             $this->createCharacterAttachments($submission, $data);
 
             return $this->commitReturn($submission);

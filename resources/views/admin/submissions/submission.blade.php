@@ -5,80 +5,86 @@
 @endsection
 
 @section('admin-content')
-    @if ($submission->prompt_id)
+    @if($submission->prompt_id)
         {!! breadcrumbs(['Admin Panel' => 'admin', 'Prompt Queue' => 'admin/submissions/pending', 'Submission (#' . $submission->id . ')' => $submission->viewUrl]) !!}
-    @else
+    @else 
         {!! breadcrumbs(['Admin Panel' => 'admin', 'Claim Queue' => 'admin/claims/pending', 'Claim (#' . $submission->id . ')' => $submission->viewUrl]) !!}
     @endif
 
-    @if ($submission->status == 'Pending')
+    @if($submission->status == 'Pending')
 
         <h1>
             {{ $submission->prompt_id ? 'Submission' : 'Claim' }} (#{{ $submission->id }})
-            <span class="float-right badge badge-{{ $submission->status == 'Pending' || $submission->status == 'Draft' ? 'secondary' : ($submission->status == 'Approved' ? 'success' : 'danger') }}">
-                {{ $submission->status }}
-            </span>
+            <span class="float-right badge badge-{{ $submission->status == 'Pending' ? 'secondary' : ($submission->status == 'Approved' ? 'success' : 'danger') }}">{{ $submission->status }}</span>
         </h1>
 
         <div class="mb-1">
             <div class="row">
-                <div class="col-md-2 col-4">
-                    <h5>User</h5>
-                </div>
+                <div class="col-md-2 col-4"><h5>User</h5></div>
                 <div class="col-md-10 col-8">{!! $submission->user->displayName !!}</div>
             </div>
-            @if ($submission->prompt_id)
+            @if($submission->prompt_id)
                 <div class="row">
-                    <div class="col-md-2 col-4">
-                        <h5>Prompt</h5>
-                    </div>
+                    <div class="col-md-2 col-4"><h5>Prompt</h5></div>
                     <div class="col-md-10 col-8">{!! $submission->prompt->displayName !!}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2 col-4">
-                        <h5>Previous Submissions</h5>
+                    <div class="col-md-2 col-4"><h5>Previous Submissions{!! add_help('This is the number of times the user has submitted this prompt before, pending or approved.') !!}</h5></div>
+                    <div class="col-md-10 col-8">
+                        <div class="row text-center">
+                            <div class="col"><strong>All Time</strong></div>
+                            <div class="col"><strong>Past Hour</strong></div>
+                            <div class="col"><strong>Past Day</strong></div>
+                            <div class="col"><strong>Past Week</strong></div>
+                            <div class="col"><strong>Past Month</strong></div>
+                            <div class="col"><strong>Past Year</strong></div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col">{{ $count['all'] }}</div>
+                            <div class="col">{{ $count['Hour'] }}</div>
+                            <div class="col">{{ $count['Day'] }}</div>
+                            <div class="col">{{ $count['Week'] }}</div>
+                            <div class="col">{{ $count['Month'] }}</div>
+                            <div class="col">{{ $count['Year'] }}</div>
+                        </div>
                     </div>
-                    <div class="col-md-10 col-8">{{ $count }} {!! add_help('This is the number of times the user has submitted this prompt before and had their submission approved.') !!}</div>
                 </div>
             @endif
             <div class="row">
-                <div class="col-md-2 col-4">
-                    <h5>URL</h5>
-                </div>
+                <div class="col-md-2 col-4"><h5>URL</h5></div>
                 <div class="col-md-10 col-8"><a href="{{ $submission->url }}">{{ $submission->url }}</a></div>
             </div>
             @if (config('lorekeeper.settings.allow_gallery_submissions_on_prompts') && $submission->data['gallery_submission_id'])
-                <div class="row mb-2 no-gutters">
-                    <div class="col-md-2">
-                        <h5 class="mb-0">Gallery Submission</h5>
+                <div class="row">
+                    <div class="col-md-2 col-4">
+                        <h5>Gallery Submission</h5>
                     </div>
-                    <div class="col-md-10"><a href="{{ $submission->gallerySubmission->url }}">{{ $submission->gallerySubmission->title }}</a></div>
+                    <div class="col-md-10 col-8"><a href="{{ $submission->gallerySubmission->url }}">{{ $submission->gallerySubmission->title }}</a></div>
                 </div>
             @endif
             <div class="row">
-                <div class="col-md-2 col-4">
-                    <h5>Submitted</h5>
-                </div>
+                <div class="col-md-2 col-4"><h5>Submitted</h5></div>
                 <div class="col-md-10 col-8">{!! format_date($submission->created_at) !!} ({{ $submission->created_at->diffForHumans() }})</div>
             </div>
         </div>
         <h2>Comments</h2>
         <div class="card mb-3">
-            <div class="card-body">{!! nl2br(htmlentities($submission->comments)) !!}</div>
+            <div class="card-body">
+                {!! nl2br(htmlentities($submission->comments)) !!}
+            </div>
         </div>
-        @if (Auth::check() && $submission->staff_comments && ($submission->user_id == Auth::user()->id || Auth::user()->hasPower('manage_submissions')))
+        @if(Auth::check() && $submission->staff_comments && ($submission->user_id == Auth::user()->id || Auth::user()->hasPower('manage_submissions')))
             <h2>Staff Comments ({!! $submission->staff->displayName !!})</h2>
             <div class="card mb-3">
                 <div class="card-body">
-                    @if (isset($submission->parsed_staff_comments))
+                    @if(isset($submission->parsed_staff_comments))
                         {!! $submission->parsed_staff_comments !!}
                     @else
                         {!! $submission->staff_comments !!}
                     @endif
                 </div>
             </div>
-        @endif
-
+    @endif
         {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm', 'onsubmit' => "$(this).find('input').prop('disabled', false)"]) !!}
 
         @if (isset($submission->data['criterion']))

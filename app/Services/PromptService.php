@@ -369,6 +369,8 @@ class PromptService extends Service {
             $data['level_req'] = null;
         }
 
+        if(!isset($data['limit_character'])) $data['limit_character'] = null;
+
         if (isset($data['remove_image'])) {
             if ($prompt && $prompt->has_image && $data['remove_image']) {
                 $data['has_image'] = 0;

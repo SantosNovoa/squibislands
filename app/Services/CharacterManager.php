@@ -1213,6 +1213,11 @@ class CharacterManager extends Service {
         DB::beginTransaction();
 
         try {
+
+            if (empty($data['sort']) || trim($data['sort']) === '') {
+                throw new \Exception('No pets to sort.');
+            }
+
             $ids = array_reverse(explode(',', $data['sort']));
             $pets = UserPet::whereIn('id', $ids)->where('user_id', $user->id)->orderBy(DB::raw('FIELD(id, '.implode(',', $ids).')'))->get();
 
