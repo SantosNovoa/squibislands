@@ -69,9 +69,6 @@
                             </a>
                             <a class="dropdown-item" href="{{ url('info/squib_design') }}">
                                 Design Guide
-                            <a class="dropdown-item" href="{{ url('pets') }}">
-                                Pets
-                            </a>
                             </a>
                             <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
                                 Trait Index
