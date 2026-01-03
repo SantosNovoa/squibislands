@@ -328,7 +328,7 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubtypeFeatures($id) {
+    public function getSubtypeFeatures(Request $request, $id) {
         $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
         $rarities = Rarity::orderBy('sort', 'ASC')->get();
         $subtype = Subtype::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
@@ -338,25 +338,39 @@ class WorldController extends Controller {
         if (!config('lorekeeper.extensions.visual_trait_index.enable_subtype_index')) {
             abort(404);
         }
-        $features = count($categories) ?
-            $subtype->features()
+
+        // Get subtype features
+        $subtypeFeatures = $subtype->features()
+            ->visible(Auth::check() ? Auth::user() : null)
+            ->where('display_separate', 1);
+
+        // If add_basics is on, also get species traits without a subtype
+        if ($request->get('add_basics')) {
+            $speciesFeatures = $subtype->species->features()
                 ->visible(Auth::check() ? Auth::user() : null)
                 ->where('display_separate', 1)
-                ->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
+                ->whereNull('subtype_id');
+            
+            // Merge the queries
+            $features = $subtypeFeatures->union($speciesFeatures->getQuery());
+        } else {
+            $features = $subtypeFeatures;
+        }
+
+        // Apply ordering and grouping
+        $features = count($categories) ?
+            $features->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
                 ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
                 ->orderBy('has_image', 'DESC')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(['feature_category_id', 'id']) :
-            $subtype->features()
-                ->visible(Auth::check() ? Auth::user() : null)
-                ->where('display_separate', 1)
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
+            $features->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
                 ->orderBy('has_image', 'DESC')
                 ->orderBy('name')
                 ->get()
                 ->groupBy(['feature_category_id', 'id']);
-        
+
         return view('world.subtype_features', [
             'subtype'    => $subtype,
             'categories' => $categories->keyBy('id'),
