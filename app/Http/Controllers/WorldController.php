@@ -349,12 +349,13 @@ class WorldController extends Controller {
             $speciesFeatures = $subtype->species->features()
                 ->visible(Auth::check() ? Auth::user() : null)
                 ->where('display_separate', 1)
-                ->whereNull('subtype_id');
+                ->where(function($query) {
+                    $query->whereNull('subtype_id')
+                        ->orWhere('subtype_id', 0);
+                });
             
             // Merge the queries
             $features = $subtypeFeatures->union($speciesFeatures->getQuery());
-        } else {
-            $features = $subtypeFeatures;
         }
 
         // Apply ordering and grouping
