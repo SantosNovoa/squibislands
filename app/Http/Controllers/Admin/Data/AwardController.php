@@ -188,10 +188,13 @@ class AwardController extends Controller {
      */
     public function getCreateAward() {
         return view('admin.awards.create_edit_award', [
-            'award'       => new Award,
-            'categories'  => ['none' => 'No category'] + AwardCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'prompts'     => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'award'          => new Award,
+            'categories'     => ['none' => 'No category'] + AwardCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'prompts'        => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
+            'userOptions'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'showLootTables' => false,
+            'showRaffles'    => false,
+            'showRecipes'    => false,
         ]);
     }
 
@@ -209,15 +212,18 @@ class AwardController extends Controller {
         }
 
         return view('admin.awards.create_edit_award', [
-            'award'       => $award,
-            'categories'  => ['none' => 'No category'] + AwardCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'prompts'     => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'items'       => Item::orderBy('name')->pluck('name', 'id'),
-            'awards'      => Award::orderBy('name')->pluck('name', 'id'),
-            'currencies'  => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
-            'tables'      => LootTable::orderBy('name')->pluck('name', 'id'),
-            'raffles'     => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'award'          => $award,
+            'categories'     => ['none' => 'No category'] + AwardCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'prompts'        => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
+            'userOptions'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'items'          => Item::orderBy('name')->pluck('name', 'id'),
+            'awards'         => Award::orderBy('name')->pluck('name', 'id'),
+            'currencies'     => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables'         => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles'        => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'showLootTables' => false,
+            'showRaffles'    => false,
+            'showRecipes'    => false,
         ]);
     }
 
