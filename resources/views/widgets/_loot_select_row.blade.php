@@ -22,6 +22,9 @@
     if ($showRaffles) {
         $raffles = \App\Models\Raffle\Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id');
     }
+    if ($showRecipes) {
+        $recipes = \App\Models\Recipe\Recipe::orderBy('name')->pluck('name', 'id');
+    }
     $awards = \App\Models\Award\Award::orderBy('name')->pluck('name', 'id');
 @endphp
 
@@ -33,7 +36,8 @@
                         'rewardable_type[]',
                         ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points'] 
                         + ($showLootTables ? ['LootTable' => 'Loot Table'] : [])
-                        + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []),
+                        + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : [])
+                        + ($showRecipes ? ['Recipe' => 'Recipe'] : []),
                     null,
                     ['class' => 'form-control reward-type', 'placeholder' => 'Select Reward Type']
                 ) !!}
