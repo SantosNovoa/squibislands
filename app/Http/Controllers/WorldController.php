@@ -356,6 +356,8 @@ class WorldController extends Controller {
             
             // Merge the queries
             $features = $subtypeFeatures->union($speciesFeatures->getQuery());
+        } else {
+            $features = $subtypeFeatures;
         }
 
         // Apply ordering and grouping
