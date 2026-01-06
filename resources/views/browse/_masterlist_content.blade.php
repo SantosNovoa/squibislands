@@ -140,21 +140,36 @@
 {!! $characters->render() !!}
 <div id="gridView" class="hide">
     @foreach ($characters->chunk(4) as $chunk)
-        <div class="row p-2">
+        <div class="row p-3 ml-container">
             @foreach ($chunk as $character)
-                <div class="col-md-3 col-6 text-center" id="mlImg">
-                    <div>
+                @php
+                    $rarityClass = 'rarity-common';
+                    if ($character->image->rarity_id) {
+                        $rarityMap = [
+                            1 => 'exclusive',  
+                            2 => 'common',     
+                            3 => 'rare',       
+                            4 => 'legendary'   
+                        ];
+                        $rarityClass = 'rarity-' . ($rarityMap[$character->image->rarity_id] ?? 'common');
+                    }
+                @endphp
+                <div class="col-md-2 col-6 text-center {{ $rarityClass }}" id="mlImg" style="font-family: DynaPuff, serif;">
+                    <div class="small pt-1 fw-bold">
+                        <strong>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!}</strong>
+                    </div>
+                    <div class="ml-bg">
                         <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
                     </div>
                     <div class="mt-1">
-                        <a href="{{ $character->url }}" class="h5 mb-0">
+                        <a href="{{ $character->url }}" class="display-character h5 mb-0">
                             @if (!$character->is_visible)
                                 <i class="fas fa-eye-slash"></i>
-                            @endif {{ Illuminate\Support\Str::limit($character->fullName, 20, $end = '...') }}
+                            @endif {{ explode('-', $character->slug, 3)[0] . '-' . explode('-', $character->slug, 3)[1] }}
                         </a>
                     </div>
-                    <div class="small">
-                        {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!} ・ {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $character->displayOwner !!}
+                    <div class="small pb-2">
+                        {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!}  ・ {!! $character->displayOwner !!}
                         @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
                             {!! $character->image->theme ? ' ・ ' . $character->image->theme : '' !!}
                         @endif
@@ -185,7 +200,7 @@
                     <td>
                         @if (!$character->is_visible)
                             <i class="fas fa-eye-slash"></i>
-                        @endif {!! $character->displayName !!}
+                        @endif {{ explode('-', $character->slug, 3)[0] . '-' . explode('-', $character->slug, 3)[1] }}
                     </td>
                     <td>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'None' !!}</td>
                     <td>{!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}</td>

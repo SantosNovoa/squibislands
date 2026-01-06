@@ -130,7 +130,11 @@ main > .row {
 
 
 .main-content {
-    background-color: rgba(203, 232, 249, 0.7);
+    background-color: rgba(203, 232, 249, 0.5);
+    background-image: url(../images/white-plain-concrete-textured-background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -1114,10 +1118,11 @@ a.text-warning:focus {
 .img-thumbnail {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: .25rem;
+    max-height: 200px;
 }
 
 .img-thumbnail:hover {
-    transform: scale(1.10) translateY(-5px);
+    transform: scale(1.10) translateY(-2px);
     cursor: pointer;
 }
 
@@ -1125,7 +1130,47 @@ a.text-warning:focus {
     display: flex;
     flex-direction: column;
     justify-content: end;
-} 
+    border-radius: 15px;
+    border: 5px solid #2C6CBC;
+    box-sizing: content-box;
+}
+
+.rarity-common {
+    background-image: url(../images/texture.png), linear-gradient(33deg, #32ADE6, #B1F266, #5BD481, #2DCF71);
+    background-blend-mode: overlay;
+}
+
+.rarity-rare {
+    background-image: url(../images/texture.png), linear-gradient(33deg, rgba(255, 87, 191, 1) 0%, rgba(255, 185, 87, 1) 31%, rgba(253, 112, 46, 1) 66%, rgba(230, 55, 55, 1) 100%);
+    background-blend-mode: overlay;
+}
+
+.rarity-legendary {
+    background-image: url(../images/texture.png), linear-gradient(33deg, rgba(76, 138, 245, 1) 0%, rgba(132, 226, 245, 1) 42%, rgba(157, 177, 237, 1) 80%, rgba(247, 178, 178, 1) 100%);
+    background-blend-mode: overlay;
+}
+
+.rarity-exclusive {
+    background-image: url(../images/texture.png), linear-gradient(33deg, rgba(242, 164, 131, 1) 0%, rgba(247, 214, 114, 1) 40%, rgba(237, 189, 157, 1) 69%, rgba(196, 242, 227, 1) 100%);
+    background-blend-mode: overlay;
+}
+
+.ml-bg {
+    background-image: url(../images/ml-tn-bg.png);
+    border-radius: 15px;
+    margin-top: 5px;
+}
+
+.display-species,
+.display-user,
+.display-character {
+    color: rgb(48, 48, 48) !important;
+}
+
+.ml-container {
+    gap: 50px;
+    justify-content: center;
+}
 
 
 
