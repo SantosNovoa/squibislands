@@ -1,13 +1,13 @@
 
-@if(Config::get('lorekeeper.settings.show_terms_popup') == 1)
+ @if(Config::get('lorekeeper.settings.show_terms_popup') == 1)
 <div class="modal fade d-none" id="termsModal" role="dialog" style="display:inline;overflow:auto;" data-backdrop="static"
     data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">{{ Config::get('lorekeeper.settings.terms_popup')['title'] }}</h5>
+            <div class="modal-header justify-content-center">
+                <h2>{{ Config::get('lorekeeper.settings.terms_popup')['title'] }}</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body text-center">
                 {!! Config::get('lorekeeper.settings.terms_popup')['text'] !!}
             </div>
             <div class="modal-footer">
