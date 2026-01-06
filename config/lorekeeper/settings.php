@@ -364,4 +364,22 @@ return [
     |
     */
     'site_logging_webhook'                              => env('SITE_LOGGING_WEBHOOK', null),
+    /*
+    |--------------------------------------------------------------------------
+    | Terms Popup
+    |--------------------------------------------------------------------------
+    |
+    | Defines the content of the terms popup that appears on your site. 
+    | For the text field, some html is fine.
+    |
+    | 0: do not show terms popup ever. 
+    | 1: Show terms popup until the visitor or user agreed.
+    */
+
+    'show_terms_popup' => 1,
+    'terms_popup' => [
+        "title" => "Welcome", 
+        "text" => '<strong>Squib Islands is a 16+ ARPG and community.</strong> By accessing this site and interacting with its users, you agree that you have read through our <a href="/info/terms" style="color: blue;">Terms of Service</a>.', 
+        "button" => "Accept"
+    ],
 ];
