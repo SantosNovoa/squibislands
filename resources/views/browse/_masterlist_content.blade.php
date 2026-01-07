@@ -165,7 +165,7 @@
                         <a href="{{ $character->url }}" class="display-character h5 mb-0">
                             @if (!$character->is_visible)
                                 <i class="fas fa-eye-slash"></i>
-                            @endif {{ explode('-', $character->slug, 3)[0] . '-' . explode('-', $character->slug, 3)[1] }}
+                            @endif {{ Illuminate\Support\Str::limit($character->fullName, 20, $end = '...') }}
                         </a>
                     </div>
                     <div class="small pb-2">
