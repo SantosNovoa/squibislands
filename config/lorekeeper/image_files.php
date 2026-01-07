@@ -67,9 +67,14 @@ return [
         'description' => 'Thumbnail used for gallery submissions with a set content warning. PNG format, size of masterlist thumbnails.',
         'filename'    => 'content_warning.png',
     ],
-    'logo'          => [
+    'logo'            => [
         'name'        => 'Logo',
         'description' => 'Logo image that will display on top of the banner. Scales to fit the screen resolution.',
         'filename'    => 'logo.png',
+    ],
+    'background'      => [
+    'name'            => 'Background Image',
+    'description'     => 'The main site background image. JPG format recommended for file size. Recommended minimum size: 1920x1080px.',
+    'filename'        => 'background.jpg',
     ],
 ];

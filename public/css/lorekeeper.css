@@ -139,7 +139,7 @@ main > .row {
     flex-direction: column;
     width: 100%;
     border-radius: 15px;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow: inset 0 0 20px rgba(118, 173, 224, 0.692);
 }
 /* Header */
 
@@ -1168,6 +1168,10 @@ a.text-warning:focus {
 .rarity-exclusive {
     background-image: url(../images/texture.png), linear-gradient(33deg, rgba(242, 164, 131, 1) 0%, rgba(247, 214, 114, 1) 40%, rgba(237, 189, 157, 1) 69%, rgba(196, 242, 227, 1) 100%);
     background-blend-mode: overlay;
+}
+
+.display-rarity {
+    font-size: 12px;
 }
 
 .ml-bg {
