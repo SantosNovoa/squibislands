@@ -139,6 +139,7 @@ main > .row {
     flex-direction: column;
     width: 100%;
     border-radius: 15px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 /* Header */
 
@@ -148,6 +149,7 @@ main > .row {
 
 #headerNav {
     background: linear-gradient(to right, rgba(4, 18, 65, 0.8), rgba(7, 31, 109, 0.8), rgba(10, 45, 160, 0.8), rgba(42, 136, 252, 0.8)) !important;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .nav-link {
@@ -217,7 +219,7 @@ nav {
     margin-bottom: 1em;
     padding: 0.4em 0;
     border-radius: 15px;
-    box-shadow: 0px 0px 6px 3px rgba(0,0,0,0.1);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
 .sidebar .sidebar-header,
@@ -1115,6 +1117,18 @@ a.text-warning:focus {
     }
 }
 
+@media (max-width: 767px) {
+    .ml-container {
+        gap: 0px; 
+    }
+    
+    #mlImg {
+        border-width: 3px; 
+        margin-bottom: 15px;
+    }
+}
+
+
 .img-thumbnail {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: .25rem;
@@ -1168,7 +1182,7 @@ a.text-warning:focus {
 }
 
 .ml-container {
-    gap: 50px;
+    gap: 20px;
     justify-content: center;
 }
 

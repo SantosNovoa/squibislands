@@ -140,7 +140,7 @@
 {!! $characters->render() !!}
 <div id="gridView" class="hide">
     @foreach ($characters->chunk(4) as $chunk)
-        <div class="row p-3 ml-container">
+        <div class="row p-3 ml-container g-2 g-md-0">
             @foreach ($chunk as $character)
                 @php
                     $rarityClass = 'rarity-common';
