@@ -595,6 +595,7 @@ nav {
 
 .pagination {
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* Chrome, Safari, Edge, Opera */
