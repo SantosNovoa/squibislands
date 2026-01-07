@@ -1173,6 +1173,10 @@ a.text-warning:focus {
     background-image: url(../images/ml-tn-bg.png);
     border-radius: 15px;
     margin-top: 5px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .display-species,
