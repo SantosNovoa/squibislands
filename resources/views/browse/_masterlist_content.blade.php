@@ -145,11 +145,11 @@
                 @php
                     $rarityClass = 'rarity-common';
                     if ($character->image->rarity_id) {
-                        $rarityMap = [
-                            1 => 'exclusive',  
-                            2 => 'common',     
-                            3 => 'rare',       
-                            4 => 'legendary'   
+                        $rarityMap = [  
+                            1 => 'common',     
+                            2 => 'rare',       
+                            3 => 'legendary',
+                            4 => 'exclusive',   
                         ];
                         $rarityClass = 'rarity-' . ($rarityMap[$character->image->rarity_id] ?? 'common');
                     }
