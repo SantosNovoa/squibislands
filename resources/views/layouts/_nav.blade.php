@@ -167,6 +167,9 @@
                             <a class="dropdown-item" href="https://ko-fi.com/squibislands">
                                 Ko-fi Shop
                             </a>
+                            <a class="dropdown-item" href="https://toyhou.se/~world/52279.squib-islands">
+                                Toyhouse
+                            </a>
                         </div>
                     </li>
                 </ul>
