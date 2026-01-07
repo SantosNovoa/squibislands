@@ -1178,6 +1178,7 @@ a.text-warning:focus {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    background-size: cover;
 }
 
 .display-species,
