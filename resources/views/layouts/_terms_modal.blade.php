@@ -1,5 +1,4 @@
-
- @if(Config::get('lorekeeper.settings.show_terms_popup') == 1)
+@if(Config::get('lorekeeper.settings.show_terms_popup') == 1)
 <div class="modal fade d-none" id="termsModal" role="dialog" style="display:inline;overflow:auto;" data-backdrop="static"
     data-keyboard="false">
     <div class="modal-dialog" role="document">
@@ -40,8 +39,22 @@
 
         termsButton.on('click', function(e) {
             e.preventDefault();
-            localStorage.setItem("terms_accepted", true);
-            window.location.replace("/terms/accept");
+            
+            if(user == "1") {
+                $.post('{{ url("terms/accept") }}', {
+                    _token: '{{ csrf_token() }}'
+                }).done(function() {
+                    $('#termsModal').removeClass("show").addClass("d-none");
+                    $('#termsBackdrop').removeClass("show").addClass("d-none");
+                }).fail(function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    alert('Error accepting terms. Please try again.');
+                });
+            } else {
+                localStorage.setItem("terms_accepted", true);
+                $('#termsModal').removeClass("show").addClass("d-none");
+                $('#termsBackdrop').removeClass("show").addClass("d-none");
+            }
         });
 
         function showPopup(){

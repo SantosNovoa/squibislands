@@ -310,5 +310,5 @@ Route::get('time', function () {
     Terms accept
 **************************************************************************************************/
 Route::group(['prefix' => 'terms'], function() {
-    Route::get('/accept', 'TermsController@acceptTerms');
+    Route::post('/accept', 'TermsController@acceptTerms');
 });
