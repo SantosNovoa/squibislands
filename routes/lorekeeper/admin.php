@@ -913,3 +913,10 @@ Route::group(['prefix' => 'typing', 'middleware' => 'power:edit_data', 'namespac
     Route::get('delete/{id}', 'ElementController@getDeleteTyping');
     Route::post('delete/{id}', 'ElementController@postDeleteTyping');
 });
+
+// FEATURED CHARACTER
+Route::group(['prefix' => 'featured-character'], function() {
+    Route::get('/', 'FeaturedCharacterController@getIndex');
+    Route::post('change', 'FeaturedCharacterController@postChange');
+    Route::post('set', 'FeaturedCharacterController@postSet');
+});

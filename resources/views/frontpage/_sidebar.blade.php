@@ -1,4 +1,4 @@
-<ul>
+{{-- <ul>
     <li class="sidebar-header" style="display: block; padding: 0.3em 1em; color: white; font-size: 17px;">Spotlight of the Moment</li>
     <li class="sidebar-section text-center accordion" id="featAccordion">
         @foreach ($featuredChars as $character)
@@ -28,4 +28,4 @@
             </div>
         @endforeach
     </li>
-</ul>
+</ul> --}}

@@ -59,26 +59,37 @@
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             <i class="fa-solid fa-paw"></i> <span class="nav-text">Species</span>
                         </a>
-
-                        <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
-                            <a class="dropdown-item" href="{{ url('info/sqb_overview') }}">
-                                Overview
-                            </a>
-                            <a class="dropdown-item" href="{{ url('info/squib_subtypes') }}">
-                                SubTypes
-                            </a>
-                            <a class="dropdown-item" href="{{ url('info/squib_design') }}">
-                                Design Guide
-                            </a>
-                            <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
-                                Trait Index
-                            </a>
-                            <a class="dropdown-item" href="{{ url('info/companions') }}">
-                                Companions
-                            </a>
-                            {{-- <a class="dropdown-item" href="{{ url('userstats') }}">
-                                Stat Information
-                            </a> --}}
+                        <div class="dropdown-menu dropdown-menu-two-column" style="padding: 0;"aria-labelledby="navbarDropdown">
+                            <div class="dropdown-column">
+                                <h3 class="dropdown-header" style="background-color: rgba(7, 31, 109, 0.8); color:white; font-size: 18px;">Guides</h3>
+                                <a class="dropdown-item" href="{{ url('info/sqb_overview') }}">
+                                    Overview
+                                </a>
+                                <a class="dropdown-item" href="{{ url('info/squib_subtypes') }}">
+                                    Subtypes
+                                </a>
+                                <a class="dropdown-item" href="{{ url('info/squib_design') }}">
+                                    Design Guide
+                                </a>
+                                <a class="dropdown-item" href="{{ url('info/companions') }}">
+                                    Companions
+                                </a>
+                            </div>
+                            <div class="dropdown-column">
+                                <h3 class="dropdown-header" style="background-color: rgba(7, 31, 109, 0.8); color:white; font-size: 18px;">Traits</h3>
+                                <a class="dropdown-item" href="{{ url('world/subtypes/1/traits') }}">
+                                    Saltwater
+                                </a>
+                                <a class="dropdown-item" href="{{ url('world/subtypes/4/traits') }}">
+                                    Freshwater
+                                </a>
+                                <a class="dropdown-item" href="{{ url('world/subtypes/2/traits') }}">
+                                    Squibble
+                                </a>
+                                <a class="dropdown-item" href="{{ url('world/subtypes/3/traits') }}">
+                                    Krakens
+                                </a>
+                            </div>
                         </div>
                     </li>
 

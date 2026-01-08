@@ -365,4 +365,13 @@ return [
             ],
         ],
     ],
+    'Spotlight' => [
+    'power' => 'edit_site_settings',
+    'links' => [
+        [
+            'name' => 'Manage Featured Character',
+            'url' => 'admin/featured-character',
+        ],
+        ],
+    ],
 ];

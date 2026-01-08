@@ -8,6 +8,7 @@
     @if(Auth::check())
        @include('frontpage._sidebar')
     @endif
+    @include('pages._sidebar')
 @endsection
 
 @section('content')
@@ -17,3 +18,7 @@
         @include('pages._logged_out')
     @endif
 @endsection
+
+{{-- @section('sidebar')
+    @include('pages._sidebar')
+@endsection --}}

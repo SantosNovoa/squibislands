@@ -11,6 +11,10 @@ use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
 use App\Services\LinkService;
 use App\Services\UserService;
+use Config;
+use Carbon\Carbon;
+use Settings;
+use App\Services\DeviantArtService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +47,11 @@ class HomeController extends Controller {
         $featured = [];
         $specieses = Species::visible(0)->orderBy('specieses.sort', 'DESC')->pluck('id')->toArray();
 
+        if(Settings::get('featured_character')) {
+            $character = Character::find(Settings::get('featured_character'));
+        }
+        else $character = null;
+
         foreach ($specieses as $species) {
             $randomSpecies = self::randomCharacter($species);
             if ($randomSpecies) {
@@ -54,6 +63,7 @@ class HomeController extends Controller {
             'about'               => SitePage::where('key', 'about')->first(),
             'gallerySubmissions'  => $gallerySubmissions,
             'featuredChars'       => $featured,
+            'featured'            => $character,
             'featuredFirst'       => Arr::first($specieses),
             'saleses'             => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
             'newses'              => News::visible()->orderBy('updated_at', 'DESC')->take(2)->get(),
