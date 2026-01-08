@@ -36,7 +36,7 @@
 
             {{-- Basic info --}}
             <div class="tab-pane fade show active" id="info-{{ $image->id }}">
-                <div class="row">
+                <div class="row no-gutters">
                     <div class="col-lg-4 col-5">
                         <h5>Class</h5>
                     </div>

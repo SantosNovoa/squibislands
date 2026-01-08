@@ -39,7 +39,7 @@
 
 {{-- Main Image --}}
 <div class="row mb-3" id="main-tab">
-        <div class="col-md-7">
+        <div class="col-md-7 d-flex flex-column justify-content-center">
             <div class="text-center">
                 <a href="{{ $character->image->canViewFull(Auth::user() ?? null) && file_exists(public_path($character->image->imageDirectory . '/' . $character->image->fullsizeFileName)) ? $character->image->fullsizeUrl : $character->image->imageUrl }}"
                     data-lightbox="entry" data-title="{{ $character->fullName }}">
