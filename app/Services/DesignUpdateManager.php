@@ -448,6 +448,7 @@ class DesignUpdateManager extends Service {
             $request->transformation_id = $transformation ? $transformation->id : null;
             $request->transformation_info = $transformation_info;
             $request->transformation_description = $transformation_description;
+            $request->theme = $data['theme'] ?? null;
             
             $request->has_features = 1;
             $request->save();
