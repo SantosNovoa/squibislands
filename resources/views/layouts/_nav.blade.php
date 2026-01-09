@@ -69,7 +69,10 @@
                                     Subtypes
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/squib_design') }}">
-                                    Design Guide
+                                    Designing
+                                </a>
+                                <a class="dropdown-item" href="{{ url('info/magic_guide') }}">
+                                    Magic
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/companions') }}">
                                     Companions
@@ -77,6 +80,9 @@
                             </div>
                             <div class="dropdown-column">
                                 <h3 class="dropdown-header" style="background-color: rgba(7, 31, 109, 0.8); color:white; font-size: 18px;">Traits</h3>
+                                <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
+                                    All Traits
+                                </a>
                                 <a class="dropdown-item" href="{{ url('world/subtypes/1/traits') }}">
                                     Saltwater
                                 </a>
