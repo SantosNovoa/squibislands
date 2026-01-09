@@ -19,12 +19,12 @@
                 <div class="card-body inventory-body">
                     <div class="row mb-2">
                         @foreach($group as $character)
-                            <div class="col-md-3 col-6 text-center mb-2">
-                                <div>
+                            <div class="col-md-3 col-6 text-center mb-2 d-flex flex-column justify-content-end">
+                                <div class="d-flex flex-column align-items-center">
                                     <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
                                 </div>
                                 <div class="mt-1 h5">
-                                    @if(!$character->is_visible) <i class="fas fa-eye-slash"></i> @endif {!! $character->displayName !!}
+                                    @if(!$character->is_visible) <i class="fas fa-eye-slash"></i> @endif {!! Illuminate\Support\Str::limit($character->fullName, 11, $end = '...') !!}
                                 </div>
                             </div>
                         @endforeach

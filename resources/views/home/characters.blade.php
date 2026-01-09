@@ -46,12 +46,12 @@
 {!! Form::open(['url' => 'characters/sort', 'class' => 'text-right']) !!}
 <div id="sortable" class="row sortable">
     @foreach($characters as $character)
-        <div class="col-md-3 col-6 text-center mb-2" data-id="{{ $character->id }}">
-            <div>
+        <div class="col-md-3 col-6 text-center mb-2 d-flex flex-column justify-content-end" data-id="{{ $character->id }}">
+            <div class="d-flex flex-column align-items-center">
                 <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
             </div>
             <div class="mt-1 h5">
-                {!! $character->displayName !!}
+                {!! Illuminate\Support\Str::limit($character->fullName, 11, $end = '...') !!}
             </div>
             <div class="form-group">
                 {!! Form::label('folder_ids[]', 'Folder (Optional)') !!}
