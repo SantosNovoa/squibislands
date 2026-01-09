@@ -9,8 +9,7 @@
 
     @include('character.design._header', ['request' => $request])
 
-    <h2>
-        Traits</h2>
+    <h2>Traits</h2>
 
     @if ($request->status == 'Draft' && $request->user_id == Auth::user()->id)
         <p>Select the traits for the {{ $request->character->is_myo_slot ? 'created' : 'updated' }} character. @if ($request->character->is_myo_slot)

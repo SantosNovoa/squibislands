@@ -159,7 +159,13 @@
                         <strong>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!}</strong>
                     </div>
                     <div class="ml-bg">
-                        <a href="{{ $character->url }}"><img src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" /></a>
+                        <a href="{{ $character->url }}" class="character-thumbnail" data-thumb-url="{{ $character->image->thumbnailUrl }}">
+                            <div class="tn-background"></div>
+                            <div class="ml-thumbnail d-flex justify-content-center">
+                                <img loading="lazy" src="{{ $character->image->thumbnailUrl }}" class="img-thumbnail" alt="Thumbnail for {{ $character->fullName }}" />
+                                <div class="shine"></div>
+                            </div>
+                        </a>
                     </div>
                     <div class="mt-1">
                         <a href="{{ $character->url }}" class="display-character h5 mb-0">
@@ -216,3 +222,39 @@
 {!! $characters->render() !!}
 
 <div class="text-center mt-4 small text-muted">{{ $characters->total() }} result{{ $characters->total() == 1 ? '' : 's' }} found.</div>
+
+
+<script>
+$(document).ready(function() {
+    $('.character-thumbnail').each(function() {
+        const $thumb = $(this);
+        const thumbUrl = $thumb.data('thumb-url');
+        
+        // Set mask image
+        $thumb.find('.shine').css('--card-shine-mask', `url(${thumbUrl})`);
+        
+        $thumb.on('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Calculate percentages and amplify (-50% to 150% range)
+            const px = ((x / rect.width) - 0.5) * 300 + 50;  // Amplified
+            const py = ((y / rect.height) - 0.5) * 300 + 50; // Amplified
+            
+            // Update background position for shine effect
+            $(this).find('.shine').css({
+                'background-position': `${px}% ${py}%`,
+                'transform': `translate(${(x / rect.width - 0.5) * 20}px, ${(y / rect.height - 0.5) * 20}px)` // Also move the element slightly
+            });
+        });
+        
+        $thumb.on('mouseleave', function() {
+            $(this).find('.shine').css({
+                'background-position': '50% 50%',
+                'transform': 'translate(0, 0)'
+            });
+        });
+    });
+});
+</script>

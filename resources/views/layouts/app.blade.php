@@ -137,9 +137,62 @@
 
         </main>
 
-        <div class="sidebar" id="sidebar">
-                    @yield('sidebar')
-        </div>
+    <div class="sidebar" id="sidebar">
+        @yield('sidebar')
+    </div> 
+
+
+    <div class="sidebar" id="sidebar-right">
+        @if(Auth::check())
+            <ul class="text-center pl-0">
+                <li class="sidebar-header">
+                    <a href="#" class="card-link" style="display: block; color: white; font-size: 17px; font-family: DynaPuff, serif !important;">Selected Character</a>
+                </li>
+                <li class="sidebar-section p-2 feat-container">
+                    @if(Auth::user()->settings->selected_character_id)
+                        @php
+                            $featuredChar = App\Models\Character\Character::find(Auth::user()->settings->selected_character_id);
+                        @endphp
+                        
+                        @if($featuredChar && $featuredChar->user_id == Auth::user()->id)
+                            <div class="featured-character">
+                                <a href="{{ $featuredChar->url }}">
+                                    <img src="{{ $featuredChar->image->thumbnailUrl }}" class="img-thumbnail" />
+                                </a>
+                            </div>
+                            <div class="mt-1">
+                                <a href="{{ $featuredChar->url }}" class="h5 mb-0">
+                                    @if(!$featuredChar->is_visible) <i class="fas fa-eye-slash"></i> @endif 
+                                    {{ Illuminate\Support\Str::limit($featuredChar->fullName, 15, $end = '...')  }}
+                                </a>
+                            </div>
+                            <a href="{{ url('characters') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif;">
+                                Switch <i class="fas fa-arrow-right"></i>
+                            </a>
+                        @else
+                            <div class="featured-character">
+                                <a href="#"><img src="{{ asset('images/account.png') }}" class="img-thumbnail" /></a>
+                            </div>
+                            <p>Character not found!</p>
+                            <a href="{{ url('characters') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif;">
+                                Select <i class="fas fa-arrow-right"></i>
+                            </a>
+                        @endif
+                    @else
+                        <div class="featured-character">
+                            <a href="#"><img src="{{ asset('images/account.png') }}" class="img-thumbnail" /></a>
+                        </div>
+                        <strong class="p-2">You haven't selected a character!</strong>
+                        <a href="{{ url('characters') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif;">
+                            Select <i class="fas fa-arrow-right"></i>
+                        </a>   
+                    @endif
+                </li>
+            </ul>
+        @endif
+    </div>
+
+        
 
         <div class="site-footer mt-4" id="footer">
                         @include('layouts._footer')
