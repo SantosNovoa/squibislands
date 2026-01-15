@@ -141,16 +141,6 @@
                         </div>
                     </div>
                 @endif
-                @if($image->hasTitle)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Title</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">
-                            {!! $image->title_id ? $image->title->displayNamePartial.(isset($image->title_data) ? ' ('.nl2br(htmlentities($image->title_data['full'])).')' : null) : (nl2br(htmlentities($image->title_data['full']))) !!}
-                        </div>
-                    </div>
-                @endif
 
                 <div class="mb-3">
                     <div>

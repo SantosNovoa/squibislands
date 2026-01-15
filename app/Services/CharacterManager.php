@@ -20,9 +20,6 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterStat;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Sales\SalesCharacter;
-use App\Models\User\UserCharacterLog;
-use App\Models\Character\CharacterTitle;
-use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
 use App\Models\WorldExpansion\FactionRankMember;
@@ -723,7 +720,6 @@ class CharacterManager extends Service {
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
             $old['transformation'] = $image->transformation_id ? $image->transformation->displayName : null;
             $old['theme'] = $image->theme ? $image->theme : null;
-            $old['title'] = $image->title_id ? $image->title->displayName : ($image->title_data ? $image->title_data : null);
 
             // Clear old features
             $image->features()->delete();
@@ -743,8 +739,6 @@ class CharacterManager extends Service {
             $image->transformation_info = $data['transformation_info'] ?: null;
             $image->transformation_description = $data['transformation_description'] ?: null;
             $image->theme = $data['theme'];
-            $image->title_id = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
-            $image->title_data = $data['title_id'] && isset($data['title_data']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
             $image->save();
 
             $new = [];
@@ -756,7 +750,6 @@ class CharacterManager extends Service {
             $new['transformation_info'] = $image->transformation_info ? $image->transformation_info : null;
             $new['transformation_description'] = $image->transformation_description ? $image->transformation_description : null;
             $new['theme'] = $image->theme ? $image->theme : null;
-            $new['title'] = $image->title_id ? $image->title->displayName : ($image->title_data ? $image->title_data : null);
 
             // Character also keeps track of these features
             $image->character->rarity_id = $image->rarity_id;
@@ -2200,7 +2193,7 @@ class CharacterManager extends Service {
                 }
             }
             $imageData = Arr::only($data, [
-                'species_id', 'subtype_id', 'rarity_id', 'use_cropper', 'title_id', 'title_data',
+                'species_id', 'subtype_id', 'rarity_id', 'use_cropper',
                 'x0', 'x1', 'y0', 'y1', 'transformation_id','transformation_info','transformation_description','theme'
             ]);
             $imageData['use_cropper'] = isset($data['use_cropper']);
@@ -2214,8 +2207,6 @@ class CharacterManager extends Service {
             $imageData['extension'] = (config('lorekeeper.settings.masterlist_image_format') ?? ($data['extension'] ?? $data['image']->getClientOriginalExtension()));
             $imageData['fullsize_extension'] = (config('lorekeeper.settings.masterlist_fullsizes_format') ?? ($data['fullsize_extension'] ?? $data['image']->getClientOriginalExtension()));
             $imageData['character_id'] = $character->id;
-            $imageData['title_id'] = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
-            $imageData['title_data'] = isset($data['title_data']) && $data['title_data'] && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
 
             $image = CharacterImage::create($imageData);
 
@@ -2279,7 +2270,7 @@ class CharacterManager extends Service {
             // Save image
             $this->handleImage($data['image'], $image->imageDirectory, $image->imageFileName, null, isset($data['default_image']));
 
-        // Save thumbnail first before processing full image
+            // Save thumbnail first before processing full image
             if (isset($data['use_cropper'])) {
                 $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $isMyo);
             } else {
@@ -2304,7 +2295,7 @@ class CharacterManager extends Service {
         }
 
         return false;
-    }    
+    }
 
     /**
      * Generates a list of features for displaying.
@@ -2406,8 +2397,6 @@ class CharacterManager extends Service {
                 'rarity_id' => $request->rarity_id,
                 'theme' => $request->theme,
                 'sort' => 0,
-                'title_id' => isset($request->title_id) && $request->title_id ? $request->title_id : null,
-                'title_data' => isset($request->title_data) ? json_encode($request->title_data) : null
             ]);
 
             // Shift the image credits over to the new image

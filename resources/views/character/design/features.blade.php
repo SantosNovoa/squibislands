@@ -68,30 +68,6 @@
             @endif
         </div>
 
-        @if($request->character->is_myo_slot && $request->character->image->title_id)
-                <div class="alert alert-secondary">{!! $request->character->image->title->displayName !!}</div>
-        @else
-            <div class="row no-gutters">
-                <div class="col-md-6 pr-2">
-                    <div class="form-group">
-                        {!! Form::label('Character Title') !!}
-                        {!! Form::select('title_id', $titles, $request->title_id ?? (isset($request->title_data) ? 'custom' : ($request->character->image->title_data ? 'custom' : null)), ['class' => 'form-control', 'id' => 'charTitle']) !!}
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group" id="titleOptions">
-                        {!! Form::label('Extra Info/Custom Title (Optional)') !!} {!! add_help('If \'custom title\' is selected, this will be displayed as the title. If a preexisting title is selected, it will be displayed in addition to it.'.(Settings::get('character_title_display') ? ' The short version is only used in the case of a custom title.' : '')) !!}
-                        <div class="d-flex">
-                            {!! Form::text('title_data[full]', isset($request->title_data['full']) ? $request->title_data['full'] : (isset($request->character->image->title_data['full']) ? $request->character->image->title_data['full']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Full Title']) !!}
-                            @if(Settings::get('character_title_display'))
-                                {!! Form::text('title_data[short]', isset($request->title_data['short']) ? $request->title_data['short'] : (isset($request->character->image->title_data['short']) ? $request->character->image->title_data['short']: null), ['class' => 'form-control mr-2', 'placeholder' => 'Short Title (Optional)']) !!}
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <div class="form-group">
             {!! Form::label(ucfirst(__('character_theme.theme')).' ' . (config('lorekeeper.extensions.character_theme.is_required') ? '(Required)' : '(Optional)')) !!}
             {!! Form::text('theme', $request->theme, ['class' => 'form-control']) !!}
@@ -193,28 +169,12 @@
                 <div class="col-md-2 col-4">
                     <h5>Rarity</h5>
                 </div>
-                <div class="col-md-10 col-8">
-                    {!! $request->rarity ? $request->rarity->displayName : 'None Selected' !!}
-                </div>
+                <div class="col-md-10 col-8">{!! $request->rarity ? $request->rarity->displayName : 'None Selected' !!}</div>
             </div>
             @if($request->theme)
                 <div class="row">
-                    <div class="col-md-2 col-4">
-                        <h5>{{ucfirst(__('character_theme.theme'))}}</h5>
-                    </div>
-                    <div class="col-md-10 col-8">
-                        {!! $request->theme !!}
-                    </div>
-                </div>
-            @endif
-            @if(isset($request->title_id) || isset($request->title_data))
-                <div class="row">
-                    <div class="col-md-2 col-4">
-                        <h5>Title</h5>
-                    </div>
-                    <div class="col-md-10 col-8">
-                        {!! $request->title_id ? $request->title->displayNamePartial.(isset($request->title_data) ? ' ('.nl2br(htmlentities($request->title_data['full'])).')' : null) : (nl2br(htmlentities($request->title_data['full']))) !!}
-                    </div>
+                    <div class="col-md-2 col-4"><h5>{{ucfirst(__('character_theme.theme'))}}</h5></div>
+                    <div class="col-md-10 col-8">{!! $request->theme !!}</div>
                 </div>
             @endif
         </div>
@@ -271,24 +231,6 @@
                 alert("AJAX call failed: " + textStatus + ", " + errorThrown);
             });
 
-        });
-        $(document).ready(function() {
-            var $title = $('#charTitle');
-            var $titleOptions = $('#titleOptions');
-
-            var titleEntry = $title.val() != 0;
-
-            updateTitleEntry(titleEntry);
-
-            $title.on('change', function(e) {
-                var titleEntry = $title.val() != 0;
-                updateTitleEntry(titleEntry);
-            });
-
-            function updateTitleEntry($show) {
-                if($show) $titleOptions.removeClass('hide');
-                else $titleOptions.addClass('hide');
-            }
         });
     </script>
 @endsection

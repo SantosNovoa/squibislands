@@ -11,7 +11,6 @@ use App\Models\Character\Sublist;
 use App\Models\Feature\Feature;
 use App\Models\Rank\Rank;
 use App\Models\Rarity;
-use App\Models\Character\CharacterTitle;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
@@ -254,15 +253,6 @@ class BrowseController extends Controller {
         if ($request->get('has_transformation')) {
             $imageQuery->whereNotNull('transformation_id');
         }
-
-        if($request->get('title_id')) {
-            if($request->get('title_id') == 'custom') $imageQuery->whereNull('title_id')->whereNotNull('title_data');
-            else $imageQuery->where('title_id', $request->get('title_id'));
-        }
-        if($request->get('title_id') == 'custom' && $request->get('title_data')) {
-            $imageQuery->where('title_data','LIKE', '%'.$request->get('title_data').'%');
-        }
-
         if($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             $imageQuery->whereHas('artists', function ($query) use ($artist) {
@@ -357,7 +347,6 @@ class BrowseController extends Controller {
             'specieses'   => [0 => 'Any Species'] + Species::whereNotIn('id', $subSpecies)->visible(Auth::user() ?? null)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'    => [0 => 'Any Subtype'] + Subtype::visible(Auth::user() ?? null)->orderBy('subtypes.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'    => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'titles'      => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
             'features'    => Feature::getDropdownItems(),
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
@@ -610,22 +599,12 @@ class BrowseController extends Controller {
                 });
             }
         }
-
         if ($request->get('transformation_id')) {
             $imageQuery->where('transformation_id', $request->get('transformation_id'));
         }
         if ($request->get('has_transformation')) {
             $imageQuery->whereNotNull('transformation_id');
         }
-
-        if($request->get('title_id')) {
-            if($request->get('title_id') == 'custom') $imageQuery->whereNull('title_id')->whereNotNull('title_data');
-            else $imageQuery->where('title_id', $request->get('title_id'));
-        }
-        if($request->get('title_id') == 'custom' && $request->get('title_data')) {
-            $imageQuery->where('title_data','LIKE', '%'.$request->get('title_data').'%');
-        }
-
         if($request->get('artist')) {
             $artist = User::find($request->get('artist'));
             $imageQuery->whereHas('artists', function ($query) use ($artist) {
@@ -702,7 +681,6 @@ class BrowseController extends Controller {
             'specieses'   => [0 => 'Any Species'] + $subSpecies,
             'subtypes'    => [0 => 'Any Subtype'] + Subtype::visible(Auth::user() ?? null)->orderBy('subtypes.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'    => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'titles'      => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
             'features'    => Feature::getDropdownItems(),
             'sublist'     => $sublist,
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),

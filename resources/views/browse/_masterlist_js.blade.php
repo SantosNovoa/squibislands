@@ -6,9 +6,7 @@
         var $gridView = $('#gridView');
         var $listButton = $('.list-view-button');
         var $listView = $('#listView');
-        var $customTitle = $('#customTitle');
-        var $customTitleOptions = $('#customTitleOptions');
-        var customTitleSearch = $customTitle.val() == 'custom';
+
         var view = null;
 
         initView();
@@ -26,17 +24,6 @@
             view = window.localStorage.getItem('lorekeeper_masterlist_view');
             if (!view) view = 'grid';
             setView(view);
-        }
-
-        $customTitle.on('change', function(e) {
-            customTitleSearch = $customTitle.val() == 'custom';
-
-            updateTitleSearch();
-        });
-
-        function updateTitleSearch() {
-            if(customTitleSearch) $customTitleOptions.removeClass('hide');
-            else $customTitleOptions.addClass('hide');
         }
 
         function setView(status) {
