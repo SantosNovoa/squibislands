@@ -31,26 +31,26 @@
                             <i class="fa-solid fa-envelope"></i> <span class="nav-text">Official</span>
                         </a>
                         @endif
-                        <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
+                        <div class="dropdown-menu animate slideIn" aria-labelledby="inventoryDropdown">
                             @if (Auth::check() && Auth::user()->is_news_unread && config('lorekeeper.extensions.navbar_news_notif'))
-                                <a class="dropdown-item d-flex text-warning" href="{{ url('news') }}"><strong>News</strong></a>
+                                <a class="dropdown-item d-flex text-warning" href="{{ url('news') }}"><strong><i class="fa-solid fa-newspaper"></i> News</strong></a>
                             @else
                                 <a class="dropdown-item" href="{{ url('news') }}">
-                                    News
+                                   <i class="fa-solid fa-newspaper"></i> News
                                 </a>
                             @endif
                             @if (Auth::check() && Auth::user()->is_sales_unread && config('lorekeeper.extensions.navbar_news_notif'))
-                                <a class="dropdown-item d-flex text-warning" href="{{ url('sales') }}"><strong>Sales</strong></a>
+                                <a class="dropdown-item d-flex text-warning" href="{{ url('sales') }}"><strong><i class="fa-solid fa-shop"></i> Sales</strong></a>
                             @else
                                 <a class="dropdown-item" href="{{ url('sales') }}">
-                                    Sales
+                                   <i class="fa-solid fa-shop"></i> Sales
                                 </a>
                             @endif
                             <a class="dropdown-item" href="{{ url('info/official_customs') }}">
-                                Customs
+                              <i class="fa-solid fa-palette"></i> Customs
                             </a>
                             <a class="dropdown-item" href="{{ url('raffles') }}">
-                                Raffles
+                               <i class="fa-solid fa-dice"></i> Raffles
                             </a>
                         </div>
                     </li>
@@ -59,41 +59,43 @@
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             <i class="fa-solid fa-paw"></i> <span class="nav-text">Species</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-two-column" style="padding: 0;"aria-labelledby="navbarDropdown">
+                        <div class="dropdown-menu dropdown-menu-two-column animate slideIn"aria-labelledby="navbarDropdown">
                             <div class="dropdown-column">
-                                <h3 class="dropdown-header" style="background-color: rgba(7, 31, 109, 0.8); color:white; font-size: 18px;">Guides</h3>
+                                <h3 class="dropdown-header" style="color: black;font-size: 18px; text-align:center;">Guides</h3>
+                                <div class="dropdown-divider-col-left"></div>
                                 <a class="dropdown-item" href="{{ url('info/sqb_overview') }}">
-                                    Overview
+                                    <i class="fa-solid fa-anchor"></i> Overview
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/squib_subtypes') }}">
-                                    Subtypes
+                                    <i class="fa-solid fa-droplet"></i> Subtypes
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/squib_design') }}">
-                                    Designing
+                                    <i class="fa-solid fa-paintbrush"></i> Designing
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/magic_guide') }}">
-                                    Magic
+                                    <i class="fa-solid fa-wand-sparkles"></i> Magic
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/companions') }}">
-                                    Companions
+                                    <i class="fa-solid fa-paw"></i> Companions
                                 </a>
                             </div>
                             <div class="dropdown-column">
-                                <h3 class="dropdown-header" style="background-color: rgba(7, 31, 109, 0.8); color:white; font-size: 18px;">Traits</h3>
+                                <h3 class="dropdown-header" style="color: black;font-size: 18px; text-align:center;">Traits</h3>
+                                <div class="dropdown-divider-col-right"></div>
                                 <a class="dropdown-item" href="{{ url('world/species/1/traits') }}">
-                                    All Traits
+                                    <i class="fa-solid fa-rectangle-list"></i>  Traits
                                 </a>
                                 <a class="dropdown-item" href="{{ url('world/subtypes/1/traits') }}">
-                                    Saltwater
+                                   <i class="fa-solid fa-caret-right"></i> Saltwater
                                 </a>
                                 <a class="dropdown-item" href="{{ url('world/subtypes/4/traits') }}">
-                                    Freshwater
+                                   <i class="fa-solid fa-caret-right"></i> Freshwater
                                 </a>
                                 <a class="dropdown-item" href="{{ url('world/subtypes/2/traits') }}">
-                                    Squibble
+                                   <i class="fa-solid fa-caret-right"></i> Squibble
                                 </a>
                                 <a class="dropdown-item" href="{{ url('world/subtypes/3/traits') }}">
-                                    Krakens
+                                   <i class="fa-solid fa-caret-right"></i> Krakens
                                 </a>
                             </div>
                         </div>
@@ -104,24 +106,24 @@
                             <i class="fa-solid fa-circle-info"></i> <span class="nav-text">Info</span>
                         </a>
 
-                        <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
+                        <div class="dropdown-menu animate slideIn" aria-labelledby="inventoryDropdown">
                             <a class="dropdown-item" href="{{ url('info/beginner') }}">
-                                Beginners Guide
+                              <i class="fa-solid fa-hourglass-start"></i> Beginners Guide
                             </a>
                             <a class="dropdown-item" href="{{ url('info/masterlist_images') }}">
-                                Masterlist Images
+                               <i class="fa-solid fa-image"></i> Masterlist Images
                             </a>
                             <a class="dropdown-item" href="{{ url('info/MYO_submissions_updates') }}">
-                                MYO Submissions & Updates
+                              <i class="fa-solid fa-brush"></i> MYO Submissions & Updates
                             </a>
                             <a class="dropdown-item" href="{{ url('info/submission_rewards') }}">
-                                Art & Writing Rewards
+                               <i class="fa-solid fa-paintbrush"></i> Art & Writing Rewards
                             </a>
                             <a class="dropdown-item" href="{{ url('info/claims_guide') }}">
-                                Character & Item Claims
+                               <i class="fa-solid fa-circle-exclamation"></i> Character & Item Claims
                             </a>
                             <a class="dropdown-item" href="{{ url('world') }}">
-                                Encyclopedia
+                               <i class="fa-solid fa-magnifying-glass"></i> Encyclopedia
                             </a>
                         </div>
                     </li>
@@ -131,12 +133,12 @@
                                 <i class="fa-solid fa-rectangle-list"></i> <span class="nav-text">Masterlist</span>
                         </a>
 
-                        <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
+                        <div class="dropdown-menu animate slideIn" aria-labelledby="inventoryDropdown">
                             <a class="dropdown-item" href="{{ url('masterlist') }}">
-                                Character Masterlist
+                               <i class="fa-solid fa-fish"></i> Character Masterlist
                             </a>
                             <a class="dropdown-item" href="{{ url('sublist/npc_designs') }}">
-                                NPCs
+                               <i class="fa-solid fa-heart"></i> NPCs
                             </a>
                         </div>
                     </li>
@@ -146,22 +148,22 @@
                             <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 <i class="fa-solid fa-gamepad"></i> <span class="nav-text">Activities</span>
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
+                            <div class="dropdown-menu animate slideIn" aria-labelledby="inventoryDropdown">
                                 <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
-                                    Prompts
+                                   <i class="fa-solid fa-pen-fancy"></i> Prompts
                                 </a>
                                 <a class="dropdown-item" href="{{ url('gallery') }}">
-                                    Galleries
+                                   <i class="fa-solid fa-images"></i> Galleries
                                 </a>
                                 {{-- <div class="dropdown-divider"></div> --}}
                                 <a class="dropdown-item" href="{{ url('shops') }}">
-                                    Shops
+                                   <i class="fa-solid fa-store"></i> Shops
                                 </a>
                                 <a class="dropdown-item" href="{{ url('dailies') }}">
-                                    Dailies
+                                   <i class="fa-solid fa-alarm-clock"></i> Dailies
                                 </a>
                                 <a class="dropdown-item" href="{{ url('crafting') }}">
-                                    Crafting
+                                   <i class="fa-solid fa-hammer"></i> Crafting
                                 </a>
                             </div>
                         </li>
@@ -171,21 +173,21 @@
                             <i class="fa-solid fa-user-group"></i> <span class="nav-text">Community</span>
                         </a>
 
-                        <div class="dropdown-menu" aria-labelledby="browseDropdown">
+                        <div class="dropdown-menu animate slideIn" aria-labelledby="browseDropdown">
                             <a class="dropdown-item" href="{{ url('users') }}">
-                                Users
+                               <i class="fa-solid fa-users"></i> Users
                             </a>
                             <a class="dropdown-item" href="https://discord.gg/whc3mVZJMp" target="_blank" rel="noopener noreferrer">
-                                Discord
+                               <i class="fa-brands fa-discord"></i> Discord
                             </a>
                             <a class="dropdown-item" href="https://www.deviantart.com/squibtank">
-                                Deviantart
+                               <i class="fa-brands fa-deviantart"></i> Deviantart
                             </a>
                             <a class="dropdown-item" href="https://ko-fi.com/squibislands">
-                                Ko-fi Shop
+                               <i class="fa-solid fa-mug-hot"></i> Ko-fi Shop
                             </a>
                             <a class="dropdown-item" href="https://toyhou.se/~world/52279.squib-islands">
-                                Toyhouse
+                               <i class="fa-solid fa-house"></i> Toyhouse
                             </a>
                         </div>
                     </li>
@@ -221,18 +223,18 @@
                                 Submit
                             </a>
 
-                            <div class="dropdown-menu" aria-labelledby="browseDropdown">
+                            <div class="dropdown-menu animate slideIn" aria-labelledby="browseDropdown">
                                 <a class="dropdown-item" href="{{ url('submissions/new') }}">
-                                    Prompt
+                                   <i class="fa-solid fa-file-arrow-up"></i> Prompt
                                 </a>
                                 <a class="dropdown-item" href="{{ url('claims/new') }}">
-                                    Claim
+                                   <i class="fa-solid fa-circle-exclamation"></i> Claim
                                 </a>
                                 <a class="dropdown-item" href="{{ url('reports/new') }}">
-                                    Report
+                                   <i class="fa-solid fa-flag"></i> Report
                                 </a>
                                 <a class="dropdown-item" href="{{ url('trades/create') }}">
-                                    Trades
+                                   <i class="fa-solid fa-arrow-right-arrow-left"></i> Trades
                                 </a>
                             </div>
                         </li>
@@ -241,51 +243,51 @@
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="{{ Auth::user()->url }}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-two-column" aria-labelledby="navbarDropdown">
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-two-column animate slideIn" aria-labelledby="navbarDropdown">
                                 <div class="dropdown-column">
                                     <a class="dropdown-item" href="{{ url('inventory') }}">
-                                        Inventory
+                                       <i class="fa-solid fa-boxes-stacked"></i> Inventory
                                     </a>
                                     <a class="dropdown-item" href="{{ url('bank') }}">
-                                        Bank
+                                       <i class="fa-solid fa-piggy-bank"></i> Bank
                                     </a>
                                     <a class="dropdown-item" href="{{ url('badgecase') }}">
-                                        Badges
+                                       <i class="fa-solid fa-certificate"></i> Badges
                                     </a>
                                     <a class="dropdown-item" href="{{ url('characters') }}">
-                                        Characters
+                                       <i class="fa-solid fa-house-user"></i> Characters
                                     </a>
                                     <a class="dropdown-item" href="{{ url('characters/myos') }}">
-                                        MYO Slots
+                                       <i class="fa-solid fa-id-card"></i> MYO Slots
                                     </a>
                                     <a class="dropdown-item" href="{{ url('designs') }}">
-                                        Design Approvals
+                                       <i class="fa-solid fa-file-circle-check"></i> Design Approvals
                                     </a>
                                     <a class="dropdown-item" href="{{ url('pets') }}">
-                                        Pets
+                                       <i class="fa-solid fa-paw"></i> Pets
                                     </a>
                                 </div>
                                 <div class="dropdown-column">
                                     <a class="dropdown-item" href="{{ Auth::user()->url }}">
-                                        Profile
+                                       <i class="fa-solid fa-user"></i> Profile
                                     </a>
                                     <a class="dropdown-item" href="{{ url('notifications') }}">
-                                        Notifications
+                                       <i class="fa-solid fa-bell"></i> Notifications
                                     </a>
                                     <a class="dropdown-item" href="{{ url('mail') }}">
-                                        Mail
+                                      <i class="fa-solid fa-envelope"></i> Mail
                                     </a>
                                     <a class="dropdown-item" href="{{ url('account/bookmarks') }}">
-                                        Bookmarks
+                                       <i class="fa-solid fa-bookmark"></i> Bookmarks
                                     </a>
                                     <a class="dropdown-item" href="{{ url('comments/liked') }}">
-                                        Liked Comments
+                                       <i class="fa-solid fa-heart"></i> Liked Comments
                                     </a>
                                     <a class="dropdown-item" href="{{ url('account/settings') }}">
-                                        Settings
+                                       <i class="fa-solid fa-gear"></i> Settings
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                       <i class="fa-solid fa-right-from-bracket"></i> {{ __('Logout') }}
                                     </a>
                                 </div>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

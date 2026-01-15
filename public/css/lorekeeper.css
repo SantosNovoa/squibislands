@@ -154,6 +154,7 @@ main > .row {
 
 .nav-link {
     color: white !important;
+    transition: all 0.2s ease-in-out;
 }
 
 .site-header-image {
@@ -337,11 +338,11 @@ nav {
     z-index: 1;
 }
 
-/* .character-thumbnail:hover .img-thumbnail {
+.character-thumbnail:hover .img-thumbnail {
     transform: scale(1.10) translateY(-2px);
 }
 
- .bubbles {
+.bubbles {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -349,25 +350,22 @@ nav {
     left: 0;
     z-index: 2;
     opacity: 0;
-    transition: opacity 0.2s ease, background-position 0.3s ease, transform 0.3s ease;
-    mix-blend-mode: multiply; 
-    background-image: url('../images/bbbb.webp');
+    transition: opacity 0.3s ease, background-position 0.15s ease;
+    mix-blend-mode: overlay; /* Changed from multiply to overlay for better effect */
+    background-image: url('../images/Illustration72.png');
     background-size: 200% 200%;
     background-position: 50% 50%;
     pointer-events: none;
-    mask-image: var(--card-shine-mask);
     -webkit-mask-image: var(--card-shine-mask);
-    mask-size: contain;
+    mask-image: var(--card-shine-mask);
     -webkit-mask-size: contain;
-    mask-repeat: no-repeat;
+    mask-size: contain;
     -webkit-mask-repeat: no-repeat;
-    mask-position: center;
+    mask-repeat: no-repeat;
     -webkit-mask-position: center;
+    mask-position: center;
 }
 
-.character-thumbnail:hover .bubbles {
-    opacity: 0.5; 
-} */
 
 /* .row {
     margin-left: 0 !important;
@@ -1127,7 +1125,7 @@ tr.accountbound {
     max-width: 90%;
 }
 
-@keyframes bounce {
+/* @keyframes bounce {
     70% { transform: translateY(0) scale(1, 1); }
     80% { transform: translateY(-15%) scale(1.05, 0.95); } 
     90% { transform: translateY(0) scale(0.95, 1.05); }  
@@ -1140,7 +1138,24 @@ tr.accountbound {
 #header #logo {
     animation: bounce 6s ease-in-out infinite; 
     transform-origin: center bottom; 
+} */
+
+
+.shimmer {
+  color: rgb(34, 92, 131);
+  display: inline-block;
+  mask: linear-gradient(-60deg, #75c1d8 30%, rgba(89, 126, 182, 0.333), #06508d 70%) right/350% 100%;
+  animation: shimmer 5.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+  font-size: 50px;
+  max-width: 200px;
 }
+
+@keyframes shimmer {
+  100% {
+    mask-position: left
+  }
+}
+
 
 /* RECIPES ***************************************************************************************/
 .recipe-image {
@@ -1169,10 +1184,13 @@ tr.accountbound {
 
 .dropdown-menu {
     background-color: rgb(222, 243, 255) !important;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
 }
 
 .dropdown-item:hover {
     background-color: #b5c9d5 !important;
+    transform: scale(1.1)
 }
 .text-warning {
     color: #3095ef !important;
@@ -1181,6 +1199,11 @@ tr.accountbound {
 a.text-warning:hover,
 a.text-warning:focus {
     color: #2680d4 !important;
+}
+
+.dropdown-menu .dropdown-item i,
+.dropdown-menu .dropdown-column .dropdown-header i {
+    color: rgba(72, 223, 249, 0.8) !important;
 }
 
 
@@ -1218,6 +1241,79 @@ a.text-warning:focus {
         border-width: 3px; 
         margin-bottom: 15px;
     }
+}
+
+@media (min-width: 768px) {
+  .animate {
+    animation-duration: 0.3s;
+    -webkit-animation-duration: 0.3s;
+    animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+
+  0% {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    -webkit-transform: transform;
+    -webkit-opacity: 0;
+  }
+
+  100% {
+    -webkit-transform: translateY(0);
+    -webkit-opacity: 1;
+  }
+
+  0% {
+    -webkit-transform: translateY(1rem);
+    -webkit-opacity: 0;
+  }
+}
+
+.slideIn {
+  -webkit-animation-name: slideIn;
+  animation-name: slideIn;
+}
+
+.dropdown-menu {
+    border: none !important;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.nav-link:hover,
+.navbar-brand:hover {
+    color: rgba(72, 223, 249, 0.8) !important;
+    transform: scale(1.1)
+}
+
+.dropdown-divider-col-left {
+    height: 0;
+  margin: .5rem 0 .2rem .5rem;
+  overflow: hidden;
+  border-top: 1px solid #000000;
+}
+
+.dropdown-divider-col-right {
+    height: 0;
+  margin: .5rem .5rem .2rem 0;
+  overflow: hidden;
+  border-top: 1px solid #000000;
 }
 
 
