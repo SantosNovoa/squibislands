@@ -388,6 +388,9 @@ class DesignUpdateManager extends Service {
 
             $rarity = ($request->character->is_myo_slot && $request->character->image->rarity_id) ? $request->character->image->rarity : Rarity::find($data['rarity_id']);
             $species = ($request->character->is_myo_slot && $request->character->image->species_id) ? $request->character->image->species : Species::find($data['species_id']);
+            if(isset($data['title_id'])) {
+                $title = ($request->character->is_myo_slot && $request->character->image->title_id) ? $request->character->image->title : CharacterTitle::where('id', $data['title_id'])->first();
+            }
             if (isset($data['subtype_id']) && $data['subtype_id']) {
                 $subtype = ($request->character->is_myo_slot && $request->character->image->subtype_id) ? $request->character->image->subtype : Subtype::find($data['subtype_id']);
             } else {
@@ -412,9 +415,13 @@ class DesignUpdateManager extends Service {
             if ($subtype && $subtype->species_id != $species->id) {
                 throw new \Exception('Subtype does not match the species.');
             }
+            if(isset($title) && !$title)  {
+                throw new \Exception("Invalid title selected.");
+            }
             if($transformation && $transformation->species_id != null){
                 if($transformation->species_id != $species->id) throw new \Exception(ucfirst(__('transformations.transformation'))." does not match the species.");
             }
+            
 
             // Clear old features
             $request->features()->delete();
@@ -449,6 +456,8 @@ class DesignUpdateManager extends Service {
             $request->transformation_info = $transformation_info;
             $request->transformation_description = $transformation_description;
             $request->theme = $data['theme'] ?? null;
+            $request->title_id = isset($data['title_id']) && $data['title_id'] ? ($data['title_id'] != 'custom' ? $data['title_id'] : null) : null;
+            $request->title_data = ($title || $data['title_id'] == 'custom') && isset($data['title_data']) && isset($data['title_data']['full']) ? json_encode($data['title_data']) : null;
             
             $request->has_features = 1;
             $request->save();

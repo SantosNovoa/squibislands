@@ -105,6 +105,19 @@ class AddSiteSettings extends Command {
 
         $this->addSiteSetting('limited_stock_coupon_settings', 0, '0: Does not allow coupons to be used on limited stock items, 1: Allows coupons to be used on limited stock items');
 
+        if(!DB::table('site_settings')->where('key', 'character_title_display')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'character_title_display',
+                    'value' => 0,
+                    'description' => '0: Characters\' titles only display in their image info. 1: Characters\'s titles display alongside their category, species, rarity.'
+                ]
+
+            ]);
+            $this->info("Added:   character_title_display / Default: 0");
+        }
+        else $this->line("Skipped: character_title_display");
+
         $this->line("\nSite settings up to date!");
     }
 

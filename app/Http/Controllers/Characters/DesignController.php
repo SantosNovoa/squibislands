@@ -17,6 +17,8 @@ use App\Services\DesignUpdateManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
+use App\Models\Character\CharacterTitle;
+use App\Services\CharacterManager;
 
 class DesignController extends Controller {
     /**
@@ -227,6 +229,7 @@ class DesignController extends Controller {
             'specieses' => ['0' => 'Select Species'] + Species::visible()->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => ['0' => 'No Subtype'] + Subtype::visible()->where('species_id', '=', $r->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'titles'    => ['0' => 'Select Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(),
             'transformations' => ['0' => 'Select '.ucfirst(__('transformations.transformation'))] + Transformation::where('species_id','=',$r->species_id)->orWhereNull('species_id')->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
         ]);

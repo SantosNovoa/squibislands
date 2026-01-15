@@ -26,6 +26,9 @@
         @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
             {!! $character->image->theme ? ' ・ ' . $character->image->theme : '' !!}
         @endif
+        @if(Settings::get('character_title_display') && $character->image->hasTitle)
+            ・ "{!! $character->image->title_id ? $character->image->title->displayName : nl2br(htmlentities($character->image->title_data['full'])) !!}"
+        @endif
     @else
         MYO Slot @if ($character->image->species_id)
             ・ {!! $character->image->species->displayName !!}
