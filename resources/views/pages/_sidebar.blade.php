@@ -1,5 +1,5 @@
 <ul class="text-center">
-    <li class="sidebar-header"><a href="#" class="card-link" style="display: block; color: white; font-size: 17px; font-family: DynaPuff, serif !important;">Featured Character</a></li>
+    <li class="sidebar-header"><a href="{{ url('prompts/3') }}" class="card-link" style="display: block; color: white; font-size: 17px; font-family: DynaPuff, serif !important;">Weekly Wavemaker</a></li>
 
     <li class="sidebar-section p-2 feat-container">
         @if(isset($featured) && $featured)
@@ -9,7 +9,7 @@
             <div class="mt-1">
                 <a href="{{ $featured->url }}" class="h5 mb-0">@if(!$featured->is_visible) <i class="fas fa-eye-slash"></i> @endif {{ Illuminate\Support\Str::limit($featured->fullName, 15, $end = '...')  }}</a>
             </div>
-            <div class="small">
+            <div class="small" style="font-family: DynaPuff, serif;">
                 {!! $featured->image->species_id ? $featured->image->species->displayName : 'No Species' !!} ・ {!! $featured->displayOwner !!}
             </div>
         @else
