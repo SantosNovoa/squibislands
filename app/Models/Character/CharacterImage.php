@@ -108,6 +108,13 @@ class CharacterImage extends Model {
     }
 
     /**
+     * Get the title of the character image.
+     */
+    public function titles() {
+        return $this->hasMany(CharacterImageTitle::class, 'character_image_id');
+    }
+
+    /**
      * Get the features (traits) attached to the character image, ordered by display order.
      */
     public function features() {
@@ -281,5 +288,50 @@ class CharacterImage extends Model {
      */
     public function getThumbnailUrlAttribute() {
         return asset($this->imageDirectory.'/'.$this->thumbnailFileName);
+    }
+
+    /**
+     * Displays all of the images titles.
+     *
+     * @return string
+     */
+    public function getDisplayTitlesAttribute() {
+        $titles = [];
+        // check sort is set on the titles
+        if (!$this->titles()->whereNull('sort')->count()) {
+            $firstTitle = $this->titles()->orderByDesc('sort')->first();
+            foreach ($this->titles()->orderByDesc('sort')->get() as $title) {
+                $isFirst = $title->id === ($firstTitle ? $firstTitle->id : null);
+                $titles[] = $title->displayTitle(!$isFirst);
+            }
+        } else {
+            // order them by the title->title->sort
+            $sortedTitles = $this->titles()->get()->sortByDesc(function ($title) {
+                return $title->title ? $title->title->sort : -1;
+            })->values();
+
+            $titles = $sortedTitles->map(function ($title, $index) {
+                $isFirst = $index === 0;
+
+                return $title->displayTitle(!$isFirst);
+            })->all();
+        }
+
+        return '<div class="d-flex flex-wrap">'.implode('', $titles).'</div>';
+    }
+
+    /**
+     * Gets the id array of titles for select forms.
+     *
+     * @return string
+     */
+    public function getTitleIdsAttribute() {
+        $ids = [];
+        // we have to do foreach because null id means 'custom' title
+        foreach ($this->titles as $title) {
+            $ids[] = $title->title_id ?? 'custom';
+        }
+
+        return $ids;
     }
 }

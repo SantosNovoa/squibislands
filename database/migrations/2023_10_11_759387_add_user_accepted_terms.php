@@ -8,11 +8,8 @@ class AddUserAcceptedTerms extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
-    {
+    public function up() {
         //
         Schema::table('users', function(Blueprint $table) {
             $table->boolean('has_accepted_terms')->default(0);
@@ -21,11 +18,8 @@ class AddUserAcceptedTerms extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
-    {
+    public function down() {
         //
         Schema::table('users', function(Blueprint $table) {
             $table->dropColumn('has_accepted_terms');

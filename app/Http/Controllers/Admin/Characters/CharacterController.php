@@ -6,6 +6,7 @@ use App\Facades\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterCategory;
+use App\Models\Character\CharacterTitle;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Feature\Feature;
 use App\Models\Rarity;
@@ -58,6 +59,7 @@ class CharacterController extends Controller {
             'transformations' => ['0' => 'Pick a Species First'],
             'isMyo'       => false,
             'stats'       => Stat::orderBy('name')->get(),
+            'titles'      => ['custom' => 'Custom Title'] + CharacterTitle::orderBy('sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
 
@@ -145,7 +147,7 @@ class CharacterController extends Controller {
             'designer_id', 'designer_url',
             'artist_id', 'artist_url',
             'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data',
-            'image', 'thumbnail', 'image_description', 'transformation_id','transformation_info','transformation_description', 'theme', 'stats',
+            'image', 'thumbnail', 'image_description', 'transformation_id','transformation_info','transformation_description', 'theme', 'stats', 'title_ids', 'title_data',
         ]);
         if ($character = $service->createCharacter($data, Auth::user())) {
             flash('Character created successfully.')->success();

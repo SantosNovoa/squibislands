@@ -6,10 +6,27 @@
         var $gridView = $('#gridView');
         var $listButton = $('.list-view-button');
         var $listView = $('#listView');
+        var $customTitle = $('#customTitle');
+        var $customTitleOptions = $('#customTitleOptions');
+
+        var customTitleSearch = $customTitle.val() == 'custom';
 
         var view = null;
 
         initView();
+        updateTitleSearch();
+
+
+        $customTitle.on('change', function(e) {
+            customTitleSearch = $customTitle.val() == 'custom';
+
+            updateTitleSearch();
+        });
+
+        function updateTitleSearch() {
+            if (customTitleSearch) $customTitleOptions.removeClass('hide');
+            else $customTitleOptions.addClass('hide');
+        }
 
         $gridButton.on('click', function(e) {
             e.preventDefault();

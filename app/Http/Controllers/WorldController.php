@@ -10,6 +10,7 @@ use App\Models\Claymore\Gear;
 use App\Models\Claymore\GearCategory;
 use App\Models\Claymore\Weapon;
 use App\Models\Claymore\WeaponCategory;
+use App\Models\Character\CharacterTitle;
 use App\Models\Currency\Currency;
 use App\Models\Element\Element;
 use App\Models\Feature\Feature;
@@ -672,6 +673,44 @@ class WorldController extends Controller {
         ]);
     }
 
+     
+    /**
+     * Shows the character titles page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterTitles(Request $request) {
+        $query = CharacterTitle::query();
+        $title = $request->get('title');
+        $rarity = $request->get('rarity_id');
+        if ($title) {
+            $query->where('title', 'LIKE', '%'.$title.'%');
+        }
+        if (isset($rarity) && $rarity != 'none') {
+            $query->where('rarity_id', $rarity);
+        }
+
+        return view('world.character_titles', [
+            'titles'   => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
+            'rarities' => ['none' => 'Any Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+        ]);
+    }
+
+    /**
+     * Shows a single title's page.
+     *
+     * @param mixed $name
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterTitle(Request $request, $name) {
+        $title = CharacterTitle::where('title', 'LIKE', str_replace('-', ' ', $name))->first();
+
+        return view('world.title_page', [
+            'title' => $title,
+        ]);
+    }
+
     /**
      * Shows the character categories page.
      *
@@ -679,7 +718,6 @@ class WorldController extends Controller {
      */
     public function getCharacterCategories(Request $request) {
         $query = CharacterCategory::query()->with('sublist');
-
         $name = $request->get('name');
         if ($name) {
             $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('code', 'LIKE', '%'.$name.'%');

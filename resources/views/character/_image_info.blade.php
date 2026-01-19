@@ -141,6 +141,18 @@
                         </div>
                     </div>
                 @endif
+                @if ($image->titles->count() > 0)
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-5">
+                            <h5>Titles</h5>
+                        </div>
+                        <div class="col-lg-8 col-7 pl-1">
+                            <div class="h5">
+                                {!! $image->displayTitles !!}
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="mb-3">
                     <div>

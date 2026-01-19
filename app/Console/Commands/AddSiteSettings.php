@@ -86,6 +86,8 @@ class AddSiteSettings extends Command {
         $this->addSiteSetting('is_maintenance_mode', 0, '0: Site is normal, 1: Users without the Has Maintenance Access power will be redirected to the home page.');
         
         $this->addSiteSetting('birthday_item', 1, 'ID of item to be granted to a user on their birth month. Suggestion is to set this to a box type item.');
+        
+        $this->addSiteSetting('character_title_display', 0, '0: Characters\' titles only display in their image info. 1: Characters\'s titles display alongside their category, species, rarity.');
 
         $this->addSiteSetting('deactivated_privacy', 0, 'Who can view the deactivated list? 0: Admin only, 1: Staff only, 2: Members only, 3: Public.');
 

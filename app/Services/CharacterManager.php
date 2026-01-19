@@ -18,6 +18,7 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterFeature;
 use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterStat;
+use App\Models\Character\CharacterImageTitle;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Sales\SalesCharacter;
 use App\Models\Species\Subtype;
@@ -720,14 +721,31 @@ class CharacterManager extends Service {
             $old['rarity'] = $image->rarity_id ? $image->rarity->displayName : null;
             $old['transformation'] = $image->transformation_id ? $image->transformation->displayName : null;
             $old['theme'] = $image->theme ? $image->theme : null;
+            $old['titles'] = $image->titles->count() ? json_encode($image->titles) : null;
 
             // Clear old features
             $image->features()->delete();
+            // Clear old titles
+            $image->titles()->delete();
 
             // Attach features
             foreach ($data['feature_id'] as $key => $featureId) {
                 if ($featureId) {
-                    $feature = CharacterFeature::create(['character_image_id' => $image->id, 'feature_id' => $featureId, 'data' => $data['feature_data'][$key]]);
+                    $feature = CharacterFeature::create([
+                        'character_image_id' => $image->id,
+                        'feature_id'         => $featureId,
+                        'data'               => $data['feature_data'][$key]]);
+                }
+            }
+
+            // Attach titles
+            if (isset($data['title_ids'])) {
+                foreach ($data['title_ids'] as $key=>$titleId) {
+                    CharacterImageTitle::create([
+                        'character_image_id' => $image->id,
+                        'title_id'           => $titleId == 'custom' ? null : $titleId,
+                        'data'               => $data['title_data'][$titleId] ?? null,
+                    ]);
                 }
             }
 
@@ -750,6 +768,7 @@ class CharacterManager extends Service {
             $new['transformation_info'] = $image->transformation_info ? $image->transformation_info : null;
             $new['transformation_description'] = $image->transformation_description ? $image->transformation_description : null;
             $new['theme'] = $image->theme ? $image->theme : null;
+            $new['title'] = $image->titles->count() ? json_encode($image->titles) : null;
 
             // Character also keeps track of these features
             $image->character->rarity_id = $image->rarity_id;
@@ -1536,6 +1555,33 @@ class CharacterManager extends Service {
     }
 
     /**
+     * Sorts a character's titles.
+     *
+     * @param Character $character
+     * @param array     $data
+     *
+     * @return bool
+     */
+    public function sortCharacterTitles($character, $data) {
+        DB::beginTransaction();
+
+        try {
+            // explode the sort array and reverse it since the order is inverted
+            $sort = array_reverse(explode(',', $data));
+
+            foreach ($sort as $key => $s) {
+                CharacterImageTitle::where('id', $s)->where('character_image_id', $character->character_image_id)->update(['sort' => $key]);
+            }
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
      * Deletes a character.
      *
      * @param Character $character
@@ -2209,6 +2255,17 @@ class CharacterManager extends Service {
             $imageData['character_id'] = $character->id;
 
             $image = CharacterImage::create($imageData);
+
+            // Titles
+            if (isset($data['title_ids'])) {
+                foreach ($data['title_ids'] as $key=>$titleId) {
+                    CharacterImageTitle::create([
+                        'character_image_id' => $image->id,
+                        'title_id'           => $titleId == 'custom' ? null : $titleId,
+                        'data'               => $data['title_data'][$titleId] ?? null,
+                    ]);
+                }
+            }
 
             // Check if entered url(s) have aliases associated with any on-site users
             $designers = array_filter($data['designer_url']); // filter null values

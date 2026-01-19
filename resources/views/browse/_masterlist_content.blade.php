@@ -27,12 +27,20 @@
                 <div class="masterlist-search-field">
                     {!! Form::label('transformation_id', ucfirst(__('transformations.transformation')).': ') !!}
                     {!! Form::select('transformation_id', $transformations, Request::get('transformation_id'), ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="masterlist-search-field">
-                        {!! Form::label('has_transformation', 'Has a '.ucfirst(__('transformations.transformation')).': ') !!}
-                        {!! Form::select('has_transformation', ['1' => 'Has a '.__('transformations.transformation').'.'], Request::get('has_transformation'), ['class' => 'form-control', 'placeholder' => 'Any']) !!}
-                    </div>
-                    <hr />
+                </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('has_transformation', 'Has a '.ucfirst(__('transformations.transformation')).': ') !!}
+                    {!! Form::select('has_transformation', ['1' => 'Has a '.__('transformations.transformation').'.'], Request::get('has_transformation'), ['class' => 'form-control', 'placeholder' => 'Any']) !!}
+                </div>
+                <div class="masterlist-search-field">
+                    {!! Form::label('title_id', 'Title: ') !!}
+                    {!! Form::select('title_id', $titles, Request::get('title_id'), ['class' => 'form-control', 'id' => 'customTitle', 'style' => 'width: 250px']) !!}
+                </div>
+                <div class="masterlist-search-field" id="customTitleOptions">
+                    {!! Form::label('title_data', 'Custom Title: ') !!}
+                    {!! Form::text('title_data', Request::get('title_data'), ['class' => 'form-control', 'style' => 'width: 250px']) !!}
+                </div>
+                <hr />
             @endif
             <div class="masterlist-search-field">
                 {!! Form::label('owner', 'Owner Username: ') !!}
@@ -195,6 +203,10 @@
                 @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
                     <th>{{ucfirst(__('character_theme.theme'))}}</th>
                 @endif
+                <th>Species</th>
+                @if (Settings::get('character_title_display'))
+                    <th>Title</th>
+                @endif
                 <th>Created</th>
             </tr>
         </thead>
@@ -211,6 +223,15 @@
                     <td>{!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}</td>
                     @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
                         <td>{!! $character->image->theme ? $character->image->theme : '---' !!}</td>
+                    @endif
+                    @if (Settings::get('character_title_display'))
+                        <td>{!! $character->image->hasTitle
+                            ? ($character->image->title_id
+                                ? $character->image->title->displayNameShort
+                                : (isset($character->image->title_data['short'])
+                                    ? nl2br(htmlentities($character->image->title_data['short']))
+                                    : nl2br(htmlentities($character->image->title_data['full']))))
+                            : 'None' !!}</td>
                     @endif
                     <td>{!! format_date($character->created_at) !!}</td>
                 </tr>
