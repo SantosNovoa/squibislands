@@ -427,6 +427,22 @@ class UserService extends Service {
     }
 
     /**
+     * Updates the user's theme.
+     *
+     * @param \App\Models\User $user
+     * @param array            $data
+     *
+     * @return bool
+     */
+    public function updateTheme($data, $user) {
+        $user->theme_id = $data['theme'];
+        $user->decorator_theme_id = $data['decorator_theme'];
+        $user->save();
+
+        return true;
+    }
+
+    /**
      * Updates a user's username.
      *
      * @param string $username

@@ -73,4 +73,10 @@ return [
         'text_color'       => '#ffffff',
         'background_color' => '#f44336',
     ],
+    
+    'theme' => [
+        'name'             => 'Theme',
+        'text_color'       => '#ffffff',
+        'background_color' => '#573f7e',
+    ],
 ];

@@ -65,3 +65,5 @@ Route::group(['middleware' => ['auth', 'verified', 'post.throttle']], function (
         });
     });
 });
+
+

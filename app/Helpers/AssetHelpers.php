@@ -20,7 +20,7 @@
  */
 function getAssetKeys($isCharacter = false) {
     if (!$isCharacter) {
-        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points'];
+        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes'];
     } else {
         return ['currencies', 'items', 'character_items', 'loot_tables', 'awards', 'elements', 'exp', 'points'];
     }
@@ -135,6 +135,13 @@ function getAssetModelString($type, $namespaced = true) {
                 return '\App\Models\Character\CharacterItem';
             } else {
                 return 'CharacterItem';
+            }
+            break;
+        case 'themes':
+            if ($namespaced) {
+                return '\App\Models\Theme';
+            } else {
+                return 'Theme';
             }
             break;
         case 'elements':
@@ -484,6 +491,13 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
             dd($data, $contents);
             if (!$service->creditStat($sender, $recipient, $logType, $data['data'], 'none', $contents['quantity'])) {
                 return false;
+            }
+        } elseif ($key == 'themes' && count($contents)) {
+            $service = new App\Services\ThemeManager;
+            foreach ($contents as $asset) {
+                if (!$service->creditTheme($recipient, $asset['asset'])) {
+                    return false;
+                }
             }
         }
         if($key == 'recipes' && count($contents))

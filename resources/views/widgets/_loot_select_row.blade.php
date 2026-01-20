@@ -26,6 +26,11 @@
         $recipes = \App\Models\Recipe\Recipe::orderBy('name')->pluck('name', 'id');
     }
     $awards = \App\Models\Award\Award::orderBy('name')->pluck('name', 'id');
+    if (isset($showThemes) && $showThemes) {
+        $themes = \App\Models\Theme::orderBy('name')
+            ->where('is_user_selectable', 0)
+            ->pluck('name', 'id');
+    }
 @endphp
 
 <div id="lootRowData" class="hide">
@@ -38,6 +43,7 @@
                         + ($showLootTables ? ['LootTable' => 'Loot Table'] : [])
                         + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : [])
                         + ($showRecipes ? ['Recipe' => 'Recipe'] : []),
+                        + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : []),
                     null,
                     ['class' => 'form-control reward-type', 'placeholder' => 'Select Reward Type']
                 ) !!}
@@ -64,5 +70,9 @@
     @if($showRecipes)
         {!! Form::select('rewardable_id[]', $recipes, null, ['class' => 'form-control recipe-select', 'placeholder' => 'Select Recipe']) !!}
     @endif
+    @if (isset($showThemes) && $showThemes)
+        {!! Form::select('rewardable_id[]', $themes, null, ['class' => 'form-control theme-select', 'placeholder' => 'Select Theme']) !!}
+    @endif
     {!! Form::select('rewardable_id[]', $awards, null, ['class' => 'form-control award-select', 'placeholder' => 'Select ' . ucfirst(__('awards.award'))]) !!}
+
 </div>

@@ -239,6 +239,13 @@ nav {
     font-weight: bold;
 }
 
+.sidebar-section {
+    background-image: url(../images/white-plain-concrete-textured-background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
+}
+
 .sidebar-header {
     font-size: 17px;
     font-family: DynaPuff, serif !important;
@@ -270,7 +277,7 @@ nav {
 .featured-character {
     max-width: 200px;
     margin-top: 20px;
-    background-image: url(../images/ml-tn-bg.png);
+    background-image: url(../images/light-ml-bg-2.png);
     background-size: cover;
     border-radius: 10px;
 }
@@ -690,13 +697,14 @@ nav {
 /* Chrome, Safari, Edge, Opera */
 .pagination-popover input::-webkit-outer-spin-button,
 .pagination-popover input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox */
 .pagination-popover input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 .spoiler {
@@ -1085,21 +1093,21 @@ tr.accountbound {
 
 /* BOOTSTRAP TABLES *************************************************************************************/
 .ubt-bottom {
-  border-bottom:1px solid #dee2e6;
+    border-bottom:1px solid #dee2e6;
 }
 
 .ubt-top {
-  border-top:1px solid #dee2e6;
+    border-top:1px solid #dee2e6;
 }
 
 .ubt-texthide {
-  width:100%;
-  max-width: 250px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: inline-block;
-  vertical-align: middle;
+    width:100%;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* COMMENTS *************************************************************************************/
@@ -1362,7 +1370,7 @@ a.text-warning:focus {
 }
 
 .ml-bg {
-    background-image: url(../images/ml-tn-bg.png);
+    background-image: url(../images/dark2.png);
     border-radius: 15px;
     margin-top: 5px;
     min-height: 200px;

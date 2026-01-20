@@ -19,6 +19,9 @@ $( document ).ready(function() {
     @if($showRecipes)
         var $recipeSelect = $('#lootRowData').find('.recipe-select');
     @endif
+    @if (isset($showThemes) && $showThemes)
+            var $themeSelect = $('#lootRowData').find('.theme-select');
+    @endif
 
     $('#lootTableBody .selectize').selectize();
     attachRemoveListener($('#lootTableBody .remove-loot-button'));
@@ -53,6 +56,9 @@ $( document ).ready(function() {
             @if($showRecipes)
                 else if (val == 'Recipe') $clone = $recipeSelect.clone();
             @endif
+            @if (isset($showThemes) && $showThemes)
+                else if (val == 'Theme') $clone = $themeSelect.clone();
+            @endif
 
             $cell.html('');
             $cell.append($clone);
@@ -80,6 +86,9 @@ $( document ).ready(function() {
                 @endif
                 @if($showRecipes)
                     else if (val == 'Recipe') $clone = $recipeSelect.clone();
+                @endif
+                @if (isset($showThemes) && $showThemes)
+                    else if (val == 'Theme') $clone = $themeSelect.clone();
                 @endif
 
                 $cell.html('');
