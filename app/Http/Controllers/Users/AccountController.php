@@ -156,6 +156,12 @@ class AccountController extends Controller {
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
+        Auth::user()->profile->update([
+            'pronouns' => $request->get('pronouns'),
+            'text' => $request->get('text'),
+            'parsed_text' => parse($request->get('text'))
+        ]);
+        flash('Profile updated successfully.')->success();
         return redirect()->back();
     }
 
