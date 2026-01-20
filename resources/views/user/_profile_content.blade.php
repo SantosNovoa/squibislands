@@ -88,11 +88,17 @@
 
 @if (isset($user->profile->parsed_text))
     <div class="card mb-3" style="clear:both;">
-        <div class="card-body">
-            {!! $user->profile->parsed_text !!}
+            @if($user->profile->pronouns)
+                <h5 class="card-header">
+                    {{ $user->profile->pronouns }}
+                </h5>
+            @endif
+            <div class="card-body">
+                {!! $user->profile->parsed_text !!}
+            </div>
         </div>
-    </div>
 @endif
+
 
     <div class="row">
     <div class="col-md-6">

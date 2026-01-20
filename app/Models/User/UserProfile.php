@@ -14,11 +14,7 @@ class UserProfile extends Model {
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
-        'text', 'parsed_text',
-=======
-        'text', 'parsed_text', 'pronouns'
->>>>>>> AnimatedCritter/extension/user-pronouns
+        'text', 'parsed_text', 'pronouns',
     ];
 
     /**

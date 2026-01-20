@@ -18,19 +18,6 @@
     @if (mb_strtolower($user->name) != mb_strtolower($name))
         <div class="alert alert-info">This user has changed their name to <strong>{{ $user->name }}</strong>.</div>
     @endif
-    
-    @if(isset($user->profile->parsed_text))
-        <div class="card mb-3" style="clear:both;">
-            @if($user->profile->pronouns)
-                <h5 class="card-header">
-                    {{ $user->profile->pronouns }}
-                </h5>
-            @endif
-            <div class="card-body">
-                {!! $user->profile->parsed_text !!}
-            </div>
-        </div>
-    @endif
 
     @if ($user->is_banned)
         <div class="alert alert-danger">This user has been banned.</div>

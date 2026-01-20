@@ -22,7 +22,6 @@ return [
         'version' => '2.0.1', 
     ],
 
-<<<<<<< HEAD
     'crafting_system' => [
         'key' => 'crafting_system',
         'wiki_key' => 'Crafting_System',
@@ -47,17 +46,10 @@ return [
         'key' => 'staff_team_page',
         'wiki_key' => 'Staff_Team_Page',
             'creators' => json_encode([
-=======
-    'user_pronouns' => [
-        'key' => 'user_pronouns',
-        'wiki_key' => 'User_Pronouns',
-        'creators' => json_encode([
->>>>>>> AnimatedCritter/extension/user-pronouns
             'AnimatedCritter' => 'https://github.com/animatedcritter/',
         ]),
         'version' => '1.0.0',
     ],
-<<<<<<< HEAD
 
     'choice_box_tag' => [
         'key' => 'Choice_Box_Tag',
@@ -107,6 +99,3 @@ return [
         'version' => '2.0.0',
     ],
 ];
-=======
-];
->>>>>>> AnimatedCritter/extension/user-pronouns
