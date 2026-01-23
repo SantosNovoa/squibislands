@@ -42,7 +42,7 @@
                         ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points'] 
                         + ($showLootTables ? ['LootTable' => 'Loot Table'] : [])
                         + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : [])
-                        + ($showRecipes ? ['Recipe' => 'Recipe'] : []),
+                        + ($showRecipes ? ['Recipe' => 'Recipe'] : [])
                         + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : []),
                     null,
                     ['class' => 'form-control reward-type', 'placeholder' => 'Select Reward Type']
