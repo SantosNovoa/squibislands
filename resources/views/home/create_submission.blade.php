@@ -96,7 +96,9 @@
                     var $prompt = $('#prompt');
                     var $rewards = $('#rewards');
 
-                    $prompt.selectize();
+                    if ($prompt.val()) {
+                        $prompt.trigger('change');
+                    }
                     $prompt.on('change', function(e) {
                         $rewards.load('{{ url('submissions/new/prompt') }}/' + $(this).val());
                         $('#copy-calc').load('{{ url('criteria/prompt') }}/' + $(this).val());

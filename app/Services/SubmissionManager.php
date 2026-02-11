@@ -123,8 +123,8 @@ class SubmissionManager extends Service {
             }
 
             $withCriteriaSelected = isset($data['criterion']) ? array_filter($data['criterion'], function ($obj) {
-                return isset($obj['id']);
-            }) : [];
+                return isset($obj['id']) && $obj['id'] != 0 && $obj['id'] !== '';
+            })  : [];
             if (count($withCriteriaSelected) > 0) {
                 $data['criterion'] = $withCriteriaSelected;
             } else {
@@ -202,8 +202,8 @@ class SubmissionManager extends Service {
             }
 
             $withCriteriaSelected = isset($data['criterion']) ? array_filter($data['criterion'], function ($obj) {
-                return isset($obj['id']);
-            }) : [];
+                return isset($obj['id']) && $obj['id'] != 0 && $obj['id'] !== '';
+            })  : [];
             if (count($withCriteriaSelected) > 0) {
                 $data['criterion'] = $withCriteriaSelected;
             } else {
@@ -485,7 +485,16 @@ class SubmissionManager extends Service {
             // Distribute currency from criteria
             if (isset($data['criterion'])) {
                 foreach ($data['criterion'] as $key => $criterionData) {
+                    // Skip if criterion ID is 0 or empty
+                    if (!isset($criterionData['id']) || $criterionData['id'] == 0 || $criterionData['id'] === '') {
+                        continue;
+                    }
+                    
                     $criterion = Criterion::where('id', $criterionData['id'])->first();
+                    if (!$criterion) {
+                        throw new \Exception('Invalid criterion ID: ' . $criterionData['id']);
+                    }
+                    
                     if (isset($criterionData['criterion_currency_id'])) {
                         $criterion_currency = Currency::find($criterionData['criterion_currency_id']);
                     } else {
