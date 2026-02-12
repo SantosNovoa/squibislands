@@ -95,15 +95,16 @@
                 @if (!$isClaim)
                     var $prompt = $('#prompt');
                     var $rewards = $('#rewards');
-
-                    if ($prompt.val()) {
-                        $prompt.trigger('change');
-                    }
+                    $prompt.selectize();
                     $prompt.on('change', function(e) {
                         $rewards.load('{{ url('submissions/new/prompt') }}/' + $(this).val());
                         $('#copy-calc').load('{{ url('criteria/prompt') }}/' + $(this).val());
                         if ($(this).val()) $('#criterion-section').removeClass('hide');
                     });
+
+                    if ($prompt.val()) {
+                        $prompt.trigger('change');
+                    }
                 @endif
 
                 $confirmButton.on('click', function(e) {
