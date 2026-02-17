@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="col-6 col-md-2">
-        <div class="logs-table-cell">
+        <div class="logs-table-cell d-flex">
             {{ $log->recipient_id == $owner->id && $log->recipient_type == $owner->logType && $log->quantity > 0 ? '+' : '-' }} {!! $log->currency ? $log->currency->display(abs($log->quantity)) : $log->cost . ' (Deleted Currency)' !!}
         </div>
     </div>

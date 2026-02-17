@@ -152,7 +152,8 @@ main > .row {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.nav-link {
+.nav-link,
+.weekly-wavemaker {
     color: white !important;
     transition: all 0.2s ease-in-out;
 }
@@ -1305,7 +1306,8 @@ a.text-warning:focus {
 }
 
 .nav-link:hover,
-.navbar-brand:hover {
+.navbar-brand:hover,
+.weekly-wavemaker:hover {
     color: rgba(72, 223, 249, 0.8) !important;
     transform: scale(1.1)
 }
@@ -1370,7 +1372,7 @@ a.text-warning:focus {
 }
 
 .ml-bg {
-    background-image: url(../images/dark2.png);
+    background-image: url(../images/light-ml-bg-2.png);
     border-radius: 15px;
     margin-top: 5px;
     min-height: 200px;

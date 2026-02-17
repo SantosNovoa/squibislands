@@ -108,7 +108,7 @@
         <div class="card profile-currencies profile-assets-card mb-4">
             <div class="card-body text-center">
                 <h5 class="card-title">Bank</h5>
-                <div class="profile-assets-content">
+                <div class="profile-assets-content d-flex flex-column align-items-center">
                     @foreach($user->getCurrencies(false) as $currency)
                         <div>{!! $currency->display($currency->quantity) !!}</div>
                     @endforeach

@@ -230,10 +230,25 @@
                             <a href="#"><img src="{{ asset('images/account.png') }}" class="img-thumbnail" /></a>
                         </div>
                         <strong class="p-2">You haven't selected a character!</strong>
-                        <a href="{{ url('characters') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif;">
+                        <a href="{{ url('characters') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
                             Select <i class="fas fa-arrow-right"></i>
                         </a>   
                     @endif
+                </li>
+            </ul>
+            <ul class="text-center pl-0">
+                <li class="sidebar-section d-flex flex-column align-items-center pb-3" style="gap: 10px;">
+                    <div class="sidebar-currency-container d-flex pt-3">
+                        @foreach(Auth::user()->getCurrencies(false) as $currency)
+                            <div class="pl-1 pr-1">{!! $currency->display($currency->quantity) !!}</div>
+                        @endforeach
+                    </div>
+                    <a href="{{ url('inventory') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
+                        Inventory <i class="fas fa-arrow-right"></i>
+                    </a> 
+                    <a href="{{ url('dailies') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
+                        Dailies <i class="fas fa-arrow-right"></i>
+                    </a> 
                 </li>
             </ul>
         @endif
