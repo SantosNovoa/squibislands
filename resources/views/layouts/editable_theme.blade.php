@@ -84,7 +84,7 @@
     /** Style main background */
 
     @if ($backgroundImage || $backgroundColor || $backgroundSize)
-        #main {
+        #app {
             @if ($backgroundImage)
                 background-image: url('{{ $backgroundImage }}');
             @endif
@@ -95,6 +95,7 @@
                 background-size: 100% {{ $backgroundSize }};
             @endif
             background-repeat: repeat;
+            min-height: 100vh;
         }
     @endif
 
