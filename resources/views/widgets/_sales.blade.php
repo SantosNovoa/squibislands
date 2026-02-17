@@ -4,7 +4,7 @@
         <a href="{{ url('sales') }}" class="btn btn-primary">View All Sales <i class="fas fa-arrow-right"></i></a>
     </div>
 
-    <div class="card-body pt-0 px-2">
+    <div class="card-body pt-0">
         @if ($saleses->count())
             @foreach ($saleses as $sales)
                 <div class="row {{ !$loop->last ? 'border-bottom' : '' }} py-3 align-items-center">
