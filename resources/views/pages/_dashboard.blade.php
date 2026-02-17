@@ -1,7 +1,8 @@
 <h1>Welcome, {!! Auth::user()->displayName !!}!</h1>
 
-@include('widgets._sales')
 @include('widgets._news', ['textPreview' => true])
+@include('widgets._sales')
+
 
 {{-- <div class="row justify-content-center">
     <div class="col-md-6">

@@ -7,7 +7,7 @@
     <div class="card-body pt-0">
         @if ($saleses->count())
             @foreach ($saleses as $sales)
-                <div class="row {{ !$loop->last ? 'border-bottom' : '' }} py-3 align-items-center">
+                <div class="row {{ !$loop->last ? 'border-bottom' : '' }} py-3 align-items-center ml-0 mr-0">
                     @if ($sales->characters->count())
                         <div class="col-md-3 text-center">
                             <a href="{{ $sales->url }}">
