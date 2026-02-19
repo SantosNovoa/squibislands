@@ -17,7 +17,7 @@
                     </span>
                     @if ($textPreview)
                         <p class="pl-3">
-                            {!! substr(strip_tags(str_replace('<br />', '&nbsp;', $news->parsed_text)), 0, 300) !!}...
+                            {!! substr(strip_tags(str_replace('<br />', '&nbsp;', $news->parsed_text)), 0, 800) !!}...
                             <a href="{!! $news->url !!}">Read more <i class="fas fa-arrow-right"></i></a>
                         </p>
                     @endif

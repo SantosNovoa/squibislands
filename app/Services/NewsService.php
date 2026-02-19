@@ -170,7 +170,7 @@ class NewsService extends Service {
             'embeds' => [[
                 'title'       => $news->title,
                 'url'         => $news->url,
-                'description' => strip_tags(Str::limit($news->parsed_text, 300)),
+                'description' => strip_tags(Str::limit($news->parsed_text, 2000)),
                 'color'       => 0x2179e0,
                 'author'      => [
                     'name' => $news->user->name,
