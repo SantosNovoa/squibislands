@@ -91,11 +91,6 @@
             @if ($backgroundColor)
                 background-color: {{ $backgroundColor }} !important;
             @endif
-            @if ($backgroundSize)
-                background-size: 100% {{ $backgroundSize }};
-            @endif
-            background-repeat: repeat;
-            min-height: 100vh;
         }
     @endif
 
