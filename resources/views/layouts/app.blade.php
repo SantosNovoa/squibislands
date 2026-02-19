@@ -100,9 +100,7 @@
     @endif
     @if (isset($theme) && $theme?->has_css)
         <style type="text/css" media="screen">
-            @php include_once($theme?->cssUrl)
-            @endphp
-            {{-- css in style tag so that order matters --}}
+            @php include_once($theme?->cssPath) @endphp
         </style>
     @endif
     @if (isset($theme) && !$theme?->prioritize_css)

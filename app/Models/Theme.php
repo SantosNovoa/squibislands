@@ -249,7 +249,7 @@ class Theme extends Model {
             return null;
         }
 
-        return $this->ImageDirectory.'/'.$this->CSSFileName;
+        return asset($this->imageDirectory.'/'.$this->CSSFileName.'?'.$this->hash);
     }
 
     /**
@@ -268,6 +268,14 @@ class Theme extends Model {
      */
     public function getAssetTypeAttribute() {
         return 'themes';
+    }
+
+    public function getCSSPathAttribute() {
+        if (!$this->has_css) {
+            return null;
+        }
+
+        return public_path($this->imageDirectory.'/'.$this->CSSFileName);
     }
 
     /**********************************************************************************************
