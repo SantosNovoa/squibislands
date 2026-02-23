@@ -213,8 +213,8 @@
                         @endif
                     @else
                         @if (Auth::user()->isStaff)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('admin') }}"><i class="fas fa-crown"></i></a>
+                            <li class="nav-item d-flex justify-content-center align-items-center">
+                                <a class="nav-link pr-0 pl-0" href="{{ url('admin') }}"><i class="fas fa-crown"></i></a><span class="nav-admin-text">Admin Panel</span>
                             </li>
                         @endif
                         @if (Auth::user()->notifications_unread)

@@ -479,11 +479,19 @@ nav {
     color: white !important;
 }
 
+.nav-admin-text {
+    display: none;
+}
+
 
 
 @media (max-width: 767px) {
 	.site-mobile-header {
 		top: 53px !important;
+    }
+
+    .nav-admin-text {
+        display: block;
     }
 
     .timestamp {
@@ -498,6 +506,11 @@ nav {
     .dailies-mobile {
         display: block;
     }
+
+    .navbar .fa-crown {
+        font-size: 1.25rem !important;
+    }   
+
 }
 
 
