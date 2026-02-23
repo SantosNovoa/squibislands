@@ -10,9 +10,14 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark" id="headerNav">
         <div class="container-fluid">
 
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <i class="fa-solid fa-sailboat"></i>
-            </a>
+            @if (View::hasSection('sidebar'))
+                <a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton"> <i class="fas fa-caret-right ml-0"></i></a>
+            @endif
+
+
+            <div class="home-container-mobile">
+                <a href="{{ url('/') }}" style="font-family: CherryBombOne, serif; font-size: 18px; text-transform: uppercase;">Squib Islands</a>
+            </div>
             
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -296,6 +301,24 @@
                             </div>
                         </li>
                     @endguest
+                    @if(Auth::check()) 
+                        <div class="clock-currency-container-mobile-view justify-content-center">
+                            <div class="time bg-transparent">
+
+                            </div>
+                            <div class="am-pm bg-transparent">
+
+                            </div>
+                            <div class="currency-container-mobile-view d-flex align-items-center">
+                                @foreach(Auth::user()->getCurrencies(false) as $currency)
+                                    <div class="pl-1 pr-1">{!! $currency->display($currency->quantity) !!}</div>
+                                @endforeach 
+                            </div>
+                        </div>
+                        <a href="{{ url('dailies') }}" class="dailies-mobile pb-3" style="font-family: CherryBombOne, serif; text-transform: uppercase;">
+                            Dailies <i class="fas fa-arrow-right"></i>
+                        </a>
+                    @endif
                 </ul>
             </div>
         </div>

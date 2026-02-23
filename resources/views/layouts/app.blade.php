@@ -145,9 +145,9 @@
             <a href="{{ url('/') }}"><img id="logo" class="shimmer" src="{{ asset('images/logo.png') }}"></a>
         </div>
         @include('layouts._nav')
-        @if (View::hasSection('sidebar'))
+        {{-- @if (View::hasSection('sidebar'))
             <div class="site-mobile-header bg-secondary"><a href="#" class="btn btn-sm btn-outline-light" id="mobileMenuButton">Menu <i class="fas fa-caret-right ml-1"></i></a></div>
-        @endif
+        @endif --}}
 
         <main class="container-fluid" id="main">
             <div class="row">

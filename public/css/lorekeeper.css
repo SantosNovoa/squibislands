@@ -408,6 +408,28 @@ nav {
     }
 }
 
+@media(max-width: 767px) {
+    .navbar .nav-text {
+        display: block !important;  
+    }
+    .navbar-collapse {
+        text-align: center;
+    }
+
+    #inventoryDropdown,
+    #browseDropdown {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .25rem;
+    }
+
+    .navbar-nav {
+        gap: 10px;
+        padding-top: 10px;
+    }
+}
+
 
 @media (min-width: 992px) and (max-width: 1399px) {
     #app {
@@ -444,6 +466,14 @@ nav {
     }
 }
 
+.clock-currency-container-mobile-view {
+    display: none;
+}
+
+.dailies-mobile {
+    display: none;
+}
+
 
 @media (max-width: 767px) {
 	.site-mobile-header {
@@ -454,7 +484,16 @@ nav {
 		margin-left: 1rem!important;
 		margin-right: 1rem!important;
 	}
+
+    .clock-currency-container-mobile-view {
+        display: flex;
+    }
+
+    .dailies-mobile {
+        display: block;
+    }
 }
+
 
 @media (max-width: 991px) {
     #app {
@@ -575,6 +614,7 @@ nav {
         flex-wrap: wrap; justify-content: center;
     }
 }
+
 /* Footer */
 
 #footer {
