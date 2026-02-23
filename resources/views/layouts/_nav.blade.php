@@ -301,7 +301,6 @@
                             </div>
                         </li>
                     @endguest
-                    @if(Auth::check()) 
                         <div class="clock-currency-container-mobile-view justify-content-center">
                             <div class="time bg-transparent">
 
@@ -309,6 +308,7 @@
                             <div class="am-pm bg-transparent">
 
                             </div>
+                    @if(Auth::check()) 
                             <div class="currency-container-mobile-view d-flex align-items-center">
                                 @foreach(Auth::user()->getCurrencies(false) as $currency)
                                     <div class="pl-1 pr-1">{!! $currency->display($currency->quantity) !!}</div>
