@@ -7,6 +7,8 @@ use App\Models\Raffle\RaffleTicket;
 use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class RaffleManager extends Service {
     /*
@@ -125,6 +127,47 @@ class RaffleManager extends Service {
         return true;
     }
 
+
+    /**
+     * Sends a Discord webhook notification when a raffle is rolled.
+     *
+     * @param Raffle $raffle
+     * @param array  $winners
+     * @return void
+     */
+    private function notifyDiscordRaffleComplete($raffle, $winners) {
+        $webhookUrl = config('app.discord_webhook_url');
+        if (!$webhookUrl) return;
+
+        try {
+            // Build winner display list
+            $winnerNames = [];
+            foreach ($winners['ids'] as $userId) {
+                $user = User::find($userId);
+                if ($user) $winnerNames[] = $user->name;
+            }
+            foreach ($winners['aliases'] as $alias) {
+                $winnerNames[] = $alias . ' (off-site)';
+            }
+
+            $winnerList = !empty($winnerNames) 
+                ? implode(', ', $winnerNames) 
+                : 'No winners';
+
+            Http::post($webhookUrl, [
+                'embeds' => [[
+                    'title'       => '🎉 Raffle Complete: ' . $raffle->name,
+                    'url'         => $raffle->url,
+                    'description' => '**Winner(s):** ' . $winnerList,
+                    'color'       => 0x2179e0,
+                    'timestamp'   => $raffle->rolled_at->toIso8601String(),
+                ]],
+            ]);
+        } catch (\Exception $e) {
+            Log::warning('Discord raffle webhook failed: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Rolls a single raffle and marks it as completed.
      * If the $updateGroup flag is true, winners will be removed
@@ -153,6 +196,9 @@ class RaffleManager extends Service {
 
                 return false;
             }
+
+            $this->notifyDiscordRaffleComplete($raffle, $winners);
+
             DB::commit();
 
             return true;

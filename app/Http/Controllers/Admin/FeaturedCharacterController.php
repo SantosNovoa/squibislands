@@ -7,6 +7,8 @@ use App\Models\Character\Character;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Settings;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class FeaturedCharacterController extends Controller {
     
@@ -20,6 +22,28 @@ class FeaturedCharacterController extends Controller {
         ]);
     }
 
+    public function notifyDiscordFeaturedCharacter($character) {
+        $webhookUrl = config('app.discord_webhook_url');
+        if (!$webhookUrl) return;
+
+        try {
+            Http::post($webhookUrl, [
+                'embeds' => [[
+                    'title'       => 'Weekly Wavemaker Updated',
+                    'url'         => $character->url,
+                    'description' => '**' . ($character->fullName ?? $character->slug) . '** is now the weekly wavemaker!',
+                    'color'       => 0x2179e0,
+                    'image'       => [
+                        'url' => asset($character->image->thumbnailUrl),
+                    ],
+                    'timestamp'   => now()->toIso8601String(),
+                ]],
+            ]);
+        } catch (\Exception $e) {
+            Log::warning('Discord featured character webhook failed: ' . $e->getMessage());
+        }
+    }
+
     public function postChange() {
         $currentId = Settings::get('featured_character');
         
@@ -30,6 +54,7 @@ class FeaturedCharacterController extends Controller {
         
         if ($newCharacter) {
             DB::table('site_settings')->where('key', 'featured_character')->update(['value' => $newCharacter->id]);
+            $this->notifyDiscordFeaturedCharacter($newCharacter);
             flash('Featured character changed to ' . $newCharacter->fullName)->success();
         } else {
             flash('No other characters available.')->error();
@@ -43,7 +68,8 @@ class FeaturedCharacterController extends Controller {
         
         DB::table('site_settings')->where('key', 'featured_character')->update(['value' => $request->get('character_id')]);
         $character = Character::find($request->get('character_id'));
-        
+
+        $this->notifyDiscordFeaturedCharacter($character);
         flash('Featured character set to ' . $character->fullName)->success();
         return redirect()->back();
     }
