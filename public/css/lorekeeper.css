@@ -472,7 +472,13 @@ nav {
 
 .dailies-mobile {
     display: none;
+    color: white !important;
 }
+
+.currency-container-mobile-view {
+    color: white !important;
+}
+
 
 
 @media (max-width: 767px) {

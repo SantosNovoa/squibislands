@@ -16,7 +16,7 @@
 
 
             <div class="home-container-mobile">
-                <a href="{{ url('/') }}" style="font-family: CherryBombOne, serif; font-size: 18px; text-transform: uppercase;">Squib Islands</a>
+                <a href="{{ url('/') }}" class="text-white" style="font-family: CherryBombOne, serif; font-size: 18px; text-transform: uppercase;">Squib Islands</a>
             </div>
             
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
