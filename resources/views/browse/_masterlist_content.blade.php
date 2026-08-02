@@ -199,7 +199,6 @@
                 <th>Owner</th>
                 <th>Name</th>
                 <th>Rarity</th>
-                <th>{{ ucfirst(__('lorekeeper.species')) }}</th>
                 @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
                     <th>{{ucfirst(__('character_theme.theme'))}}</th>
                 @endif
