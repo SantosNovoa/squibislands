@@ -1,5 +1,5 @@
 <div class="flex-fill text-center mb-1">
-    <a href="{{ $submission->url }}">@include('widgets._gallery_thumb', ['submission' => $submission])</a>
+    <a class="d-flex justify-content-center" href="{{ $submission->url }}">@include('widgets._gallery_thumb', ['submission' => $submission])</a>
     <?php if (isset($submission->hash) && !isset($submission->content_warning)) {
         $width = Image::make($submission->imagePath . '/' . $submission->thumbnailFileName)->width();
     } else {
