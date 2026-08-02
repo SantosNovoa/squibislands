@@ -1,8 +1,8 @@
 @if (config('lorekeeper.extensions.show_all_recent_submissions.enable') && config('lorekeeper.extensions.show_all_recent_submissions.section_on_front'))
     <div class="card my-2 text-center">
-        <div class="card-header">
-            <h5>Recent Gallery Submissions</h5>
-        </div>
+        <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="fa-solid fa-image"></i> Recent Gallery Submissions</h4>
+    </div>
         <div class="card-body">
             <div class="row">
                 @if (count($gallerySubmissions))

@@ -1,7 +1,6 @@
 <div class="card mb-4">
     <div class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-center">
         <h4 class="mb-0"><i class="fas fa-money-bill-wave"></i> Recent Sales</h4>
-        <a href="{{ url('sales') }}" class="btn btn-primary">View All Sales <i class="fas fa-arrow-right"></i></a>
     </div>
 
     <div class="card-body pt-0">
@@ -52,6 +51,7 @@
                     </div>
                 </div>
             @endforeach
+            <div class="col-12 pb-2"><a class="float-right" href="{{ url('sales') }}">View all Sales...</a></div>
         @else
             <div class="text-center pt-3">
                 <h5 class="mb-0">There are no sales.</h5>
