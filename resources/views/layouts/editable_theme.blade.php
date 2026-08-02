@@ -20,11 +20,11 @@
 
 <style>
     /** Style the site header and nav */
-    @if ($headerImageDisplay)
+    /* @if ($headerImageDisplay)
         .site-header-image {
             display: {{ $headerImageDisplay }};
         }
-    @endif
+    @endif */
 
     @if ($navBarColor || $navTextColor)
         .bg-dark,
@@ -111,13 +111,13 @@
         }
     @endif
 
-    /** Style the main content + sidebars and make links/forms/cards fit. This part gets commented out if a css theme is used! */
-    @if ($mainMarginTop)
+    * Style the main content + sidebars and make links/forms/cards fit. This part gets commented out if a css theme is used!
+    /* @if ($mainMarginTop)
         .main-content,
         .sidebar {
             margin-top: {{ $mainMarginTop }}px;
         }
-    @endif
+    @endif */
 
     @if ($mainColor || $mainTextColor)
         .main-content,
