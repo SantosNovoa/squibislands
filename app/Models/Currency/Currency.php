@@ -226,7 +226,7 @@ class Currency extends Model {
      * @return string
      */
     public function display($value) {
-        $ret = '<span class="display-currency d-flex align-items-center" style="gap: 2px;">';
+        $ret = '<span class="display-currency">';
         
         if ($this->has_icon) {
             $ret .= $this->displayIcon;
