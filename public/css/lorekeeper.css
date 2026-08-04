@@ -963,7 +963,6 @@ thead {
     color: #EF96B8 !important;
 }
 
-
 .character-bio .nav-tabs.card-header-tabs .active {
     background-color: #194581;
 }
@@ -1121,6 +1120,11 @@ tr.accountbound {
 }
 .shops-row .shop-name a {
     font-weight: bold;
+}
+
+/* shop modal thumbnail */
+.text-center.mb-3 .mb-1 img.img-fluid {
+  max-height: 200px;
 }
 
 /* TRADES ****************************************************************************************/
