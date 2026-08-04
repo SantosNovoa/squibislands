@@ -60,7 +60,7 @@
                         @foreach ($categoryItems->chunk(4) as $chunk)
                             <div class="row mb-3">
                                 @foreach ($chunk as $item)
-                                    <div class="col-sm-3 col-6 text-center inventory-item" data-id="{{ $item->pivot->id }}">
+                                    <div class="col-sm-3 col-6 text-center inventory-item d-flex flex-column justify-content-end" data-id="{{ $item->pivot->id }}">
                                         <div class="mb-1">
                                             @if ($item->has_image)
                                                 <a href="#" class="inventory-stack"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" /></a>
