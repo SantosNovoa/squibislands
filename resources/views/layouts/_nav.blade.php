@@ -123,7 +123,7 @@
                                 <a class="dropdown-item" href="{{ url('info/masterlist_images') }}">
                                    <i class="fa-solid fa-image"></i> Masterlist Images
                                 </a>
-                                <a class="dropdown-item" href="{{ url('info/MYO_submissions_updates') }}">
+                                <a class="dropdown-item" href="{{ url('info/MYO_submissions') }}">
                                   <i class="fa-solid fa-brush"></i> MYO Submissions
                                 </a>
                                 <a class="dropdown-item" href="{{ url('/info/design_updates') }}">
