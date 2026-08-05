@@ -124,7 +124,10 @@
                                    <i class="fa-solid fa-image"></i> Masterlist Images
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/MYO_submissions_updates') }}">
-                                  <i class="fa-solid fa-brush"></i> MYO Submissions & Updates
+                                  <i class="fa-solid fa-brush"></i> MYO Submissions
+                                </a>
+                                <a class="dropdown-item" href="{{ url('/info/design_updates') }}">
+                                  <i class="fa-solid fa-palette"></i> Design Updates
                                 </a>
                                 <a class="dropdown-item" href="{{ url('info/submission_rewards') }}">
                                    <i class="fa-solid fa-paintbrush"></i> Art & Writing Rewards
