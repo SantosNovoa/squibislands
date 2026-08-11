@@ -64,7 +64,35 @@
 
 
     <h3>Latest Activity</h3>
-    <table class="table table-sm">
+
+    <div class="mb-4 logs-table">
+        <div class="logs-table-header">
+            <div class="row">
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Sender</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Recipient</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Pet</div>
+                </div>
+                <div class="col-6 col-md-4">
+                    <div class="logs-table-cell">Log</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Date</div>
+                </div>
+            </div>
+        </div>
+        <div class="logs-table-body">
+            @foreach ($logs as $log)
+                @include('user._pet_log_row', ['log' => $log, 'user' => $user])
+            @endforeach
+        </div>
+    </div>
+
+    {{-- <table class="table table-sm">
         <thead>
             <th>Sender</th>
             <th>Recipient</th>
@@ -77,7 +105,7 @@
                 @include('user._pet_log_row', ['log' => $log, 'user' => $user])
             @endforeach
         </tbody>
-    </table>
+    </table> --}}
     <div class="text-right">
         <a href="{{ url($user->url . '/pet-logs') }}">View all...</a>
     </div>

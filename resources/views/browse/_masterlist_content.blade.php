@@ -25,12 +25,12 @@
                     {!! Form::select('subtype_id', $subtypes, Request::get('subtype_id'), ['class' => 'form-control mr-2', 'style' => 'width: 250px']) !!}
                 </div>
                 <div class="masterlist-search-field">
-                    {!! Form::label('transformation_id', ucfirst(__('transformations.transformation')).': ') !!}
+                    {!! Form::label('transformation_id', ucfirst(__('transformations.transformation')) . ': ') !!}
                     {!! Form::select('transformation_id', $transformations, Request::get('transformation_id'), ['class' => 'form-control']) !!}
                 </div>
                 <div class="masterlist-search-field">
-                    {!! Form::label('has_transformation', 'Has a '.ucfirst(__('transformations.transformation')).': ') !!}
-                    {!! Form::select('has_transformation', ['1' => 'Has a '.__('transformations.transformation').'.'], Request::get('has_transformation'), ['class' => 'form-control', 'placeholder' => 'Any']) !!}
+                    {!! Form::label('has_transformation', 'Has a ' . ucfirst(__('transformations.transformation')) . ': ') !!}
+                    {!! Form::select('has_transformation', ['1' => 'Has a ' . __('transformations.transformation') . '.'], Request::get('has_transformation'), ['class' => 'form-control', 'placeholder' => 'Any']) !!}
                 </div>
                 <div class="masterlist-search-field">
                     {!! Form::label('title_id', 'Title: ') !!}
@@ -86,8 +86,8 @@
                     {!! Form::select('is_gift_writing_allowed', [0 => 'Any', 2 => 'Ask First', 1 => 'Yes', 3 => 'Yes OR Ask First'], Request::get('is_gift_writing_allowed'), ['class' => 'form-control', 'style' => 'width: 250px']) !!}
                 </div>
                 <div class="masterlist-search-field">
-                    {!! Form::label('theme', ucfirst(__('character_theme.theme')).': ') !!} 
-                    {!! Form::text('theme', Request::get('theme'), ['class'=> 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a '. ucfirst(__('character_theme.theme'))]) !!}
+                    {!! Form::label('theme', ucfirst(__('character_theme.theme')) . ': ') !!}
+                    {!! Form::text('theme', Request::get('theme'), ['class' => 'form-control mr-2', 'style' => 'width: 250px', 'placeholder' => 'Type a ' . ucfirst(__('character_theme.theme'))]) !!}
                 </div>
             @endif
             <br />
@@ -153,11 +153,11 @@
                 @php
                     $rarityClass = 'rarity-common';
                     if ($character->image->rarity_id) {
-                        $rarityMap = [  
-                            1 => 'common',     
-                            2 => 'rare',       
+                        $rarityMap = [
+                            1 => 'common',
+                            2 => 'rare',
                             3 => 'legendary',
-                            4 => 'exclusive',   
+                            4 => 'exclusive',
                         ];
                         $rarityClass = 'rarity-' . ($rarityMap[$character->image->rarity_id] ?? 'common');
                     }
@@ -182,8 +182,8 @@
                         </a>
                     </div>
                     <div class="small pb-2">
-                        {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!}  ・ {!! $character->displayOwner !!}
-                        @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                        {!! $character->image->species_id ? $character->image->species->displayName : 'No Species' !!} ・ {!! $character->displayOwner !!}
+                        @if (config('lorekeeper.extensions.character_theme.show_on_masterlist'))
                             {!! $character->image->theme ? ' ・ ' . $character->image->theme : '' !!}
                         @endif
                     </div>
@@ -193,50 +193,96 @@
     @endforeach
 </div>
 <div id="listView" class="hide">
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Owner</th>
-                <th>Name</th>
-                <th>Rarity</th>
-                @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
-                    <th>{{ucfirst(__('character_theme.theme'))}}</th>
+        <div class="mb-4 logs-table">
+        <div class="logs-table-header">
+            <div class="row">
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Owner</div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Name</div>
+                </div>
+                <div class="col-6 col-md-1">
+                    <div class="logs-table-cell">Rarity</div>
+                </div>
+                @if (config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                    <div class="col-6 col-md-1">
+                        <div class="logs-table-cell">{{ ucfirst(__('character_theme.theme')) }}</div>
+                    </div>
                 @endif
-                <th>Species</th>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Species</div>
+                </div>
                 @if (Settings::get('character_title_display'))
-                    <th>Title</th>
+                    <div class="col-6 col-md-2">
+                        <div class="logs-table-cell">Title</div>
+                    </div>
                 @endif
-                <th>Created</th>
-            </tr>
-        </thead>
-        <tbody>
+                <div class="col-6 col-md-2">
+                    <div class="logs-table-cell">Created</div>
+                </div>
+            </div>
+        </div>
+        <div class="logs-table-body">
             @foreach ($characters as $character)
-                <tr>
-                    <td>{!! $character->displayOwner !!}</td>
-                    <td>
-                        @if (!$character->is_visible)
-                            <i class="fas fa-eye-slash"></i>
-                        @endif {{ explode('-', $character->slug, 3)[0] . '-' . explode('-', $character->slug, 3)[1] }}
-                    </td>
-                    <td>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'None' !!}</td>
-                    <td>{!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}</td>
-                    @if(config('lorekeeper.extensions.character_theme.show_on_masterlist'))
-                        <td>{!! $character->image->theme ? $character->image->theme : '---' !!}</td>
-                    @endif
-                    @if (Settings::get('character_title_display'))
-                        <td>{!! $character->image->hasTitle
-                            ? ($character->image->title_id
-                                ? $character->image->title->displayNameShort
-                                : (isset($character->image->title_data['short'])
-                                    ? nl2br(htmlentities($character->image->title_data['short']))
-                                    : nl2br(htmlentities($character->image->title_data['full']))))
-                            : 'None' !!}</td>
-                    @endif
-                    <td>{!! format_date($character->created_at) !!}</td>
-                </tr>
+                <div class="logs-table-row">
+                    <div class="row flex-wrap">
+                        <div class="col-6 col-md-2">
+                            <div class="logs-table-cell">
+                                {!! $character->displayOwner !!}
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-2">
+                            <div class="logs-table-cell">
+                                @if (!$character->is_visible)
+                                    <i class="fas fa-eye-slash"></i>
+                                @endif
+                                @php
+                                    $slugParts = $character->slug ? explode('-', $character->slug, 3) : [];
+                                @endphp
+                                {{ count($slugParts) >= 2 ? $slugParts[0] . '-' . $slugParts[1] : ($character->slug ?: 'MYO') }}
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-1">
+                            <div class="logs-table-cell">
+                                {!! $character->image->rarity_id ? $character->image->rarity->displayName : 'None' !!}
+                            </div>
+                        </div>
+                        @if (config('lorekeeper.extensions.character_theme.show_on_masterlist'))
+                            <div class="col-6 col-md-1">
+                                <div class="logs-table-cell">
+                                    {!! $character->image->theme ? $character->image->theme : '---' !!}
+                                </div>
+                            </div>
+                        @endif
+                        <div class="col-6 col-md-2">
+                            <div class="logs-table-cell">
+                                {!! $character->image->species_id ? $character->image->species->displayName : 'None' !!}
+                            </div>
+                        </div>
+                        @if (Settings::get('character_title_display'))
+                            <div class="col-6 col-md-2">
+                                <div class="logs-table-cell">
+                                    {!! $character->image->hasTitle
+                                        ? ($character->image->title_id
+                                            ? $character->image->title->displayNameShort
+                                            : (isset($character->image->title_data['short'])
+                                                ? nl2br(htmlentities($character->image->title_data['short']))
+                                                : nl2br(htmlentities($character->image->title_data['full']))))
+                                        : 'None' !!}
+                                </div>
+                            </div>
+                        @endif
+                        <div class="col-6 col-md-2">
+                            <div class="logs-table-cell">
+                                {!! format_date($character->created_at) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endforeach
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
 {!! $characters->render() !!}
 
