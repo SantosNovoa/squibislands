@@ -142,7 +142,7 @@
 <body>
     <div id="app">
         <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');">
-            <a href="{{ url('/') }}"><img id="logo" class="shimmer" src="{{ asset('images/logo.png') }}"></a>
+            <a href="{{ url('/') }}"><img id="logo" class="bounce2" src="{{ asset('images/logo.png') }}"></a>
         </div>
         @include('layouts._nav')
         {{-- @if (View::hasSection('sidebar'))

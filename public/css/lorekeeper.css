@@ -21,6 +21,10 @@
     src: url(../webfonts/CherryBombOne-Regular.ttf)
 }
 
+:root {
+    --header-color: linear-gradient(to right, rgb(4, 18, 65), rgb(7, 31, 109), rgb(10, 45, 160), rgb(42, 136, 252)) !important;
+}
+
 /**************************************************************************************************
 
     Base styles
@@ -148,7 +152,7 @@ main > .row {
 }
 
 #headerNav {
-    background: linear-gradient(to right, rgba(4, 18, 65, 0.8), rgba(7, 31, 109, 0.8), rgba(10, 45, 160, 0.8), rgba(42, 136, 252, 0.8)) !important;
+    background: linear-gradient(to right, rgb(4, 18, 65), rgb(7, 31, 109), rgb(10, 45, 160), rgb(42, 137, 252)) !important;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
@@ -228,7 +232,6 @@ nav {
 .sidebar ul li {
     background-color: rgba(222, 243, 255, 0.9);
     margin-bottom: 1em;
-    padding: 0.4em 0 0;
     border-radius: 15px;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
@@ -592,7 +595,7 @@ nav {
         position: fixed;
         z-index: 5;
         width: 100%;
-        background: linear-gradient(to right, rgb(4, 18, 65), rgb(7, 31, 109), rgb(10, 45, 160), rgb(42, 137, 252)) !important;
+        background: var(--header-color);
     }
 
     main.container-fluid {
@@ -618,7 +621,6 @@ nav {
         background-color: white;
         border-radius: 0;
         margin-bottom: 1em;
-        padding: 0.4em 0 0;
         box-shadow: none;
     }
 
@@ -950,7 +952,7 @@ thead {
 }
 
 .card-header {
-    background: linear-gradient(to right, rgba(4, 18, 65, 0.8), rgba(7, 31, 109, 0.8), rgba(10, 45, 160, 0.8), rgba(42, 136, 252, 0.8)) !important;
+    background: var(--header-color);
 }
 
 .card-header,
@@ -1210,20 +1212,13 @@ tr.accountbound {
     max-width: 90%;
 }
 
-
-.shimmer {
-  color: rgb(34, 92, 131);
-  display: inline-block;
-  mask: linear-gradient(-60deg, #75c1d8 30%, rgba(89, 126, 182, 0.333), #06508d 70%) right/350% 100%;
-  animation: shimmer 5.5s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
-  font-size: 50px;
-  max-width: 200px;
+.bounce2 {
+  animation: bounce2 6s ease infinite;
 }
-
-@keyframes shimmer {
-  100% {
-    mask-position: left
-  }
+@keyframes bounce2 {
+    0%, 83.33%, 91.67%, 96.67%, 100% {transform: translateY(0);}
+    90% {transform: translateY(-30px);}
+    93.33% {transform: translateY(-15px);}
 }
 
 
