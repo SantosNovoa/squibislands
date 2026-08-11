@@ -3,7 +3,7 @@
         <div class="logs-table-cell">
             <span class="ubt-texthide">
                 @if (!$report->is_br)
-                    <a href="{{ $report->url }}">
+                    <a href="{{ $report->getViewUrlAttribute() }}">
                         @endif {{ $report->url }} @if (!$report->is_br)
                     </a>
                 @endif
@@ -21,7 +21,7 @@
     <div class="col-6 col-md-2 text-right">
         <div class="logs-table-cell">
             @if ($report->status == 'Closed' || ($report->status == 'Assigned' && $report->is_br && $report->error_type != 'exploit') || (Auth::check() && Auth::user()->id == $report->user_id))
-                <a href="{{ $report->viewUrl }}" class="btn btn-primary btn-sm">Details</a>
+                <a href="{{ $report->getViewUrlAttribute() }}" class="btn btn-primary btn-sm">Details</a>
             @else
                 <a class="btn btn-dark btn-sm text-light">Report not closed</a>
             @endif

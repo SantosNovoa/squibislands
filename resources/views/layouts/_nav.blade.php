@@ -179,6 +179,9 @@
                                     <a class="dropdown-item" href="{{ url('dailies') }}">
                                        <i class="fa-solid fa-alarm-clock"></i> Dailies
                                     </a>
+                                    <a class="dropdown-item" href="{{ url('expeditions') }}">
+                                       <i class="fa-solid fa-person-digging"></i> Expeditions
+                                    </a>
                                     <a class="dropdown-item" href="{{ url('crafting') }}">
                                        <i class="fa-solid fa-hammer"></i> Crafting
                                     </a>

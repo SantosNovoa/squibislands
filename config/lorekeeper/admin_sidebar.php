@@ -262,6 +262,10 @@ return [
                 'name' => 'Pets',
                 'url'  => 'admin/data/pets',
             ],
+            [
+                'name' => 'Expeditions',
+                'url'  => 'admin/data/expeditions' 
+            ],
 
         ]
     ],

@@ -314,3 +314,16 @@ Route::get('time', function () {
 Route::group(['prefix' => 'terms'], function() {
     Route::post('/accept', 'TermsController@acceptTerms');
 });
+
+/**************************************************************************************************
+    Expeditions
+**************************************************************************************************/
+Route::group(['prefix' => 'expeditions', 'middleware' => 'auth'], function() {
+    Route::get('my', 'ExpeditionController@getMyExpeditions');
+    Route::post('{log_id}/claim', 'ExpeditionController@postClaimExpedition')->where(['log_id' => '[0-9]+']);
+    Route::get('{id}/select', 'ExpeditionController@getSelectCharacters')->where(['id' => '[0-9]+']);
+    Route::post('{id}/send', 'ExpeditionController@postSendExpedition')->where(['id' => '[0-9]+']);
+    Route::get('/', 'ExpeditionController@getIndex');
+    Route::get('{id}', 'ExpeditionController@getExpedition')->where(['id' => '[0-9]+']);
+});
+

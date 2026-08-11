@@ -378,6 +378,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('dailies/delete/{id}', 'DailyController@postDeleteDaily');
     Route::post('dailies/sort', 'DailyController@postSortDaily'); 
 
+    # EXPEDITIONS
+    Route::get('expeditions', 'ExpeditionController@getIndex');
+    Route::get('expeditions/create', 'ExpeditionController@getCreateExpedition');
+    Route::get('expeditions/edit/{id}', 'ExpeditionController@getEditExpedition');
+    Route::get('expeditions/delete/{id}', 'ExpeditionController@getDeleteExpedition');
+    Route::post('expeditions/create', 'ExpeditionController@postCreateEditExpedition');
+    Route::post('expeditions/edit/{id?}', 'ExpeditionController@postCreateEditExpedition');
+    Route::post('expeditions/delete/{id}', 'ExpeditionController@postDeleteExpedition');
+
     # TRANSFORMATIONS
     Route::get('transformations', 'TransformationController@getTransformationIndex');
     Route::get('transformations/create', 'TransformationController@getCreateTransformation');

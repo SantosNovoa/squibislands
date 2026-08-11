@@ -24,6 +24,17 @@
         </div>
 
     @endforeach
+
+    <div class="col-md-3 col-6 mb-3 text-center d-flex flex-column justify-content-end">
+        <div class="expedition-daily-image">
+            <a href="{{ url('expeditions') }}">
+                <img src="{{ asset('images/expedition.png') }}" alt="expedition-preview">
+            </a>
+        </div>
+        <div class="expedition-daily-image mt-1">
+            <a href="{{ url('expeditions') }}" class="h5 mb-0">Expeditions</a>
+        </div>
+    </div>
 </div>
 
 @endsection

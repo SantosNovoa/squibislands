@@ -34,6 +34,8 @@ class Kernel extends ConsoleKernel {
         $schedule->command('update-staff-reward-actions')
             ->daily();
         $schedule->command('update-timed-daily')
+            ->everyMinute();
+        $schedule->command('resolve-expeditions')
             ->everyMinute();          
         $schedule->command('distribute-birthday-rewards')
             ->monthly();

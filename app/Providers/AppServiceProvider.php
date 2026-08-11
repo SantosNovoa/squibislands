@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -45,6 +46,12 @@ class AppServiceProvider extends ServiceProvider {
             View::share('conditionalTheme', $conditionalTheme);
             View::share('decoratorTheme', $decoratorTheme);
         });
+
+        Relation::morphMap([
+            'Item' => 'App\Models\Item\Item',
+            'Currency' => 'App\Models\Currency\Currency',
+            'LootTable' => 'App\Models\Loot\LootTable',
+        ]);
 
         /*
          * Paginate a standard Laravel Collection.

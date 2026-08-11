@@ -6,19 +6,19 @@
 
 @font-face {
     font-family: Roboto Condensed;
-    src: url(../webfonts/RobotoCondensed-Regular.ttf)
+    src: url(/webfonts/RobotoCondensed-Regular.ttf)
 }
 @font-face {
     font-family: Lato;
-    src: url(../webfonts/Lato-Regular.ttf)
+    src: url(/webfonts/Lato-Regular.ttf)
 }
 @font-face {
     font-family: DynaPuff;
-    src: url(../webfonts/DynaPuff-VariableFont_wdth\,wght.ttf);
+    src: url(/webfonts/DynaPuff-VariableFont_wdth\,wght.ttf);
 }
 @font-face {
     font-family: CherryBombOne;
-    src: url(../webfonts/CherryBombOne-Regular.ttf)
+    src: url(/webfonts/CherryBombOne-Regular.ttf)
 }
 
 /**************************************************************************************************
@@ -1552,4 +1552,80 @@ a.text-warning:focus {
 
 .parsed-text a:hover {
     text-decoration: underline;
+}
+
+.expedition-image a img{
+    border-radius: 10px;
+}
+
+.card-img-top {
+    object-fit: cover;
+}
+
+.expedition-image {
+    position: absolute;
+}
+
+.expedition-title-container {
+    position: absolute;
+    z-index: 9;
+    margin: 65px 20px 0 20px;
+    padding: 5px;
+    background-color: rgba(222, 243, 255, 0.85);
+    border-radius: 5px;
+    border: 1px #212121ad solid;
+}
+
+
+.image-option-card {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin: 4px;
+}
+
+.image-option-card .character-select-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+.image-option-card img {
+    display: block;
+    border: 3px solid transparent;
+    border-radius: 6px;
+    transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+/* .image-option-card .character-select-checkbox:checked + img {
+    border-color: #007bff;
+    filter: brightness(0.6);
+    background-color: #00000071;
+} */
+
+.modal-content {
+    background-color: rgba(222, 243, 255) !important;
+}
+
+.expedition-info-container {
+   background-color: rgba(222, 243, 255, 0.85);
+   padding: 5px;
+   border-radius: 0 0 5px 5px;
+   gap: 2px;
+}
+
+.expedition-select-image {
+    border: 1px solid rgba(0,0,0,.125) !important;
+    height: 120px;
+    width: 120px;
+    border-radius: 5px;
+}
+
+.expedition-select-image:has(.character-select-checkbox:checked) {
+    filter: brightness(0.6);
+    background-color: #00000071;
+    border-color: #007bff;
 }
