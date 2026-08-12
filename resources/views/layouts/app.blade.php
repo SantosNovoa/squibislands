@@ -65,13 +65,15 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=DynaPuff:wdth,wght@75..100,400..700&family=Lato:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/lorekeeper.css?v=' . filemtime(public_path('css/lorekeeper.css'))) }}" rel="stylesheet">
 
     {{-- Font Awesome --}}
-    <link href="{{ asset('css/all.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {{-- jQuery UI --}}
@@ -142,7 +144,7 @@
 <body>
     <div id="app">
         <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');">
-            <a href="{{ url('/') }}"><img id="logo" class="bounce2" src="{{ asset('images/logo.png') }}"></a>
+            <a href="{{ url('/') }}"><img id="logo" class="gelatine" src="{{ asset('images/logo.png') }}"></a>
         </div>
         @include('layouts._nav')
         {{-- @if (View::hasSection('sidebar'))

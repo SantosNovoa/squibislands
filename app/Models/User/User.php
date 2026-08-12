@@ -546,7 +546,10 @@ class User extends Authenticatable implements MustVerifyEmail {
             }
         }
 
-        return url('images/avatars/'.$this->avatar.'?v='.filemtime(public_path('images/avatars/'.$this->avatar)));
+        $avatarPath = public_path('images/avatars/'.$this->avatar);
+        $version = file_exists($avatarPath) ? filemtime($avatarPath) : time();
+
+        return url('images/avatars/'.$this->avatar.'?v='.$version);
     }
 
     /**
