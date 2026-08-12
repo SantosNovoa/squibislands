@@ -68,7 +68,7 @@
     {!! Form::submit($expedition->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>
 {!! Form::close() !!}
-@include('dailies._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'showLootTables' => true, 'showRaffles' => false])
+@include('expeditions._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'showLootTables' => true, 'showRaffles' => false])
 @endsection
 @section('scripts')
 @parent
