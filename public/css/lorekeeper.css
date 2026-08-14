@@ -232,6 +232,7 @@ nav {
 .sidebar-header {
     font-size: 17px;
     font-family: "DynaPuff", serif !important;
+    padding: 0.4em 0 0.4em 0;
 }
 
 .sidebar .sidebar-header {
