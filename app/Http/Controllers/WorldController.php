@@ -669,7 +669,7 @@ class WorldController extends Controller {
                 }
 
                 return $shops->where('is_staff', 0);
-            })->whereIn('id', ShopStock::where('item_id', $item->id)->pluck('shop_id')->unique()->toArray())->orderBy('sort', 'DESC')->get(),
+            })->whereIn('id', ShopStock::where('item_id', $award->id)->pluck('shop_id')->unique()->toArray())
         ]);
     }
 

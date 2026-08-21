@@ -61,7 +61,7 @@
 
 <h4>
     <span>
-    {{ $character->level->nextLevel ? 'Current Lvl: ' . $character->level->current_level : 'Max Level' }}
+        {{ $character->level->nextLevel ? 'Current Lvl: ' . $character->level->current_level : 'Max Level' }}
     </span>
 </h4>
 
@@ -92,7 +92,8 @@
             @else
                 {{ $character->level->current_exp }} Exp (Max Level)
                 <div class="progress">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{ $character->level->current_exp }}" aria-valuemin="0" aria-valuemax="{{ $character->level->current_exp }}" style="width:100%">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{{ $character->level->current_exp }}" aria-valuemin="0" aria-valuemax="{{ $character->level->current_exp }}"
+                        style="width:100%">
                         {{ $character->level->current_exp }}
                     </div>
                 </div>
@@ -107,13 +108,14 @@
         <div class="row justify-content-begin" style="margin: 0 !important; gap: 10px;">
             @foreach ($character->weapons as $weapon)
                 <div class="col-md-2 character-armoury-info-container">
-                    @if ($weapon->has_image)
-                        <img class="img-fluid rounded character-armoury-img" src="{{ $weapon->imageUrl }}" data-toggle="tooltip" />
-                    @elseif($weapon->weapon->imageUrl)
-                        <img class="img-fluid rounded character-armoury-img" src="{{ $weapon->weapon->imageUrl }}" data-toggle="tooltip" />
-                    @else
-                        {!! $weapon->weapon->name !!}
-                    @endif
+                    <a href="{{ url('world/weapons/' . $weapon->weapon->id) }}">
+                        @if ($weapon->has_image)
+                            <img class="img-fluid rounded character-armoury-img" src="{{ $weapon->imageUrl }}" data-toggle="tooltip" />
+                        @elseif($weapon->weapon->imageUrl)
+                            <img class="img-fluid rounded character-armoury-img" src="{{ $weapon->weapon->imageUrl }}" data-toggle="tooltip" />
+                        @endif
+                    </a>
+                    <div class="text-center">{{ $weapon->weapon->name }}</div>
                 </div>
             @endforeach
         </div>
@@ -124,13 +126,14 @@
         <div class="row justify-content-begin" style="margin: 0 !important; gap: 10px;">
             @foreach ($character->gear as $gear)
                 <div class="col-md-2 character-armoury-info-container">
-                    @if ($gear->has_image)
-                        <img class="img-fluid rounded character-armoury-img" src="{{ $gear->imageUrl }}" data-toggle="tooltip" />
-                    @elseif($gear->gear->imageUrl)
-                        <img class="img-fluid rounded character-armoury-img" src="{{ $gear->gear->imageUrl }}" data-toggle="tooltip" />
-                    @else
-                        {!! $gear->gear->name !!}
-                    @endif
+                    <a href="{{ url('world/gear/' . $gear->gear->id) }}">
+                        @if ($gear->has_image)
+                            <img class="img-fluid rounded character-armoury-img" src="{{ $gear->imageUrl }}" data-toggle="tooltip" />
+                        @elseif($gear->gear->imageUrl)
+                            <img class="img-fluid rounded character-armoury-img" src="{{ $gear->gear->imageUrl }}" data-toggle="tooltip" />
+                        @endif
+                    </a>
+                    <div class="text-center">{!! $gear->gear->name !!}</div>
                 </div>
             @endforeach
         </div>

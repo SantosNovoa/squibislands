@@ -64,10 +64,12 @@
     @foreach ($pets->chunk(4) as $chunk)
         <div class="row">
             <div id="gridView">
-                <div class="row p-3 g-2 g-md-0" style="margin: 0 !important;">
+                <div class="row p-3 g-2 g-md-0" style="margin: 0 !important; gap: 10px;">
                     @foreach ($chunk as $pet)
                         <div class="align-items-center character-items-info-container">
-                            <img src="{{ $pet->pet->variantImage($pet->id) }}" class="rounded img-fluid character-item-img" />
+                            <a href="{{ $pet->pet->url }}">
+                                <img src="{{ $pet->pet->variantImage($pet->id) }}" class="rounded img-fluid character-item-img" />
+                            </a>
                             @if (config('lorekeeper.pets.pet_bonding_enabled'))
                                 <div class="progress mb-2" style="width: 100%;">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"

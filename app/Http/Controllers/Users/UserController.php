@@ -322,6 +322,19 @@ class UserController extends Controller {
         ]);
     }
 
+
+    /**
+     * Shows a user's pet page.
+     *
+     * @param string $name
+     * @param int    $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function getUserPet($name, $id) {
+        return redirect()->to('pets/view/' . $id);
+    }
+
     /**
      *  Shows a user's Bank.
      *

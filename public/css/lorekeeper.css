@@ -1394,7 +1394,8 @@ a.text-warning:focus {
 }
 
 .display-species,
-.display-character {
+.display-character,
+.display-subtype {
     color: rgb(48, 48, 48) !important;
 }
 
@@ -1554,6 +1555,12 @@ a.text-warning:focus {
 .character-item-img {
     max-height: 140px;
     max-width: 180px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.character-item-img:hover,
+.character-armoury-img:hover {
+    transform: scale(1.10) translateY(-2px);
 }
 
 .character-armoury-info-container {
@@ -1566,12 +1573,15 @@ a.text-warning:focus {
     height: 160px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .character-armoury-img {
     max-height: 120px;
     max-width: 120px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .rarity-char-bio a.display-rarity {
@@ -1588,7 +1598,7 @@ a.text-warning:focus {
     text-align: center;
 }
 
-.character-image-titles .d-flex.flex-wrap a {
-    display: inline-block;
+.character-image-titles .badge {
+    font-size: 20px !important;
 }
 

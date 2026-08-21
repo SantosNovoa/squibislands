@@ -2,10 +2,12 @@
     @foreach ($items as $categoryId => $categoryItems)
         <div class="row">
             <div id="gridView">
-                <div class="row p-3 g-2 g-md-0" style="margin: 0 !important;">
+                <div class="row p-3 g-2 g-md-0" style="margin: 0 !important; gap: 10px;">
                     @foreach ($categoryItems as $itemtype)
                         <div class="align-items-center character-items-info-container">
-                            <img src="{{ $itemtype->first()->imageUrl }}"  alt="{{ $itemtype->first()->name }}" class="rounded img-fluid character-item-img" />
+                            <a href="{{ $itemtype->first()->url ?? '#'  }}">
+                                <img src="{{ $itemtype->first()->imageUrl }}"  alt="{{ $itemtype->first()->name }}" class="rounded img-fluid character-item-img" />
+                            </a>
                             <div class="items-text-container d-flex justify-content-center" style="gap: 5px;">
                                 <span>{{ $itemtype->first()->name }} x{{ $itemtype->sum('pivot.count') }}</span>
                             </div>
