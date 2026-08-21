@@ -47,7 +47,7 @@
     @if ($level->id)
         <h2>General Rewards</h2>
         <p>These rewards are given to the owner of a pet when they reach this level, regardless of what pet it is.</p>
-        @include('widgets._loot_select', ['loots' => $level->rewards, 'showLootTables' => true, 'showRaffles' => true])
+        @include('widgets._loot_select', ['loots' => $level->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
         <h2>Pet Specific Rewards</h2>
         <p>These rewards are given <i>in addition</i> to the general rewards when a pet reaches this level.</p>
@@ -101,13 +101,13 @@
 
     {!! Form::close() !!}
 
-    @include('widgets._loot_select_row', ['showLootTables' => true, 'showRaffles' => true])
+    @include('widgets._loot_select_row', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
 @endsection
 
 @section('scripts')
     @parent
-    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
     <script>
         $(document).ready(function() {
             $('.delete-level-button').on('click', function(e) {
