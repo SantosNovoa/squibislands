@@ -78,13 +78,6 @@
                                         {{ $pet->level?->nextLevel?->bonding_required ? $pet->level?->bonding . '/' . $pet->level?->nextLevel?->bonding_required : $pet->level?->levelName }}
                                     </div>
                                 </div>
-                                @if (Auth::check() && Auth::user()->id == $character->user_id && $pet->canBond())
-                                    <div class="form-group mb-0">
-                                        {!! Form::open(['url' => 'pets/bond/' . $pet->id]) !!}
-                                        {!! Form::submit('Bond', ['class' => 'btn btn-primary']) !!}
-                                        {!! Form::close() !!}
-                                    </div>
-                                @endif
                             @endif
                             <div class="pet-text-container d-flex justify-content-center" style="gap: 5px;">
                                 @if ($pet->pet_name != null)
