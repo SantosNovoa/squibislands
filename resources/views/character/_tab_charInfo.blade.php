@@ -17,7 +17,7 @@
 
 <div class="row no-gutters">
     <div class="col-lg-4 col-5">
-        <h5>Class</h5>
+        <h4>Class</h4>
     </div>
     <div class="col-lg-8 col-7 pl-1">{!! $image->character->class_id ? $image->character->class->displayName : 'None' !!}
         @if (Auth::check())
@@ -43,7 +43,7 @@
 @if ($type || (Auth::check() && Auth::user()->hasPower('manage_characters')))
     <div class="row no-gutters">
         <div class="col-lg-4 col-5">
-            <h5>Typing</h5>
+            <h4>Typing</h4>
         </div>
         <div class="col-lg-8 col-7 pl-1">
             <h5>{!! $type?->displayElements !!}</h5>
