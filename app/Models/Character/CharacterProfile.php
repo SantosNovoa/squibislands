@@ -11,7 +11,7 @@ class CharacterProfile extends Model {
      * @var array
      */
     protected $fillable = [
-        'character_id', 'text', 'parsed_text', 'link',
+        'character_id', 'text', 'parsed_text', 'link', 'items_tab_order', 'info_tab_order',
     ];
 
     /**
@@ -34,6 +34,11 @@ class CharacterProfile extends Model {
      */
     public static $rules = [
         'link' => 'url|nullable',
+    ];
+
+    protected $casts = [
+        'items_tab_order' => 'array',
+        'info_tab_order'  => 'array',
     ];
 
     /**********************************************************************************************

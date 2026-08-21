@@ -1,16 +1,13 @@
 {{-- Image Data --}}
 <div class="col-md-5 d-flex">
     <div class="card character-bio w-100">
-        <div class="card-header">
+        {{-- <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" id="infoTab-{{ $image->id }}" data-toggle="tab" href="#info-{{ $image->id }}" role="tab">Info</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="notesTab-{{ $image->id }}" data-toggle="tab" href="#notes-{{ $image->id }}" role="tab">Notes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="creditsTab-{{ $image->id }}" data-toggle="tab" href="#credits-{{ $image->id }}" role="tab">Credits</a>
                 </li>
                 @if (isset($showMention) && $showMention)
                     <li class="nav-item">
@@ -23,135 +20,38 @@
                     </li>
                 @endif
             </ul>
-        </div>
+        </div> --}}
         <div class="card-body tab-content">
-            <div class="text-right mb-1">
-                <div class="badge badge-primary">Image #{{ $image->id }}</div>
-            </div>
-            @if (!$image->character->is_myo_slot && !$image->is_valid)
-                <div class="alert alert-danger">
-                    This version of this {{ __('lorekeeper.character') }} is outdated, and only noted here for recordkeeping purposes. Do not use as an official reference.
-                </div>
-            @endif
-
             {{-- Basic info --}}
             <div class="tab-pane fade show active" id="info-{{ $image->id }}">
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-5">
-                        <h5>Class</h5>
-                    </div>
-                    <div class="col-lg-8 col-7 pl-1">{!! $image->character->class_id ? $image->character->class->displayName : 'None' !!}
-                        @if (Auth::check())
-                            @if (Auth::user()->isStaff || (Auth::user()->id == $image->character->user_id && $image->character->class_id == null))
-                                <a href="#" class="btn btn-outline-info btn-sm edit-class ml-1" data-id="{{ $image->character->id }}"><i class="fas fa-cog"></i></a>
-                            @endif
+
+                <div class="text-center">
+                    <h2 style="text-transform: none !important;">
+                        @if ($image->subtype_id)
+                            {!! $image->subtype_id ? $image->subtype->displayName : 'None' !!}
                         @endif
-                    </div>
+
+                        {!! $image->species_id ? $image->species->displayName : 'None' !!}
+                    </h2>
+                    <hr>
                 </div>
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-5">
-                        <h5>Species</h5>
-                    </div>
-                    <div class="col-lg-8 col-7 pl-1">{!! $image->species_id ? $image->species->displayName : 'None' !!}</div>
-                </div>
-                @if ($image->subtype_id)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Subtype</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">{!! $image->subtype_id ? $image->subtype->displayName : 'None' !!}</div>
-                    </div>
-                @endif
-                @if ($image->character->homeSetting)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Home</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">{!! $image->character->location ? $image->character->location : 'None' !!}</div>
-                    </div>
-                @endif
-                @if ($image->character->factionSetting)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Faction</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">{!! $image->character->faction ? $image->character->currentFaction : 'None' !!}{!! $character->factionRank ? ' (' . $character->factionRank->name . ')' : null !!}</div>
-                    </div>
-                @endif
-                @if ($image->transformation_id)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>{{ ucfirst(__('transformations.form')) }} {!! add_help('The main image is always the active image') !!}</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">
-                            <a href="{{ $image->transformation->url }}">
-                                {!! $image->transformation->displayName !!}
-                            </a>
-                            @if($image->transformation_description) ({{ $image->transformation_description }}) @endif
-                        </div>
-                    </div>
-                @endif
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-5">
-                        <h5>Rarity</h5>
-                    </div>
-                    <div class="col-lg-8 col-7 pl-1">{!! $image->rarity_id ? $image->rarity->displayName : 'None' !!}</div>
-                </div>
-                @if($image->theme)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>{{ucfirst(__('character_theme.theme'))}}</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">{!! $image->theme !!}</div>
-                    </div>
-                @endif
-                @php
-                    // check if there is a type for this object if not passed
-                    // for characters first check subtype (since it takes precedence)
-                    $type = \App\Models\Element\Typing::where('typing_model', 'App\Models\Character\CharacterImage')
-                        ->where('typing_id', $image->id)
-                        ->first();
-                    if (!isset($type) && $image->subtype_id) {
-                        $type = \App\Models\Element\Typing::where('typing_model', 'App\Models\Species\Subtype')
-                            ->where('typing_id', $image->subtype_id)
-                            ->first();
-                    }
-                    if (!isset($type)) {
-                        $type = \App\Models\Element\Typing::where('typing_model', 'App\Models\Species\Species')
-                            ->where('typing_id', $image->species_id)
-                            ->first();
-                    }
-                    $type = $type ?? null;
-                @endphp
-                @if ($type || (Auth::check() && Auth::user()->hasPower('manage_characters')))
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Typing</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">
-                            <h5>{!! $type?->displayElements !!}</h5>
-                            @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
-                                {!! add_help('Typing is assigned on an image basis') !!}
-                                <div class="ml-auto">
-                                    <a href="#" class="btn btn-outline-info btn-sm edit-typing" data-id="{{ $image->id }}">
-                                        <i class="fas fa-cog"></i> {{ $type ? 'Edit' : 'Create' }}
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
+                <h3 class="rarity-char-bio text-center">
+                    {!! $image->rarity_id ? $image->rarity->displayName : 'None' !!}
+                    <span class="char-theme">
+                        @if ($image->theme)
+                            <i>{!! $image->theme !!}</i>
+                        @endif
+                    </span>
+                </h3>
+                @if (!$image->character->is_myo_slot && !$image->is_valid)
+                    <div class="alert alert-danger">
+                        This version of this {{ __('lorekeeper.character') }} is outdated, and only noted here for recordkeeping purposes. Do not use as an official reference.
                     </div>
                 @endif
                 @if ($image->titles->count() > 0)
-                    <div class="row no-gutters">
-                        <div class="col-lg-4 col-5">
-                            <h5>Titles</h5>
-                        </div>
-                        <div class="col-lg-8 col-7 pl-1">
-                            <div class="h5">
-                                {!! $image->displayTitles !!}
-                            </div>
-                        </div>
-                    </div>
+                    <h5 class="text-center character-image-titles">
+                        {!! $image->displayTitles !!}
+                    </h5>
                 @endif
 
                 <div class="mb-3">
@@ -202,66 +102,46 @@
                         </div>
                     @endif
                 </div>
+
+
+                <div class="mb-2">
+                    <div>
+                        <h5>Design</h5>
+                    </div>
+                    <div class="ml-md-2">
+                        @foreach ($image->designers as $designer)
+                            <div>{!! $designer->displayLink() !!}</div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div>
+                        <h5>Art</h5>
+                    </div>
+                    <div class="ml-md-2">
+                        @foreach ($image->artists as $artist)
+                            <div>{!! $artist->displayLink() !!}</div>
+                        @endforeach
+                    </div>
+                </div>
+
+                @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-outline-info btn-sm edit-credits" data-id="{{ $image->id }}"><i class="fas fa-cog"></i> Edit</a>
+                    </div>
+                @endif
+
+
                 <div>
-                    <strong>Uploaded:</strong> {!! pretty_date($image->created_at) !!}
+                    Uploaded: <i>{!! pretty_date($image->created_at) !!}</i>
                 </div>
                 <div>
-                    <strong>Last Edited:</strong> {!! pretty_date($image->updated_at) !!}
+                    Last Edited:  <i>{!! pretty_date($image->updated_at) !!}</i>
                 </div>
 
                 @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
                     <div class="mt-3">
                         <a href="#" class="btn btn-outline-info btn-sm edit-features mb-3" data-id="{{ $image->id }}"><i class="fas fa-cog"></i> Edit</a>
-                    </div>
-                @endif
-
-                @if (count($image->character->pets))
-                    <div class="row justify-content-center text-center">
-                        {{-- get one random pet --}}
-                        @php
-                            $pets = $image->character
-                                ->pets()
-                                ->orderBy('sort', 'DESC')
-                                ->limit(config('lorekeeper.pets.display_pet_count'))
-                                ->get();
-                        @endphp
-                        @foreach ($pets as $pet)
-                            @if (config('lorekeeper.pets.pet_bonding_enabled'))
-                                @include('character._pet_bonding_info', ['pet' => $pet])
-                            @else
-                                <div class="ml-2 mr-3">
-                                    <img src="{{ $pet->pet->variantImage($pet->id) }}" style="max-width: 75px;" />
-                                    <br>
-                                    <span class="text-light badge badge-dark" style="font-size:95%;">{!! $pet->pet_name !!}</span>
-                                </div>
-                            @endif
-                        @endforeach
-                        <div class="ml-auto float-right mr-3">
-                            <a href="{{ $character->url . '/pets' }}" class="btn btn-outline-info btn-sm">View All</a>
-                        </div>
-                    </div>
-                @endif
-                @if (count($image->character->equipment()))
-                    <div class="mb-1 mt-4">
-                        <div class="mb-0">
-                            <h5>Equipment</h5>
-                        </div>
-                        <div class="text-center row">
-                            @foreach ($image->character->equipment()->take(5) as $equipment)
-                                <div class="col-md-2">
-                                    @if ($equipment->has_image)
-                                        <img class="rounded" src="{{ $equipment->imageUrl }}" data-toggle="tooltip" title="{{ $equipment->equipment->name }}" style="max-width: 75px;" />
-                                    @elseif($equipment->equipment->imageurl)
-                                        <img class="rounded" src="{{ $equipment->equipment->imageUrl }}" data-toggle="tooltip" title="{{ $equipment->equipment->name }}" style="max-width: 75px;" />
-                                    @else
-                                        {!! $equipment->equipment->displayName !!}
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="float-right">
-                            <a href="{{ $character->url . '/stats' }}">View All...</a>
-                        </div>
                     </div>
                 @endif
             </div>
@@ -276,37 +156,6 @@
                 @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
                     <div class="mt-3">
                         <a href="#" class="btn btn-outline-info btn-sm edit-notes" data-id="{{ $image->id }}"><i class="fas fa-cog"></i> Edit</a>
-                    </div>
-                @endif
-            </div>
-
-            {{-- Image credits --}}
-            <div class="tab-pane fade" id="credits-{{ $image->id }}">
-
-                <div class="row no-gutters mb-2">
-                    <div class="col-lg-4 col-4">
-                        <h5>Design</h5>
-                    </div>
-                    <div class="col-lg-8 col-8">
-                        @foreach ($image->designers as $designer)
-                            <div>{!! $designer->displayLink() !!}</div>
-                        @endforeach
-                    </div>
-                </div>
-                <div class="row no-gutters">
-                    <div class="col-lg-4 col-4">
-                        <h5>Art</h5>
-                    </div>
-                    <div class="col-lg-8 col-8">
-                        @foreach ($image->artists as $artist)
-                            <div>{!! $artist->displayLink() !!}</div>
-                        @endforeach
-                    </div>
-                </div>
-
-                @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
-                    <div class="mt-3">
-                        <a href="#" class="btn btn-outline-info btn-sm edit-credits" data-id="{{ $image->id }}"><i class="fas fa-cog"></i> Edit</a>
                     </div>
                 @endif
             </div>
@@ -369,4 +218,3 @@
     </div>
 
 </div>
-

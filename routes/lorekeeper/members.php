@@ -192,6 +192,9 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
 
     Route::get('{slug}/stats/logs', 'CharacterStatController@getStatLogs');
     Route::post('{slug}/stats/level', 'CharacterStatController@postLevel'); // level up
+
+    Route::get('{slug}/tab-order', 'CharacterController@getTabOrder');
+    Route::post('{slug}/tab-order', 'CharacterController@postTabOrder');
 });
 
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {

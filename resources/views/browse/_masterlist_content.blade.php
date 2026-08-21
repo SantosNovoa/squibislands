@@ -163,10 +163,10 @@
                     }
                 @endphp
                 <div class="col-md-2 col-6 text-center {{ $rarityClass }}" id="mlImg" style="font-family: DynaPuff, serif;">
-                    <div class="small pt-1 fw-bold">
+                    {{-- <div class="small pt-1 fw-bold">
                         <strong>{!! $character->image->rarity_id ? $character->image->rarity->displayName : 'No Rarity' !!}</strong>
-                    </div>
-                    <div class="ml-bg">
+                    </div> --}}
+                    <div class="ml-bg mt-4">
                         <a href="{{ $character->url }}" class="character-thumbnail" data-thumb-url="{{ $character->image->thumbnailUrl }}">
                             <div class="tn-background"></div>
                             <div class="ml-thumbnail d-flex justify-content-center">
@@ -174,7 +174,8 @@
                             </div>
                         </a>
                     </div>
-                    <div class="mt-1">
+                    <div class="mt-1 d-flex justify-content-center">
+                        <img src="/images/data/rarities/{{ $character->rarity->getRarityIconFileNameAttribute() }}" alt="">
                         <a href="{{ $character->url }}" class="display-character h5 mb-0">
                             @if (!$character->is_visible)
                                 <i class="fas fa-eye-slash"></i>

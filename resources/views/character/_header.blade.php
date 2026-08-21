@@ -36,7 +36,7 @@
 </div>
 
 <h1 class="mb-0">
-    @if (config('lorekeeper.extensions.character_status_badges'))
+    {{-- @if (config('lorekeeper.extensions.character_status_badges'))
         <!-- character trade/gift status badges -->
         <div class="float-right">
             <span class="btn {{ $character->is_trading ? 'badge-success' : 'badge-danger' }} float-right ml-2" data-toggle="tooltip" title="{{ $character->is_trading ? 'OPEN for sale and trade offers.' : 'CLOSED for sale and trade offers.' }}"><i
@@ -52,11 +52,11 @@
     @if ($character->is_visible && Auth::check() && $character->user_id != Auth::user()->id)
         <?php $bookmark = Auth::user()->hasBookmarked($character); ?>
         <a href="#" class="btn btn-outline-info float-right bookmark-button ml-2" data-id="{{ $bookmark ? $bookmark->id : 0 }}" data-character-id="{{ $character->id }}"><i class="fas fa-bookmark"></i>
-            {{ $bookmark ? 'Edit Bookmark' : 'Bookmark' }}</a>
+            {{ $bookmark ? 'Edit Bookmark' : '' }}</a>
     @endif
     @if (config('lorekeeper.extensions.character_TH_profile_link') && $character->profile->link)
-        <a class="btn btn-outline-info float-right" data-character-id="{{ $character->id }}" href="{{ $character->profile->link }}"><i class="fas fa-home"></i> Profile</a>
-    @endif
+        <a class="btn btn-outline-info float-right" data-character-id="{{ $character->id }}" href="{{ $character->profile->link }}"><i class="fas fa-home"></i></a>
+    @endif --}}
     @if (!$character->is_visible)
         <i class="fas fa-eye-slash"></i>
     @endif

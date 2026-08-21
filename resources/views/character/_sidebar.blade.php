@@ -31,6 +31,7 @@
             @if (Auth::user()->id == $character->user_id)
                 <div class="sidebar-item"><a href="{{ $character->url . '/approval' }}" class="{{ set_active('character/' . $character->slug . '/approval') }}">Update Design</a></div>
             @endif
+            <div class="sidebar-item"><a href="{{ $character->url . '/tab-order' }}" class="{{ set_active('character/' . $character->slug . '/tab-order') }}">Tab Order</a></div>
         </li>
     @endif
 </ul>

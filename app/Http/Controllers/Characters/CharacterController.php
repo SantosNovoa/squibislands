@@ -137,6 +137,17 @@ class CharacterController extends Controller {
         return view('character.character', [
             'character'             => $this->character,
             'skills'                => Skill::where('parent_id', null)->orderBy('name', 'ASC')->get(),
+            'pets'                  => $this->character->pets()->orderBy('sort', 'DESC')->take(4)->get(),
+            'items'                 => $this->character->items()
+                                        ->with('category')
+                                        ->where('count', '>', 0)
+                                        ->orderBy('name')
+                                        ->get()
+                                        ->groupBy(['item_category_id', 'id']),
+            'awards'                => $this->character->awards()->get()->groupBy(['award_category_id', 'id']),
+            'profile'               => $this->character->profile()->get(),
+            'weapons'               => $this->character->weapons()->get(),
+            'gear'                  => $this->character->gear()->get(),
             'showMention'           => true,
             'extPrevAndNextBtnsUrl' => '',
         ]);
@@ -184,6 +195,40 @@ class CharacterController extends Controller {
             'char_faction_enabled' => Settings::get('WE_character_factions'),
         ]);
     }
+    
+    /**
+     * Shows the tab order editor for a character.
+     *
+     * @param string $slug
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getTabOrder($slug) {
+        if (!Auth::check()) {
+            abort(404);
+        }
+
+        $isMod = Auth::user()->hasPower('manage_characters');
+        $isOwner = ($this->character->user_id == Auth::user()->id);
+        if (!$isMod && !$isOwner) {
+            abort(404);
+        }
+
+        $defaultItems = ['pets', 'items', 'awards'];
+        $defaultInfo  = ['profile', 'charInfo', 'skills'];
+
+        return view('character.tab_order', [
+            'character'  => $this->character,
+            'itemsOrder' => array_values(array_unique(array_merge(
+                $this->character->profile->items_tab_order ?? $defaultItems, $defaultItems
+            ))),
+            'infoOrder'  => array_values(array_unique(array_merge(
+                $this->character->profile->info_tab_order ?? $defaultInfo, $defaultInfo
+            ))),
+            'itemLabels' => ['pets' => 'Pets', 'items' => 'Inventory', 'awards' => 'Badges'],
+            'infoLabels' => ['profile' => 'Profile', 'charInfo' => 'Character Info', 'skills' => 'Skills'],
+        ]);
+    }
 
     /**
      * Edits a character's profile.
@@ -217,6 +262,50 @@ class CharacterController extends Controller {
         return redirect()->back();
     }
 
+    /**
+     * Updates the tab order for a character's profile page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $slug
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postTabOrder(Request $request, $slug) {
+        if (!Auth::check()) abort(404);
+
+        $isMod   = Auth::user()->hasPower('manage_characters');
+        $isOwner = ($this->character->user_id == Auth::user()->id);
+        if (!$isMod && !$isOwner) abort(403);
+
+        $validItems = ['pets', 'items', 'awards'];
+        $validInfo  = ['profile', 'charInfo', 'skills'];
+        $type = $request->input('type');
+
+        if ($type === 'items') {
+            $itemsOrder = array_filter(explode(',', $request->input('items_tab_order', '')));
+            $itemsOrder = array_values(array_filter($itemsOrder, fn($k) => in_array($k, $validItems)));
+            foreach ($validItems as $v) {
+                if (!in_array($v, $itemsOrder)) $itemsOrder[] = $v;
+            }
+            $infoOrder = $this->character->profile->info_tab_order ?? $validInfo;
+        } else {
+            $infoOrder = array_filter(explode(',', $request->input('info_tab_order', '')));
+            $infoOrder = array_values(array_filter($infoOrder, fn($k) => in_array($k, $validInfo)));
+            foreach ($validInfo as $v) {
+                if (!in_array($v, $infoOrder)) $infoOrder[] = $v;
+            }
+            $itemsOrder = $this->character->profile->items_tab_order ?? $validItems;
+        }
+
+        \DB::table('character_profiles')
+            ->where('character_id', $this->character->id)
+            ->update([
+                'items_tab_order' => json_encode($itemsOrder),
+                'info_tab_order'  => json_encode($infoOrder),
+            ]);
+
+        flash('Tab order updated.')->success();
+        return redirect()->back();
+    }
     /**
      * Sorts a character's titles.
      *
