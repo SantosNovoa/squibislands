@@ -175,7 +175,12 @@
                         </a>
                     </div>
                     <div class="mt-1 d-flex justify-content-center">
-                        <img src="/images/data/rarities/{{ $character->rarity->getRarityIconFileNameAttribute() }}" alt="">
+                        <img src="/images/data/rarities/{{ $character->rarity->getRarityIconFileNameAttribute() }}" 
+                        alt="{{ $character->rarity->name }}"
+                        data-toggle="tooltip" 
+                        data-placement="top" 
+                        title="{{ $character->rarity->name }}" 
+                        style="cursor: pointer;"/>
                         <a href="{{ $character->url }}" class="display-character h5 mb-0">
                             @if (!$character->is_visible)
                                 <i class="fas fa-eye-slash"></i>
