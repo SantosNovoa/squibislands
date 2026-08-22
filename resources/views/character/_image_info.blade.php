@@ -50,7 +50,7 @@
                 @endif
                 @if ($image->titles->count() > 0)
                     <h5 class="text-center character-image-titles">
-                        {!! $image->displayTitles !!}
+                        {!! $image->displayTitlesLimited(3) !!}
                     </h5>
                 @endif
 
