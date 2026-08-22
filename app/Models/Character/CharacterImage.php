@@ -321,6 +321,36 @@ class CharacterImage extends Model {
     }
 
     /**
+     * Displays a limited number of the image's titles.
+     *
+     * @param int $limit
+     * @return string
+     */
+    public function displayTitlesLimited($limit = 3) {
+        $titles = [];
+        if (!$this->titles()->whereNull('sort')->count()) {
+            $firstTitle = $this->titles()->orderByDesc('sort')->first();
+            foreach ($this->titles()->orderByDesc('sort')->take($limit)->get() as $title) {
+                $isFirst = $title->id === ($firstTitle ? $firstTitle->id : null);
+                $titles[] = $title->displayTitle(!$isFirst);
+            }
+        } else {
+            $sortedTitles = $this->titles()->get()->sortByDesc(function ($title) {
+                return $title->title ? $title->title->sort : -1;
+            })->values()->take($limit);
+
+            $titles = $sortedTitles->map(function ($title, $index) {
+                $isFirst = $index === 0;
+                return $title->displayTitle(!$isFirst);
+            })->all();
+        }
+
+        return '<div class="d-flex flex-wrap">'.implode('', $titles).'</div>';
+    }
+    
+
+
+    /**
      * Gets the id array of titles for select forms.
      *
      * @return string

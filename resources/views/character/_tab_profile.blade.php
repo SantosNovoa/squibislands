@@ -7,7 +7,7 @@
         </div>
     @endif
 
-    @if ($character->is_trading || $character->is_gift_art_allowed || $character->is_gift_writing_allowed)
+    {{-- @if ($character->is_trading || $character->is_gift_art_allowed || $character->is_gift_writing_allowed)
         <div class="card mb-3">
         <ul class="list-group list-group-flush">
             @if ($character->is_gift_art_allowed >= 1 && !$character->is_myo_slot)
@@ -29,7 +29,7 @@
             @endif
         </ul>
         </div>
-    @endif
+    @endif --}}
 @else
     <p class="text-center">This character has no profile content yet.</p>
 @endif
