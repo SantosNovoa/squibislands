@@ -1,4 +1,4 @@
-@if ($character->profile->parsed_text || $character->is_trading || $character->is_gift_art_allowed || $character->is_gift_writing_allowed)
+@if ($character->profile->parsed_text)
     @if ($character->profile->parsed_text)
         <div class="card mb-3">
             <div class="card-body parsed-text">
@@ -6,7 +6,6 @@
             </div>
         </div>
     @endif
-
     {{-- @if ($character->is_trading || $character->is_gift_art_allowed || $character->is_gift_writing_allowed)
         <div class="card mb-3">
         <ul class="list-group list-group-flush">
