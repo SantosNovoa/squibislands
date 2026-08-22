@@ -1602,3 +1602,7 @@ a.text-warning:focus {
     font-size: 18px !important;
 }
 
+.character-image-titles .d-flex.flex-wrap a {
+    margin-right: 5px;
+}
+
