@@ -5,13 +5,13 @@
 @endsection
 
 @section('admin-content')
-    @if($submission->prompt_id)
+    @if ($submission->prompt_id)
         {!! breadcrumbs(['Admin Panel' => 'admin', 'Prompt Queue' => 'admin/submissions/pending', 'Submission (#' . $submission->id . ')' => $submission->viewUrl]) !!}
-    @else 
+    @else
         {!! breadcrumbs(['Admin Panel' => 'admin', 'Claim Queue' => 'admin/claims/pending', 'Claim (#' . $submission->id . ')' => $submission->viewUrl]) !!}
     @endif
 
-    @if($submission->status == 'Pending')
+    @if ($submission->status == 'Pending')
 
         <h1>
             {{ $submission->prompt_id ? 'Submission' : 'Claim' }} (#{{ $submission->id }})
@@ -27,13 +27,17 @@
                     {!! $submission->user->displayNamePronouns !!}
                 </div>
             </div>
-            @if($submission->prompt_id)
+            @if ($submission->prompt_id)
                 <div class="row">
-                    <div class="col-md-2 col-4"><h5>Prompt</h5></div>
+                    <div class="col-md-2 col-4">
+                        <h5>Prompt</h5>
+                    </div>
                     <div class="col-md-10 col-8">{!! $submission->prompt->displayName !!}</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2 col-4"><h5>Previous Submissions{!! add_help('This is the number of times the user has submitted this prompt before, pending or approved.') !!}</h5></div>
+                    <div class="col-md-2 col-4">
+                        <h5>Previous Submissions{!! add_help('This is the number of times the user has submitted this prompt before, pending or approved.') !!}</h5>
+                    </div>
                     <div class="col-md-10 col-8">
                         <div class="row text-center">
                             <div class="col"><strong>All Time</strong></div>
@@ -55,7 +59,9 @@
                 </div>
             @endif
             <div class="row">
-                <div class="col-md-2 col-4"><h5>URL</h5></div>
+                <div class="col-md-2 col-4">
+                    <h5>URL</h5>
+                </div>
                 <div class="col-md-10 col-8"><a href="{{ $submission->url }}">{{ $submission->url }}</a></div>
             </div>
             @if (config('lorekeeper.settings.allow_gallery_submissions_on_prompts') && $submission->data['gallery_submission_id'])
@@ -67,7 +73,9 @@
                 </div>
             @endif
             <div class="row">
-                <div class="col-md-2 col-4"><h5>Submitted</h5></div>
+                <div class="col-md-2 col-4">
+                    <h5>Submitted</h5>
+                </div>
                 <div class="col-md-10 col-8">{!! format_date($submission->created_at) !!} ({{ $submission->created_at->diffForHumans() }})</div>
             </div>
         </div>
@@ -77,18 +85,18 @@
                 {!! nl2br(htmlentities($submission->comments)) !!}
             </div>
         </div>
-        @if(Auth::check() && $submission->staff_comments && ($submission->user_id == Auth::user()->id || Auth::user()->hasPower('manage_submissions')))
+        @if (Auth::check() && $submission->staff_comments && ($submission->user_id == Auth::user()->id || Auth::user()->hasPower('manage_submissions')))
             <h2>Staff Comments ({!! $submission->staff->displayName !!})</h2>
             <div class="card mb-3">
                 <div class="card-body">
-                    @if(isset($submission->parsed_staff_comments))
+                    @if (isset($submission->parsed_staff_comments))
                         {!! $submission->parsed_staff_comments !!}
                     @else
                         {!! $submission->staff_comments !!}
                     @endif
                 </div>
             </div>
-    @endif
+        @endif
         {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm', 'onsubmit' => "$(this).find('input').prop('disabled', false)"]) !!}
 
         @if (isset($submission->data['criterion']))
@@ -242,7 +250,12 @@
                         <div class="col-md-10">
                             <div class="form-group">
                                 {!! Form::label('slug[]', 'Character Code') !!}
-                                {!! Form::text('slug[]', null, ['class' => 'form-control character-code']) !!}
+                                {!! Form::text('slug[]', null, ['class' => 'form-control character-code', 'list' => 'character-slugs']) !!}
+                                <datalist id="character-slugs">
+                                    @foreach ($characters as $slug => $name)
+                                        <option value="{{ $slug }}">{{ $name }}</option>
+                                    @endforeach
+                                </datalist>
                             </div>
                             <div class="form-group col-6">
                                 {!! Form::label('character-is-focus[]', 'Focus Character?', ['class' => 'form-check-label ']) !!}
@@ -297,14 +310,14 @@
                         </td>
                     @endif
 
-                <td class="d-flex align-items-center">
-                    {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2  character-rewardable-quantity']) !!}
-                    <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
-                </td>
-            </tr>
-        </table>
-    </div>
-    @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+                    <td class="d-flex align-items-center">
+                        {!! Form::text('character_quantity[]', 0, ['class' => 'form-control mr-2  character-rewardable-quantity']) !!}
+                        <a href="#" class="remove-reward d-block"><i class="fas fa-times text-muted"></i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
 
         <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -354,10 +367,10 @@
 @endsection
 
 @section('scripts')
-@parent
-@if($submission->status == 'Pending')
-    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
-    @include('js._character_select_js')
+    @parent
+    @if ($submission->status == 'Pending')
+        @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+        @include('js._character_select_js')
 
         <script>
             $(document).ready(function() {

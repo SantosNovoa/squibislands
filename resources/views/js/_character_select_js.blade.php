@@ -16,7 +16,7 @@
             attachListeners($clone);
             attachRewardTypeListener($clone.find('.character-rewardable-type'));
             $characters.append($clone);
-            $clone.find('.character-code').selectize();
+            // $clone.find('.character-code').selectize();
             count++;
         });
 
