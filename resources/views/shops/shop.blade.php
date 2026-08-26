@@ -44,17 +44,18 @@
         @if (Settings::get('shop_type'))
             @include('shops._tab', ['items' => $stock, 'shop' => $shop])
         @else
-            @foreach ($stock as $categoryId => $categoryItems)
+              @foreach ($stock as $categoryId => $categoryItems)
                 @php
+                    $typeCategories = $categories[$type] ?? ($categories['item'] ?? collect());
+                    $category = $typeCategories[$categoryId] ?? null;
                     $visible = '';
-                    // check if method exists
-                    if (method_exists($categoryItems->first(), 'is_visible') && !$categories[$categoryId]->is_visible) {
+                    if ($category && method_exists($category, 'is_visible') && !$category->is_visible) {
                         $visible = '<i class="fas fa-eye-slash mr-1"></i>';
                     }
                 @endphp
                 <div class="card mb-3 inventory-category">
                     <h5 class="card-header inventory-header">
-                        {!! isset($categories[$categoryId]) ? '<a href="' . $categories[$categoryId]->searchUrl . '">' . $visible . $categories[$categoryId]->name . '</a>' : 'Miscellaneous' !!}
+                        {!! $category ? '<a href="' . $category->searchUrl . '">' . $visible . $category->name . '</a>' : 'Miscellaneous' !!}
                     </h5>
                     <div class="card-body inventory-body">
                         @foreach ($categoryItems->chunk(4) as $chunk)

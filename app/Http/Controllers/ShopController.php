@@ -96,7 +96,8 @@ class ShopController extends Controller {
         // c&c for multiple stock types
         $stock_types = ShopStock::where('shop_id', $shop->id)->pluck('stock_type')->unique();
         $stocks = [];
-        $allCategories = collect();
+        $allCategories = $categories->keyBy('id');
+        $categoriesByType = ['item' => $categories->keyBy('id')];
 
         foreach ($stock_types as $type) {
             $type = strtolower($type);
@@ -114,7 +115,7 @@ class ShopController extends Controller {
                 $stock_category = ($model.'Category')::orderBy('sort', 'DESC')->get();
             }
 
-            $allCategories = $allCategories->merge($stock_category->keyBy('id'));
+            $categoriesByType[$type] = $stock_category->keyBy('id');
 
             $stock = count($stock_category) ? $shop->displayStock($model, $type)->where('stock_type', $type)
                 ->orderByRaw('FIELD('.$type.'_category_id,'.implode(',', $stock_category->pluck('id')->toArray()).')')
@@ -132,7 +133,8 @@ class ShopController extends Controller {
             'shop'       => $shop,
             'stocks'     => $stocks,
             'items'      => $items, //  v3 items
-            'categories' => $categories->keyBy('id'), //  v3 categories
+            // 'categories' => $categories->keyBy('id'), //  v3 categories
+            'categories' => $categoriesByType,
             'shops'      => Shop::where('is_active', 1)->orderBy('sort', 'DESC')->get(),
             'currencies' => Currency::whereIn('id', ShopStock::where('shop_id', $shop->id)->pluck('currency_id')->toArray())->get()->keyBy('id'),
         ]);
