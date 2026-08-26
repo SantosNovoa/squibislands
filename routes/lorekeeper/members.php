@@ -365,3 +365,10 @@ Route::group(['prefix' => 'criteria'], function () {
 
     Route::get('guide/{id}', 'CriterionController@getCriterionGuide');
 });
+
+/**************************************************************************************************
+    Premium Shop
+**************************************************************************************************/
+
+Route::post('premium-shop/intent/{id}', 'PremiumShopController@postCreateIntent');
+Route::get('premium-shop/history', 'PremiumShopController@getHistory');

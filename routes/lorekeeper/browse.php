@@ -314,3 +314,9 @@ Route::get('time', function () {
 Route::group(['prefix' => 'terms'], function() {
     Route::post('/accept', 'TermsController@acceptTerms');
 });
+
+/**************************************************************************************************
+    Stripe
+**************************************************************************************************/
+Route::get('premium-shop', 'PremiumShopController@getIndex');
+Route::get('premium-shop/complete', 'PremiumShopController@getComplete');

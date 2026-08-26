@@ -214,7 +214,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('recipes/create', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/edit/{id?}', 'RecipeController@postCreateEditRecipe');
     Route::post('recipes/delete/{id}', 'RecipeController@postDeleteRecipe');
-    
+
     # SHOPS
     // PETS
     Route::get('pet-categories', 'PetController@getIndex');
@@ -367,7 +367,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
-    
+
     # DAILIES
     Route::get('dailies', 'DailyController@getIndex');
     Route::get('dailies/create', 'DailyController@getCreateDaily');
@@ -376,7 +376,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('dailies/create', 'DailyController@postCreateEditDaily');
     Route::post('dailies/edit/{id?}', 'DailyController@postCreateEditDaily');
     Route::post('dailies/delete/{id}', 'DailyController@postDeleteDaily');
-    Route::post('dailies/sort', 'DailyController@postSortDaily'); 
+    Route::post('dailies/sort', 'DailyController@postSortDaily');
 
     # TRANSFORMATIONS
     Route::get('transformations', 'TransformationController@getTransformationIndex');
@@ -443,6 +443,16 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('elements/create', 'ElementController@postCreateEditElement');
     Route::post('elements/edit/{id?}', 'ElementController@postCreateEditElement');
     Route::post('elements/delete/{id}', 'ElementController@postDeleteElement');
+
+    // PREMIUM SHOP
+    Route::get('premium-shop', 'PremiumShopController@getIndex');
+    Route::get('premium-shop/create', 'PremiumShopController@getCreateProduct');
+    Route::post('premium-shop/create', 'PremiumShopController@postCreateEditProduct');
+    Route::get('premium-shop/edit/{id}', 'PremiumShopController@getEditProduct');
+    Route::post('premium-shop/edit/{id}', 'PremiumShopController@postCreateEditProduct');
+    Route::get('premium-shop/delete/{id}', 'PremiumShopController@getDeleteProduct');
+    Route::post('premium-shop/delete/{id}', 'PremiumShopController@postDeleteProduct');
+    Route::get('premium-shop/purchases', 'PremiumShopController@getPurchases');
 });
 
 // PAGES
@@ -493,7 +503,7 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('items', 'GrantController@getItems');
     Route::post('items', 'GrantController@postItems');
-    
+
 
     Route::get('exp', 'GrantController@getExp');
     Route::post('exp', 'GrantController@postExp');
@@ -519,7 +529,7 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
 
     Route::get('awards', 'GrantController@getAwards');
     Route::post('awards', 'GrantController@postAwards');
-    
+
     Route::get('recipes', 'GrantController@getRecipes');
     Route::post('recipes', 'GrantController@postRecipes');
 });
@@ -937,8 +947,20 @@ Route::group(['prefix' => 'typing', 'middleware' => 'power:edit_data', 'namespac
 });
 
 // FEATURED CHARACTER
-Route::group(['prefix' => 'featured-character'], function() {
+Route::group(['prefix' => 'featured-character'], function () {
     Route::get('/', 'FeaturedCharacterController@getIndex');
     Route::post('change', 'FeaturedCharacterController@postChange');
     Route::post('set', 'FeaturedCharacterController@postSet');
 });
+
+// // PREMIUM SHOP
+// Route::group(['prefix' => 'premium-shop'], function () {
+//     Route::get('/', 'PremiumShopController@getIndex');
+//     Route::get('create', 'PremiumShopController@getCreateProduct');
+//     Route::post('create', 'PremiumShopController@postCreateEditProduct');
+//     Route::get('edit/{id}', 'PremiumShopController@getEditProduct');
+//     Route::post('edit/{id}', 'PremiumShopController@postCreateEditProduct');
+//     Route::get('delete/{id}', 'PremiumShopController@getDeleteProduct');
+//     Route::post('delete/{id}', 'PremiumShopController@postDeleteProduct');
+//     Route::get('purchases', 'PremiumShopController@getPurchases');
+// });

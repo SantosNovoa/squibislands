@@ -227,6 +227,10 @@ return [
                 'url'  => 'admin/data/shops',
             ],
             [
+                'name' => 'Premium Shop',
+                'url'  => 'admin/data/premium-shop'
+            ],
+            [
                 'name' => 'Dailies',
                 'url' => 'admin/data/dailies'
             ],

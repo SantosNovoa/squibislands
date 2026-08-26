@@ -67,3 +67,6 @@ Route::group(['middleware' => ['auth', 'verified', 'post.throttle']], function (
 });
 
 
+Route::post('stripe/webhook', 'StripeWebhookController@handleWebhook');
+
+

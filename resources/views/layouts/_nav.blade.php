@@ -179,6 +179,9 @@
                                     <a class="dropdown-item" href="{{ url('dailies') }}">
                                        <i class="fa-solid fa-alarm-clock"></i> Dailies
                                     </a>
+                                    <a class="dropdown-item" href="{{ url('premium-shop') }}">
+                                       <i class="fa-solid fa-credit-card"></i> Premium Shop
+                                    </a>
                                     <a class="dropdown-item" href="{{ url('crafting') }}">
                                        <i class="fa-solid fa-hammer"></i> Crafting
                                     </a>
@@ -234,7 +237,7 @@
                         @endif
                         @if (Auth::user()->notifications_unread)
                             <li class="nav-item">
-                                <a class="nav-link btn btn-secondary btn-sm" href="{{ url('notifications') }}"><span class="fas fa-envelope"></span> {{ Auth::user()->notifications_unread }}</a>
+                                <a class="nav-link btn btn-secondary btn-sm" style="margin: 0 5px 0 5px;" href="{{ url('notifications') }}"><span class="fas fa-envelope"></span> {{ Auth::user()->notifications_unread }}</a>
                             </li>
                         @endif
 

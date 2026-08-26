@@ -18,6 +18,10 @@ class ParsePostRequestFields {
         // return $next($request);
         // }
 
+            if ($request->is('stripe/webhook')) {
+                return $next($request);
+            }
+
             if (!$request->isMethod('post')) {
             $excludedFields = ['_token', 'password', 'email', 'description', 'text', 'criteria'];
             $strippedFields = ['name', 'title'];
