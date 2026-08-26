@@ -1,3 +1,11 @@
+@if ($image->titles->where('is_visible', 1)->count() > 0)
+    <div class="row no-gutters">
+        <div class="col-lg-4 col-5">
+            <h4>Titles</h4>
+        </div>
+        <div class="col-lg-8 col-7 pl-1">{!! $image->buildDisplayTitles(false) !!}</div>
+    </div>
+@endif
 @if ($image->character->homeSetting)
     <div class="row no-gutters">
         <div class="col-lg-4 col-5">

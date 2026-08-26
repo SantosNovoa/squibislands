@@ -1606,3 +1606,13 @@ a.text-warning:focus {
     margin-right: 5px;
 }
 
+.d-flex.align-items-center .display-rarity {
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.d-flex.flex-wrap a .badge {
+  font-size: 15px;
+  margin-right: 5px;
+}
+

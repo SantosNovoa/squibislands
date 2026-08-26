@@ -11,7 +11,7 @@ class CharacterImageTitle extends Model {
      * @var array
      */
     protected $fillable = [
-        'character_image_id', 'title_id', 'data', 'sort',
+    'character_image_id', 'title_id', 'data', 'sort', 'is_visible',
     ];
 
     /**
