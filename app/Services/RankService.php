@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\Rank\Rank;
+use App\Models\Rank\RankThemeColor;
 use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 
-class RankService extends Service {
+class RankService extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | Rank Service
@@ -24,11 +26,11 @@ class RankService extends Service {
      *
      * @return bool
      */
-    public function createRank($data, $user) {
+    public function createRank($data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            // More specific validation
             if (Rank::where('name', $data['name'])->exists()) {
                 throw new \Exception('A rank with the given name already exists.');
             }
@@ -36,7 +38,7 @@ class RankService extends Service {
             $powers = null;
             if (isset($data['powers'])) {
                 foreach ($data['powers'] as $power) {
-                    if (!config('lorekeeper.powers.'.$power)) {
+                    if (!config('lorekeeper.powers.' . $power)) {
                         throw new \Exception('Invalid power selected.');
                     }
                 }
@@ -45,9 +47,6 @@ class RankService extends Service {
                 unset($data['powers']);
             }
 
-            // Assign sort the sort value of the lowest rank + 1.
-            // (This is because new users get assigned the lowest rank)
-            // Ranks equal to and above the new rank also get + 1.
             $data['sort'] = Rank::orderBy('sort')->first()->sort + 1;
             Rank::where('sort', '>=', $data['sort'])->increment('sort');
 
@@ -60,7 +59,12 @@ class RankService extends Service {
 
             $data['icon'] ??= 'fas fa-user';
 
+            $themeColors = $data['theme_colors'] ?? [];
+            unset($data['theme_colors']);
+
             $rank = Rank::create($data);
+            $this->saveThemeColors($rank, $themeColors);
+
             if ($powers) {
                 foreach ($powers as $power) {
                     DB::table('rank_powers')->insert(['rank_id' => $rank->id, 'power' => $power]);
@@ -84,11 +88,11 @@ class RankService extends Service {
      *
      * @return bool
      */
-    public function updateRank($rank, $data, $user) {
+    public function updateRank($rank, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            // More specific validation
             if (Rank::where('name', $data['name'])->where('id', '!=', $rank->id)->exists()) {
                 throw new \Exception('A rank with the given name already exists.');
             }
@@ -96,7 +100,7 @@ class RankService extends Service {
             $powers = null;
             if (isset($data['powers'])) {
                 foreach ($data['powers'] as $power) {
-                    if (!config('lorekeeper.powers.'.$power)) {
+                    if (!config('lorekeeper.powers.' . $power)) {
                         throw new \Exception('Invalid power selected.');
                     }
                 }
@@ -114,7 +118,13 @@ class RankService extends Service {
 
             $data['icon'] ??= 'fas fa-user';
 
+
+            $themeColors = $data['theme_colors'] ?? [];
+            unset($data['theme_colors']);
+
             $rank->update($data);
+            $this->saveThemeColors($rank, $themeColors);
+
             $rank->powers()->delete();
             if ($powers) {
                 foreach ($powers as $power) {
@@ -138,11 +148,11 @@ class RankService extends Service {
      *
      * @return bool
      */
-    public function deleteRank($rank, $user) {
+    public function deleteRank($rank, $user)
+    {
         DB::beginTransaction();
 
         try {
-            // Disallow deletion of ranks that are currently assigned to users
             if (User::where('rank_id', $rank->id)->exists()) {
                 throw new \Exception('There are currently user(s) with the selected rank. Please change their rank before deleting this one.');
             }
@@ -166,14 +176,13 @@ class RankService extends Service {
      *
      * @return bool
      */
-    public function sortRanks($data, $user) {
+    public function sortRanks($data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            // explode the sort array and reverse it since the power order is inverted
             $sort = array_reverse(explode(',', $data));
 
-            // Check if the array contains the admin rank, or anything non-numeric
             $adminRank = Rank::orderBy('sort', 'DESC')->first();
             $count = 0;
             foreach ($sort as $key => $s) {
@@ -187,7 +196,7 @@ class RankService extends Service {
                 Rank::where('id', $s)->update(['sort' => $key]);
                 $count++;
             }
-            $adminRank->update(['sort'=> $count]);
+            $adminRank->update(['sort' => $count]);
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
@@ -195,5 +204,29 @@ class RankService extends Service {
         }
 
         return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Sync per-theme color overrides for a rank.
+     *
+     * @param Rank  $rank
+     * @param array $themeColors
+     */
+    public function saveThemeColors(Rank $rank, array $themeColors): void
+    {
+        foreach ($themeColors as $themeId => $color) {
+            $color = ltrim(trim($color ?? ''), '#') ?: null;
+
+            if ($color) {
+                RankThemeColor::updateOrCreate(
+                    ['rank_id' => $rank->id, 'theme_id' => $themeId],
+                    ['color'   => $color]
+                );
+            } else {
+                RankThemeColor::where('rank_id', $rank->id)
+                    ->where('theme_id', $themeId)
+                    ->delete();
+            }
+        }
     }
 }

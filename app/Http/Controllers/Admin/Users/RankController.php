@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rank\Rank;
+use App\Models\Theme;
 use App\Services\RankService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ class RankController extends Controller {
             'rankPowers' => null,
             'powers'     => config('lorekeeper.powers'),
             'editable'   => 1,
+            'themes'     => Theme::where('is_active', 1)->orderBy('name')->get(),
         ]);
     }
 
@@ -48,20 +50,33 @@ class RankController extends Controller {
             $rank = null;
         }
 
+        if ($rank) {
+            $rank->load('themeColors');
+        }
+
         return view('admin.users._create_edit_rank', [
             'rank'       => $rank,
-            'rankPowers' => $rank ? $rank->getPowers() : null,
             'powers'     => config('lorekeeper.powers'),
+            'rankPowers' => null,
             'editable'   => $editable,
+            'themes'     => Theme::where('is_active', 1)->orderBy('name')->get(),
         ]);
     }
 
+    /**
+     * Handle rank creation and editing.
+     *
+     * @param mixed $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postCreateEditRank(Request $request, RankService $service, $id = null) {
         $request->validate(Rank::$rules);
-        $data = $request->only(['name', 'description', 'color', 'powers', 'icon']);
+        $data = $request->only(['name', 'description', 'color', 'powers', 'icon', 'theme_colors']);
+
         if ($id && $service->updateRank(Rank::find($id), $data, Auth::user())) {
             flash('Rank updated successfully.')->success();
-        } elseif ($service->createRank($data, Auth::user())) {
+        } elseif (!$id && $service->createRank($data, Auth::user())) {
             flash('Rank created successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
@@ -92,6 +107,11 @@ class RankController extends Controller {
         ]);
     }
 
+    /**
+     * Handle rank deletion.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postDeleteRank(Request $request, RankService $service, $id) {
         if ($id && $service->deleteRank(Rank::find($id), Auth::user())) {
             flash('Rank deleted successfully.')->success();
@@ -104,6 +124,11 @@ class RankController extends Controller {
         return redirect()->back();
     }
 
+    /**
+     * Handle rank sorting.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postSortRanks(Request $request, RankService $service) {
         if ($service->sortRanks($request->get('sort'), Auth::user())) {
             flash('Ranks sorted successfully.')->success();

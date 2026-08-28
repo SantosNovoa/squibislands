@@ -3,16 +3,24 @@
 namespace App\Models\Rank;
 
 use App\Models\Model;
+use App\Model\App\Models\Theme;
 use Illuminate\Support\Arr;
+use App\Models\Rank\RankThemeColor;
 
-class Rank extends Model {
+class Rank extends Model
+{
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'parsed_description', 'sort', 'color', 'icon',
+        'name',
+        'description',
+        'parsed_description',
+        'sort',
+        'color',
+        'icon',
     ];
 
     /**
@@ -37,32 +45,62 @@ class Rank extends Model {
 
         RELATIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the powers attached to this rank.
      */
-    public function powers() {
+    public function powers()
+    {
         return $this->hasMany(RankPower::class);
+    }
+
+    /**
+     * Get the per-theme color overrides for this rank.
+     */
+    public function themeColors()
+    {
+        return $this->hasMany(RankThemeColor::class);
     }
 
     /**********************************************************************************************
 
         ACCESSORS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
+
 
     /**
-     * Display the rank with its associated colour.
+     * Display the rank with its associated color, respecting the active theme.
+     * Resolves priority: theme override -> primary color -> unstyled.
      *
      * @return string
      */
-    public function getDisplayNameAttribute() {
-        if ($this->color) {
-            return '<strong style="color: #'.$this->color.'">'.$this->name.'</strong>';
+    public function getDisplayNameAttribute()
+    {
+        $color = $this->getColorForCurrentTheme();
+
+        if ($color) {
+            return '<strong style="color: #' . $color . '">' . $this->name . '</strong>';
         }
 
         return $this->name;
+    }
+
+    public function getColorForCurrentTheme(): ?string
+    {
+        $themeId = auth()->check()
+            ? auth()->user()->theme_id
+            : optional(\App\Models\Theme::where('is_default', 1)->first())->id;
+
+        if ($themeId) {
+            $override = $this->themeColors()->where('theme_id', $themeId)->first();
+            if ($override && $override->color) {
+                return ltrim($override->color, '#');
+            }
+        }
+
+        return $this->color ? ltrim($this->color, '#') : null;
     }
 
     /**
@@ -70,7 +108,8 @@ class Rank extends Model {
      *
      * @return bool
      */
-    public function getIsAdminAttribute() {
+    public function getIsAdminAttribute()
+    {
         if ($this->id == self::orderBy('sort', 'DESC')->first()->id) {
             return true;
         }
@@ -82,7 +121,7 @@ class Rank extends Model {
 
         OTHER FUNCTIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Checks if the current rank is high enough to edit a given rank.
@@ -91,7 +130,8 @@ class Rank extends Model {
      *
      * @return int
      */
-    public function canEditRank($rank) {
+    public function canEditRank($rank)
+    {
         if (is_numeric($rank)) {
             $rank = self::find($rank);
         }
@@ -118,7 +158,8 @@ class Rank extends Model {
      *
      * @return bool
      */
-    public function hasPower($power) {
+    public function hasPower($power)
+    {
         if ($this->isAdmin) {
             return true;
         }
@@ -131,7 +172,8 @@ class Rank extends Model {
      *
      * @return array
      */
-    public function getPowers() {
+    public function getPowers()
+    {
         if ($this->isAdmin) {
             return config('lorekeeper.powers');
         }
