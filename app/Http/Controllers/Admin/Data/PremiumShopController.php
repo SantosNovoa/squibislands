@@ -109,7 +109,7 @@ class PremiumShopController extends Controller
 
         flash($id ? 'Product updated.' : 'Product created.')->success();
 
-        return redirect()->to('admin/premium-shop');
+        return redirect()->to('admin/data/premium-shop');
     }
 
     /**
@@ -143,7 +143,7 @@ class PremiumShopController extends Controller
 
         flash('Product deleted.')->success();
 
-        return redirect()->to('admin/premium-shop');
+        return redirect()->to('admin/data/premium-shop');
     }
 
     /**
