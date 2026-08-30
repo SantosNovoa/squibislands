@@ -1,6 +1,8 @@
 @extends('admin.layout')
 
-@section('admin-title') {{ $product->id ? 'Edit' : 'Create' }} Product @endsection
+@section('admin-title')
+    {{ $product->id ? 'Edit' : 'Create' }} Product
+@endsection
 
 @section('admin-content')
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Premium Shop' => 'admin/data/premium-shop', ($product->id ? 'Edit' : 'Create') . ' Product' => $product->id ? 'admin/data/premium-shop/edit/' . $product->id : 'admin/data/premium-shop/create']) !!}
@@ -79,13 +81,25 @@
 @section('scripts')
     @parent
     <script>
+        $(document).ready(function() {
+            if ($('#rewardableType').val() === 'Currency') {
+                $('#itemSelect select').prop('disabled', true);
+            } else {
+                $('#currencySelect select').prop('disabled', true);
+            }
+        });
+
         $('#rewardableType').on('change', function() {
             if ($(this).val() === 'Currency') {
                 $('#currencySelect').show();
+                $('#currencySelect select').prop('disabled', false);
                 $('#itemSelect').hide();
+                $('#itemSelect select').prop('disabled', true);
             } else {
                 $('#currencySelect').hide();
+                $('#currencySelect select').prop('disabled', true);
                 $('#itemSelect').show();
+                $('#itemSelect select').prop('disabled', false);
             }
         });
     </script>
