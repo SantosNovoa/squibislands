@@ -139,6 +139,7 @@ class PremiumShopController extends Controller
         $product = PremiumShopProduct::find($id);
         if (!$product) abort(404);
 
+        $product->purchases()->delete();
         $product->delete();
 
         flash('Product deleted.')->success();
