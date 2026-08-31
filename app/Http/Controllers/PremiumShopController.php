@@ -64,19 +64,23 @@ class PremiumShopController extends Controller
      */
     public function postCreateIntent(Request $request, $id)
     {
-        $product = PremiumShopProduct::active()->find($id);
-        if (!$product) {
-            return response()->json(['error' => 'Product not found.'], 404);
+        try {
+            $product = PremiumShopProduct::active()->find($id);
+            if (!$product) {
+                return response()->json(['error' => 'Product not found.'], 404);
+            }
+
+            $service = new PremiumShopService;
+            $intent  = $service->createPaymentIntent($product, Auth::user());
+
+            if (!$intent) {
+                return response()->json(['error' => $service->errors()->first()], 500);
+            }
+
+            return response()->json(['clientSecret' => $intent->client_secret]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
         }
-
-        $service = new PremiumShopService;
-        $intent  = $service->createPaymentIntent($product, Auth::user());
-
-        if (!$intent) {
-            return response()->json(['error' => $service->errors()->first()], 500);
-        }
-
-        return response()->json(['clientSecret' => $intent->client_secret]);
     }
 
     public function getComplete()

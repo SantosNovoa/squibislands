@@ -123,6 +123,7 @@
     @parent
     <script src="https://js.stripe.com/v3/"></script>
     <script>
+        document.body.appendChild(document.getElementById('paymentModal'));
         const stripe = Stripe('{{ $stripeKey }}');
         let elements;
         let currentProductId;
