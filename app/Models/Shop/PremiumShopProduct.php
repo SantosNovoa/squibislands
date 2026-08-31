@@ -4,21 +4,30 @@ namespace App\Models\Shop;
 
 use App\Models\Model;
 
+
 class PremiumShopProduct extends Model
 {
     protected $table = 'premium_shop_products';
 
     protected $fillable = [
-        'name', 'description', 'image', 'price',
-        'rewardable_type', 'rewardable_id', 'quantity',
-        'is_active', 'sort',
+        'name',
+        'description',
+        'image',
+        'price',
+        'rewardable_type',
+        'rewardable_id',
+        'quantity',
+        'is_active',
+        'sort',
     ];
+
+    public $timestamps = true;
 
     /**********************************************************************************************
 
         RELATIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the rewardable (Currency or Item).
@@ -37,7 +46,7 @@ class PremiumShopProduct extends Model
 
         ACCESSORS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the price formatted as a dollar string.
@@ -61,7 +70,7 @@ class PremiumShopProduct extends Model
 
         SCOPES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     public function scopeActive($query)
     {

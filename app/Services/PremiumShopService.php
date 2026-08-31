@@ -30,39 +30,26 @@ class PremiumShopService extends Service
      */
     public function createPaymentIntent(PremiumShopProduct $product, User $user)
     {
-        DB::beginTransaction();
-
         try {
             Stripe::setApiKey(config('services.stripe.secret'));
 
             $intent = PaymentIntent::create([
-                'amount'              => $product->price,
-                'currency'            => 'usd',
-                'receipt_email'       => $user->email,
-                'description'         => $product->name . ' x' . $product->quantity,
-                'metadata'            => [
-                    'user_id'         => $user->id,
-                    'product_id'      => $product->id,
-                    'product_name'    => $product->name,
-                    'quantity'        => $product->quantity,
+                'amount'           => $product->price,
+                'currency'         => 'usd',
+                'receipt_email'    => $user->email,
+                'description'      => $product->name . ' x' . $product->quantity,
+                'metadata'         => [
+                    'user_id'      => $user->id,
+                    'product_id'   => $product->id,
+                    'product_name' => $product->name,
+                    'quantity'     => $product->quantity,
                 ],
             ]);
-            // Create a pending purchase record
-            PremiumShopPurchase::create([
-                'user_id'                  => $user->id,
-                'product_id'               => $product->id,
-                'stripe_payment_intent_id' => $intent->id,
-                'status'                   => 'pending',
-            ]);
-
-            DB::commit();
 
             return $intent;
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
-
-        DB::rollback();
 
         return false;
     }
@@ -79,16 +66,21 @@ class PremiumShopService extends Service
         DB::beginTransaction();
 
         try {
-            $purchase = PremiumShopPurchase::where('stripe_payment_intent_id', $paymentIntentId)
-                ->where('status', 'pending')
-                ->first();
-
-            if (!$purchase) {
-                throw new \Exception('Purchase not found or already fulfilled.');
+            // Check if this payment intent has already been fulfilled
+            if (PremiumShopPurchase::where('stripe_payment_intent_id', $paymentIntentId)
+                ->where('status', 'completed')
+                ->exists()) {
+                throw new \Exception('Purchase already fulfilled.');
             }
 
-            $product = $purchase->product;
-            $user    = $purchase->user;
+            Stripe::setApiKey(config('services.stripe.secret'));
+            $intent = PaymentIntent::retrieve($paymentIntentId);
+
+            $user    = User::find($intent->metadata->user_id);
+            $product = PremiumShopProduct::find($intent->metadata->product_id);
+
+            if (!$user) throw new \Exception('User not found.');
+            if (!$product) throw new \Exception('Product not found.');
 
             // Build assets array using Lorekeeper's asset helpers
             $rewards = createAssetsArray();
@@ -112,7 +104,13 @@ class PremiumShopService extends Service
                 throw new \Exception('Failed to distribute rewards.');
             }
 
-            $purchase->update(['status' => 'completed']);
+            // Create the purchase record only after successful fulfillment
+            PremiumShopPurchase::create([
+                'user_id'                  => $user->id,
+                'product_id'               => $product->id,
+                'stripe_payment_intent_id' => $paymentIntentId,
+                'status'                   => 'completed',
+            ]);
 
             DB::commit();
 

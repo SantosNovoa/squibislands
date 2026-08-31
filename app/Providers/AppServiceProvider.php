@@ -12,19 +12,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
-class AppServiceProvider extends ServiceProvider {
+class AppServiceProvider extends ServiceProvider
+{
     /**
      * Register any application services.
      */
-    public function register() {
+    public function register()
+    {
         //
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot() {
+    public function boot()
+    {
         //
         Schema::defaultStringLength(191);
         Paginator::defaultView('layouts._pagination');
@@ -37,14 +41,19 @@ class AppServiceProvider extends ServiceProvider {
             $conditionalTheme = null;
             if (class_exists('\App\Models\Weather\WeatherSeason')) {
                 $conditionalTheme = Theme::where('link_type', 'season')->where('link_id', Settings::get('site_season'))->first() ??
-                Theme::where('link_type', 'weather')->where('link_id', Settings::get('site_weather'))->first() ??
-                $theme;
+                    Theme::where('link_type', 'weather')->where('link_id', Settings::get('site_weather'))->first() ??
+                    $theme;
             }
             $decoratorTheme = Auth::user()->decoratorTheme ?? null;
             View::share('theme', $theme);
             View::share('conditionalTheme', $conditionalTheme);
             View::share('decoratorTheme', $decoratorTheme);
         });
+
+        Relation::morphMap([
+            'Currency' => \App\Models\Currency\Currency::class,
+            'Item'     => \App\Models\Item\Item::class,
+        ]);
 
         /*
          * Paginate a standard Laravel Collection.
@@ -76,7 +85,8 @@ class AppServiceProvider extends ServiceProvider {
     /**
      * Boot Toyhouse Socialite provider.
      */
-    private function bootToyhouseSocialite() {
+    private function bootToyhouseSocialite()
+    {
         $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
         $socialite->extend(
             'toyhouse',

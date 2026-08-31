@@ -1,6 +1,8 @@
-@extends('home.layout')
+@extends('premium-shop.layout')
 
-@section('title') Premium Shop @endsection
+@section('title')
+    Premium Shop
+@endsection
 
 @section('content')
     {!! breadcrumbs(['Premium Shop' => 'premium-shop']) !!}
@@ -11,43 +13,85 @@
     @if (!$products->count())
         <p class="text-center">No products are currently available.</p>
     @else
-        <div class="row">
-            @foreach ($products as $product)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        @if ($product->imageUrl)
-                            <img src="{{ $product->imageUrl }}" class="card-img-top" alt="{{ $product->name }}" style="object-fit: cover; height: 200px;" />
-                        @endif
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ $product->name }}</h5>
-                            @if ($product->description)
-                                <p class="card-text">{{ $product->description }}</p>
-                            @endif
-                            <p class="card-text">
-                                <strong>Reward:</strong>
-                                {{ $product->quantity }}x
-                                {{ $product->rewardable_type === 'Currency'
-                                    ? \App\Models\Currency\Currency::find($product->rewardable_id)->name ?? 'Unknown'
-                                    : \App\Models\Item\Item::find($product->rewardable_id)->name ?? 'Unknown' }}
-                            </p>
-                            <p class="card-text"><strong>Price:</strong> {{ $product->price_display }}</p>
-                            <div class="mt-auto">
-                                @auth
-                                    <button class="btn btn-primary btn-block buy-btn"
-                                            data-id="{{ $product->id }}"
-                                            data-name="{{ $product->name }}"
-                                            data-price="{{ $product->price_display }}">
-                                        Buy Now
-                                    </button>
-                                @else
-                                    <a href="{{ url('login') }}" class="btn btn-secondary btn-block">Login to Purchase</a>
-                                @endauth
+        @php
+            $currencies = $products->where('rewardable_type', 'Currency');
+            $items = $products->where('rewardable_type', 'Item');
+
+            // Group items by category name, falling back to 'Uncategorized'
+            $itemsByCategory = $items->groupBy(function ($product) {
+                return $product->rewardable?->category?->name ?? 'Uncategorized';
+            });
+        @endphp
+
+        {{-- Currency Section --}}
+        @if ($currencies->count())
+            <div class="card mb-4 inventory-category">
+                <h5 class="card-header inventory-header">Currency</h5>
+                <div class="card-body inventory-body">
+                    <div class="row">
+                        @foreach ($currencies as $product)
+                            <div class="col-sm-3 col-6 text-center inventory-item d-flex flex-column justify-content-end mb-3" data-id="{{ $product->id }}">
+                                <div class="mb-1">
+                                    @if ($product->imageUrl)
+                                        <img src="{{ $product->imageUrl }}" alt="{{ $product->name }}" style="max-height: 200px;">
+                                    @endif
+                                </div>
+                                <div>
+                                    <strong>{{ $product->name }}</strong>
+                                    <div>{{ $product->quantity }}x {{ optional($product->rewardable)->name ?? 'Unknown' }}</div>
+                                    <div><strong>Price:</strong> {{ $product->price_display }}</div>
+                                    <div class="mt-2">
+                                        @auth
+                                            <button class="btn btn-primary btn-sm buy-btn" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price_display }}">
+                                                Buy Now
+                                            </button>
+                                        @else
+                                            <a href="{{ url('login') }}" class="btn btn-secondary btn-sm">Login to Purchase</a>
+                                        @endauth
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endif
+
+        {{-- Items grouped by category --}}
+        @foreach ($itemsByCategory as $categoryName => $categoryProducts)
+            <div class="card mb-4 inventory-category">
+                <h5 class="card-header inventory-header">{{ $categoryName }}</h5>
+                <div class="card-body inventory-body">
+                    <div class="row">
+                        @foreach ($categoryProducts as $product)
+                            <div class="col-sm-3 col-6 text-center inventory-item d-flex flex-column justify-content-end mb-3" data-id="{{ $product->id }}">
+                                <div class="mb-1">
+                                    @if ($product->imageUrl)
+                                        <img src="{{ $product->imageUrl }}" alt="{{ $product->name }}" style="max-height: 200px;">
+                                    @elseif (optional($product->rewardable)->imageUrl)
+                                        <img src="{{ $product->rewardable->imageUrl }}" alt="{{ $product->name }}" style="max-height: 200px;">
+                                    @endif
+                                </div>
+                                <div>
+                                    <strong>{{ $product->name }}</strong>
+                                    <div>{{ $product->quantity }}x {{ optional($product->rewardable)->name ?? 'Unknown' }}</div>
+                                    <div><strong>Price:</strong> {{ $product->price_display }}</div>
+                                    <div class="mt-2">
+                                        @auth
+                                            <button class="btn btn-primary btn-sm buy-btn" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->price_display }}">
+                                                Buy Now
+                                            </button>
+                                        @else
+                                            <a href="{{ url('login') }}" class="btn btn-secondary btn-sm">Login to Purchase</a>
+                                        @endauth
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endforeach
     @endif
 
     {{-- Payment Modal --}}
@@ -85,14 +129,13 @@
 
         $('.buy-btn').on('click', async function() {
             currentProductId = $(this).data('id');
-            const name  = $(this).data('name');
+            const name = $(this).data('name');
             const price = $(this).data('price');
 
             $('#purchase-summary').text('You are purchasing: ' + name + ' for ' + price);
             $('#payment-message').addClass('hide').text('');
             $('#paymentModal').modal('show');
 
-            // Create payment intent
             const response = await fetch('{{ url('premium-shop/intent') }}/' + currentProductId, {
                 method: 'POST',
                 headers: {
@@ -108,7 +151,9 @@
                 return;
             }
 
-            elements = stripe.elements({ clientSecret: data.clientSecret });
+            elements = stripe.elements({
+                clientSecret: data.clientSecret
+            });
             const paymentElement = elements.create('payment');
             paymentElement.mount('#payment-element');
         });
@@ -122,7 +167,9 @@
             $('#spinner').removeClass('hide');
             $('#submit-payment').prop('disabled', true);
 
-            const { error } = await stripe.confirmPayment({
+            const {
+                error
+            } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
                     return_url: '{{ url('premium-shop/complete') }}',

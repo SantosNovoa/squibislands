@@ -11,7 +11,7 @@ class PremiumShopPurchase extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'user_id', 'product_id', 'stripe_payment_intent_id', 'status',
+        'user_id', 'product_id', 'stripe_payment_intent_id', 'cost', 'status',
     ];
 
     /**********************************************************************************************

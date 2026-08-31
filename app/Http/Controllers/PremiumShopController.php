@@ -6,6 +6,8 @@ use App\Models\Shop\PremiumShopProduct;
 use App\Services\PremiumShopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Shop\PremiumShopPurchase;
+use App\Models\Item\Item;
 
 class PremiumShopController extends Controller
 {
@@ -26,7 +28,14 @@ class PremiumShopController extends Controller
     public function getIndex()
     {
         return view('premium-shop.index', [
-            'products'   => PremiumShopProduct::active()->get(),
+            'products' => PremiumShopProduct::active()->with([
+                'rewardable' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        \App\Models\Item\Item::class     => ['category'],
+                        \App\Models\Currency\Currency::class => [],
+                    ]);
+                }
+            ])->get(),
             'stripeKey'  => config('services.stripe.key'),
         ]);
     }
@@ -39,9 +48,9 @@ class PremiumShopController extends Controller
     {
         return view('premium-shop.history', [
             'purchases' => PremiumShopPurchase::where('user_id', Auth::user()->id)
-                            ->with('product')
-                            ->orderBy('created_at', 'DESC')
-                            ->paginate(20),
+                ->with('product')
+                ->orderBy('created_at', 'DESC')
+                ->paginate(20),
         ]);
     }
 
@@ -70,7 +79,7 @@ class PremiumShopController extends Controller
         return response()->json(['clientSecret' => $intent->client_secret]);
     }
 
-        public function getComplete()
+    public function getComplete()
     {
         return view('premium-shop.complete');
     }
