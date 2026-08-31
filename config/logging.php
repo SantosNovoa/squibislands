@@ -70,7 +70,12 @@ return [
                 'port' => env('PAPERTRAIL_PORT'),
             ],
         ],
-
+        'throttle' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/throttle.log'),
+            'level'  => 'info',
+            'days'   => 14,
+        ],
         'stderr'     => [
             'driver'    => 'monolog',
             'handler'   => StreamHandler::class,
@@ -89,7 +94,7 @@ return [
             'driver' => 'errorlog',
             'level'  => 'debug',
         ],
-        
+
         'too_many_attempts' => [
             'driver' => 'daily',
             'path' => storage_path('logs/too-many-attempts.log'),
