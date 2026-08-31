@@ -39,7 +39,7 @@
                             <div>{{ $power['name'] }}</div>
                         @endforeach
                     </td>
-                    <td>
+                    <td class="d-flex" style="gap: 5px;">
                         <a href="#" class="btn btn-primary edit-rank-button" data-id="{{ $rank->id }}">Edit</a>
                         @if (!$rank->isAdmin)
                             <a href="#" class="btn btn-danger delete-rank-button" data-id="{{ $rank->id }}">Delete</a>

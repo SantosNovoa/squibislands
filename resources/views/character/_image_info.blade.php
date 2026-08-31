@@ -48,7 +48,7 @@
                         This version of this {{ __('lorekeeper.character') }} is outdated, and only noted here for recordkeeping purposes. Do not use as an official reference.
                     </div>
                 @endif
-                @if ($image->titles->count() > 0)
+                @if ($image->titles->where('is_visible', 1)->count() > 0)
                     <h5 class="text-center character-image-titles">
                         {!! $image->displayTitlesLimited(3) !!}
                     </h5>

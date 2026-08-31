@@ -9,7 +9,8 @@ use App\Models\Species\Subtype;
 use App\Models\User\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CharacterImage extends Model {
+class CharacterImage extends Model
+{
     use SoftDeletes;
 
     /**
@@ -18,11 +19,29 @@ class CharacterImage extends Model {
      * @var array
      */
     protected $fillable = [
-        'character_id', 'user_id', 'species_id', 'subtype_id', 'rarity_id', 'url',
-        'extension', 'use_cropper', 'hash', 'fullsize_hash', 'fullsize_extension', 'sort',
-        'x0', 'x1', 'y0', 'y1',
-        'description', 'parsed_description',
-        'is_valid', 'transformation_id','transformation_info','transformation_description', 'theme'
+        'character_id',
+        'user_id',
+        'species_id',
+        'subtype_id',
+        'rarity_id',
+        'url',
+        'extension',
+        'use_cropper',
+        'hash',
+        'fullsize_hash',
+        'fullsize_extension',
+        'sort',
+        'x0',
+        'x1',
+        'y0',
+        'y1',
+        'description',
+        'parsed_description',
+        'is_valid',
+        'transformation_id',
+        'transformation_info',
+        'transformation_description',
+        'theme'
     ];
 
     /**
@@ -70,54 +89,61 @@ class CharacterImage extends Model {
 
         RELATIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the character associated with the image.
      */
-    public function character() {
+    public function character()
+    {
         return $this->belongsTo(Character::class, 'character_id');
     }
 
     /**
      * Get the user who owned the character at the time of image creation.
      */
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      * Get the species of the character image.
      */
-    public function species() {
+    public function species()
+    {
         return $this->belongsTo(Species::class, 'species_id');
     }
 
     /**
      * Get the subtype of the character image.
      */
-    public function subtype() {
+    public function subtype()
+    {
         return $this->belongsTo(Subtype::class, 'subtype_id');
     }
 
     /**
      * Get the rarity of the character image.
      */
-    public function rarity() {
+    public function rarity()
+    {
         return $this->belongsTo(Rarity::class, 'rarity_id');
     }
 
     /**
      * Get the title of the character image.
      */
-    public function titles() {
+    public function titles()
+    {
         return $this->hasMany(CharacterImageTitle::class, 'character_image_id');
     }
 
     /**
      * Get the features (traits) attached to the character image, ordered by display order.
      */
-    public function features() {
+    public function features()
+    {
         $query = $this
             ->hasMany(CharacterFeature::class, 'character_image_id')->where('character_features.character_type', 'Character')
             ->join('features', 'features.id', '=', 'character_features.feature_id')
@@ -130,28 +156,32 @@ class CharacterImage extends Model {
     /**
      * Get the designers/artists attached to the character image.
      */
-    public function creators() {
+    public function creators()
+    {
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id');
     }
 
     /**
      * Get the designers attached to the character image.
      */
-    public function designers() {
+    public function designers()
+    {
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id')->where('type', 'Designer')->where('character_type', 'Character');
     }
 
     /**
      * Get the artists attached to the character image.
      */
-    public function artists() {
+    public function artists()
+    {
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
     }
 
     /**
      * Get the transformation of the character image.
      */
-    public function transformation() {
+    public function transformation()
+    {
         return $this->belongsTo('App\Models\Character\CharacterTransformation', 'transformation_id');
     }
 
@@ -159,7 +189,7 @@ class CharacterImage extends Model {
 
         SCOPES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Scope a query to only include images visible to guests and regular logged-in users.
@@ -169,7 +199,8 @@ class CharacterImage extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeImages($query, $user = null) {
+    public function scopeImages($query, $user = null)
+    {
         if (!$user || !$user->hasPower('manage_characters')) {
             return $query->where('is_visible', 1)->orderBy('sort')->orderBy('id', 'DESC');
         } else {
@@ -181,15 +212,16 @@ class CharacterImage extends Model {
 
         ACCESSORS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Displays the character's name, linked to their character page.
      *
      * @return string
      */
-    public function getDisplayNameAttribute() {
-        return '<a href="'.$this->character->url.'" class="display-character">'.$this->character->fullName.'</a>';
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="' . $this->character->url . '" class="display-character">' . $this->character->fullName . '</a>';
     }
 
     /**
@@ -197,8 +229,9 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getImageDirectoryAttribute() {
-        return 'images/characters/'.floor($this->id / 1000);
+    public function getImageDirectoryAttribute()
+    {
+        return 'images/characters/' . floor($this->id / 1000);
     }
 
     /**
@@ -206,8 +239,9 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getImageFileNameAttribute() {
-        return $this->id.'_'.$this->hash.'.'.$this->extension;
+    public function getImageFileNameAttribute()
+    {
+        return $this->id . '_' . $this->hash . '.' . $this->extension;
     }
 
     /**
@@ -215,7 +249,8 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getImagePathAttribute() {
+    public function getImagePathAttribute()
+    {
         return public_path($this->imageDirectory);
     }
 
@@ -224,8 +259,9 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getImageUrlAttribute() {
-        return asset($this->imageDirectory.'/'.$this->imageFileName);
+    public function getImageUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->imageFileName);
     }
 
     /**
@@ -233,9 +269,10 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getFullsizeFileNameAttribute() {
+    public function getFullsizeFileNameAttribute()
+    {
         // Backwards compatibility pre v3
-        return $this->id.'_'.$this->hash.'_'.$this->fullsize_hash.'_full.'.($this->fullsize_extension ?? $this->extension);
+        return $this->id . '_' . $this->hash . '_' . $this->fullsize_hash . '_full.' . ($this->fullsize_extension ?? $this->extension);
     }
 
     /**
@@ -243,8 +280,9 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getFullsizeUrlAttribute() {
-        return asset($this->imageDirectory.'/'.$this->fullsizeFileName);
+    public function getFullsizeUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->fullsizeFileName);
     }
 
     /**
@@ -255,7 +293,8 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function canViewFull($user = null) {
+    public function canViewFull($user = null)
+    {
         if (((isset($this->character->user_id) && ($user ? $this->character->user->id == $user->id : false)) || ($user ? $user->hasPower('manage_characters') : false))) {
             return true;
         } else {
@@ -268,8 +307,9 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getThumbnailFileNameAttribute() {
-        return $this->id.'_'.$this->hash.'_th.'.$this->extension;
+    public function getThumbnailFileNameAttribute()
+    {
+        return $this->id . '_' . $this->hash . '_th.' . $this->extension;
     }
 
     /**
@@ -277,7 +317,8 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getThumbnailPathAttribute() {
+    public function getThumbnailPathAttribute()
+    {
         return $this->imagePath;
     }
 
@@ -286,56 +327,73 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getThumbnailUrlAttribute() {
-        return asset($this->imageDirectory.'/'.$this->thumbnailFileName);
+    public function getThumbnailUrlAttribute()
+    {
+        return asset($this->imageDirectory . '/' . $this->thumbnailFileName);
     }
 
     /**
-     * Displays all of the images titles.
+     * Displays all of the image's visible titles.
      *
      * @return string
      */
-    public function getDisplayTitlesAttribute() {
+    public function getDisplayTitlesAttribute()
+    {
+        return $this->buildDisplayTitles(true);
+    }
+
+    /**
+     * Builds the display titles string.
+     *
+     * @param bool $visibleOnly
+     *
+     * @return string
+     */
+    public function buildDisplayTitles($visibleOnly = true)
+    {
         $titles = [];
-        // check sort is set on the titles
-        if (!$this->titles()->whereNull('sort')->count()) {
-            $firstTitle = $this->titles()->orderByDesc('sort')->first();
-            foreach ($this->titles()->orderByDesc('sort')->get() as $title) {
+        $query = $visibleOnly ? $this->titles()->where('is_visible', 1) : $this->titles();
+
+        if (!(clone $query)->whereNull('sort')->count()) {
+            $firstTitle = (clone $query)->orderByDesc('sort')->first();
+            foreach ((clone $query)->orderByDesc('sort')->get() as $title) {
                 $isFirst = $title->id === ($firstTitle ? $firstTitle->id : null);
                 $titles[] = $title->displayTitle(!$isFirst);
             }
         } else {
-            // order them by the title->title->sort
-            $sortedTitles = $this->titles()->get()->sortByDesc(function ($title) {
+            $sortedTitles = (clone $query)->get()->sortByDesc(function ($title) {
                 return $title->title ? $title->title->sort : -1;
             })->values();
 
             $titles = $sortedTitles->map(function ($title, $index) {
                 $isFirst = $index === 0;
-
                 return $title->displayTitle(!$isFirst);
             })->all();
         }
 
-        return '<div class="d-flex flex-wrap">'.implode('', $titles).'</div>';
+        return '<div class="d-flex flex-wrap">' . implode('', $titles) . '</div>';
     }
 
     /**
-     * Displays a limited number of the image's titles.
+     * Displays a limited number of the image's visible titles.
      *
      * @param int $limit
+     *
      * @return string
      */
-    public function displayTitlesLimited($limit = 3) {
+    public function displayTitlesLimited($limit = 3)
+    {
         $titles = [];
-        if (!$this->titles()->whereNull('sort')->count()) {
-            $firstTitle = $this->titles()->orderByDesc('sort')->first();
-            foreach ($this->titles()->orderByDesc('sort')->take($limit)->get() as $title) {
+        $query = $this->titles()->where('is_visible', 1);
+
+        if (!(clone $query)->whereNull('sort')->count()) {
+            $firstTitle = (clone $query)->orderByDesc('sort')->first();
+            foreach ((clone $query)->orderByDesc('sort')->take($limit)->get() as $title) {
                 $isFirst = $title->id === ($firstTitle ? $firstTitle->id : null);
                 $titles[] = $title->displayTitle(!$isFirst);
             }
         } else {
-            $sortedTitles = $this->titles()->get()->sortByDesc(function ($title) {
+            $sortedTitles = (clone $query)->get()->sortByDesc(function ($title) {
                 return $title->title ? $title->title->sort : -1;
             })->values()->take($limit);
 
@@ -345,9 +403,9 @@ class CharacterImage extends Model {
             })->all();
         }
 
-        return '<div class="d-flex flex-wrap">'.implode('', $titles).'</div>';
+        return '<div class="d-flex flex-wrap">' . implode('', $titles) . '</div>';
     }
-    
+
 
 
     /**
@@ -355,7 +413,8 @@ class CharacterImage extends Model {
      *
      * @return string
      */
-    public function getTitleIdsAttribute() {
+    public function getTitleIdsAttribute()
+    {
         $ids = [];
         // we have to do foreach because null id means 'custom' title
         foreach ($this->titles as $title) {

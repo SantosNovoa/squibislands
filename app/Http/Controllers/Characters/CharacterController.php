@@ -35,7 +35,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use App\Models\Character\CharacterImage;
 
-class CharacterController extends Controller {
+class CharacterController extends Controller
+{
     /*
     |--------------------------------------------------------------------------
     | Character Controller
@@ -48,7 +49,8 @@ class CharacterController extends Controller {
     /**
      * Create a new controller instance.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->middleware(function ($request, $next) {
             $slug = Route::current()->parameter('slug');
@@ -133,17 +135,18 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacter($slug) {
+    public function getCharacter($slug)
+    {
         return view('character.character', [
             'character'             => $this->character,
             'skills'                => Skill::where('parent_id', null)->orderBy('name', 'ASC')->get(),
             'pets'                  => $this->character->pets()->orderBy('sort', 'DESC')->take(4)->get(),
             'items'                 => $this->character->items()
-                                        ->with('category')
-                                        ->where('count', '>', 0)
-                                        ->orderBy('name')
-                                        ->get()
-                                        ->groupBy(['item_category_id', 'id']),
+                ->with('category')
+                ->where('count', '>', 0)
+                ->orderBy('name')
+                ->get()
+                ->groupBy(['item_category_id', 'id']),
             'awards'                => $this->character->awards()->get()->groupBy(['award_category_id', 'id']),
             'profile'               => $this->character->profile()->get(),
             'weapons'               => $this->character->weapons()->get(),
@@ -160,7 +163,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterProfile($slug) {
+    public function getCharacterProfile($slug)
+    {
         return view('character.profile', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/profile',
@@ -174,7 +178,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditCharacterProfile($slug) {
+    public function getEditCharacterProfile($slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -195,7 +200,7 @@ class CharacterController extends Controller {
             'char_faction_enabled' => Settings::get('WE_character_factions'),
         ]);
     }
-    
+
     /**
      * Shows the tab order editor for a character.
      *
@@ -203,7 +208,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTabOrder($slug) {
+    public function getTabOrder($slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -220,10 +226,12 @@ class CharacterController extends Controller {
         return view('character.tab_order', [
             'character'  => $this->character,
             'itemsOrder' => array_values(array_unique(array_merge(
-                $this->character->profile->items_tab_order ?? $defaultItems, $defaultItems
+                $this->character->profile->items_tab_order ?? $defaultItems,
+                $defaultItems
             ))),
             'infoOrder'  => array_values(array_unique(array_merge(
-                $this->character->profile->info_tab_order ?? $defaultInfo, $defaultInfo
+                $this->character->profile->info_tab_order ?? $defaultInfo,
+                $defaultInfo
             ))),
             'itemLabels' => ['pets' => 'Pets', 'items' => 'Inventory', 'awards' => 'Badges'],
             'infoLabels' => ['profile' => 'Profile', 'charInfo' => 'Character Info', 'skills' => 'Skills'],
@@ -238,7 +246,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditCharacterProfile(Request $request, CharacterManager $service, $slug) {
+    public function postEditCharacterProfile(Request $request, CharacterManager $service, $slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -269,7 +278,8 @@ class CharacterController extends Controller {
      * @param  string  $slug
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postTabOrder(Request $request, $slug) {
+    public function postTabOrder(Request $request, $slug)
+    {
         if (!Auth::check()) abort(404);
 
         $isMod   = Auth::user()->hasPower('manage_characters');
@@ -314,8 +324,9 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postSortTitles(CharacterManager $service, Request $request, $slug) {
-        if ($service->sortCharacterTitles($this->character, $request->get('sort'))) {
+    public function postSortTitles(CharacterManager $service, Request $request, $slug)
+    {
+        if ($service->sortCharacterTitles($this->character, $request->get('sort'), $request->get('visibility', []))) {
             flash('Title order updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
@@ -333,7 +344,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterGallery(Request $request, $slug) {
+    public function getCharacterGallery(Request $request, $slug)
+    {
         return view('character.gallery', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/gallery',
@@ -348,7 +360,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterImages($slug) {
+    public function getCharacterImages($slug)
+    {
         return view('character.images', [
             'user'                  => Auth::user() ?? null,
             'character'             => $this->character,
@@ -363,26 +376,27 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterInventory($slug) {
+    public function getCharacterInventory($slug)
+    {
         $categories = ItemCategory::visible(Auth::user() ?? null)->where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
         $itemOptions = Item::whereIn('item_category_id', $categories->pluck('id'));
 
         $items = count($categories) ?
             $this->character->items()
-                ->with('category')
-                ->where('count', '>', 0)
-                ->orderByRaw('FIELD(item_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['item_category_id', 'id']) :
+            ->with('category')
+            ->where('count', '>', 0)
+            ->orderByRaw('FIELD(item_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')')
+            ->orderBy('name')
+            ->orderBy('updated_at')
+            ->get()
+            ->groupBy(['item_category_id', 'id']) :
             $this->character->items()
-                ->with('category')
-                ->where('count', '>', 0)
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['item_category_id', 'id']);
+            ->with('category')
+            ->where('count', '>', 0)
+            ->orderBy('name')
+            ->orderBy('updated_at')
+            ->get()
+            ->groupBy(['item_category_id', 'id']);
 
         return view('character.inventory', [
             'character'             => $this->character,
@@ -403,7 +417,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterBank($slug) {
+    public function getCharacterBank($slug)
+    {
         $character = $this->character;
 
         return view('character.bank', [
@@ -427,24 +442,25 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterAwards($slug) {
+    public function getCharacterAwards($slug)
+    {
         $categories = AwardCategory::orderBy('sort', 'DESC')->get();
         $awardOptions = Award::where('is_character_owned', '1');
 
         $awards = count($categories) ?
             $this->character->awards()
-                ->where('count', '>', 0)
-                ->orderByRaw('FIELD(award_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['award_category_id', 'id']) :
+            ->where('count', '>', 0)
+            ->orderByRaw('FIELD(award_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')')
+            ->orderBy('name')
+            ->orderBy('updated_at')
+            ->get()
+            ->groupBy(['award_category_id', 'id']) :
             $this->character->awards()
-                ->where('count', '>', 0)
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['award_category_id', 'id']);
+            ->where('count', '>', 0)
+            ->orderBy('name')
+            ->orderBy('updated_at')
+            ->get()
+            ->groupBy(['award_category_id', 'id']);
 
         return view('character.awards', [
             'character'  => $this->character,
@@ -465,7 +481,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCurrencyTransfer(Request $request, CurrencyManager $service, $slug) {
+    public function postCurrencyTransfer(Request $request, CurrencyManager $service, $slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -493,7 +510,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postInventoryEdit(Request $request, InventoryManager $service, $slug) {
+    public function postInventoryEdit(Request $request, InventoryManager $service, $slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -535,7 +553,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAwardEdit(Request $request, AwardCaseManager $service, $slug) {
+    public function postAwardEdit(Request $request, AwardCaseManager $service, $slug)
+    {
         // TODO: THIS
         if (!Auth::check()) {
             abort(404);
@@ -549,7 +568,7 @@ class CharacterController extends Controller {
                 $recipient = $this->character;
 
                 if ($service->transferCharacterStack($sender, $recipient, UserAward::find($request->get('stack_id')), $request->get('stack_quantity'))) {
-                    flash(ucfirst(__('awards.award')).' transferred successfully.')->success();
+                    flash(ucfirst(__('awards.award')) . ' transferred successfully.')->success();
                 } else {
                     foreach ($service->errors()->getMessages()['error'] as $error) {
                         flash($error)->error();
@@ -575,7 +594,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterCurrencyLogs($slug) {
+    public function getCharacterCurrencyLogs($slug)
+    {
         return view('character.currency_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/currency-logs',
@@ -590,7 +610,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterItemLogs($slug) {
+    public function getCharacterItemLogs($slug)
+    {
         return view('character.item_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/item-logs',
@@ -605,22 +626,24 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterAwardLogs($slug) {
+    public function getCharacterAwardLogs($slug)
+    {
         return view('character.award_logs', [
             'character' => $this->character,
             'logs'      => $this->character->getAwardLogs(0),
         ]);
     }
-    
+
     /**
      * Shows a character's exp logs.
      *
      * @param mixed $slug
      *
      * @return \Illuminate\Contracts\Support\Renderable
-     */          
-    
-    public function getCharacterExpLogs($slug) {
+     */
+
+    public function getCharacterExpLogs($slug)
+    {
         $character = $this->character;
 
         return view('character.stats.exp_logs', [
@@ -637,7 +660,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterSkillLogs($slug) {
+    public function getCharacterSkillLogs($slug)
+    {
         return view('character.character_skill_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/skill-logs',
@@ -652,7 +676,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterStatLogs($slug) {
+    public function getCharacterStatLogs($slug)
+    {
         $character = $this->character;
 
         return view('character.stats.character_stat_logs', [
@@ -670,7 +695,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterStatPointLogs($slug) {
+    public function getCharacterStatPointLogs($slug)
+    {
         $character = $this->character;
 
         return view('character.stats.stat_logs', [
@@ -688,7 +714,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterLevelLogs($slug) {
+    public function getCharacterLevelLogs($slug)
+    {
         $character = $this->character;
 
         return view('character.stats.level_logs', [
@@ -705,7 +732,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterCountLogs($slug) {
+    public function getCharacterCountLogs($slug)
+    {
         $character = $this->character;
 
         return view('character.stats.count_logs', [
@@ -722,7 +750,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterOwnershipLogs($slug) {
+    public function getCharacterOwnershipLogs($slug)
+    {
         return view('character.ownership_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/ownership',
@@ -737,7 +766,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterLogs($slug) {
+    public function getCharacterLogs($slug)
+    {
         return view('character.character_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/change-log',
@@ -752,7 +782,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterSubmissions($slug) {
+    public function getCharacterSubmissions($slug)
+    {
         return view('character.submission_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/submissions',
@@ -767,7 +798,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTransfer($slug) {
+    public function getTransfer($slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -795,7 +827,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postTransfer(Request $request, CharacterManager $service, $slug) {
+    public function postTransfer(Request $request, CharacterManager $service, $slug)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -820,7 +853,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCancelTransfer(Request $request, CharacterManager $service, $slug, $id) {
+    public function postCancelTransfer(Request $request, CharacterManager $service, $slug, $id)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -843,7 +877,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterApproval($slug) {
+    public function getCharacterApproval($slug)
+    {
         if (!Auth::check() || $this->character->user_id != Auth::user()->id) {
             abort(404);
         }
@@ -863,7 +898,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCharacterApproval($slug, DesignUpdateManager $service) {
+    public function postCharacterApproval($slug, DesignUpdateManager $service)
+    {
         if (!Auth::check() || $this->character->user_id != Auth::user()->id) {
             abort(404);
         }
@@ -888,9 +924,10 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function postAwardTransfer(Request $request, AwardCaseManager $service) {
+    private function postAwardTransfer(Request $request, AwardCaseManager $service)
+    {
         if ($service->transferCharacterStack($this->character, $this->character->user, CharacterAward::find($request->get('ids')), $request->get('quantities'))) {
-            flash(ucfirst(__('awards.award')).' transferred successfully.')->success();
+            flash(ucfirst(__('awards.award')) . ' transferred successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -907,9 +944,10 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function postDeleteAward(Request $request, AwardCaseManager $service) {
+    private function postDeleteAward(Request $request, AwardCaseManager $service)
+    {
         if ($service->deleteStack($this->character, CharacterAward::find($request->get('ids')), $request->get('quantities'))) {
-            flash(ucfirst(__('awards.award')).' deleted successfully.')->success();
+            flash(ucfirst(__('awards.award')) . ' deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -924,7 +962,8 @@ class CharacterController extends Controller {
      *
      * @param string $slug
      */
-    public function getCharacterPets($slug) {
+    public function getCharacterPets($slug)
+    {
         return view('character.pets', [
             'character'             => $this->character,
         ]);
@@ -937,7 +976,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function postItemTransfer(Request $request, InventoryManager $service) {
+    private function postItemTransfer(Request $request, InventoryManager $service)
+    {
         if ($service->transferCharacterStack($this->character, $this->character->user, CharacterItem::find($request->get('ids')), $request->get('quantities'), Auth::user())) {
             flash('Item transferred successfully.')->success();
         } else {
@@ -956,7 +996,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function postName(Request $request, InventoryManager $service) {
+    private function postName(Request $request, InventoryManager $service)
+    {
         $request->validate([
             'stack_name' => 'nullable|max:100',
         ]);
@@ -979,7 +1020,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function postDelete(Request $request, InventoryManager $service) {
+    private function postDelete(Request $request, InventoryManager $service)
+    {
         if ($service->deleteStack($this->character, CharacterItem::find($request->get('ids')), $request->get('quantities'), Auth::user())) {
             flash('Item deleted successfully.')->success();
         } else {
@@ -999,7 +1041,8 @@ class CharacterController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterImage($slug, $id) {
+    public function getCharacterImage($slug, $id)
+    {
         $image = CharacterImage::where('character_id', $this->character->id)->where('id', $id)->first();
 
         return view('character.image', [
@@ -1019,15 +1062,14 @@ class CharacterController extends Controller {
      */
     public function postCharacterApprovalSpecificImage($slug, DesignUpdateManager $service, $id)
     {
-        if(!Auth::check() || $this->character->user_id != Auth::user()->id) abort(404);
+        if (!Auth::check() || $this->character->user_id != Auth::user()->id) abort(404);
         $image = CharacterImage::where('character_id', $this->character->id)->where('id', $id)->first();
 
-        if($request = $service->createDesignUpdateRequest($this->character, Auth::user(), $image, true)) {
+        if ($request = $service->createDesignUpdateRequest($this->character, Auth::user(), $image, true)) {
             flash('Successfully created new design update request draft.')->success();
             return redirect()->to($request->url);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
     }

@@ -44,7 +44,7 @@
         @if (Settings::get('shop_type'))
             @include('shops._tab', ['items' => $stock, 'shop' => $shop])
         @else
-            @foreach ($stock as $categoryId => $categoryItems)
+              @foreach ($stock as $categoryId => $categoryItems)
                 @php
                     $typeCategories = $categories[$type] ?? ($categories['item'] ?? collect());
                     $category = $typeCategories[$categoryId] ?? null;

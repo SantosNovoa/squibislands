@@ -109,29 +109,32 @@
 
     <hr />
 
-    <h5>Sort Character Titles</h5>
-    <p>Here you can order your character's titles however you like! By default, the titles will be ordered by the same sorting as appears on the world page.</p>
+    <h5>Title Visibility</h5>
+    <p>Choose which titles to show on your character's profile.</p>
+
     @if (!count($character->image->titles))
         <p>No titles found.</p>
     @else
+        {!! Form::open(['url' => $character->url . '/profile/titles/sort']) !!}
         <table class="table table-sm title-table">
             <tbody id="sortable" class="sortable">
                 @foreach ($character->image->titles()->orderByDesc('sort')->get() as $title)
                     <tr class="sort-item" data-id="{{ $title->id }}">
-                        <td>
+                        <td class="d-flex align-items-center">
                             <a class="fas fa-arrows-alt-v handle mr-3" href="#"></a>
+                            {!! Form::checkbox('visibility[]', $title->id, $title->is_visible, ['class' => 'form-check-input mr-2', 'data-toggle' => 'toggle', 'data-size' => 'sm', 'id' => 'visibility_toggle_' . $title->id]) !!}
                             {!! $title->title ? $title->title->displayName : $title->data['full'] !!}
                         </td>
+                    </tr>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         <div class="mb-4 float-right">
-            {!! Form::open(['url' => $character->url . '/profile/titles/sort']) !!}
             {!! Form::hidden('sort', '', ['id' => 'sortableOrder']) !!}
-            {!! Form::submit('Save Order', ['class' => 'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            {!! Form::submit('Save Order & Visibility', ['class' => 'btn btn-primary']) !!}
         </div>
+        {!! Form::close() !!}
     @endif
 @endsection
 @section('scripts')

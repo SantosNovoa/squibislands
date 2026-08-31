@@ -11,8 +11,10 @@
         {!! Form::textarea('description', $rank->description, ['class' => 'form-control']) !!}
     </div>
 
+    {{-- Primary / fallback color --}}
     <div class="form-group">
         {!! Form::label('Colour (Hex code; optional)') !!}
+        {!! add_help('This is the default colour used across all themes unless a per-theme override is set below.') !!}
         <div class="input-group cp">
             {!! Form::text('color', $rank->color, ['class' => 'form-control']) !!}
             <span class="input-group-append">
@@ -20,6 +22,38 @@
             </span>
         </div>
     </div>
+
+    {{-- Per-theme color overrides --}}
+    @if (isset($themes) && $themes->count())
+        <div class="form-group">
+            <a class="collapse-toggle rankTheme" href="#rankThemeColors" data-toggle="collapse">
+                Per-theme Colour Overrides
+            </a>
+            <div class="collapse" id="rankThemeColors">
+                <div class="card card-body mt-2">
+                    <p class="text-muted small mb-3">
+                        Set a specific colour for each theme. If left blank, the default colour above will be used.
+                    </p>
+                    <div class="row">
+                        @foreach ($themes as $theme)
+                            @php
+                                $themeColor = $rank->themeColors->firstWhere('theme_id', $theme->id);
+                            @endphp
+                            <div class="col-md-6 mb-3">
+                                <label>{{ $theme->name }}</label>
+                                <div class="input-group cp">
+                                    {!! Form::text('theme_colors[' . $theme->id . ']', $themeColor ? $themeColor->color : null, ['class' => 'form-control', 'placeholder' => 'Leave blank to use default']) !!}
+                                    <span class="input-group-append">
+                                        <span class="input-group-text colorpicker-input-addon"><i></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="form-group row px-0 mx-0">
         <div class="col-5 align-self-center">
@@ -36,7 +70,7 @@
     @if ($editable != 2)
         {{-- Powers --}}
         <div class="form-group">
-            <div class="row">
+            <div class="row user-rank-checkbox">
                 @foreach ($powers as $key => $power)
                     <div class="col-md-6 form-check">
                         {!! Form::checkbox('powers[' . $key . ']', $key, $rankPowers ? isset($rankPowers[$key]) : false, ['class' => 'form-check-input', 'id' => 'powers[' . $key . ']']) !!}
