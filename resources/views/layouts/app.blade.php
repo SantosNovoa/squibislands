@@ -277,6 +277,15 @@
         </div>
 
         @yield('scripts')
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.modal').forEach(function (modal) {
+                    document.body.appendChild(modal);
+                });
+            });
+        </script>
+        
         @include('layouts._pagination_js')
         <script>
             $(document).on('focusin', function(e) {

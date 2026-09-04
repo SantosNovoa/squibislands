@@ -659,9 +659,9 @@ nav {
     }
 }
 
-@media (max-height: 890px) and (max-width: 991px) {
+@media (max-height: 890px) and (max-width: 767px) {
     #navbarSupportedContent {
-        max-height: calc(100vh - 3.2rem);
+        max-height: calc(100vh - 6.4rem);
         overflow-y: auto;
     }
     .navbar-nav {
