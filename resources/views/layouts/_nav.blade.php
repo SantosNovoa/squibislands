@@ -334,7 +334,7 @@
                                 @endforeach
                             </div>
                     </div>
-                    <a href="{{ url('dailies') }}" class="dailies-mobile pb-3" style="font-family: CherryBombOne, serif; text-transform: uppercase;">
+                    <a href="{{ url('dailies') }}" class="dailies-mobile pb-3" style="font-family: Cherry Bomb One, serif; text-transform: uppercase;">
                         Dailies <i class="fas fa-arrow-right"></i>
                     </a>
                     @endif
