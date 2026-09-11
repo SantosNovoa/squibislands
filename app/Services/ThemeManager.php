@@ -7,7 +7,8 @@ use App\Models\User\User;
 use App\Models\User\UserTheme;
 use Illuminate\Support\Facades\DB;
 
-class ThemeManager extends Service {
+class ThemeManager extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | Theme Service
@@ -25,7 +26,8 @@ class ThemeManager extends Service {
      *
      * @return bool|Theme\Theme
      */
-    public function createTheme($data, $user) {
+    public function createTheme($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -78,7 +80,7 @@ class ThemeManager extends Service {
             }
 
             if ($css) {
-                $this->handleImage($css, $theme->imagePath, $theme->cssFileName, null);
+                $this->handleImage($css, $theme->imagePath, $theme->CSSFileName, null);
             }
 
             return $this->commitReturn($theme);
@@ -98,7 +100,8 @@ class ThemeManager extends Service {
      *
      * @return bool|Theme\Theme
      */
-    public function updateTheme($theme, $data, $user) {
+    public function updateTheme($theme, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -162,7 +165,7 @@ class ThemeManager extends Service {
             }
 
             if ($css) {
-                $this->handleImage($css, $theme->imagePath, $theme->cssFileName);
+                $this->handleImage($css, $theme->imagePath, $theme->CSSFileName);
             }
 
             return $this->commitReturn($theme);
@@ -180,7 +183,8 @@ class ThemeManager extends Service {
      *
      * @return bool
      */
-    public function deleteTheme($theme) {
+    public function deleteTheme($theme)
+    {
         DB::beginTransaction();
 
         try {
@@ -216,7 +220,8 @@ class ThemeManager extends Service {
      *
      * @return bool
      */
-    public function creditTheme($recipient, $theme) {
+    public function creditTheme($recipient, $theme)
+    {
         DB::beginTransaction();
 
         try {
@@ -225,7 +230,7 @@ class ThemeManager extends Service {
             }
 
             if ($recipient->themes->contains($theme)) {
-                flash($recipient->name.' already has the theme '.$theme->displayName, 'warning');
+                flash($recipient->name . ' already has the theme ' . $theme->displayName, 'warning');
 
                 return $this->commitReturn(false);
             }
@@ -254,7 +259,8 @@ class ThemeManager extends Service {
      *
      * @return array
      */
-    private function populateData($data, $theme = null) {
+    private function populateData($data, $theme = null)
+    {
         if (isset($data['description']) && $data['description']) {
             $data['parsed_description'] = parse($data['description']);
         } else {

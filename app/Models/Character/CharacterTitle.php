@@ -4,15 +4,24 @@ namespace App\Models\Character;
 
 use App\Models\Model;
 use App\Models\Rarity;
+use Illuminate\Support\Str;
 
-class CharacterTitle extends Model {
+class CharacterTitle extends Model
+{
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'title', 'short_title', 'sort', 'has_image', 'description', 'parsed_description', 'rarity_id', 'colours',
+        'title',
+        'short_title',
+        'sort',
+        'has_image',
+        'description',
+        'parsed_description',
+        'rarity_id',
+        'colours',
     ];
 
     /**
@@ -59,12 +68,13 @@ class CharacterTitle extends Model {
 
         RELATIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the rarity of the character image.
      */
-    public function rarity() {
+    public function rarity()
+    {
         return $this->belongsTo(Rarity::class, 'rarity_id');
     }
 
@@ -72,15 +82,16 @@ class CharacterTitle extends Model {
 
         ATTRIBUTES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
-    public function getDisplayNameAttribute() {
-        return '<a href="'.$this->url.'" class="display-rarity">'.$this->title.'</a>';
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="' . $this->url . '" class="display-rarity">' . $this->title . '</a>';
     }
 
     /**
@@ -88,8 +99,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getDisplayNamePartialAttribute() {
-        return '<a href="'.$this->url.'" class="display-rarity">'.$this->title.'</a>'.($this->rarity ? ' ('.$this->rarity->displayName.')' : '');
+    public function getDisplayNamePartialAttribute()
+    {
+        return '<a href="' . $this->url . '" class="display-rarity">' . $this->title . '</a>' . ($this->rarity ? ' (' . $this->rarity->displayName . ')' : '');
     }
 
     /**
@@ -97,8 +109,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getDisplayNameFullAttribute() {
-        return '<a href="'.$this->url.'" style="background-image: '.$this->backgroundColour.' !important;" class="gradient-text display-rarity">'.$this->title.'</a>'.($this->short_title ? ' ('.$this->short_title.')' : '').($this->rarity ? ' ('.$this->rarity->displayName.')' : '');
+    public function getDisplayNameFullAttribute()
+    {
+        return '<a href="' . $this->url . '" style="background-image: ' . $this->backgroundColour . ' !important;" class="gradient-text display-rarity">' . $this->title . '</a>' . ($this->short_title ? ' (' . $this->short_title . ')' : '') . ($this->rarity ? ' (' . $this->rarity->displayName . ')' : '');
     }
 
     /**
@@ -106,8 +119,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getDisplayNameShortAttribute() {
-        return '<a href="'.$this->url.'" class="display-rarity">'.$this->short_title.'</a>';
+    public function getDisplayNameShortAttribute()
+    {
+        return '<a href="' . $this->url . '" class="display-rarity">' . $this->short_title . '</a>';
     }
 
     /**
@@ -115,7 +129,8 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getImageDirectoryAttribute() {
+    public function getImageDirectoryAttribute()
+    {
         return 'images/data/character-titles';
     }
 
@@ -124,8 +139,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getTitleImageFileNameAttribute() {
-        return $this->id.'-image.png';
+    public function getTitleImageFileNameAttribute()
+    {
+        return $this->id . '-image.png';
     }
 
     /**
@@ -133,7 +149,8 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getTitleImagePathAttribute() {
+    public function getTitleImagePathAttribute()
+    {
         return public_path($this->imageDirectory);
     }
 
@@ -142,12 +159,13 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getTitleImageUrlAttribute() {
+    public function getTitleImageUrlAttribute()
+    {
         if (!$this->has_image) {
             return null;
         }
 
-        return asset($this->imageDirectory.'/'.$this->titleImageFileName);
+        return asset($this->imageDirectory . '/' . $this->titleImageFileName);
     }
 
     /**
@@ -155,8 +173,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getUrlAttribute() {
-        return url('world/character-titles?title='.$this->title);
+    public function getUrlAttribute()
+    {
+        return url('world/character-titles/' . $this->id . '-' . Str::slug($this->title));
     }
 
     /**
@@ -164,8 +183,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getIdUrlAttribute() {
-        return url('world/character-titles/'.str_replace(' ', '-', $this->title));
+    public function getIdUrlAttribute()
+    {
+        return url('world/character-titles/' . str_replace(' ', '-', $this->title));
     }
 
     /**
@@ -173,8 +193,9 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getSearchCharactersUrlAttribute() {
-        return url('masterlist?title_id='.$this->id);
+    public function getSearchCharactersUrlAttribute()
+    {
+        return url('masterlist?title_id=' . $this->id);
     }
 
     /**
@@ -182,7 +203,8 @@ class CharacterTitle extends Model {
      *
      * @return string
      */
-    public function getAssetTypeAttribute() {
+    public function getAssetTypeAttribute()
+    {
         return 'character_title';
     }
 
@@ -190,14 +212,15 @@ class CharacterTitle extends Model {
 
         ATTRIBUTES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Returns the gradient of the colours for the title.
      *
      * @return string
      */
-    public function getBackgroundColourAttribute() {
+    public function getBackgroundColourAttribute()
+    {
         if (!$this->colours) {
             return 'linear-gradient(to right, #ddd)';
         }
@@ -211,7 +234,7 @@ class CharacterTitle extends Model {
 
         OTHER FUNCTIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Displays the title like a typing.
@@ -219,9 +242,10 @@ class CharacterTitle extends Model {
      * @param mixed $data
      * @param mixed $padding
      */
-    public function displayTitle($data, $padding = true) {
-        return '<a href="'.$this->idUrl.'"><span class="badge '.($padding ? 'ml-1' : '').'" style="color: white; background: '.$this->backgroundColour.';"'.
-            (isset($data['full']) ? ' data-toggle="tooltip" title="'.$this->title.'">'.$data['full'] : '>'.$this->title)
-        .'</span></a>';
+    public function displayTitle($data, $padding = true)
+    {
+        return '<a href="' . $this->url . '"><span class="badge ' . ($padding ? 'ml-1' : '') . '" style="color: white; background: ' . $this->backgroundColour . ';"' .
+            (isset($data['full']) ? ' data-toggle="tooltip" title="' . $this->title . '">' . $data['full'] : '>' . $this->title)
+            . '</span></a>';
     }
 }

@@ -10,7 +10,7 @@
 
 @section('content')
     <x-admin-edit title="Title" :object="$title" />
-    {!! breadcrumbs(['World' => 'world', 'Titles' => 'world/titles', $title->title => $title->idUrl]) !!}
+    {!! breadcrumbs(['World' => 'world', 'Character Titles' => 'world/character-titles', $title->title => $title->idUrl]) !!}
 
     <div class="row">
         <div class="col-sm">

@@ -25,6 +25,7 @@
         <div class="sidebar-item"><a href="{{ url('world/currencies') }}" class="{{ set_active('world/currencies*') }}">Currencies</a></div>
         <div class="sidebar-item"><a href="{{ url('world/pet-categories') }}" class="{{ set_active('world/pet-categories*') }}">Pet Categories</a></div>
         <div class="sidebar-item"><a href="{{ url('world/pets') }}" class="{{ set_active('world/pets*') }}">Pets</a></div>
+        <div class="sidebar-item"><a href="{{ url('world/character-titles') }}" class="{{ set_active('world/character-titles*') }}">Character Titles</a></div>
     </li>
     <li class="sidebar-section">
         <div class="sidebar-section-header">Levels</div>

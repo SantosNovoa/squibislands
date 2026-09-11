@@ -34,7 +34,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
 
-class WorldController extends Controller {
+class WorldController extends Controller
+{
     /*
     |--------------------------------------------------------------------------
     | World Controller
@@ -50,7 +51,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex() {
+    public function getIndex()
+    {
         return view('world.index');
     }
 
@@ -59,11 +61,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCurrencies(Request $request) {
+    public function getCurrencies(Request $request)
+    {
         $query = Currency::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('abbreviation', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('abbreviation', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.currencies', [
@@ -76,11 +79,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRarities(Request $request) {
+    public function getRarities(Request $request)
+    {
         $query = Rarity::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.rarities', [
@@ -93,7 +97,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSpecieses(Request $request) {
+    public function getSpecieses(Request $request)
+    {
         $query = Species::query();
 
         if (config('lorekeeper.extensions.species_trait_index.enable')) {
@@ -102,7 +107,7 @@ class WorldController extends Controller {
 
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.specieses', [
@@ -117,11 +122,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubtypes(Request $request) {
+    public function getSubtypes(Request $request)
+    {
         $query = Subtype::query()->with('species');
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.subtypes', [
@@ -134,11 +140,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getItemCategories(Request $request) {
+    public function getItemCategories(Request $request)
+    {
         $query = ItemCategory::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.item_categories', [
@@ -151,11 +158,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAwardCategories(Request $request) {
+    public function getAwardCategories(Request $request)
+    {
         $query = AwardCategory::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.award_categories', [
@@ -168,11 +176,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getFeatureCategories(Request $request) {
+    public function getFeatureCategories(Request $request)
+    {
         $query = FeatureCategory::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.feature_categories', [
@@ -185,7 +194,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getFeatures(Request $request) {
+    public function getFeatures(Request $request)
+    {
         $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category')->with('rarity')->with('species')->where('display_separate', 1);
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name', 'sort']);
 
@@ -214,7 +224,7 @@ class WorldController extends Controller {
             }
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         if (isset($data['sort'])) {
@@ -267,7 +277,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSpeciesFeatures($id) {
+    public function getSpeciesFeatures($id)
+    {
         $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
         $rarities = Rarity::orderBy('sort', 'ASC')->get();
 
@@ -282,36 +293,36 @@ class WorldController extends Controller {
         $features = $species->features()->visible(Auth::user() ?? null);
         $features = count($categories) ?
             $species->features()
-                ->visible(Auth::check() ? Auth::user() : null)
-                ->where('display_separate', 1)
-                ->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->filter(function ($feature) {
-                    if ($feature->subtype) {
-                        return $feature->subtype->is_visible;
-                    }
+            ->visible(Auth::check() ? Auth::user() : null)
+            ->where('display_separate', 1)
+            ->orderByRaw('FIELD(feature_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')')
+            ->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
+            ->orderBy('has_image', 'DESC')
+            ->orderBy('name')
+            ->get()
+            ->filter(function ($feature) {
+                if ($feature->subtype) {
+                    return $feature->subtype->is_visible;
+                }
 
-                    return true;
-                })
-                ->groupBy(['feature_category_id', 'id']) :
+                return true;
+            })
+            ->groupBy(['feature_category_id', 'id']) :
             $species->features()
-                ->visible(Auth::check() ? Auth::user() : null)
-                ->where('display_separate', 1)
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->filter(function ($feature) {
-                    if ($feature->subtype) {
-                        return $feature->subtype->is_visible;
-                    }
+            ->visible(Auth::check() ? Auth::user() : null)
+            ->where('display_separate', 1)
+            ->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
+            ->orderBy('has_image', 'DESC')
+            ->orderBy('name')
+            ->get()
+            ->filter(function ($feature) {
+                if ($feature->subtype) {
+                    return $feature->subtype->is_visible;
+                }
 
-                    return true;
-                })
-                ->groupBy(['feature_category_id', 'id']);
+                return true;
+            })
+            ->groupBy(['feature_category_id', 'id']);
 
         return view('world.species_features', [
             'species'    => $species,
@@ -329,7 +340,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubtypeFeatures(Request $request, $id) {
+    public function getSubtypeFeatures(Request $request, $id)
+    {
         $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
         $rarities = Rarity::orderBy('sort', 'ASC')->get();
         $subtype = Subtype::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
@@ -350,11 +362,11 @@ class WorldController extends Controller {
             $speciesFeatures = $subtype->species->features()
                 ->visible(Auth::check() ? Auth::user() : null)
                 ->where('display_separate', 1)
-                ->where(function($query) {
+                ->where(function ($query) {
                     $query->whereNull('subtype_id')
                         ->orWhere('subtype_id', 0);
                 });
-            
+
             // Merge the queries
             $features = $subtypeFeatures->union($speciesFeatures->getQuery());
         } else {
@@ -363,17 +375,17 @@ class WorldController extends Controller {
 
         // Apply ordering and grouping
         $features = count($categories) ?
-            $features->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->groupBy(['feature_category_id', 'id']) :
-            $features->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->groupBy(['feature_category_id', 'id']);
+            $features->orderByRaw('FIELD(feature_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')')
+            ->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
+            ->orderBy('has_image', 'DESC')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(['feature_category_id', 'id']) :
+            $features->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
+            ->orderBy('has_image', 'DESC')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(['feature_category_id', 'id']);
 
         return view('world.subtype_features', [
             'subtype'    => $subtype,
@@ -390,7 +402,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSpeciesFeatureDetail($speciesId, $id) {
+    public function getSpeciesFeatureDetail($speciesId, $id)
+    {
         $feature = Feature::where('id', $id)->with('species', 'subtype', 'rarity')->first();
 
         if (!$feature) {
@@ -403,9 +416,9 @@ class WorldController extends Controller {
         $features = $speciesBasics ? $species : $subtype;
         $features = $features->features()->visible(Auth::user() ?? null);
         $features = count($categories) ?
-            $features->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')') :
+            $features->orderByRaw('FIELD(feature_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')') :
             $features;
-        $features = $features->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
+        $features = $features->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
             ->orderBy('has_image', 'DESC')
             ->orderBy('name')
             ->get();
@@ -433,7 +446,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUniversalFeatures(Request $request) {
+    public function getUniversalFeatures(Request $request)
+    {
         $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
         $rarities = Rarity::orderBy('sort', 'ASC')->get();
 
@@ -444,9 +458,9 @@ class WorldController extends Controller {
         $features = Feature::whereNull('species_id')
             ->visible(Auth::user() ?? null);
         $features = count($categories) ?
-            $features->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')') :
+            $features->orderByRaw('FIELD(feature_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')') :
             $features;
-        $features = $features->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
+        $features = $features->orderByRaw('FIELD(rarity_id,' . implode(',', $rarities->pluck('id')->toArray()) . ')')
             ->orderBy('has_image', 'DESC')
             ->orderBy('name')
             ->get()->groupBy(['feature_category_id', 'id']);
@@ -465,7 +479,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getFeatureDetail($id) {
+    public function getFeatureDetail($id)
+    {
         $feature = Feature::visible(Auth::user() ?? null)->where('id', $id)->first();
 
         if (!$feature) {
@@ -482,7 +497,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getItems(Request $request) {
+    public function getItems(Request $request)
+    {
         $query = Item::with('category')->released(Auth::user() ?? null);
 
         if (config('lorekeeper.extensions.item_entry_expansion.extra_fields')) {
@@ -503,7 +519,7 @@ class WorldController extends Controller {
             }
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
         if (isset($data['artist']) && $data['artist'] != 'none') {
             $query->where('artist_id', $data['artist']);
@@ -546,7 +562,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getItem($id) {
+    public function getItem($id)
+    {
         $item = Item::where('id', $id)->released(Auth::user() ?? null)->with('category');
 
         if (config('lorekeeper.extensions.item_entry_expansion.extra_fields')) {
@@ -577,14 +594,15 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAwards(Request $request) {
+    public function getAwards(Request $request)
+    {
         $query = Award::with('category');
         $data = $request->only(['award_category_id', 'name', 'sort', 'ownership']);
         if (isset($data['award_category_id']) && $data['award_category_id'] != 'none') {
             $query->where('award_category_id', $data['award_category_id']);
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         if (isset($data['ownership'])) {
@@ -641,7 +659,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAward($id) {
+    public function getAward($id)
+    {
         $categories = AwardCategory::orderBy('sort', 'DESC')->get();
         $award = Award::where('id', $id);
         $released = $award->released()->count();
@@ -654,7 +673,7 @@ class WorldController extends Controller {
         }
 
         if (!$released) {
-            flash('This '.__('awards.award').' is not yet released.')->error();
+            flash('This ' . __('awards.award') . ' is not yet released.')->error();
         }
 
         return view('world.award_page', [
@@ -673,18 +692,19 @@ class WorldController extends Controller {
         ]);
     }
 
-     
+
     /**
      * Shows the character titles page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterTitles(Request $request) {
+    public function getCharacterTitles(Request $request)
+    {
         $query = CharacterTitle::query();
         $title = $request->get('title');
         $rarity = $request->get('rarity_id');
         if ($title) {
-            $query->where('title', 'LIKE', '%'.$title.'%');
+            $query->where('title', 'LIKE', '%' . $title . '%');
         }
         if (isset($rarity) && $rarity != 'none') {
             $query->where('rarity_id', $rarity);
@@ -703,8 +723,14 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterTitle(Request $request, $name) {
-        $title = CharacterTitle::where('title', 'LIKE', str_replace('-', ' ', $name))->first();
+    public function getCharacterTitle(Request $request, $name)
+    {
+        $id = explode('-', $name)[0];
+        $title = CharacterTitle::where('id', $id)->first();
+
+        if (!$title) {
+            abort(404);
+        }
 
         return view('world.title_page', [
             'title' => $title,
@@ -716,11 +742,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterCategories(Request $request) {
+    public function getCharacterCategories(Request $request)
+    {
         $query = CharacterCategory::query()->with('sublist');
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('code', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('code', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.character_categories', [
@@ -734,15 +761,15 @@ class WorldController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecipes(Request $request) {
+    public function getRecipes(Request $request)
+    {
         $query = Recipe::query();
         $data = $request->only(['name', 'sort']);
-        if(isset($data['name']))
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+        if (isset($data['name']))
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
 
-        if(isset($data['sort']))
-        {
-            switch($data['sort']) {
+        if (isset($data['sort'])) {
+            switch ($data['sort']) {
                 case 'alpha':
                     $query->sortAlphabetical();
                     break;
@@ -759,8 +786,7 @@ class WorldController extends Controller {
                     $query->sortNeedsUnlocking();
                     break;
             }
-        }
-        else $query->sortNewest();
+        } else $query->sortNewest();
 
         return view('world.recipes.recipes', [
             'recipes' => $query->paginate(20)->appends($request->query()),
@@ -773,9 +799,10 @@ class WorldController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getRecipe($id) {
+    public function getRecipe($id)
+    {
         $recipe = Recipe::where('id', $id)->first();
-        if(!$recipe) abort(404);
+        if (!$recipe) abort(404);
 
         return view('world.recipes._recipe_page', [
             'recipe' => $recipe,
@@ -784,16 +811,17 @@ class WorldController extends Controller {
             'description' => $recipe->parsed_description,
         ]);
     }
-     /**
+    /**
      * Shows the Transformations page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getTransformations(Request $request) {
+    public function getTransformations(Request $request)
+    {
         $query = Transformation::query();
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.transformations', [
@@ -804,7 +832,8 @@ class WorldController extends Controller {
     /**
      *  LEVELS.
      */
-    public function getLevels() {
+    public function getLevels()
+    {
         return view('world.level_index');
     }
 
@@ -813,7 +842,8 @@ class WorldController extends Controller {
      *
      * @param mixed $type
      */
-    public function getLevelTypes($type) {
+    public function getLevelTypes($type)
+    {
         if ($type == 'user') {
             $levels = Level::where('level_type', 'User')->get();
         } elseif ($type == 'character') {
@@ -833,11 +863,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getStats(Request $request) {
+    public function getStats(Request $request)
+    {
         $query = Stat::query();
 
         if ($request->has('name')) {
-            $squery->where('name', 'LIKE', '%'.$request->get('name').'%');
+            $squery->where('name', 'LIKE', '%' . $request->get('name') . '%');
         }
 
         return view('world.stats', [
@@ -852,7 +883,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getStat($abbreviation) {
+    public function getStat($abbreviation)
+    {
         $stat = Stat::where('abbreviation', $abbreviation)->first();
 
         return view('world.stat', [
@@ -865,11 +897,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSkillCategories(Request $request) {
+    public function getSkillCategories(Request $request)
+    {
         $query = SkillCategory::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.skill_categories', [
@@ -882,7 +915,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSkills(Request $request) {
+    public function getSkills(Request $request)
+    {
         $query = Skill::with('category')->visible(Auth::check() ? Auth::user() : null);
 
         $categoryVisibleCheck = SkillCategory::visible(Auth::check() ? Auth::user() : null)->pluck('id', 'name')->toArray();
@@ -896,7 +930,7 @@ class WorldController extends Controller {
             $query->where('skill_category_id', $data['skill_category_id']);
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         return view('world.skills', [
@@ -912,7 +946,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSkill($id) {
+    public function getSkill($id)
+    {
         $categories = SkillCategory::get();
         $skill = Skill::where('id', $id)->first();
         if (!$skill) {
@@ -939,11 +974,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPetCategories(Request $request) {
+    public function getPetCategories(Request $request)
+    {
         $query = PetCategory::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.pet_categories', [
@@ -956,7 +992,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getPets(Request $request) {
+    public function getPets(Request $request)
+    {
         $query = Pet::with('category')->visible(Auth::check() ? Auth::user() : null);
 
         $categoryVisibleCheck = PetCategory::visible(Auth::check() ? Auth::user() : null)->pluck('id', 'name')->toArray();
@@ -970,7 +1007,7 @@ class WorldController extends Controller {
             $query->where('pet_category_id', $data['pet_category_id']);
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         if (isset($data['sort'])) {
@@ -1006,7 +1043,8 @@ class WorldController extends Controller {
      *
      * @param mixed $id
      */
-    public function getPet($id) {
+    public function getPet($id)
+    {
         $pet = Pet::with('category')->findOrFail($id);
 
         if (!$pet->is_visible) {
@@ -1025,11 +1063,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWeaponCategories(Request $request) {
+    public function getWeaponCategories(Request $request)
+    {
         $query = WeaponCategory::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.weapon_categories', [
@@ -1042,7 +1081,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWeapons(Request $request) {
+    public function getWeapons(Request $request)
+    {
         $query = Weapon::with('category')->visible(Auth::check() ? Auth::user() : null);
 
         $categoryVisibleCheck = WeaponCategory::visible(Auth::check() ? Auth::user() : null)->pluck('id', 'name')->toArray();
@@ -1056,7 +1096,7 @@ class WorldController extends Controller {
             $query->where('weapon_category_id', $data['weapon_category_id']);
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         if (isset($data['sort'])) {
@@ -1094,7 +1134,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getWeapon($id) {
+    public function getWeapon($id)
+    {
         $categories = WeaponCategory::orderBy('sort', 'DESC')->get();
         $weapon = Weapon::where('id', $id)->first();
         if (!$weapon) {
@@ -1121,11 +1162,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGearCategories(Request $request) {
+    public function getGearCategories(Request $request)
+    {
         $query = GearCategory::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.gear_categories', [
@@ -1138,7 +1180,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGears(Request $request) {
+    public function getGears(Request $request)
+    {
         $query = Gear::with('category')->visible(Auth::check() ? Auth::user() : null);
 
         $categoryVisibleCheck = GearCategory::visible(Auth::check() ? Auth::user() : null)->pluck('id', 'name')->toArray();
@@ -1152,7 +1195,7 @@ class WorldController extends Controller {
             $query->where('gear_category_id', $data['gear_category_id']);
         }
         if (isset($data['name'])) {
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
         }
 
         if (isset($data['sort'])) {
@@ -1190,7 +1233,8 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGear($id) {
+    public function getGear($id)
+    {
         $categories = GearCategory::orderBy('sort', 'DESC')->get();
         $gear = Gear::where('id', $id)->first();
         if (!$gear) {
@@ -1217,11 +1261,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterClasses(Request $request) {
+    public function getCharacterClasses(Request $request)
+    {
         $query = CharacterClass::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.character_class', [
@@ -1234,11 +1279,12 @@ class WorldController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getElements(Request $request) {
+    public function getElements(Request $request)
+    {
         $query = Element::query()->visible(Auth::check() ? Auth::user() : null);
         $name = $request->get('name');
         if ($name) {
-            $query->where('name', 'LIKE', '%'.$name.'%');
+            $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         if (isset($data['sort'])) {
@@ -1270,7 +1316,8 @@ class WorldController extends Controller {
      *
      * @param mixed $id
      */
-    public function getElement($id) {
+    public function getElement($id)
+    {
         $element = Element::where('id', $id)->first();
         if (!$element) {
             abort(404);
