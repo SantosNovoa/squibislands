@@ -175,7 +175,7 @@ class CharacterTitle extends Model
      */
     public function getUrlAttribute()
     {
-        return url('world/character-titles/' . $this->id . '-' . Str::slug($this->title));
+        return url('world/character-titles/' . $this->id);
     }
 
     /**

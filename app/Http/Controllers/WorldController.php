@@ -725,8 +725,7 @@ class WorldController extends Controller
      */
     public function getCharacterTitle(Request $request, $name)
     {
-        $id = explode('-', $name)[0];
-        $title = CharacterTitle::where('id', $id)->first();
+        $title = CharacterTitle::where('id', $name)->first();
 
         if (!$title) {
             abort(404);
