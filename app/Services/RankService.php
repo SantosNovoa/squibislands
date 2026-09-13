@@ -63,6 +63,9 @@ class RankService extends Service
             unset($data['theme_colors']);
 
             $rank = Rank::create($data);
+
+            $this->logAdminAction($user, 'Created Rank', 'Created rank ' . $rank->name);
+
             $this->saveThemeColors($rank, $themeColors);
 
             if ($powers) {
@@ -123,6 +126,7 @@ class RankService extends Service
             unset($data['theme_colors']);
 
             $rank->update($data);
+            $this->logAdminAction($user, 'Updated Rank', 'Updated rank ' . $rank->name);
             $this->saveThemeColors($rank, $themeColors);
 
             $rank->powers()->delete();
@@ -159,6 +163,8 @@ class RankService extends Service
 
             $rank->powers()->delete();
             $rank->delete();
+
+            $this->logAdminAction($this->user(), 'Deleted Rank', 'Deleted rank ' . $rank->name);
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

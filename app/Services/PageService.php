@@ -5,7 +5,8 @@ namespace App\Services;
 use App\Models\SitePage;
 use Illuminate\Support\Facades\DB;
 
-class PageService extends Service {
+class PageService extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | Page Service
@@ -23,7 +24,8 @@ class PageService extends Service {
      *
      * @return bool|SitePage
      */
-    public function createPage($data, $user) {
+    public function createPage($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -40,6 +42,9 @@ class PageService extends Service {
             }
 
             $page = SitePage::create($data);
+
+            $this->logAdminAction($user, 'Created Page', 'Created page ' . $page->title);
+
 
             return $this->commitReturn($page);
         } catch (\Exception $e) {
@@ -58,7 +63,8 @@ class PageService extends Service {
      *
      * @return bool|SitePage
      */
-    public function updatePage($page, $data, $user) {
+    public function updatePage($page, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -81,6 +87,9 @@ class PageService extends Service {
 
             $page->update($data);
 
+            $this->logAdminAction($user, 'Updated Page', 'Updated page ' . $page->title);
+
+
             return $this->commitReturn($page);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
@@ -96,16 +105,23 @@ class PageService extends Service {
      *
      * @return bool
      */
-    public function deletePage($page) {
+    public function deletePage($page)
+    {
         DB::beginTransaction();
 
         try {
             // Specific pages such as the TOS/privacy policy cannot be deleted from the admin panel.
-            if (config('lorekeeper.text_pages.'.$page->key)) {
+            if (config('lorekeeper.text_pages.' . $page->key)) {
                 throw new \Exception('You cannot delete this page.');
             }
 
+            $title = $page->title;
+            $id = $page->id;
+
             $page->delete();
+
+            $this->logAdminAction($this->user(), 'Deleted Page', 'Deleted page ' . $title);
+
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
