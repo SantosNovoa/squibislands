@@ -345,6 +345,7 @@
                     ],
                     toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | spoiler-add spoiler-remove | removeformat | code',
                     content_css: [
+                        'https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=DynaPuff:wdth,wght@75..100,400..700&family=Lato:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap',
                         '{{ asset('css/app.css') }}',
                         '{{ asset('css/lorekeeper.css?v=' . filemtime(public_path('css/lorekeeper.css'))) }}',
                         {!! file_exists(public_path() . '/css/custom.css') ? "'" . asset('css/custom.css?v=') . filemtime(public_path('css/custom.css')) . "'," : '' !!}
