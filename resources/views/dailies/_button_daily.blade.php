@@ -1,6 +1,6 @@
 <div class="text-center">
     @if($daily->has_image)
-    <img src="{{ $daily->dailyImageUrl }}" style="max-width:100%" alt="{{ $daily->name }}" />
+    <img src="{{ $daily->dailyImageUrl }}" style="max-width: 400px;" alt="{{ $daily->name }}" />
     @endif    
     <p>{!! $daily->parsed_description !!}</p>
 </div>
