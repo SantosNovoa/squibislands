@@ -112,7 +112,7 @@
 
                     <li class="nav-item dropdown">
                         <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            <i class="fa-solid fa-circle-info"></i> <span class="nav-text">Info</span>
+                            <i class="fa-solid fa-circle-info"></i> <span class="nav-text">Guides</span>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
