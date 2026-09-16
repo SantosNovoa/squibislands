@@ -129,6 +129,9 @@
                                 <a class="dropdown-item" href="{{ url('/info/design_updates') }}">
                                     <i class="fa-solid fa-palette"></i> Design Updates
                                 </a>
+                                <a class="dropdown-item" href="{{ url('info/submission_guide') }}">
+                                    <i class="fa-solid fa-file-arrow-up"></i> Prompt & Gallery Submissions
+                                </a>
                                 <a class="dropdown-item" href="{{ url('info/submission_rewards') }}">
                                     <i class="fa-solid fa-paintbrush"></i> Art & Writing Rewards
                                 </a>
