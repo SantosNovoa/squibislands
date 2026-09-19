@@ -1,26 +1,28 @@
 {{-- Image Data --}}
 <div class="col-md-5 d-flex">
     <div class="card character-bio w-100">
-        {{-- <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" id="infoTab-{{ $image->id }}" data-toggle="tab" href="#info-{{ $image->id }}" role="tab">Info</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="notesTab-{{ $image->id }}" data-toggle="tab" href="#notes-{{ $image->id }}" role="tab">Notes</a>
-                </li>
-                @if (isset($showMention) && $showMention)
+        @if (isset($showHeader) && $showHeader)
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item">
-                        <a class="nav-link" id="mentionTab-{{ $image->id }}" data-toggle="tab" href="#mention-{{ $image->id }}" role="tab">Mention</a>
+                        <a class="nav-link active" id="infoTab-{{ $image->id }}" data-toggle="tab" href="#info-{{ $image->id }}" role="tab">Info</a>
                     </li>
-                @endif
-                @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
                     <li class="nav-item">
-                        <a class="nav-link" id="settingsTab-{{ $image->id }}" data-toggle="tab" href="#settings-{{ $image->id }}" role="tab"><i class="fas fa-cog"></i></a>
+                        <a class="nav-link" id="notesTab-{{ $image->id }}" data-toggle="tab" href="#notes-{{ $image->id }}" role="tab">Notes</a>
                     </li>
-                @endif
-            </ul>
-        </div> --}}
+                    @if (isset($showMention) && $showMention)
+                        <li class="nav-item">
+                            <a class="nav-link" id="mentionTab-{{ $image->id }}" data-toggle="tab" href="#mention-{{ $image->id }}" role="tab">Mention</a>
+                        </li>
+                    @endif
+                    @if (Auth::check() && Auth::user()->hasPower('manage_characters'))
+                        <li class="nav-item">
+                            <a class="nav-link" id="settingsTab-{{ $image->id }}" data-toggle="tab" href="#settings-{{ $image->id }}" role="tab"><i class="fas fa-cog"></i></a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+        @endif
         <div class="card-body tab-content">
             {{-- Basic info --}}
             <div class="tab-pane fade show active" id="info-{{ $image->id }}">
@@ -136,7 +138,7 @@
                     Uploaded: <i>{!! pretty_date($image->created_at) !!}</i>
                 </div>
                 <div>
-                    Last Edited:  <i>{!! pretty_date($image->updated_at) !!}</i>
+                    Last Edited: <i>{!! pretty_date($image->updated_at) !!}</i>
                 </div>
 
                 @if (Auth::check() && Auth::user()->hasPower('manage_characters'))

@@ -40,7 +40,7 @@
                         {!! Form::close() !!}
                     @endif
                     </div>
-                    @include('character._image_info', ['image' => $image])
+                    @include('character._image_info', ['image' => $image, 'showHeader' => true])
                 </div>
             </div>
         @endforeach
