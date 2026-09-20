@@ -11,5 +11,6 @@ return [
     'App\Models\Gallery\GallerySubmission',
     'App\Models\Mail\ModMail',
     'App\Models\Mail\UserMail',
+    'App\Models\Forms\SiteForm',
 
 ];

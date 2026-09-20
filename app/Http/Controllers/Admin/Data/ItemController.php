@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Data;
 
-<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
@@ -18,27 +17,6 @@ use App\Models\Recipe\Recipe;
 
 
 class ItemController extends Controller {
-=======
-use Illuminate\Http\Request;
-
-use Auth;
-
-use App\Models\Item\ItemCategory;
-use App\Models\Item\Item;
-use App\Models\Item\ItemTag;
-use App\Models\Shop\Shop;
-use App\Models\Shop\ShopStock;
-use App\Models\Prompt\Prompt;
-use App\Models\Currency\Currency;
-use App\Models\User\User;
-
-use App\Services\ItemService;
-
-use App\Http\Controllers\Controller;
-
-class ItemController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Admin / Item Controller
@@ -59,16 +37,9 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getIndex() {
         return view('admin.items.item_categories', [
             'categories' => ItemCategory::orderBy('sort', 'DESC')->get(),
-=======
-    public function getIndex()
-    {
-        return view('admin.items.item_categories', [
-            'categories' => ItemCategory::orderBy('sort', 'DESC')->get()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -77,23 +48,15 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getCreateItemCategory() {
         return view('admin.items.create_edit_item_category', [
             'category' => new ItemCategory,
-=======
-    public function getCreateItemCategory()
-    {
-        return view('admin.items.create_edit_item_category', [
-            'category' => new ItemCategory
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the edit item category page.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -106,24 +69,12 @@ class ItemController extends Controller
 
         return view('admin.items.create_edit_item_category', [
             'category' => $category,
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditItemCategory($id)
-    {
-        $category = ItemCategory::find($id);
-        if(!$category) abort(404);
-        return view('admin.items.create_edit_item_category', [
-            'category' => $category
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Creates or edits an item category.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int|null                 $id
      *
@@ -146,36 +97,12 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int|null                  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateEditItemCategory(Request $request, ItemService $service, $id = null)
-    {
-        $id ? $request->validate(ItemCategory::$updateRules) : $request->validate(ItemCategory::$createRules);
-        $data = $request->only([
-            'name', 'description', 'image', 'remove_image', 'is_character_owned', 'character_limit', 'can_name'
-        ]);
-        if($id && $service->updateItemCategory(ItemCategory::find($id), $data, Auth::user())) {
-            flash('Category updated successfully.')->success();
-        }
-        else if (!$id && $category = $service->createItemCategory($data, Auth::user())) {
-            flash('Category created successfully.')->success();
-            return redirect()->to('admin/data/item-categories/edit/'.$category->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Gets the item category deletion modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -183,14 +110,6 @@ class ItemController extends Controller
     public function getDeleteItemCategory($id) {
         $category = ItemCategory::find($id);
 
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteItemCategory($id)
-    {
-        $category = ItemCategory::find($id);
->>>>>>> Cylunny/extension/polls-and-forms
         return view('admin.items._delete_item_category', [
             'category' => $category,
         ]);
@@ -199,7 +118,6 @@ class ItemController extends Controller
     /**
      * Deletes an item category.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      *
@@ -214,28 +132,12 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int                       $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postDeleteItemCategory(Request $request, ItemService $service, $id)
-    {
-        if($id && $service->deleteItemCategory(ItemCategory::find($id))) {
-            flash('Category deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to('admin/data/item-categories');
     }
 
     /**
      * Sorts item categories.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -249,20 +151,6 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postSortItemCategory(Request $request, ItemService $service)
-    {
-        if($service->sortItemCategory($request->get('sort'))) {
-            flash('Category order updated successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
@@ -275,7 +163,6 @@ class ItemController extends Controller
     /**
      * Shows the item index.
      *
-<<<<<<< HEAD
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getItemIndex(Request $request) {
@@ -324,22 +211,6 @@ class ItemController extends Controller
             'items'      => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'artists'    => ['none' => 'Any Artist'] + User::whereIn('id', Item::whereNotNull('artist_id')->pluck('artist_id')->toArray())->pluck('name', 'id')->toArray(),
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getItemIndex(Request $request)
-    {
-        $query = Item::query();
-        $data = $request->only(['item_category_id', 'name']);
-        if(isset($data['item_category_id']) && $data['item_category_id'] != 'none')
-            $query->where('item_category_id', $data['item_category_id']);
-        if(isset($data['name']))
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
-        return view('admin.items.items', [
-            'items' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -348,7 +219,6 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getCreateItem() {
         return view('admin.items.create_edit_item', [
             'item'           => new Item,
@@ -356,23 +226,12 @@ class ItemController extends Controller
             'prompts'        => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
             'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
             'userOptions'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-=======
-    public function getCreateItem()
-    {
-        return view('admin.items.create_edit_item', [
-            'item' => new Item,
-            'categories' => ['none' => 'No category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'prompts' => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
-            'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the edit item page.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -390,49 +249,22 @@ class ItemController extends Controller
             'prompts'        => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
             'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
             'userOptions'    => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditItem($id)
-    {
-        $item = Item::find($id);
-        if(!$item) abort(404);
-        return view('admin.items.create_edit_item', [
-            'item' => $item,
-            'categories' => ['none' => 'No category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'shops' => Shop::whereIn('id', ShopStock::where('item_id', $item->id)->pluck('shop_id')->unique()->toArray())->orderBy('sort', 'DESC')->get(),
-            'prompts' => Prompt::where('is_active', 1)->orderBy('id')->pluck('name', 'id'),
-            'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
-            'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Creates or edits an item.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int|null                 $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditItem(Request $request, ItemService $service, $id = null) {
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int|null                  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateEditItem(Request $request, ItemService $service, $id = null)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         $id ? $request->validate(Item::$updateRules) : $request->validate(Item::$createRules);
         $data = $request->only([
             'name', 'allow_transfer', 'item_category_id', 'description', 'image', 'remove_image', 'rarity',
             'reference_url', 'artist_id', 'artist_url', 'uses', 'shops', 'prompts', 'release', 'currency_id', 'currency_quantity',
-<<<<<<< HEAD
             'is_released', 'is_deletable',
         ]);
         if ($id && $service->updateItem(Item::find($id), $data, Auth::user())) {
@@ -447,27 +279,12 @@ class ItemController extends Controller
             }
         }
 
-=======
-            'is_released'
-        ]);
-        if($id && $service->updateItem(Item::find($id), $data, Auth::user())) {
-            flash('Item updated successfully.')->success();
-        }
-        else if (!$id && $item = $service->createItem($data, Auth::user())) {
-            flash('Item created successfully.')->success();
-            return redirect()->to('admin/data/items/edit/'.$item->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Gets the item deletion modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -475,14 +292,6 @@ class ItemController extends Controller
     public function getDeleteItem($id) {
         $item = Item::find($id);
 
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteItem($id)
-    {
-        $item = Item::find($id);
->>>>>>> Cylunny/extension/polls-and-forms
         return view('admin.items._delete_item', [
             'item' => $item,
         ]);
@@ -491,7 +300,6 @@ class ItemController extends Controller
     /**
      * Creates or edits an item.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      *
@@ -506,21 +314,6 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int                       $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postDeleteItem(Request $request, ItemService $service, $id)
-    {
-        if($id && $service->deleteItem(Item::find($id))) {
-            flash('Item deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to('admin/data/items');
     }
 
@@ -533,7 +326,6 @@ class ItemController extends Controller
     /**
      * Gets the tag addition page.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      *
@@ -545,25 +337,12 @@ class ItemController extends Controller
         return view('admin.items.add_tag', [
             'item' => $item,
             'tags' => array_diff($service->getItemTags(), $item->tags()->pluck('tag')->toArray()),
-=======
-     * @param  App\Services\ItemService  $service
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getAddItemTag(ItemService $service, $id)
-    {
-        $item = Item::find($id);
-        return view('admin.items.add_tag', [
-            'item' => $item,
-            'tags' => array_diff($service->getItemTags(), $item->tags()->pluck('tag')->toArray())
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Adds a tag to an item.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      *
@@ -582,31 +361,12 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int                       $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postAddItemTag(Request $request, ItemService $service, $id)
-    {
-        $item = Item::find($id);
-        $tag = $request->get('tag');
-        if($tag = $service->addItemTag($item, $tag)) {
-            flash('Tag added successfully.')->success();
-            return redirect()->to($tag->adminUrl);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Gets the tag editing page.
      *
-<<<<<<< HEAD
      * @param int   $id
      * @param mixed $tag
      *
@@ -629,26 +389,12 @@ class ItemController extends Controller
             'item' => $item,
             'tag'  => $tag,
             'recipes' => $recipes,
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditItemTag(ItemService $service, $id, $tag)
-    {
-        $item = Item::find($id);
-        $tag = $item->tags()->where('tag', $tag)->first();
-        if(!$item || !$tag) abort(404);
-        return view('admin.items.edit_tag', [
-            'item' => $item,
-            'tag' => $tag
->>>>>>> Cylunny/extension/polls-and-forms
         ] + $tag->getEditData());
     }
 
     /**
      * Edits tag data for an item.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      * @param string                   $tag
@@ -665,30 +411,12 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int                       $id
-     * @param  string                    $tag
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postEditItemTag(Request $request, ItemService $service, $id, $tag)
-    {
-        $item = Item::find($id);
-        if($service->editItemTag($item, $tag, $request->all())) {
-            flash('Tag edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Gets the item tag deletion modal.
      *
-<<<<<<< HEAD
      * @param int    $id
      * @param string $tag
      *
@@ -701,26 +429,12 @@ class ItemController extends Controller
         return view('admin.items._delete_item_tag', [
             'item' => $item,
             'tag'  => $tag,
-=======
-     * @param  int  $id
-     * @param  string                    $tag
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteItemTag($id, $tag)
-    {
-        $item = Item::find($id);
-        $tag = $item->tags()->where('tag', $tag)->first();
-        return view('admin.items._delete_item_tag', [
-            'item' => $item,
-            'tag' => $tag
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Deletes a tag from an item.
      *
-<<<<<<< HEAD
      * @param App\Services\ItemService $service
      * @param int                      $id
      * @param string                   $tag
@@ -737,23 +451,6 @@ class ItemController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ItemService  $service
-     * @param  int                       $id
-     * @param  string                    $tag
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postDeleteItemTag(Request $request, ItemService $service, $id, $tag)
-    {
-        $item = Item::find($id);
-        if($service->deleteItemTag($item, $tag)) {
-            flash('Tag deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to('admin/data/items/edit/'.$item->id);
     }
 }

@@ -12,28 +12,28 @@
         @endif
     </div>
     <div class="h5">
-        <span class="badge bg-warning border">
+        <span class="badge bg-warning border" style="color: black;"> 
             @if($form->is_anonymous)
             This form is anonymous {!! add_help('Staff will be unable to see your name linked to your answers, however, the site owners may still access this information through the database.') !!}
             @else
             This form is not anonymous. {!! add_help('Staff will be able to easily see your name linked to your answers.') !!}
             @endif
         </span>
-        <span class="badge bg-light border">
+        <span class="badge border" style="background-color: black;">
             @if($form->timeframe == 'lifetime')
             Once per user
             @else
             {{ $form->timeframe }} per user
             @endif
         </span>
-        <span class="badge bg-light border">
+        <span class="badge border" style="background-color: black;">
             @if($form->is_editable)
             Editable
             @else
             Not editable
             @endif
         </span>
-        <span class="badge bg-light border">
+        <span class="badge border" style="background-color: black;">
             @if($form->is_public)
             Public
             @else
@@ -41,7 +41,7 @@
             @endif
         </span>
         @if($form->rewards->count() > 0)
-        <span class="badge bg-light border">
+        <span class="badge border" style="background-color: black;">
             Grants reward
         </span>
         @endif

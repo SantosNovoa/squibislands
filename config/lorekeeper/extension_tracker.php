@@ -1,12 +1,7 @@
 <?php
-<<<<<<< HEAD
 
 return [
 
-=======
-return [
-    
->>>>>>> Cylunny/extension/polls-and-forms
     // FORMAT EXAMPLE.
     //
     // 'extension_tracker' => [
@@ -18,7 +13,6 @@ return [
     //     'version' => '1.0.0',
     // ],
     
-<<<<<<< HEAD
     'dailies' => [
         'key' => 'dailies',
         'wiki_key' => 'Dailies',
@@ -105,15 +99,3 @@ return [
         'version' => '2.0.0',
     ],
 ];
-=======
-    'polls_and_forms' => [
-        'key' => 'polls_and_forms',
-        'wiki_key' => 'Polls_and_Forms',
-        'creators' => json_encode([
-            'Cylunny' => 'https://toyhou.se/cylunny',
-        ]),
-        'version' => '1.0.0', 
-    ],
-
-];
->>>>>>> Cylunny/extension/polls-and-forms

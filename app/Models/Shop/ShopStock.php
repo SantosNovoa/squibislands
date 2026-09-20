@@ -2,31 +2,19 @@
 
 namespace App\Models\Shop;
 
-<<<<<<< HEAD
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
 use App\Models\Model;
 
 class ShopStock extends Model {
-=======
-use App\Models\Model;
-
-class ShopStock extends Model
-{
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'shop_id', 'item_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'purchase_limit', 'purchase_limit_timeframe', 'is_fto', 'stock_type', 'is_visible',
         'restock', 'restock_quantity', 'restock_interval', 'range', 'disallow_transfer', 'is_timed_stock', 'start_at', 'end_at',
-=======
-        'shop_id', 'item_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'sort', 'purchase_limit'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -36,7 +24,6 @@ class ShopStock extends Model
      */
     protected $table = 'shop_stock';
 
-<<<<<<< HEAD
     /**
      * Validation rules for creation.
      *
@@ -119,35 +106,5 @@ class ShopStock extends Model
      */
     public function getDisplayCostAttribute() {
         return (int) $this->cost;
-=======
-    /**********************************************************************************************
-    
-        RELATIONS
-
-    **********************************************************************************************/
-    
-    /**
-     * Get the item being stocked.
-     */
-    public function item() 
-    {
-        return $this->belongsTo('App\Models\Item\Item');
-    }
-    
-    /**
-     * Get the shop that holds this item.
-     */
-    public function shop() 
-    {
-        return $this->belongsTo('App\Models\Shop\Shop');
-    }
-    
-    /**
-     * Get the currency the item must be purchased with.
-     */
-    public function currency() 
-    {
-        return $this->belongsTo('App\Models\Currency\Currency');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 }

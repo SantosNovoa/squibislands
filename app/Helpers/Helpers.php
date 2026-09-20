@@ -12,7 +12,6 @@
 /**
  * Returns class name if the current URL corresponds to the given path.
  *
-<<<<<<< HEAD
  * @param string $path
  * @param string $class
  *
@@ -20,25 +19,13 @@
  */
 function set_active($path, $class = 'active') {
     return call_user_func_array('Request::is', (array) $path) ? $class : '';
-=======
- * @param  string  $path
- * @param  string  $class
- * @return string
- */
-function set_active($path, $class = 'active') {
-    return call_user_func_array('Request::is', (array)$path) ? $class : '';
->>>>>>> Cylunny/extension/polls-and-forms
 }
 
 /**
  * Adds a help icon with a tooltip.
  *
-<<<<<<< HEAD
  * @param string $text
  *
-=======
- * @param  string  $text
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function add_help($text) {
@@ -48,19 +35,14 @@ function add_help($text) {
 /**
  * Uses the given array to generate breadcrumb links.
  *
-<<<<<<< HEAD
  * @param array $links
  *
-=======
- * @param  array  $links
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function breadcrumbs($links) {
     $ret = '<nav><ol class="breadcrumb">';
     $count = 0;
     $ret .= '<li class="breadcrumb-item"><a href="'.url('/').'">'.config('lorekeeper.settings.site_name', 'Lorekeeper').'</a></li>';
-<<<<<<< HEAD
     foreach ($links as $key => $link) {
         $isLast = ($count == count($links) - 1);
 
@@ -77,18 +59,6 @@ function breadcrumbs($links) {
         if (!$isLast) {
             $ret .= '</a>';
         }
-=======
-    foreach($links as $key => $link) {
-        $isLast = ($count == count($links) - 1);
-
-        $ret .= '<li class="breadcrumb-item ';
-        if($isLast) $ret .= 'active';
-        $ret .= '">';
-
-        if(!$isLast) $ret .= '<a href="'.url($link).'">';
-        $ret .=  $key;
-        if(!$isLast) $ret .= '</a>';
->>>>>>> Cylunny/extension/polls-and-forms
 
         $ret .= '</li>';
 
@@ -102,7 +72,6 @@ function breadcrumbs($links) {
 /**
  * Formats the timestamp to a standard format.
  *
-<<<<<<< HEAD
  * @param \Illuminate\Support\Carbon\Carbon $timestamp
  * @param mixed                            $showTime
  *
@@ -114,30 +83,15 @@ $timestamp = $timestamp->setTimezone('America/New_York');
 
 function pretty_date($timestamp, $showTime = true) {
     return '<abbr data-toggle="tooltip" title="'.$timestamp->format('F j Y'.($showTime ? ', g:i:s A' : '')).' '.strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())).'">'.$timestamp->diffForHumans().'</abbr>';
-=======
- * @param  \Illuminate\Support\Carbon\Carbon  $timestamp
- * @return string
- */
-function format_date($timestamp, $showTime = true) {
-    return $timestamp->format('j F Y' . ($showTime ? ', H:i:s' : '')) . ($showTime ? ' <abbr data-toggle="tooltip" title="UTC'.$timestamp->timezone->toOffsetName().'">' . strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())) . '</abbr>' : '');
-}
-
-function pretty_date($timestamp, $showTime = true) {
-   return '<abbr data-toggle="tooltip" title="' . $timestamp->format('F j Y' . ($showTime ? ', H:i:s' : '')) . ' ' . strtoupper($timestamp->timezone->getAbbreviatedName($timestamp->isDST())).'">' .$timestamp->diffForHumans() . '</abbr>';
->>>>>>> Cylunny/extension/polls-and-forms
 }
 
 /**
  * Formats a number to fit the number of digits given,
  * for generating masterlist numbers.
  *
-<<<<<<< HEAD
  * @param mixed $number
  * @param mixed $digits
  *
-=======
- * @param  \Illuminate\Support\Carbon\Carbon  $timestamp
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function format_masterlist_number($number, $digits) {
@@ -147,7 +101,6 @@ function format_masterlist_number($number, $digits) {
 /**
  * Parses a piece of user-entered text for HTML output and optionally gets pings.
  *
-<<<<<<< HEAD
  * @param string $text
  * @param array  $pings
  *
@@ -159,38 +112,17 @@ function parse($text, &$pings = null) {
     }
 
     require_once base_path().'/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
-=======
- * @param  string  $text
- * @param  array   $pings
- * @return string
- */
-function parse($text, &$pings = null) {
-    if(!$text) return null;
-
-    require_once(base_path().'/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
->>>>>>> Cylunny/extension/polls-and-forms
 
     $config = HTMLPurifier_Config::createDefault();
     $config->set('Attr.EnableID', true);
     $config->set('HTML.DefinitionID', 'include');
     $config->set('HTML.DefinitionRev', 2);
-<<<<<<< HEAD
     if ($def = $config->maybeGetRawHTMLDefinition()) {
         $def->addElement('include', 'Block', 'Empty', 'Common', ['file*' => 'URI', 'height' => 'Text', 'width' => 'Text']);
         $def->addAttribute('a', 'data-toggle', 'Enum#collapse,tab');
         $def->addAttribute('a', 'aria-expanded', 'Enum#true,false');
         $def->addAttribute('a', 'data-target', 'Text');
         $def->addAttribute('div', 'data-parent', 'Text');
-=======
-	$config->set('Cache.DefinitionImpl', null); // TODO: remove this later!
-    if ($def = $config->maybeGetRawHTMLDefinition()) {
-        $def->addElement('include', 'Block', 'Empty', 'Common', array('file*' => 'URI', 'height' => 'Text', 'width' => 'Text'));
-		$def->addAttribute('a', 'data-toggle', 'Enum#collapse,tab');
-		$def->addAttribute('a', 'aria-expanded', 'Enum#true,false');
-		$def->addAttribute('a', 'data-target', 'Text');
-		$def->addAttribute('div', 'data-parent', 'Text');
-
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     $purifier = new HTMLPurifier($config);
@@ -198,7 +130,6 @@ function parse($text, &$pings = null) {
 
     $users = $characters = null;
     $text = parseUsers($text, $users);
-<<<<<<< HEAD
     $text = parseUsersAndAvatars($text, $users);
     $text = parseUserIDs($text, $users);
     $text = parseUserIDsForAvatars($text, $users);
@@ -210,11 +141,6 @@ function parse($text, &$pings = null) {
     }
 
     $text = parseLiveClock($text);
-=======
-    $text = parseCharacters($text, $characters);
-    $text = parseGalleryThumbs($text, $submissions);
-    if($pings) $pings = ['users' => $users, 'characters' => $characters];
->>>>>>> Cylunny/extension/polls-and-forms
 
     return $text;
 }
@@ -223,33 +149,20 @@ function parse($text, &$pings = null) {
  * Parses a piece of user-entered text to match user mentions
  * and replace with a link.
  *
-<<<<<<< HEAD
  * @param string $text
  * @param mixed  $users
  *
-=======
- * @param  string  $text
- * @param  mixed   $users
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function parseUsers($text, &$users) {
     $matches = null;
     $users = [];
     $count = preg_match_all('/\B@([A-Za-z0-9_-]+)/', $text, $matches);
-<<<<<<< HEAD
     if ($count) {
         $matches = array_unique($matches[1]);
         foreach ($matches as $match) {
             $user = App\Models\User\User::where('name', $match)->first();
             if ($user) {
-=======
-    if($count) {
-        $matches = array_unique($matches[1]);
-        foreach($matches as $match) {
-            $user = \App\Models\User\User::where('name', $match)->first();
-            if($user) {
->>>>>>> Cylunny/extension/polls-and-forms
                 $users[] = $user;
                 $text = preg_replace('/\B@'.$match.'/', $user->displayName, $text);
             }
@@ -260,7 +173,6 @@ function parseUsers($text, &$users) {
 }
 
 /**
-<<<<<<< HEAD
  * Parses a piece of user-entered text to match user mentions
  * and replace with a link and avatar.
  *
@@ -348,32 +260,17 @@ function parseUserIDsForAvatars($text, &$users) {
  * @param string $text
  * @param mixed  $characters
  *
-=======
- * Parses a piece of user-entered text to match character mentions
- * and replace with a link.
- *
- * @param  string  $text
- * @param  mixed   $characters
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function parseCharacters($text, &$characters) {
     $matches = null;
     $characters = [];
     $count = preg_match_all('/\[character=([^\[\]&<>?"\']+)\]/', $text, $matches);
-<<<<<<< HEAD
     if ($count) {
         $matches = array_unique($matches[1]);
         foreach ($matches as $match) {
             $character = App\Models\Character\Character::where('slug', $match)->first();
             if ($character) {
-=======
-    if($count) {
-        $matches = array_unique($matches[1]);
-        foreach($matches as $match) {
-            $character = \App\Models\Character\Character::where('slug', $match)->first();
-            if($character) {
->>>>>>> Cylunny/extension/polls-and-forms
                 $characters[] = $character;
                 $text = preg_replace('/\[character='.$match.'\]/', $character->displayName, $text);
             }
@@ -384,7 +281,6 @@ function parseCharacters($text, &$characters) {
 }
 
 /**
-<<<<<<< HEAD
  * Parses a piece of user-entered text to match character mentions
  * and replace with a thumbnail.
  *
@@ -418,32 +314,17 @@ function parseCharacterThumbs($text, &$characters) {
  * @param string $text
  * @param mixed  $submissions
  *
-=======
- * Parses a piece of user-entered text to match gallery submission thumb mentions
- * and replace with a link.
- *
- * @param  string  $text
- * @param  mixed   $submissions
->>>>>>> Cylunny/extension/polls-and-forms
  * @return string
  */
 function parseGalleryThumbs($text, &$submissions) {
     $matches = null;
     $submissions = [];
     $count = preg_match_all('/\[thumb=([^\[\]&<>?"\']+)\]/', $text, $matches);
-<<<<<<< HEAD
     if ($count) {
         $matches = array_unique($matches[1]);
         foreach ($matches as $match) {
             $submission = App\Models\Gallery\GallerySubmission::where('id', $match)->first();
             if ($submission) {
-=======
-    if($count) {
-        $matches = array_unique($matches[1]);
-        foreach($matches as $match) {
-            $submission = \App\Models\Gallery\GallerySubmission::where('id', $match)->first();
-            if($submission) {
->>>>>>> Cylunny/extension/polls-and-forms
                 $submissions[] = $submission;
                 $text = preg_replace('/\[thumb='.$match.'\]/', '<a href="'.$submission->url.'" data-toggle="tooltip" title="'.$submission->displayTitle.' by '.nl2br(htmlentities($submission->creditsPlain)).(isset($submission->content_warning) ? '<br/><strong>Content Warning:</strong> '.nl2br(htmlentities($submission->content_warning)) : '').'">'.view('widgets._gallery_thumb', ['submission' => $submission]).'</a>', $text);
             }
@@ -456,7 +337,6 @@ function parseGalleryThumbs($text, &$submissions) {
 /**
  * Generates a string of random characters of the specified length.
  *
-<<<<<<< HEAD
  * @param int $characters
  *
  * @return string
@@ -468,16 +348,6 @@ function randomString($characters) {
         $code .= $src[mt_rand(0, strlen($src) - 1)];
     }
 
-=======
- * @param  int  $characters
- * @return string
- */
-function randomString($characters)
-{
-    $src = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    $code = '';
-    for ($i = 0; $i < $characters; $i++) $code .= $src[mt_rand(0, strlen($src) - 1)];
->>>>>>> Cylunny/extension/polls-and-forms
     return $code;
 }
 
@@ -485,7 +355,6 @@ function randomString($characters)
  * Check that a url is from a site used for authentication,
  * and if it belongs to a user.
  *
-<<<<<<< HEAD
  * @param string $url
  * @param bool   $failOnError
  *
@@ -497,19 +366,6 @@ function checkAlias($url, $failOnError = true) {
         $matches = [];
         // Check to see if url is 1. from a site used for auth
         foreach (config('lorekeeper.sites') as $key=> $site) {
-=======
- * @param  string                  $url
- * @param  bool                    $failOnError
- * @return \App\Models\User\User|string
- */
-function checkAlias($url, $failOnError = true)
-{
-    if($url) {
-        $recipient = null;
-        $matches = [];
-        // Check to see if url is 1. from a site used for auth
-        foreach (Config::get('lorekeeper.sites') as $key=> $site) {
->>>>>>> Cylunny/extension/polls-and-forms
             if (isset($site['auth']) && $site['auth']) {
                 preg_match_all($site['regex'], $url, $matches, PREG_SET_ORDER, 0);
                 if ($matches != []) {
@@ -519,7 +375,6 @@ function checkAlias($url, $failOnError = true)
             }
         }
         if ((!isset($matches[0]) || $matches[0] == []) && $failOnError) {
-<<<<<<< HEAD
             throw new Exception('This URL is from an invalid site. Please provide a URL for a user profile from a site used for authentication.');
         }
 
@@ -531,14 +386,6 @@ function checkAlias($url, $failOnError = true)
             } else {
                 $alias = App\Models\User\UserAlias::where('site', $urlSite)->where('alias', $matches[0][0])->first();
             }
-=======
-            throw new \Exception('This URL is from an invalid site. Please provide a URL for a user profile from a site used for authentication.');
-        }
-
-        // and 2. if it contains an alias associated with a user on-site.
-        if (isset($matches[0]) && $matches[0] != [] && isset($matches[0][1])) {
-            $alias = App\Models\User\UserAlias::where('site', $urlSite)->where('alias', $matches[0][0])->first();
->>>>>>> Cylunny/extension/polls-and-forms
             if ($alias) {
                 $recipient = $alias->user;
             } else {
@@ -553,7 +400,6 @@ function checkAlias($url, $failOnError = true)
 /**
  * Prettifies links to user profiles on various sites in a "user@site" format.
  *
-<<<<<<< HEAD
  * @param string $url
  *
  * @return string
@@ -577,28 +423,11 @@ function prettyProfileLink($url) {
     } else {
         return '<a href="'.$url.'"><i class="fas fa-globe mr-1" style="opacity: 50%;"></i>'.$url.'</a>';
     }
-=======
- * @param  string  $url
- * @return string
- */
-function prettyProfileLink($url)
-{
-    $matches = [];
-    // Check different sites and return site if a match is made, plus username (retreived from the URL)
-    foreach(Config::get('lorekeeper.sites') as $siteName=>$siteInfo) {
-        if(preg_match_all($siteInfo['regex'], $url, $matches)) {$site = $siteName; $name = $matches[1][0]; $link = $matches[0][0]; break;}
-    }
-
-    // Return formatted link if possible; failing that, an unformatted link
-    if(isset($name) && isset($site) && isset($link)) return '<a href="https://'.$link.'">'.$name.'@'.(Config::get('lorekeeper.sites.'.$site.'.display_name') != null ? Config::get('lorekeeper.sites.'.$site.'.display_name') : $site).'</a>';
-    else return '<a href="'.$url.'">'.$url.'</a>';
->>>>>>> Cylunny/extension/polls-and-forms
 }
 
 /**
  * Prettifies user profile names for use in various functions.
  *
-<<<<<<< HEAD
  * @param string $url
  *
  * @return string
@@ -710,20 +539,4 @@ function allAttachments($model) {
  */
 function getDisplayName($model, $id) {
     return $model::find($id)?->displayName;
-=======
- * @param  string  $url
- * @return string
- */
-function prettyProfileName($url)
-{
-    $matches = [];
-    // Check different sites and return site if a match is made, plus username (retreived from the URL)
-    foreach(Config::get('lorekeeper.sites') as $siteName=>$siteInfo) {
-        if(preg_match_all($siteInfo['regex'], $url, $matches)) {$site = $siteName; $name = $matches[1][0]; break;}
-    }
-
-    // Return formatted name if possible; failing that, an unformatted url
-    if(isset($name) && isset($site)) return $name.'@'.(Config::get('lorekeeper.sites.'.$site.'.display_name') != null ? Config::get('lorekeeper.sites.'.$site.'.display_name') : $site);
-    else return $url;
->>>>>>> Cylunny/extension/polls-and-forms
 }

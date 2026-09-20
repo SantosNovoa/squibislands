@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
 use App\Models\Award\Award;
 use App\Models\Award\AwardCategory;
 use App\Models\Character\CharacterCategory;
@@ -34,25 +33,6 @@ use App\Models\Recipe\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
-=======
-use Illuminate\Http\Request;
-use Config;
-
-use App\Models\Currency\Currency;
-use App\Models\Rarity;
-use App\Models\Species\Species;
-use App\Models\Species\Subtype;
-use App\Models\Item\ItemCategory;
-use App\Models\Item\Item;
-use App\Models\Feature\FeatureCategory;
-use App\Models\Feature\Feature;
-use App\Models\Character\CharacterCategory;
-use App\Models\Prompt\PromptCategory;
-use App\Models\Prompt\Prompt;
-use App\Models\Shop\Shop;
-use App\Models\Shop\ShopStock;
-use App\Models\User\User;
->>>>>>> Cylunny/extension/polls-and-forms
 
 class WorldController extends Controller
 {
@@ -79,72 +59,47 @@ class WorldController extends Controller
     /**
      * Shows the currency page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCurrencies(Request $request)
     {
         $query = Currency::query();
         $name = $request->get('name');
-<<<<<<< HEAD
         if ($name) {
             $query->where('name', 'LIKE', '%' . $name . '%')->orWhere('abbreviation', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.currencies', [
             'currencies' => $query->orderBy('name')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('abbreviation', 'LIKE', '%'.$name.'%');
-        return view('world.currencies', [
-            'currencies' => $query->orderBy('name')->paginate(20)->appends($request->query()),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the rarity page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRarities(Request $request)
     {
         $query = Rarity::query();
         $name = $request->get('name');
-<<<<<<< HEAD
         if ($name) {
             $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.rarities', [
             'rarities' => $query->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.rarities', [
-            'rarities' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the species page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSpecieses(Request $request)
     {
         $query = Species::query();
-<<<<<<< HEAD
 
         if (config('lorekeeper.extensions.species_trait_index.enable')) {
             $query->withCount('features');
@@ -159,29 +114,16 @@ class WorldController extends Controller
             'specieses' => $query->with(['subtypes' => function ($query) {
                 $query->visible(Auth::user() ?? null)->orderBy('sort', 'DESC');
             }])->visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        $name = $request->get('name');
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.specieses', [
-            'specieses' => $query->with(['subtypes' => function($query) {
-                $query->orderBy('sort', 'DESC');
-            }])->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the subtypes page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSubtypes(Request $request)
     {
-<<<<<<< HEAD
         $query = Subtype::query()->with('species');
         $name = $request->get('name');
         if ($name) {
@@ -190,30 +132,18 @@ class WorldController extends Controller
 
         return view('world.subtypes', [
             'subtypes' => $query->visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        $query = Subtype::query();
-        $name = $request->get('name');
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.subtypes', [
-            'subtypes' => $query->with('species')->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the item categories page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getItemCategories(Request $request)
     {
         $query = ItemCategory::query();
         $name = $request->get('name');
-<<<<<<< HEAD
         if ($name) {
             $query->where('name', 'LIKE', '%' . $name . '%');
         }
@@ -237,10 +167,6 @@ class WorldController extends Controller
         }
 
         return view('world.award_categories', [
-=======
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.item_categories', [
->>>>>>> Cylunny/extension/polls-and-forms
             'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
@@ -248,43 +174,28 @@ class WorldController extends Controller
     /**
      * Shows the trait categories page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getFeatureCategories(Request $request)
     {
         $query = FeatureCategory::query();
         $name = $request->get('name');
-<<<<<<< HEAD
         if ($name) {
             $query->where('name', 'LIKE', '%' . $name . '%');
         }
 
         return view('world.feature_categories', [
             'categories' => $query->visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.feature_categories', [
-            'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the traits page.
      *
-<<<<<<< HEAD
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getFeatures(Request $request)
     {
-<<<<<<< HEAD
         $query = Feature::visible(Auth::check() ? Auth::user() : null)->with('category')->with('rarity')->with('species')->where('display_separate', 1);
         $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'subtype_id', 'name', 'sort']);
 
@@ -318,22 +229,6 @@ class WorldController extends Controller
 
         if (isset($data['sort'])) {
             switch ($data['sort']) {
-=======
-        $query = Feature::with('category')->with('rarity')->with('species');
-        $data = $request->only(['rarity_id', 'feature_category_id', 'species_id', 'name', 'sort']);
-        if(isset($data['rarity_id']) && $data['rarity_id'] != 'none')
-            $query->where('rarity_id', $data['rarity_id']);
-        if(isset($data['feature_category_id']) && $data['feature_category_id'] != 'none')
-            $query->where('feature_category_id', $data['feature_category_id']);
-        if(isset($data['species_id']) && $data['species_id'] != 'none')
-            $query->where('species_id', $data['species_id']);
-        if(isset($data['name']))
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
-
-        if(isset($data['sort']))
-        {
-            switch($data['sort']) {
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'alpha':
                     $query->sortAlphabetical();
                     break;
@@ -352,12 +247,9 @@ class WorldController extends Controller
                 case 'species':
                     $query->sortSpecies();
                     break;
-<<<<<<< HEAD
                 case 'subtypes':
                     $query->sortSubtype();
                     break;
-=======
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'newest':
                     $query->sortNewest();
                     break;
@@ -365,7 +257,6 @@ class WorldController extends Controller
                     $query->sortOldest();
                     break;
             }
-<<<<<<< HEAD
         } else {
             $query->sortCategory();
         }
@@ -376,35 +267,20 @@ class WorldController extends Controller
             'specieses'  => ['none' => 'Any Species'] + ['withoutOption' => 'Without Species'] + Species::visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'   => ['none' => 'Any Subtype'] + ['withoutOption' => 'Without Subtype'] + Subtype::visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'categories' => ['none' => 'Any Category'] + ['withoutOption' => 'Without Category'] + FeatureCategory::visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-=======
-        }
-        else $query->sortCategory();
-
-        return view('world.features', [
-            'features' => $query->paginate(20)->appends($request->query()),
-            'rarities' => ['none' => 'Any Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses' => ['none' => 'Any Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'categories' => ['none' => 'Any Category'] + FeatureCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows a species' visual trait list.
      *
-<<<<<<< HEAD
      * @param mixed $id
      *
-=======
-     * @param  \Illuminate\Http\Request  $request
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getSpeciesFeatures($id)
     {
         $categories = FeatureCategory::orderBy('sort', 'DESC')->get();
         $rarities = Rarity::orderBy('sort', 'ASC')->get();
-<<<<<<< HEAD
 
         $species = Species::visible(Auth::check() ? Auth::user() : null)->where('id', $id)->first();
         if (!$species) {
@@ -875,32 +751,6 @@ class WorldController extends Controller
 
         return view('world.character_categories', [
             'categories' => $query->visible(Auth::user() ?? null)->orderBy('sort', 'DESC')->orderBy('id')->paginate(20)->appends($request->query()),
-=======
-        $species = Species::where('id', $id)->first();
-        if(!$species) abort(404);
-        if(!Config::get('lorekeeper.extensions.species_trait_index')) abort(404);
-
-        $features = count($categories) ?
-            $species->features()
-                ->orderByRaw('FIELD(feature_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->groupBy(['feature_category_id', 'id']) :
-            $species->features()
-                ->orderByRaw('FIELD(rarity_id,'.implode(',', $rarities->pluck('id')->toArray()).')')
-                ->orderBy('has_image', 'DESC')
-                ->orderBy('name')
-                ->get()
-                ->groupBy(['feature_category_id', 'id']);
-
-        return view('world.species_features', [
-            'species' => $species,
-            'categories' => $categories->keyBy('id'),
-            'rarities' => $rarities->keyBy('id'),
-            'features' => $features,
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -910,7 +760,6 @@ class WorldController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getRecipes(Request $request)
     {
         $query = Recipe::query();
@@ -920,41 +769,18 @@ class WorldController extends Controller
 
         if (isset($data['sort'])) {
             switch ($data['sort']) {
-=======
-    public function getItems(Request $request)
-    {
-        $query = Item::with('category')->released();
-        $data = $request->only(['item_category_id', 'name', 'sort', 'artist']);
-        if(isset($data['item_category_id']) && $data['item_category_id'] != 'none')
-            $query->where('item_category_id', $data['item_category_id']);
-        if(isset($data['name']))
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
-        if(isset($data['artist']) && $data['artist'] != 'none')
-            $query->where('artist_id', $data['artist']);
-
-        if(isset($data['sort']))
-        {
-            switch($data['sort']) {
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'alpha':
                     $query->sortAlphabetical();
                     break;
                 case 'alpha-reverse':
                     $query->sortAlphabetical(true);
                     break;
-<<<<<<< HEAD
-=======
-                case 'category':
-                    $query->sortCategory();
-                    break;
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'newest':
                     $query->sortNewest();
                     break;
                 case 'oldest':
                     $query->sortOldest();
                     break;
-<<<<<<< HEAD
                 case 'locked':
                     $query->sortNeedsUnlocking();
                     break;
@@ -963,31 +789,15 @@ class WorldController extends Controller
 
         return view('world.recipes.recipes', [
             'recipes' => $query->paginate(20)->appends($request->query()),
-=======
-            }
-        }
-        else $query->sortCategory();
-
-        return view('world.items', [
-            'items' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'shops' => Shop::orderBy('sort', 'DESC')->get(),
-            'artists' => ['none' => 'Any Artist'] + User::whereIn('id', Item::whereNotNull('artist_id')->pluck('artist_id')->toArray())->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
-<<<<<<< HEAD
      * Shows an individual recipe;ss page.
-=======
-     * Shows an individual item's page.
->>>>>>> Cylunny/extension/polls-and-forms
      *
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getRecipe($id)
     {
         $recipe = Recipe::where('id', $id)->first();
@@ -1172,42 +982,11 @@ class WorldController extends Controller
         }
 
         return view('world.pet_categories', [
-=======
-    public function getItem($id)
-    {
-        $categories = ItemCategory::orderBy('sort', 'DESC')->get();
-        $item = Item::where('id', $id)->released()->first();
-        if(!$item) abort(404);
-
-        return view('world.item_page', [
-            'item' => $item,
-            'imageUrl' => $item->imageUrl,
-            'name' => $item->displayName,
-            'description' => $item->parsed_description,
-            'categories' => $categories->keyBy('id'),
-            'shops' => Shop::whereIn('id', ShopStock::where('item_id', $item->id)->pluck('shop_id')->unique()->toArray())->orderBy('sort', 'DESC')->get()
-        ]);
-    }
-
-    /**
-     * Shows the character categories page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterCategories(Request $request)
-    {
-        $query = CharacterCategory::query();
-        $name = $request->get('name');
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%')->orWhere('code', 'LIKE', '%'.$name.'%');
-        return view('world.character_categories', [
->>>>>>> Cylunny/extension/polls-and-forms
             'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
 
     /**
-<<<<<<< HEAD
      * Shows the pets page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -1232,41 +1011,6 @@ class WorldController extends Controller
 
         if (isset($data['sort'])) {
             switch ($data['sort']) {
-=======
-     * Shows the prompt categories page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getPromptCategories(Request $request)
-    {
-        $query = PromptCategory::query();
-        $name = $request->get('name');
-        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
-        return view('world.prompt_categories', [
-            'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
-        ]);
-    }
-
-    /**
-     * Shows the prompts page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getPrompts(Request $request)
-    {
-        $query = Prompt::active()->with('category');
-        $data = $request->only(['prompt_category_id', 'name', 'sort']);
-        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none')
-            $query->where('prompt_category_id', $data['prompt_category_id']);
-        if(isset($data['name']))
-            $query->where('name', 'LIKE', '%'.$data['name'].'%');
-
-        if(isset($data['sort']))
-        {
-            switch($data['sort']) {
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'alpha':
                     $query->sortAlphabetical();
                     break;
@@ -1282,7 +1026,6 @@ class WorldController extends Controller
                 case 'oldest':
                     $query->sortOldest();
                     break;
-<<<<<<< HEAD
             }
         } else {
             $query->sortCategory();
@@ -1587,27 +1330,6 @@ class WorldController extends Controller
 
         return view('world.element_page', [
             'element' => $element,
-=======
-                case 'start':
-                    $query->sortStart();
-                    break;
-                case 'start-reverse':
-                    $query->sortStart(true);
-                    break;
-                case 'end':
-                    $query->sortEnd();
-                    break;
-                case 'end-reverse':
-                    $query->sortEnd(true);
-                    break;
-            }
-        }
-        else $query->sortCategory();
-
-        return view('world.prompts', [
-            'prompts' => $query->paginate(20)->appends($request->query()),
-            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 }

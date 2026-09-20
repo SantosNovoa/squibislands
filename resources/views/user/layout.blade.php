@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-<<<<<<< HEAD
 @section('title')
     User{!! View::hasSection('profile-title') ? ' :: ' . trim(View::getSection('profile-title')) : '' !!}
 @endsection
@@ -18,12 +17,6 @@
     @else
         @include('user._sidebar')
     @endif
-=======
-@section('title') User ::@yield('profile-title')@endsection
-
-@section('sidebar')
-    @include('user._sidebar')
->>>>>>> Cylunny/extension/polls-and-forms
 @endsection
 
 @section('content')
@@ -31,10 +24,5 @@
 @endsection
 
 @section('scripts')
-<<<<<<< HEAD
     @parent
 @endsection
-=======
-@parent
-@endsection
->>>>>>> Cylunny/extension/polls-and-forms

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -20,31 +19,6 @@ use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 
 class GalleryManager extends Service {
-=======
-<?php namespace App\Services;
-
-use DB;
-use Image;
-use Settings;
-use Config;
-use Notifications;
-use Carbon\Carbon;
-use App\Services\Service;
-
-use App\Models\Gallery\Gallery;
-use App\Models\Gallery\GallerySubmission;
-use App\Models\Gallery\GalleryCharacter;
-use App\Models\Gallery\GalleryCollaborator;
-use App\Models\Gallery\GalleryFavorite;
-
-use App\Models\User\User;
-use App\Models\Character\Character;
-use App\Models\Prompt\Prompt;
-use App\Models\Currency\Currency;
-
-class GalleryManager extends Service
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Gallery Manager
@@ -57,7 +31,6 @@ class GalleryManager extends Service
     /**
      * Creates a new gallery submission.
      *
-<<<<<<< HEAD
      * @param array $data
      * @param array $currencyFormData
      * @param User  $user
@@ -65,20 +38,10 @@ class GalleryManager extends Service
      * @return bool|GallerySubmission
      */
     public function createSubmission($data, $currencyFormData, $user) {
-=======
-     * @param  array                  $data
-     * @param  array                  $currencyFormData
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Gallery\GallerySubmission
-     */
-    public function createSubmission($data, $currencyFormData, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             //  Check that submissions are open
-<<<<<<< HEAD
             if (!Settings::get('gallery_submissions_open')) {
                 throw new \Exception('Gallery submissions are currently closed.');
             }
@@ -138,53 +101,10 @@ class GalleryManager extends Service
                 'status'     => 'Pending',
                 'title'      => $data['title'],
                 'is_visible' => 1,
-=======
-            if(!Settings::get('gallery_submissions_open')) throw new \Exception("Gallery submissions are currently closed.");
-            // Check that the gallery exists and can be submitted to
-            $gallery = Gallery::find($data['gallery_id']);
-            if(!$gallery) throw new \Exception ("Invalid gallery selected.");
-            if(!$gallery->submissions_open && !$user->hasPower('manage_submissions')) throw new \Exception("You cannot submit to this gallery.");
-            if((isset($gallery->start_at) && $gallery->start_at->isFuture()) || (isset($gallery->end_at) && $gallery->end_at->isPast())) throw new \Exception('This gallery\'s submissions aren\'t open.');
-
-            // Check that associated collaborators exist
-            if(isset($data['collaborator_id'])) {
-                $collaborators = User::whereIn('id', $data['collaborator_id'])->get();
-                if(count($collaborators) != count($data['collaborator_id'])) throw new \Exception("One or more of the selected collaborators does not exist, or you have entered a duplicate.");
-            }
-            else $collaborators = [];
-
-            // Check that associated participants exist
-            if(isset($data['participant_id'])) {
-                $participants = User::whereIn('id', $data['participant_id'])->get();
-                if(count($participants) != count($data['participant_id'])) throw new \Exception("One or more of the selected participants does not exist, or you have entered a duplicate.");
-            }
-            else $participants = [];
-
-            // Check that associated characters exist
-            if(isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
-                if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters does not exist, or you have entered a duplicate.");
-            }
-            else $characters = [];
-
-            // Check that the selected prompt exists and can be submitted to
-            if(isset($data['prompt_id'])) {
-                $prompt = Prompt::active()->find($data['prompt_id']);
-                if(!$prompt) throw new \Exception("Invalid prompt selected.");
-            }
-
-            $submission = GallerySubmission::create([
-                'user_id' => $user->id,
-                'gallery_id' => $gallery->id,
-                'status' => 'Pending',
-                'title' => $data['title'],
-                'is_visible' => 1
->>>>>>> Cylunny/extension/polls-and-forms
             ]);
 
             $data = $this->populateData($data);
 
-<<<<<<< HEAD
             $withCriteriaSelected = isset($currencyFormData) && $currencyFormData && isset($currencyFormData['criterion']) ? array_filter($currencyFormData['criterion'], function ($obj) {
                 return isset($obj['id']);
             }) : [];
@@ -202,17 +122,11 @@ class GalleryManager extends Service
                     $total += $calc->calculateReward($criteria);
                 }
                 $data['data']['total'] = $total;
-=======
-            if(isset($currencyFormData) && $currencyFormData) {
-                $data['data']['currencyData'] = $currencyFormData;
-                $data['data']['total'] = calculateGroupCurrency($currencyFormData);
->>>>>>> Cylunny/extension/polls-and-forms
                 $data['data'] = collect($data['data'])->toJson();
             }
 
             $submission->update($data);
 
-<<<<<<< HEAD
             if (isset($data['image']) && $data['image']) {
                 $this->processImage($data, $submission);
             }
@@ -232,33 +146,12 @@ class GalleryManager extends Service
                         Notifications::create('GALLERY_SUBMISSION_COLLABORATOR', User::find($collaborator), [
                             'sender_url'    => $user->url,
                             'sender'        => $user->name,
-=======
-            if(isset($data['image']) && $data['image']) $this->processImage($data, $submission);
-            $submission->update();
-
-            if(isset($data['collaborator_id']) && $collaborators->count()) {
-                // Attach any collaborators to the submission
-                foreach($data['collaborator_id'] as $key=>$collaborator) {
-                    GalleryCollaborator::create([
-                        'user_id' => $collaborator,
-                        'gallery_submission_id' => $submission->id,
-                        'data' => $data['collaborator_data'][$key],
-                        'has_approved' => $collaborator == $user->id ? 1 : 0,
-                    ]);
-
-                    // Notify collaborators (but not the submitting user)
-                    if($collaborator != $user->id) {
-                        Notifications::create('GALLERY_SUBMISSION_COLLABORATOR', User::find($collaborator), [
-                            'sender_url' => $user->url,
-                            'sender' => $user->name,
->>>>>>> Cylunny/extension/polls-and-forms
                             'submission_id' => $submission->id,
                         ]);
                     }
                 }
             }
 
-<<<<<<< HEAD
             if (isset($data['participant_id']) && $participants->count()) {
                 // Attach any participants to the submission
                 foreach ($data['participant_id'] as $key=> $participant) {
@@ -268,36 +161,18 @@ class GalleryManager extends Service
                         'data'                  => null,
                         'has_approved'          => 1,
                         'type'                  => $data['participant_type'][$key],
-=======
-            if(isset($data['participant_id']) && $participants->count()) {
-                // Attach any participants to the submission
-                foreach($data['participant_id'] as $key=>$participant) {
-                    GalleryCollaborator::create([
-                        'user_id' => $participant,
-                        'gallery_submission_id' => $submission->id,
-                        'data' => null,
-                        'has_approved' => 1,
-                        'type' => $data['participant_type'][$key]
->>>>>>> Cylunny/extension/polls-and-forms
                     ]);
                 }
             }
 
             // Attach any characters to the submission
-<<<<<<< HEAD
             foreach ($characters as $character) {
                 GalleryCharacter::create([
                     'character_id'          => $character->id,
-=======
-            foreach($characters as $character) {
-                GalleryCharacter::create([
-                    'character_id' => $character->id,
->>>>>>> Cylunny/extension/polls-and-forms
                     'gallery_submission_id' => $submission->id,
                 ]);
             }
 
-<<<<<<< HEAD
             if (!$submission->collaborators->count() && (!Settings::get('gallery_submissions_require_approval') || (Settings::get('gallery_submissions_require_approval') && $submission->gallery->votes_required == 0))) {
                 $this->acceptSubmission($submission);
             }
@@ -307,21 +182,12 @@ class GalleryManager extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(!$submission->collaborators->count() && (!Settings::get('gallery_submissions_require_approval') || (Settings::get('gallery_submissions_require_approval') && $submission->gallery->votes_required == 0))) $this->acceptSubmission($submission);
-
-            return $this->commitReturn($submission);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a gallery submission.
      *
-<<<<<<< HEAD
      * @param GallerySubmission $submission
      * @param array             $data
      * @param User              $user
@@ -329,20 +195,10 @@ class GalleryManager extends Service
      * @return bool|GallerySubmission
      */
     public function updateSubmission($submission, $data, $user) {
-=======
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  array                                  $data
-     * @param  \App\Models\User\User                  $user
-     * @return bool|\App\Models\Gallery\GallerySubmission
-     */
-    public function updateSubmission($submission, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // Check that the user can edit the submission
-<<<<<<< HEAD
             if (!$submission->user_id == $user->id && !$user->hasPower('manage_submissions')) {
                 throw new \Exception("You can't edit this submission.");
             }
@@ -373,28 +229,12 @@ class GalleryManager extends Service
                 } else {
                     $collaborators = [];
                 }
-=======
-            if(!$submission->user_id == $user->id && !$user->hasPower('manage_submissions')) throw new \Exception("You can't edit this submission.");
-
-            // Check that there is text and/or an image, including if there is an existing image (via the existence of a hash)
-            if((!isset($data['image']) && !isset($submission->hash)) && !$data['text']) throw new \Exception("Please submit either text or an image.");
-
-            // If still pending, perform validation on and process collaborators and participants
-            if($submission->status == 'Pending') {
-                // Check that associated collaborators exist
-                if(isset($data['collaborator_id'])) {
-                    $collaborators = User::whereIn('id', $data['collaborator_id'])->get();
-                    if(count($collaborators) != count($data['collaborator_id'])) throw new \Exception("One or more of the selected users does not exist, or you have entered a duplicate.");
-                }
-                else $collaborators = [];
->>>>>>> Cylunny/extension/polls-and-forms
 
                 // Fetch collaborator approval data
                 $collaboratorApproval = $submission->collaborators->pluck('has_approved', 'user_id');
                 // Remove all collaborators from the submission so they can be reattached with new data
                 $submission->collaborators()->delete();
 
-<<<<<<< HEAD
                 if (isset($data['collaborator_id']) && $collaborators->count()) {
                     // Attach any collaborators to the submission
                     foreach ($data['collaborator_id'] as $key=> $collaborator) {
@@ -403,22 +243,11 @@ class GalleryManager extends Service
                             'gallery_submission_id' => $submission->id,
                             'data'                  => $data['collaborator_data'][$key],
                             'has_approved'          => $collaboratorApproval[$collaborator] ?? ($collaborator == $user->id ? 1 : 0),
-=======
-                if(isset($data['collaborator_id']) && $collaborators->count()) {
-                    // Attach any collaborators to the submission
-                    foreach($data['collaborator_id'] as $key=>$collaborator) {
-                        GalleryCollaborator::create([
-                            'user_id' => $collaborator,
-                            'gallery_submission_id' => $submission->id,
-                            'data' => $data['collaborator_data'][$key],
-                            'has_approved' => isset($collaboratorApproval[$collaborator]) ? $collaboratorApproval[$collaborator] : ($collaborator == $user->id ? 1 : 0),
->>>>>>> Cylunny/extension/polls-and-forms
                         ]);
                     }
                 }
 
                 // Check that associated participants exist
-<<<<<<< HEAD
                 if (isset($data['participant_id'])) {
                     $participants = User::whereIn('id', $data['participant_id'])->get();
                     if (count($participants) != count($data['participant_id'])) {
@@ -427,18 +256,10 @@ class GalleryManager extends Service
                 } else {
                     $participants = [];
                 }
-=======
-                if(isset($data['participant_id'])) {
-                    $participants = User::whereIn('id', $data['participant_id'])->get();
-                    if(count($participants) != count($data['participant_id'])) throw new \Exception("One or more of the selected participants does not exist, or you have entered a duplicate.");
-                }
-                else $participants = [];
->>>>>>> Cylunny/extension/polls-and-forms
 
                 // Remove all participants from the submission so they can be reattached with new data
                 $submission->participants()->delete();
 
-<<<<<<< HEAD
                 if (isset($data['participant_id']) && $participants->count()) {
                     // Attach any participants to the submission
                     foreach ($data['participant_id'] as $key=> $participant) {
@@ -448,24 +269,12 @@ class GalleryManager extends Service
                             'data'                  => null,
                             'has_approved'          => 1,
                             'type'                  => $data['participant_type'][$key],
-=======
-                if(isset($data['participant_id']) && $participants->count()) {
-                    // Attach any participants to the submission
-                    foreach($data['participant_id'] as $key=>$participant) {
-                        GalleryCollaborator::create([
-                            'user_id' => $participant,
-                            'gallery_submission_id' => $submission->id,
-                            'data' => null,
-                            'has_approved' => 1,
-                            'type' => $data['participant_type'][$key]
->>>>>>> Cylunny/extension/polls-and-forms
                         ]);
                     }
                 }
             }
 
             // Check that associated characters exist
-<<<<<<< HEAD
             if (isset($data['slug'])) {
                 $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
@@ -474,33 +283,19 @@ class GalleryManager extends Service
             } else {
                 $characters = [];
             }
-=======
-            if(isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
-                if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters does not exist, or you have entered a duplicate.");
-            }
-            else $characters = [];
->>>>>>> Cylunny/extension/polls-and-forms
 
             // Remove all characters from the submission so they can be reattached with new data
             $submission->characters()->delete();
 
             // Attach any characters to the submission
-<<<<<<< HEAD
             foreach ($characters as $character) {
                 GalleryCharacter::create([
                     'character_id'          => $character->id,
-=======
-            foreach($characters as $character) {
-                GalleryCharacter::create([
-                    'character_id' => $character->id,
->>>>>>> Cylunny/extension/polls-and-forms
                     'gallery_submission_id' => $submission->id,
                 ]);
             }
 
             // Check that the selected prompt exists and can be submitted to
-<<<<<<< HEAD
             if (isset($data['prompt_id'])) {
                 $prompt = $user->hasPower('manage_submissions') ? Prompt::find($data['prompt_id']) : Prompt::active()->find($data['prompt_id']);
                 if (!$prompt) {
@@ -525,28 +320,11 @@ class GalleryManager extends Service
                 if (!isset($data['gallery_id']) && !$data['gallery_id']) {
                     $data['gallery_id'] = $submission->gallery->id;
                 }
-=======
-            if(isset($data['prompt_id'])) {
-                $prompt = $user->hasPower('manage_submissions') ? Prompt::find($data['prompt_id']) : Prompt::active()->find($data['prompt_id']);
-                if(!$prompt) throw new \Exception("Invalid prompt selected.");
-            }
-
-            if((isset($submission->parsed_description) && $submission->parsed_description) && !isset($data['description'])) $data['parsed_description'] = null;
-            if((isset($submission->parsed_text) && $submission->parsed_text) && !isset($data['text'])) $data['parsed_text'] = null;
-
-            $data = $this->populateData($data);
-            if(isset($data['image']) && $data['image']) $this->processImage($data, $submission);
-
-            // Processing relating to staff edits
-            if($user->hasPower('manage_submissions')) {
-                if(!isset($data['gallery_id']) && !$data['gallery_id']) $data['gallery_id'] = $submission->gallery->id;
->>>>>>> Cylunny/extension/polls-and-forms
 
                 $data['staff_id'] = $user->id;
             }
 
             // Send notifications for staff edits if necessary
-<<<<<<< HEAD
             if ($user->hasPower('manage_submissions') && $user->id != $submission->user->id && (isset($data['alert_user']) && $data['alert_user'])) {
                 if ($data['gallery_id'] != $submission->gallery_id) {
                     Notifications::create('GALLERY_SUBMISSION_MOVED', $submission->user, [
@@ -561,23 +339,6 @@ class GalleryManager extends Service
                         'submission_id'    => $submission->id,
                         'staff_url'        => $user->url,
                         'staff_name'       => $user->name,
-=======
-            if($user->hasPower('manage_submissions') && $user->id != $submission->user->id && (isset($data['alert_user']) && $data['alert_user'])) {
-                if($data['gallery_id'] != $submission->gallery_id) {
-                    Notifications::create('GALLERY_SUBMISSION_MOVED', $submission->user, [
-                        'submission_title' => $submission->title,
-                        'submission_id' => $submission->id,
-                        'staff_url' => $user->url,
-                        'staff_name' => $user->name,
-                    ]);
-                }
-                else {
-                    Notifications::create('GALLERY_SUBMISSION_EDITED', $submission->user, [
-                        'submission_title' => $submission->title,
-                        'submission_id' => $submission->id,
-                        'staff_url' => $user->url,
-                        'staff_name' => $user->name,
->>>>>>> Cylunny/extension/polls-and-forms
                     ]);
                 }
             }
@@ -585,21 +346,14 @@ class GalleryManager extends Service
             $submission->update($data);
 
             return $this->commitReturn($submission);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Processes collaborator edits/approvals on a submission.
      *
      * @param GallerySubmission $submission
@@ -609,69 +363,10 @@ class GalleryManager extends Service
      * @return bool|GalleryFavorite
      */
     public function editCollaborator($submission, $data, $user) {
-=======
-     * Processes user input for creating/updating a gallery submission.
-     *
-     * @param  array                                  $data
-     * @return array
-     */
-    private function populateData($data)
-    {
-        // Parse any text
-        if(isset($data['text']) && $data['text']) $data['parsed_text'] = parse($data['text']);
-        if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
-
-        return $data;
-    }
-
-    /**
-     * Processes gallery submission images.
-     *
-     * @param  array                                  $data
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @return array
-     */
-    private function processImage($data, $submission)
-    {
-        if(isset($submission->hash)) {
-            unlink($submission->imagePath . '/' . $submission->imageFileName);
-            unlink($submission->imagePath . '/' . $submission->thumbnailFileName);
-        }
-        $submission->hash = randomString(10);
-        $submission->extension = $data['image']->getClientOriginalExtension();
-
-        // Save image itself
-        $this->handleImage($data['image'], $submission->imageDirectory, $submission->imageFileName);
-
-        // Process thumbnail
-        $thumbnail = Image::make($submission->imagePath . '/' .  $submission->imageFileName);
-        // Resize
-        $thumbnail->resize(null, Config::get('lorekeeper.settings.masterlist_thumbnails.height'), function ($constraint) {
-            $constraint->aspectRatio();
-            $constraint->upsize();
-        });
-
-        // Save thumbnail
-        $thumbnail->save($submission->thumbnailPath . '/' . $submission->thumbnailFileName);
-
-        return $submission;
-    }
-
-    /**
-     * Processes collaborator edits/approvals on a submission.
-     *
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  \App\Models\User\User                  $user
-     * @return bool|\App\Models\Gallery\GalleryFavorite
-     */
-    public function editCollaborator($submission, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // Check that the submission is pending and the user is a collaborator on it
-<<<<<<< HEAD
             if (!$submission->status == 'Pending') {
                 throw new \Exception("This submission isn't pending.");
             }
@@ -681,13 +376,6 @@ class GalleryManager extends Service
 
             // Check if the user has requested to be removed from the submission
             if (isset($data['remove_user']) && $data['remove_user']) {
-=======
-            if(!$submission->status == 'Pending') throw new \Exception("This submission isn't pending.");
-            if($submission->collaborators->where('user_id', $user->id)->first() == null) throw new \Exception("You aren't a collaborator on this submission.");
-
-            // Check if the user has requested to be removed from the submission
-            if(isset($data['remove_user']) && $data['remove_user']) {
->>>>>>> Cylunny/extension/polls-and-forms
                 $submission->collaborators()->where('user_id', $user->id)->delete();
             }
             // Otherwise update the record of their contribution and mark them as having approved
@@ -698,7 +386,6 @@ class GalleryManager extends Service
 
                 // Check if all collaborators have approved, and if so send a notification to the
                 // submitting user (unless they are the last to approve-- which shouldn't happen, but)
-<<<<<<< HEAD
                 if ($submission->collaboratorApproval) {
                     if (Settings::get('gallery_submissions_require_approval') && $submission->gallery->votes_required > 0) {
                         if ($submission->user->id != $user->id) {
@@ -710,39 +397,20 @@ class GalleryManager extends Service
                     } else {
                         $this->acceptSubmission($submission);
                     }
-=======
-                if($submission->collaboratorApproved) {
-                    if(Settings::get('gallery_submissions_require_approval') && $submission->gallery->votes_required > 0) {
-                        if($submission->user->id != $user->id) {
-                            Notifications::create('GALLERY_COLLABORATORS_APPROVED', $submission->user, [
-                                'submission_title' => $submission->title,
-                                'submission_id' => $submission->id,
-                            ]);
-                        }
-                    }
-                    else $this->acceptSubmission($submission);
->>>>>>> Cylunny/extension/polls-and-forms
                 }
             }
 
             return $this->commitReturn($submission);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Votes on a gallery submission.
      *
-<<<<<<< HEAD
      * @param string            $action
      * @param GallerySubmission $submission
      * @param User              $user
@@ -761,22 +429,6 @@ class GalleryManager extends Service
             }
 
             switch ($action) {
-=======
-     * @param  string                                 $action
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  \App\Models\User\User                  $user
-     * @return  bool
-     */
-    public function castVote($action, $submission, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            if($submission->status != 'Pending') throw new \Exception("This request cannot be processed.");
-            if(!$submission->collaboratorApproved) throw new \Exception("This submission's collaborators have not all approved yet.");
-
-            switch($action) {
->>>>>>> Cylunny/extension/polls-and-forms
                 default:
                     flash('Invalid action.')->error();
                     break;
@@ -790,18 +442,13 @@ class GalleryManager extends Service
 
             // Get existing vote data if it exists, remove any existing vote data for the user,
             // add the new vote data, and json encode it
-<<<<<<< HEAD
             $voteData = (isset($submission->attributes['vote_data']) ? collect(json_decode($submission->attributes['vote_data'], true)) : collect([]));
-=======
-            $voteData = (isset($submission->vote_data) ? collect(json_decode($submission->vote_data, true)) : collect([]));
->>>>>>> Cylunny/extension/polls-and-forms
             $voteData->get($user->id) ? $voteData->pull($user->id) : null;
             $voteData->put($user->id, $vote);
             $submission->vote_data = $voteData->toJson();
 
             $submission->save();
 
-<<<<<<< HEAD
             // Process the submission if the required number of votes has been reached
             if ($action == 'reject' && $submission->getVoteData()['reject'] >= $submission->gallery->votes_required) {
                 $this->rejectSubmission($submission, $user);
@@ -819,32 +466,12 @@ class GalleryManager extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            // Count up the existing votes to see if the required number has been reached
-            $rejectSum = 0;
-            $approveSum = 0;
-            foreach($submission->voteData as $voter=>$vote) {
-                if($vote == 1) $rejectSum += 1;
-                if($vote == 2) $approveSum += 1;
-            }
-
-            // And if so, process the submission
-            if($action == 'reject' && $rejectSum >= $submission->gallery->votes_required)
-            $this->rejectSubmission($submission);
-            if($action == 'accept' && $approveSum >= $submission->gallery->votes_required) $this->acceptSubmission($submission);
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes staff comments for a submission.
      *
-<<<<<<< HEAD
      * @param User  $user
      * @param mixed $id
      * @param mixed $data
@@ -852,20 +479,11 @@ class GalleryManager extends Service
      * @return bool|GalleryFavorite
      */
     public function postStaffComments($id, $data, $user) {
-=======
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  \App\Models\User\User                  $user
-     * @return bool|\App\Models\Gallery\GalleryFavorite
-     */
-    public function postStaffComments($id, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $submission = GallerySubmission::find($id);
             // Check that the submission exists and that the user can edit staff comments
-<<<<<<< HEAD
             if (!$submission) {
                 throw new \Exception('Invalid submission selected.');
             }
@@ -890,45 +508,18 @@ class GalleryManager extends Service
                     'sender_url'       => $user->url,
                     'submission_title' => $submission->title,
                     'submission_id'    => $submission->id,
-=======
-            if(!$submission) throw new \Exception("Invalid submission selected.");
-            if(!$user->hasPower('manage_submissions')) throw new \Exception("You can't edit staff comments on this submission.");
-
-            // Parse comments
-            if(isset($data['staff_comments']) && $data['staff_comments']) $data['parsed_staff_comments'] = parse($data['staff_comments']);
-
-            $submission->update([
-                'staff_comments' => $data['staff_comments'],
-                'parsed_staff_comments' => $data['parsed_staff_comments'],
-                'staff_id' => $user->id,
-            ]);
-
-            if(isset($data['alert_user'])) {
-                Notifications::create('GALLERY_SUBMISSION_STAFF_COMMENTS', $submission->user, [
-                    'sender' => $user->name,
-                    'sender_url' => $user->url,
-                    'submission_title' => $submission->title,
-                    'submission_id' => $submission->id,
->>>>>>> Cylunny/extension/polls-and-forms
                 ]);
             }
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Archives a submission.
      *
      * @param GallerySubmission $submission
@@ -1149,98 +740,30 @@ class GalleryManager extends Service
                         'submission_title' => $submission->title,
                         'submission_id'    => $submission->id,
                     ]);
-=======
-     * Processes acceptance for a submission.
-     *
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @return bool|\App\Models\Gallery\GallerySubmission
-     */
-    private function acceptSubmission($submission)
-    {
-        DB::beginTransaction();
-
-        try {
-            // Check that the submission exists and is pending
-            if(!$submission) throw new \Exception("Invalid submission selected.");
-            if($submission->status != 'Pending') throw new \Exception("This submission isn't pending.");
-
-            $submission->update(['status' => 'Accepted']);
-
-            // If the submission wouldn't have been automatically approved, send a notification
-            if(Settings::get('gallery_submissions_require_approval') || (!Settings::get('gallery_submissions_require_approval') && $submission->collaborators->count())) {
-                Notifications::create('GALLERY_SUBMISSION_ACCEPTED', $submission->user, [
-                    'submission_title' => $submission->title,
-                    'submission_id' => $submission->id
-                ]);
-            }
-
-            if($submission->characters->count()) {
-                // Send a notification to included characters' owners now that the submission is accepted
-                // but not for the submitting user's own characters
-                foreach($submission->characters as $character) {
-                    if($character->user && $character->character->user->id != $submission->user->id) {
-                        Notifications::create('GALLERY_SUBMISSION_CHARACTER', $character->character->user, [
-                            'sender' => $submission->user->name,
-                            'sender_url' => $submission->user->url,
-                            'character_url' => $character->character->url,
-                            'character' => isset($character->character->name) ? $character->character->fullName : $character->character->slug,
-                            'submission_id' => $submission->id,
-                        ]);
-                    }
-                }
-            }
-
-            if($submission->participants->count()) {
-                // Send a notification to participants now that the submission is accepted
-                // but not for the submitting user
-                foreach($submission->participants as $participant) {
-                    if($participant->user->id != $submission->user->id) {
-                        Notifications::create('GALLERY_SUBMISSION_PARTICIPANT', $participant->user, [
-                            'sender_url' => $submission->user->url,
-                            'sender' => $submission->user->name,
-                            'submission_id' => $submission->id,
-                        ]);
-                    }
->>>>>>> Cylunny/extension/polls-and-forms
                 }
             }
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Processes rejection for a submission.
      *
-<<<<<<< HEAD
      * @param GallerySubmission $submission
      * @param mixed             $user
      *
      * @return bool|GallerySubmission
      */
     public function rejectSubmission($submission, $user) {
-=======
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @return bool|\App\Models\Gallery\GallerySubmission
-     */
-    private function rejectSubmission($submission)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // Check that the submission exists and is pending
-<<<<<<< HEAD
             if (!$submission) {
                 throw new \Exception('Invalid submission selected.');
             }
@@ -1251,16 +774,11 @@ class GalleryManager extends Service
             if (!$this->logAdminAction($user, 'Rejected Gallery Submission', 'Rejected gallery submission '.$submission->displayName)) {
                 throw new \Exception('Failed to log admin action.');
             }
-=======
-            if(!$submission) throw new \Exception("Invalid submission selected.");
-            if($submission->status != 'Pending') throw new \Exception("This submission isn't pending.");
->>>>>>> Cylunny/extension/polls-and-forms
 
             $submission->update(['status' => 'Rejected']);
 
             Notifications::create('GALLERY_SUBMISSION_REJECTED', $submission->user, [
                 'submission_title' => $submission->title,
-<<<<<<< HEAD
                 'submission_id'    => $submission->id,
             ]);
 
@@ -1269,20 +787,10 @@ class GalleryManager extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-                'submission_id' => $submission->id,
-            ]);
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Processes user input for creating/updating a gallery submission.
      *
      * @param array $data
@@ -1439,194 +947,14 @@ class GalleryManager extends Service
                             'submission_id' => $submission->id,
                         ]);
                     }
-=======
-     * Archives a submission.
-     *
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @return bool
-     */
-    public function archiveSubmission($submission, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            if(!$submission) throw new \Exception("Invalid submission selected.");
-            if($submission->user->id != $user->id && !$user->hasPower('manage_submissions')) throw new \Exception("You can't archive this submission.");
-
-            if($submission->is_visible) $submission->update(['is_visible' => 0]);
-            else $submission->update(['is_visible' => 1]);
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Processes group currency evaluation for a submission.
-     *
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  \App\Models\User\User                  $user
-     * @return bool|\App\Models\Gallery\GalleryFavorite
-     */
-    public function postValueSubmission($id, $data, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            $submission = GallerySubmission::find($id);
-            // Check that the submission exists and that the user can value it
-            if(!$submission) throw new \Exception("Invalid submission selected.");
-            if(!$user->hasPower('manage_submissions')) throw new \Exception("You can't evaluate this submission.");
-
-            if(!isset($data['ineligible'])) {
-                // Process data and award currency for each user associated with the submission
-                // First, set up CurrencyManager instance and log information
-                $currencyManager = new CurrencyManager;
-                $currency = Currency::find(Settings::get('group_currency'));
-
-                $awardType = 'Gallery Submission Reward';
-                $awardData = 'Received reward for gallery submission (<a href="'.$submission->url.'">#'.$submission->id.'</a>)';
-
-                $grantedList = [];
-                $awardQuantity = [];
-
-                // Then cycle through associated users and award currency
-                if(isset($data['value']['submitted'])) {
-                    if(!$currencyManager->creditCurrency($user, $submission->user, $awardType, $awardData, $currency, $data['value']['submitted'][$submission->user->id])) throw new \Exception("Failed to award currency to submitting user.");
-
-                    $grantedList[] = $submission->user;
-                    $awardQuantity[] = $data['value']['submitted'][$submission->user->id];
-                }
-
-                if(isset($data['value']['collaborator'])) {
-                    foreach($submission->collaborators as $collaborator) {
-                        if($data['value']['collaborator'][$collaborator->user->id] > 0) {
-                            // Double check that the submitting user isn't being awarded currency twice
-                            if(isset($data['value']['submitted']) && $collaborator->user->id == $submission->user->id) throw new \Exception("Can't award currency to the submitting user twice.");
-
-                            if(!$currencyManager->creditCurrency($user, $collaborator->user, $awardType, $awardData, $currency, $data['value']['collaborator'][$collaborator->user->id])) throw new \Exception("Failed to award currency to one or more collaborators.");
-
-                            $grantedList[] = $collaborator->user;
-                            $awardQuantity[] = $data['value']['collaborator'][$collaborator->user->id];
-                        }
-                    }
-                }
-
-                if(isset($data['value']['participant'])) {
-                    foreach($submission->participants as $participant) {
-                        if($data['value']['participant'][$participant->user->id] > 0) {
-                            if(!$currencyManager->creditCurrency($user, $participant->user, $awardType, $awardData, $currency, $data['value']['participant'][$participant->user->id])) throw new \Exception("Failed to award currency to one or more participants.");
-
-                            $grantedList[] = $participant->user;
-                            $awardQuantity[] = $data['value']['participant'][$participant->user->id];
-                        }
-                    }
-                }
-
-                // Collect and json encode existing as well as new data for storage
-                if(isset($submission->data['total'])) $valueData = collect([
-                    'currencyData' => $submission->data['currencyData'],
-                    'total' => $submission->data['total'],
-                    'value' => $data['value'],
-                    'staff' => $user->id,
-                ])->toJson();
-                else $valueData = collect(['value' => $data['value'], 'staff' => $user->id])->toJson();
-
-                // Update the submission with the new data and mark it as processed
-                $submission->update([
-                    'data' => $valueData,
-                    'is_valued' => 1,
-                ]);
-
-                // Send a notification to each user that received a currency award
-                foreach($grantedList as $key=>$grantedUser) {
-                    Notifications::create('GALLERY_SUBMISSION_VALUED', $grantedUser, [
-                        'currency_quantity' => $awardQuantity[$key],
-                        'currency_name' => $currency->name,
-                        'submission_title' => $submission->title,
-                        'submission_id' => $submission->id,
-                    ]);
-                }
-            }
-            else {
-                // Collect and json encode existing as well as new data for storage
-                if(isset($submission->data['total'])) $valueData = collect([
-                    'currencyData' => $submission->data['currencyData'],
-                    'total' => $submission->data['total'],
-                    'ineligible' => 1,
-                    'staff' => $user->id,
-                ])->toJson();
-                else $valueData = collect(['ineligible' => 1, 'staff' => $user->id])->toJson();
-
-                // Update the submission, including marking it as processed
-                $submission->update([
-                    'data' => $valueData,
-                    'is_valued' => 1,
-                ]);
-
-            }
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Toggles favorite status on a submission for a user.
-     *
-     * @param  \App\Models\Gallery\GallerySubmission  $submission
-     * @param  \App\Models\User\User                  $user
-     * @return bool|\App\Models\Gallery\GalleryFavorite
-     */
-    public function favoriteSubmission($submission, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            // Check that the submission can be favorited
-            if(!$submission->isVisible) throw new \Exception("This submission isn't visible to be favorited.");
-            if($submission->user->id == $user->id || $submission->collaborators->where('user_id', $user->id)->first() != null) throw new \Exception("You can't favorite your own submission!");
-
-            // Check if the user has an existing favorite, and if so, delete it
-            // or else create one.
-            if($submission->favorites->where('user_id', $user->id)->first() != null) {
-                $submission->favorites()->where('user_id', $user->id)->delete();
-            }
-            else {
-                GalleryFavorite::create([
-                    'user_id' => $user->id,
-                    'gallery_submission_id' => $submission->id,
-                ]);
-
-                if($submission->user->id != $user->id) {
-                    Notifications::create('GALLERY_SUBMISSION_FAVORITE', $submission->user, [
-                        'sender_url' => $user->url,
-                        'sender' => $user->name,
-                        'submission_title' => $submission->title,
-                        'submission_id' => $submission->id,
-                    ]);
->>>>>>> Cylunny/extension/polls-and-forms
                 }
             }
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
         return $this->rollbackReturn(false);
     }
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models\Gallery;
 
-<<<<<<< HEAD
 use App\Facades\Settings;
 use App\Models\Comment\Comment;
 use App\Models\Currency\Currency;
@@ -14,21 +13,6 @@ use App\Models\WorldExpansion\Location;
 use App\Traits\Commentable;
 
 class GallerySubmission extends Model {
-=======
-use Config;
-use DB;
-use Settings;
-use Carbon\Carbon;
-use App\Models\Currency\Currency;
-use App\Models\Prompt\Prompt;
-use App\Models\Submission\Submission;
-use App\Models\Model;
-
-use App\Traits\Commentable;
-
-class GallerySubmission extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     use Commentable;
 
     /**
@@ -42,12 +26,8 @@ class GallerySubmission extends Model
         'title', 'description', 'parsed_description',
         'prompt_id', 'data', 'is_visible', 'status',
         'vote_data', 'staff_id', 'is_valued',
-<<<<<<< HEAD
         'staff_comments', 'parsed_staff_comments',
         'location_id',
-=======
-        'staff_comments', 'parsed_staff_comments'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -58,7 +38,6 @@ class GallerySubmission extends Model
     protected $table = 'gallery_submissions';
 
     /**
-<<<<<<< HEAD
      * The relationships that should always be loaded.
      *
      * @var array
@@ -77,8 +56,6 @@ class GallerySubmission extends Model
     ];
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -91,15 +68,9 @@ class GallerySubmission extends Model
      * @var array
      */
     public static $createRules = [
-<<<<<<< HEAD
         'title'       => 'required|between:3,200',
         'image'       => 'required_without:text|mimes:png,jpeg,jpg,gif,webp|max:3000',
         'text'        => 'required_without:image',
-=======
-        'title' => 'required|between:3,200',
-        'image' => 'required_without:text|mimes:png,jpeg,jpg,gif|max:3000',
-        'text' => 'required_without:image',
->>>>>>> Cylunny/extension/polls-and-forms
         'description' => 'nullable',
     ];
 
@@ -109,15 +80,9 @@ class GallerySubmission extends Model
      * @var array
      */
     public static $updateRules = [
-<<<<<<< HEAD
         'title'       => 'required|between:3,200',
         'description' => 'nullable',
         'image'       => 'mimes:png,jpeg,jpg,gif,webp|max:3000',
-=======
-        'title' => 'required|between:3,200',
-        'description' => 'nullable',
-        'image' => 'mimes:png,jpeg,jpg,gif|max:3000'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
@@ -129,98 +94,55 @@ class GallerySubmission extends Model
     /**
      * Get the user who made the submission.
      */
-<<<<<<< HEAD
     public function user() {
         return $this->belongsTo(User::class);
-=======
-    public function user()
-    {
-        return $this->belongsTo('App\Models\User\User', 'user_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the staff member who last edited the submission's comments.
      */
-<<<<<<< HEAD
     public function staff() {
         return $this->belongsTo(User::class, 'staff_id');
-=======
-    public function staff()
-    {
-        return $this->belongsTo('App\Models\User\User', 'staff_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the collaborating users on the submission.
      */
-<<<<<<< HEAD
     public function collaborators() {
         return $this->hasMany(GalleryCollaborator::class)->where('type', 'Collab');
-=======
-    public function collaborators()
-    {
-        return $this->hasMany('App\Models\Gallery\GalleryCollaborator', 'gallery_submission_id')->where('type', 'Collab');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the user(s) who are related to the submission in some way.
      */
-<<<<<<< HEAD
     public function participants() {
         return $this->hasMany(GalleryCollaborator::class)->where('type', '!=', 'Collab');
-=======
-    public function participants()
-    {
-        return $this->hasMany('App\Models\Gallery\GalleryCollaborator', 'gallery_submission_id')->where('type', '!=', 'Collab');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the characters associated with the submission.
      */
-<<<<<<< HEAD
     public function characters() {
         return $this->hasMany(GalleryCharacter::class);
-=======
-    public function characters()
-    {
-        return $this->hasMany('App\Models\Gallery\GalleryCharacter', 'gallery_submission_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get any favorites on the submission.
      */
-<<<<<<< HEAD
     public function favorites() {
         return $this->hasMany(GalleryFavorite::class);
-=======
-    public function favorites()
-    {
-        return $this->hasMany('App\Models\Gallery\GalleryFavorite', 'gallery_submission_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the gallery this submission is in.
      */
-<<<<<<< HEAD
     public function gallery() {
         return $this->belongsTo(Gallery::class);
-=======
-    public function gallery()
-    {
-        return $this->belongsTo('App\Models\Gallery\Gallery', 'gallery_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the prompt this submission is for if relevant.
      */
-<<<<<<< HEAD
     public function prompt() {
         return $this->belongsTo(Prompt::class);
     }
@@ -237,11 +159,6 @@ class GallerySubmission extends Model
      */
     public function location() {
         return $this->belongsTo(Location::class, 'location_id');
-=======
-    public function prompt()
-    {
-        return $this->belongsTo('App\Models\Prompt\Prompt', 'prompt_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
@@ -253,26 +170,17 @@ class GallerySubmission extends Model
     /**
      * Scope a query to only include pending submissions.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopePending($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopePending($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('status', 'Pending');
     }
 
     /**
      * Scope a query to only include submissions where all collaborators have approved.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -281,58 +189,33 @@ class GallerySubmission extends Model
         return $query->whereDoesntHave('collaborators', function ($query) {
             $query->where('has_approved', 0);
         })->orWhereDoesntHave('collaborators');
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCollaboratorApproved($query)
-    {
-        return $query->whereNotIn('id', GalleryCollaborator::where('has_approved', 0)->pluck('gallery_submission_id')->toArray());
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to only include accepted submissions.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeAccepted($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeAccepted($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('status', 'Accepted');
     }
 
     /**
      * Scope a query to only include rejected submissions.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeRejected($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeRejected($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('status', 'Rejected');
     }
 
     /**
      * Scope a query to only include submissions that require currency awards.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -343,21 +226,11 @@ class GallerySubmission extends Model
         }
 
         return $query->where('status', 'Accepted')->whereIn('gallery_id', Gallery::has('criteria')->pluck('id')->toArray());
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeRequiresAward($query)
-    {
-        if(!Settings::get('gallery_submissions_reward_currency')) return $query->whereNull('id');
-        return $query->where('status', 'Accepted')->whereIn('gallery_id', Gallery::where('currency_enabled', 1)->pluck('id')->toArray());
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to only include submissions the user has either submitted or collaborated on.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param mixed                                 $user
      *
@@ -367,21 +240,11 @@ class GallerySubmission extends Model
         return $query->where('user_id', $user->id)->orWhereHas('collaborators', function ($query) use ($user) {
             $query->where('user_id', $user->id)->where('type', 'Collab');
         });
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param                                         $user
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeUserSubmissions($query, $user)
-    {
-        return $query->where('user_id', $user->id)->orWhereIn('id', GalleryCollaborator::where('user_id', $user->id)->where('type', 'Collab')->pluck('gallery_submission_id')->toArray());
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to only include submissions visible within the gallery.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param mixed|null                            $user
      *
@@ -417,17 +280,6 @@ class GallerySubmission extends Model
         return $query->orderBy('id', 'DESC');
     }
 
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeVisible($query, $user = null)
-    {
-        if($user && $user->hasPower('manage_submissions')) return $query->where('status', 'Accepted');
-        return $query->where('status', 'Accepted')->where('is_visible', 1);
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**********************************************************************************************
 
         ACCESSORS
@@ -439,12 +291,7 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
-=======
-    public function getImageDirectoryAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return 'images/gallery/'.floor($this->id / 1000);
     }
 
@@ -453,14 +300,8 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageFileNameAttribute() {
         return $this->id.'_'.$this->hash.'.'.$this->extension;
-=======
-    public function getImageFileNameAttribute()
-    {
-        return $this->id . '_'.$this->hash.'.'.$this->extension;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -468,12 +309,7 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImagePathAttribute() {
-=======
-    public function getImagePathAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return public_path($this->imageDirectory);
     }
 
@@ -482,19 +318,12 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageUrlAttribute() {
         if (!isset($this->hash)) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->imageFileName);
-=======
-    public function getImageUrlAttribute()
-    {
-        if(!isset($this->hash)) return null;
-        return asset($this->imageDirectory . '/' . $this->imageFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -502,14 +331,8 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getThumbnailFileNameAttribute() {
         return $this->id.'_'.$this->hash.'_th.'.$this->extension;
-=======
-    public function getThumbnailFileNameAttribute()
-    {
-        return $this->id . '_'.$this->hash.'_th.'.$this->extension;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -517,12 +340,7 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getThumbnailPathAttribute() {
-=======
-    public function getThumbnailPathAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->imagePath;
     }
 
@@ -531,19 +349,12 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getThumbnailUrlAttribute() {
         if (!isset($this->hash)) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->thumbnailFileName);
-=======
-    public function getThumbnailUrlAttribute()
-    {
-        if(!isset($this->hash)) return null;
-        return asset($this->imageDirectory . '/' . $this->thumbnailFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -551,39 +362,16 @@ class GallerySubmission extends Model
      *
      * @return array
      */
-<<<<<<< HEAD
     public function getDataAttribute() {
-=======
-    public function getDataAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return json_decode($this->attributes['data'], true);
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * Gets the voting data of the gallery submission.
-     *
-     * @return string
-     */
-    public function getVoteDataAttribute()
-    {
-        return collect(json_decode($this->attributes['vote_data'], true));
-    }
-
-    /**
->>>>>>> Cylunny/extension/polls-and-forms
      * Get the title of the submission, with prefix.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayTitleAttribute() {
-=======
-    public function getDisplayTitleAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->prefix.$this->attributes['title'];
     }
 
@@ -592,12 +380,7 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
-=======
-    public function getDisplayNameAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'">'.$this->displayTitle.'</a>';
     }
 
@@ -606,17 +389,11 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
-=======
-    public function getUrlAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return url('gallery/view/'.$this->id);
     }
 
     /**
-<<<<<<< HEAD
      * Get the prefix for a submission.
      *
      * @return string
@@ -632,21 +409,6 @@ class GallerySubmission extends Model
         }
         foreach ($this->participants as $participant) {
             switch ($participant->type) {
-=======
-     * Checks if all of a submission's collaborators have approved or no.
-     *
-     * @return string
-     */
-    public function getPrefixAttribute()
-    {
-        $currencyName = Currency::find(Settings::get('group_currency'))->abbreviation ? Currency::find(Settings::get('group_currency'))->abbreviation : Currency::find(Settings::get('group_currency'))->name;
-
-        $prefixList = [];
-        if($this->promptSubmissions->count()) foreach($this->prompts as $prompt) isset($prompt->prefix) ? ($prefixList[] = $prompt->prefix) : null;
-        elseif(isset($this->prompt_id)) isset($this->prompt->prefix) ? $prefixList[] = $this->prompt->prefix : null;
-        foreach($this->participants as $participant) {
-            switch($participant->type) {
->>>>>>> Cylunny/extension/polls-and-forms
                 case 'Collab':
                     $prefixList[] = 'Collab';
                     break;
@@ -660,23 +422,16 @@ class GallerySubmission extends Model
                     $prefixList[] = 'Comm';
                     break;
                 case 'Comm (Currency)':
-<<<<<<< HEAD
                     $currencyName = Currency::find(Settings::get('group_currency'))->abbreviation ? Currency::find(Settings::get('group_currency'))->abbreviation : Currency::find(Settings::get('group_currency'))->name;
 
-=======
->>>>>>> Cylunny/extension/polls-and-forms
                     $prefixList[] = 'Comm ('.$currencyName.')';
                     break;
             }
         }
-<<<<<<< HEAD
         if ($prefixList != null) {
             return '['.implode(' : ', array_unique($prefixList)).'] ';
         }
 
-=======
-        if($prefixList != null) return '['.implode(' : ', array_unique($prefixList)).'] ';
->>>>>>> Cylunny/extension/polls-and-forms
         return null;
     }
 
@@ -685,12 +440,7 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getQueueUrlAttribute() {
-=======
-    public function getQueueUrlAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return url('gallery/queue/'.$this->id);
     }
 
@@ -699,16 +449,10 @@ class GallerySubmission extends Model
      *
      * @return bool
      */
-<<<<<<< HEAD
     public function getIsVisibleAttribute() {
         if ($this->attributes['is_visible'] && $this->status == 'Accepted') {
             return true;
         }
-=======
-    public function getIsVisibleAttribute()
-    {
-        if($this->attributes['is_visible'] && $this->status == 'Accepted') return true;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -716,7 +460,6 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCreditsAttribute() {
         if ($this->collaborators->count()) {
             foreach ($this->collaborators as $collaborator) {
@@ -727,17 +470,6 @@ class GallerySubmission extends Model
         } else {
             return $this->user->displayName;
         }
-=======
-    public function getCreditsAttribute()
-    {
-        if($this->collaborators->count()) {
-            foreach($this->collaborators as $count=>$collaborator) {
-                $collaboratorList[] = $collaborator->user->displayName;
-            }
-            return implode(', ', $collaboratorList);
-        }
-        else return $this->user->displayName;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -745,7 +477,6 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCreditsPlainAttribute() {
         if ($this->collaborators->count()) {
             foreach ($this->collaborators as $collaborator) {
@@ -756,17 +487,6 @@ class GallerySubmission extends Model
         } else {
             return $this->user->name;
         }
-=======
-    public function getCreditsPlainAttribute()
-    {
-        if($this->collaborators->count()) {
-            foreach($this->collaborators as $count=>$collaborator) {
-                $collaboratorList[] = $collaborator->user->name;
-            }
-            return implode(', ', $collaboratorList);
-        }
-        else return $this->user->name;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -774,17 +494,11 @@ class GallerySubmission extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCollaboratorApprovalAttribute() {
         if ($this->collaborators->where('has_approved', 0)->count()) {
             return false;
         }
 
-=======
-    public function getCollaboratorApprovedAttribute()
-    {
-        if($this->collaborators->where('has_approved', 0)->count()) return false;
->>>>>>> Cylunny/extension/polls-and-forms
         return true;
     }
 
@@ -793,18 +507,10 @@ class GallerySubmission extends Model
      *
      * @return array
      */
-<<<<<<< HEAD
     public function getPromptSubmissionsAttribute() {
         // Only returns submissions which are viewable to everyone,
         // but given that this is for the sake of public display, that's fine
         return Submission::viewable()->whereNotNull('prompt_id')->where('url', 'like', '%'.request()->getHost().'/gallery/view/'.$this->id)->get();
-=======
-    public function getPromptSubmissionsAttribute()
-    {
-        // Only returns submissions which are viewable to everyone,
-        // but given that this is for the sake of public display, that's fine
-        return Submission::viewable()->whereNotNull('prompt_id')->where('url', $this->url)->get();
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -812,19 +518,13 @@ class GallerySubmission extends Model
      *
      * @return array
      */
-<<<<<<< HEAD
     public function getPromptsAttribute() {
-=======
-    public function getPromptsAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         // Only returns submissions which are viewable to everyone,
         // but given that this is for the sake of public display, that's fine
         return Prompt::whereIn('id', $this->promptSubmissions->pluck('prompt_id'))->get();
     }
 
     /**
-<<<<<<< HEAD
      * Gets prompt submissions associated with this gallery submission.
      *
      * @return array
@@ -847,13 +547,10 @@ class GallerySubmission extends Model
     }
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Gets the excerpt of text for a literature submission.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getExcerptAttribute() {
         if (!isset($this->parsed_text)) {
             return null;
@@ -907,12 +604,4 @@ class GallerySubmission extends Model
 
         return $voteData;
     }
-=======
-    public function getExcerptAttribute()
-    {
-        if(!isset($this->parsed_text)) return null;
-        else return strip_tags(substr($this->parsed_text, 0, 500)).(strlen($this->parsed_text) > 500 ? '...' : '');
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
 }

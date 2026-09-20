@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,21 +9,6 @@ class AdjustItemLogsForCharacterItems extends Migration {
      * Run the migrations.
      */
     public function up() {
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-class AdjustItemLogsForCharacterItems extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         //Drop character item logs table in favor of adjusting existing logs table to suit
         Schema::dropIfExists('character_items_log');
 
@@ -39,20 +23,10 @@ class AdjustItemLogsForCharacterItems extends Migration
 
     /**
      * Reverse the migrations.
-<<<<<<< HEAD
      */
     public function down() {
         //
         Schema::create('character_items_log', function (Blueprint $table) {
-=======
-     *
-     * @return void
-     */
-    public function down()
-    {
-        //
-        Schema::create('character_items_log', function(Blueprint $table) {
->>>>>>> Cylunny/extension/polls-and-forms
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('item_id')->unsigned();

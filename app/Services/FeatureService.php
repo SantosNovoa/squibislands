@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -11,22 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FeatureService extends Service {
-=======
-<?php namespace App\Services;
-
-use App\Services\Service;
-
-use DB;
-use Config;
-
-use App\Models\Feature\FeatureCategory;
-use App\Models\Feature\Feature;
-use App\Models\Species\Species;
-use App\Models\Species\Subtype;
-
-class FeatureService extends Service
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Feature Service
@@ -37,11 +20,6 @@ class FeatureService extends Service
     */
 
     /**********************************************************************************************
-<<<<<<< HEAD
-
-=======
-     
->>>>>>> Cylunny/extension/polls-and-forms
         FEATURE CATEGORIES
 
     **********************************************************************************************/
@@ -49,28 +27,18 @@ class FeatureService extends Service
     /**
      * Create a category.
      *
-<<<<<<< HEAD
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
      * @return bool|FeatureCategory
      */
     public function createFeatureCategory($data, $user) {
-=======
-     * @param  array                 $data
-     * @param  \App\Models\User\User $user
-     * @return \App\Models\Feature\FeatureCategory|bool
-     */
-    public function createFeatureCategory($data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $data = $this->populateCategoryData($data);
 
             $image = null;
-<<<<<<< HEAD
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
                 $data['hash'] = randomString(10);
@@ -95,30 +63,12 @@ class FeatureService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(isset($data['image']) && $data['image']) {
-                $data['has_image'] = 1;
-                $image = $data['image'];
-                unset($data['image']);
-            }
-            else $data['has_image'] = 0;
-
-            $category = FeatureCategory::create($data);
-
-            if ($image) $this->handleImage($image, $category->categoryImagePath, $category->categoryImageFileName);
-
-            return $this->commitReturn($category);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Update a category.
      *
-<<<<<<< HEAD
      * @param FeatureCategory       $category
      * @param array                 $data
      * @param \App\Models\User\User $user
@@ -126,20 +76,10 @@ class FeatureService extends Service
      * @return bool|FeatureCategory
      */
     public function updateFeatureCategory($category, $data, $user) {
-=======
-     * @param  \App\Models\Feature\FeatureCategory  $category
-     * @param  array                                $data
-     * @param  \App\Models\User\User                $user
-     * @return \App\Models\Feature\FeatureCategory|bool
-     */
-    public function updateFeatureCategory($category, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // More specific validation
-<<<<<<< HEAD
             if (FeatureCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) {
                 throw new \Exception('The name has already been taken.');
             }
@@ -150,22 +90,12 @@ class FeatureService extends Service
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
                 $data['hash'] = randomString(10);
-=======
-            if(FeatureCategory::where('name', $data['name'])->where('id', '!=', $category->id)->exists()) throw new \Exception("The name has already been taken.");
-
-            $data = $this->populateCategoryData($data, $category);
-
-            $image = null;            
-            if(isset($data['image']) && $data['image']) {
-                $data['has_image'] = 1;
->>>>>>> Cylunny/extension/polls-and-forms
                 $image = $data['image'];
                 unset($data['image']);
             }
 
             $category->update($data);
 
-<<<<<<< HEAD
             if (!$this->logAdminAction($user, 'Updated Feature Category', 'Updated '.$category->displayName)) {
                 throw new \Exception('Failed to log admin action.');
             }
@@ -179,19 +109,10 @@ class FeatureService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if ($category) $this->handleImage($image, $category->categoryImagePath, $category->categoryImageFileName);
-
-            return $this->commitReturn($category);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Delete a category.
      *
      * @param FeatureCategory $category
@@ -200,44 +121,10 @@ class FeatureService extends Service
      * @return bool
      */
     public function deleteFeatureCategory($category, $user) {
-=======
-     * Handle category data.
-     *
-     * @param  array                                     $data
-     * @param  \App\Models\Feature\FeatureCategory|null  $category
-     * @return array
-     */
-    private function populateCategoryData($data, $category = null)
-    {
-        if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
-        
-        if(isset($data['remove_image']))
-        {
-            if($category && $category->has_image && $data['remove_image']) 
-            { 
-                $data['has_image'] = 0; 
-                $this->deleteImage($category->categoryImagePath, $category->categoryImageFileName); 
-            }
-            unset($data['remove_image']);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Delete a category.
-     *
-     * @param  \App\Models\Feature\FeatureCategory  $category
-     * @return bool
-     */
-    public function deleteFeatureCategory($category)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // Check first if the category is currently in use
-<<<<<<< HEAD
             if (Feature::where('feature_category_id', $category->id)->exists()) {
                 throw new \Exception('A trait with this category exists. Please change its category first.');
             }
@@ -256,52 +143,28 @@ class FeatureService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(Feature::where('feature_category_id', $category->id)->exists()) throw new \Exception("A trait with this category exists. Please change its category first.");
-            
-            if($category->has_image) $this->deleteImage($category->categoryImagePath, $category->categoryImageFileName); 
-            $category->delete();
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Sorts category order.
      *
-<<<<<<< HEAD
      * @param array $data
      *
      * @return bool
      */
     public function sortFeatureCategory($data) {
-=======
-     * @param  array  $data
-     * @return bool
-     */
-    public function sortFeatureCategory($data)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // explode the sort array and reverse it since the order is inverted
             $sort = array_reverse(explode(',', $data));
 
-<<<<<<< HEAD
             foreach ($sort as $key => $s) {
-=======
-            foreach($sort as $key => $s) {
->>>>>>> Cylunny/extension/polls-and-forms
                 FeatureCategory::where('id', $s)->update(['sort' => $key]);
             }
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -311,17 +174,6 @@ class FeatureService extends Service
 
     /**********************************************************************************************
 
-=======
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
-    
-    /**********************************************************************************************
-     
->>>>>>> Cylunny/extension/polls-and-forms
         FEATURES
 
     **********************************************************************************************/
@@ -329,7 +181,6 @@ class FeatureService extends Service
     /**
      * Creates a new feature.
      *
-<<<<<<< HEAD
      * @param array                       $data
      * @param \App\Models\User\User       $user
      * @param \App\Models\Feature\Feature $parent
@@ -378,34 +229,11 @@ class FeatureService extends Service
                     ->where('species_id', $data['species_id']);
             })->exists()) {
                 throw new \Exception('The name has already been taken.');
-=======
-     * @param  array                  $data 
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Feature\Feature
-     */
-    public function createFeature($data, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            if(isset($data['feature_category_id']) && $data['feature_category_id'] == 'none') $data['feature_category_id'] = null;
-            if(isset($data['species_id']) && $data['species_id'] == 'none') $data['species_id'] = null;
-            if(isset($data['subtype_id']) && $data['subtype_id'] == 'none') $data['subtype_id'] = null;
-
-            if((isset($data['feature_category_id']) && $data['feature_category_id']) && !FeatureCategory::where('id', $data['feature_category_id'])->exists()) throw new \Exception("The selected trait category is invalid.");
-            if((isset($data['species_id']) && $data['species_id']) && !Species::where('id', $data['species_id'])->exists()) throw new \Exception("The selected species is invalid.");
-            if(isset($data['subtype_id']) && $data['subtype_id'])
-            {
-                $subtype = Subtype::find($data['subtype_id']);
-                if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
-                if(!$subtype || $subtype->species_id != $data['species_id']) throw new \Exception('Selected subtype invalid or does not match species.');
->>>>>>> Cylunny/extension/polls-and-forms
             }
 
             $data = $this->populateData($data);
 
             $image = null;
-<<<<<<< HEAD
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
                 $data['hash'] = randomString(10);
@@ -430,30 +258,12 @@ class FeatureService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(isset($data['image']) && $data['image']) {
-                $data['has_image'] = 1;
-                $image = $data['image'];
-                unset($data['image']);
-            }
-            else $data['has_image'] = 0;
-
-            $feature = Feature::create($data);
-
-            if ($image) $this->handleImage($image, $feature->imagePath, $feature->imageFileName);
-
-            return $this->commitReturn($feature);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a feature.
      *
-<<<<<<< HEAD
      * @param \App\Models\Feature\Feature $feature
      * @param array                       $data
      * @param \App\Models\User\User       $user
@@ -521,45 +331,12 @@ class FeatureService extends Service
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
                 $data['hash'] = randomString(10);
-=======
-     * @param  \App\Models\Feature\Feature  $feature
-     * @param  array                        $data 
-     * @param  \App\Models\User\User        $user
-     * @return bool|\App\Models\Feature\Feature
-     */
-    public function updateFeature($feature, $data, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            if(isset($data['feature_category_id']) && $data['feature_category_id'] == 'none') $data['feature_category_id'] = null;
-            if(isset($data['species_id']) && $data['species_id'] == 'none') $data['species_id'] = null;
-            if(isset($data['subtype_id']) && $data['subtype_id'] == 'none') $data['subtype_id'] = null;
-
-            // More specific validation
-            if(Feature::where('name', $data['name'])->where('id', '!=', $feature->id)->exists()) throw new \Exception("The name has already been taken.");
-            if((isset($data['feature_category_id']) && $data['feature_category_id']) && !FeatureCategory::where('id', $data['feature_category_id'])->exists()) throw new \Exception("The selected trait category is invalid.");
-            if((isset($data['species_id']) && $data['species_id']) && !Species::where('id', $data['species_id'])->exists()) throw new \Exception("The selected species is invalid.");
-            if(isset($data['subtype_id']) && $data['subtype_id'])
-            {
-                $subtype = Subtype::find($data['subtype_id']);
-                if(!(isset($data['species_id']) && $data['species_id'])) throw new \Exception('Species must be selected to select a subtype.');
-                if(!$subtype || $subtype->species_id != $data['species_id']) throw new \Exception('Selected subtype invalid or does not match species.');
-            }
-
-            $data = $this->populateData($data);
-
-            $image = null;            
-            if(isset($data['image']) && $data['image']) {
-                $data['has_image'] = 1;
->>>>>>> Cylunny/extension/polls-and-forms
                 $image = $data['image'];
                 unset($data['image']);
             }
 
             $feature->update($data);
 
-<<<<<<< HEAD
             if (!$this->logAdminAction($user, 'Updated Feature', 'Updated '.$feature->displayName)) {
                 throw new \Exception('Failed to log admin action.');
             }
@@ -626,19 +403,10 @@ class FeatureService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if ($feature) $this->handleImage($image, $feature->imagePath, $feature->imageFileName);
-
-            return $this->commitReturn($feature);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Deletes a feature.
      *
      * @param Feature $feature
@@ -725,57 +493,10 @@ class FeatureService extends Service
             if ($feature && $feature->has_image && $data['remove_image']) {
                 $data['has_image'] = 0;
                 $this->deleteImage($feature->imagePath, $feature->imageFileName);
-=======
-     * Processes user input for creating/updating a feature.
-     *
-     * @param  array                        $data 
-     * @param  \App\Models\Feature\Feature  $feature
-     * @return array
-     */
-    private function populateData($data, $feature = null)
-    {
-        if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
-        if(isset($data['species_id']) && $data['species_id'] == 'none') $data['species_id'] = null;
-        if(isset($data['feature_category_id']) && $data['feature_category_id'] == 'none') $data['feature_category_id'] = null;
-        if(isset($data['remove_image']))
-        {
-            if($feature && $feature->has_image && $data['remove_image']) 
-            { 
-                $data['has_image'] = 0; 
-                $this->deleteImage($feature->imagePath, $feature->imageFileName); 
->>>>>>> Cylunny/extension/polls-and-forms
             }
             unset($data['remove_image']);
         }
 
         return $data;
     }
-<<<<<<< HEAD
 }
-=======
-    
-    /**
-     * Deletes a feature.
-     *
-     * @param  \App\Models\Feature\Feature  $feature
-     * @return bool
-     */
-    public function deleteFeature($feature)
-    {
-        DB::beginTransaction();
-
-        try {
-            // Check first if the feature is currently in use
-            if(DB::table('character_features')->where('feature_id', $feature->id)->exists()) throw new \Exception("A character with this trait exists. Please remove the trait first.");
-            
-            if($feature->has_image) $this->deleteImage($feature->imagePath, $feature->imageFileName); 
-            $feature->delete();
-
-            return $this->commitReturn(true);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-}
->>>>>>> Cylunny/extension/polls-and-forms

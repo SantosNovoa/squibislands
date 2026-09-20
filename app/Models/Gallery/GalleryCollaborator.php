@@ -2,37 +2,18 @@
 
 namespace App\Models\Gallery;
 
-<<<<<<< HEAD
 use App\Models\Model;
 use App\Models\User\User;
 
 class GalleryCollaborator extends Model {
-=======
-use Settings;
-use Config;
-use DB;
-use Carbon\Carbon;
-
-use App\Models\Currency\Currency;
-
-use App\Models\Model;
-
-class GalleryCollaborator extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'gallery_submission_id', 'user_id',
         'has_approved', 'data', 'type',
-=======
-        'gallery_submission_id', 'user_id', 
-        'has_approved', 'data', 'type'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -42,7 +23,6 @@ class GalleryCollaborator extends Model
      */
     protected $table = 'gallery_submission_collaborators';
 
-<<<<<<< HEAD
     /**
      * The relationships that should always be loaded.
      *
@@ -74,32 +54,6 @@ class GalleryCollaborator extends Model
 
     /**********************************************************************************************
 
-=======
-    /**********************************************************************************************
-    
-        RELATIONS
-
-    **********************************************************************************************/
-    
-    /**
-     * Get the submission this is attached to.
-     */
-    public function submission() 
-    {
-        return $this->belongsTo('App\Models\Gallery\GallerySubmission', 'gallery_submission_id');
-    }
-    
-    /**
-     * Get the user being attached to the submission.
-     */
-    public function user() 
-    {
-        return $this->belongsTo('App\Models\User\User', 'user_id');
-    }
-
-    /**********************************************************************************************
-    
->>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -109,14 +63,8 @@ class GalleryCollaborator extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayTypeAttribute() {
         switch ($this->type) {
-=======
-    public function getDisplayTypeAttribute()
-    {
-        switch($this->type) {
->>>>>>> Cylunny/extension/polls-and-forms
             default:
                 flash('Invalid type selected.')->error();
                 break;
@@ -132,15 +80,6 @@ class GalleryCollaborator extends Model
             case 'Comm':
                 return 'Commissioned';
                 break;
-<<<<<<< HEAD
         }
     }
-=======
-            case 'Comm (Currency)':
-                return 'Commissioned ('.Currency::find(Settings::get('group_currency'))->name.')';
-                break;
-        }
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
 }

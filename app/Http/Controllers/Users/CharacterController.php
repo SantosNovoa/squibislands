@@ -2,26 +2,14 @@
 
 namespace App\Http\Controllers\Users;
 
-<<<<<<< HEAD
 use App\Facades\Settings;
 use DB;
 use Route;
 use App\Models\Character\CharacterFolder;
-=======
-use Illuminate\Http\Request;
-
-use DB;
-use Auth;
-use Route;
-use Settings;
-use App\Models\User\User;
-use App\Models\Character\Character;
->>>>>>> Cylunny/extension/polls-and-forms
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\User\UserCurrency;
 use App\Models\Character\CharacterCurrency;
-<<<<<<< HEAD
 use App\Services\CurrencyManager;
 use App\Services\FolderManager;
 use App\Http\Controllers\Controller;
@@ -34,17 +22,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CharacterController extends Controller {
-=======
-use App\Models\Character\CharacterTransfer;
-
-use App\Services\CurrencyManager;
-use App\Services\CharacterManager;
-
-use App\Http\Controllers\Controller;
-
-class CharacterController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Character Controller
@@ -59,20 +36,12 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getIndex() {
-=======
-    public function getIndex()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         $characters = Auth::user()->characters()->with('image')->visible()->whereNull('trade_id')->get();
 
         return view('home.characters', [
             'characters' => $characters,
-<<<<<<< HEAD
             'folders' => ['None' => 'None'] + Auth::user()->folders()->pluck('name', 'id')->toArray(),
-=======
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -81,12 +50,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getMyos() {
-=======
-    public function getMyos()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         $slots = Auth::user()->myoSlots()->with('image')->get();
 
         return view('home.myos', [
@@ -97,7 +61,6 @@ class CharacterController extends Controller
     /**
      * Sorts the user's characters.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -181,23 +144,14 @@ class CharacterController extends Controller
     /**
      * Sets the user's selected character.
      *
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * @param  \Illuminate\Http\Request       $request
      * @param  App\Services\CharacterManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
-<<<<<<< HEAD
     public function postSelectCharacter(Request $request, CharacterManager $service)
     {
         if ($service->selectCharacter($request->only(['character_id']), Auth::user())) {
             flash('Character selected successfully.')->success();
-=======
-    public function postSortCharacters(Request $request, CharacterManager $service)
-    {
-        if ($service->sortCharacters($request->only(['sort']), Auth::user())) {
-            flash('Characters sorted successfully.')->success();
->>>>>>> Cylunny/extension/polls-and-forms
             return redirect()->back();
         }
         else {
@@ -207,7 +161,6 @@ class CharacterController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * Sorts the characters pets.
      *
      * @param mixed $slug
@@ -236,19 +189,6 @@ class CharacterController extends Controller
         $user = Auth::user();
 
         switch ($type) {
-=======
-     * Shows the user's transfers.
-     *
-     * @param  string  $type
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getTransfers($type = 'incoming')
-    {
-        $transfers = CharacterTransfer::with('sender.rank')->with('recipient.rank')->with('character.image');
-        $user = Auth::user();
-
-        switch($type) {
->>>>>>> Cylunny/extension/polls-and-forms
             case 'incoming':
                 $transfers->where('recipient_id', $user->id)->active();
                 break;
@@ -256,22 +196,14 @@ class CharacterController extends Controller
                 $transfers->where('sender_id', $user->id)->active();
                 break;
             case 'completed':
-<<<<<<< HEAD
                 $transfers->where(function ($query) use ($user) {
-=======
-                $transfers->where(function($query) use ($user) {
->>>>>>> Cylunny/extension/polls-and-forms
                     $query->where('recipient_id', $user->id)->orWhere('sender_id', $user->id);
                 })->completed();
                 break;
         }
 
         return view('home.character_transfers', [
-<<<<<<< HEAD
             'transfers'      => $transfers->orderBy('id', 'DESC')->paginate(20),
-=======
-            'transfers' => $transfers->orderBy('id', 'DESC')->paginate(20),
->>>>>>> Cylunny/extension/polls-and-forms
             'transfersQueue' => Settings::get('open_transfers_queue'),
         ]);
     }
@@ -279,7 +211,6 @@ class CharacterController extends Controller
     /**
      * Transfers one of the user's own characters.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -345,33 +276,6 @@ class CharacterController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postHandleTransfer(Request $request, CharacterManager $service, $id)
-    {
-        if(!Auth::check()) abort(404);
-
-        $action = $request->get('action');
-
-        if($action == 'Cancel' && $service->cancelTransfer(['transfer_id' => $id], Auth::user())) {
-            flash('Transfer cancelled.')->success();
-        }
-        else if($service->processTransfer($request->only(['action']) + ['transfer_id' => $id], Auth::user())) {
-            if(strtolower($action) == 'approve'){
-                flash('Transfer ' . strtolower($action) . 'd.')->success();
-            }
-            else {
-                flash('Transfer ' . strtolower($action) . 'ed.')->success();
-            }
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 }

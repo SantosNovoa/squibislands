@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Characters;
 
-<<<<<<< HEAD
 use App\Facades\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
@@ -35,40 +34,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use App\Models\Character\CharacterImage;
-=======
-use Illuminate\Http\Request;
-
-use DB;
-use Auth;
-use Route;
-use Settings;
-use App\Models\User\User;
-use App\Models\Character\Character;
-use App\Models\Species\Species;
-use App\Models\Rarity;
-use App\Models\Feature\Feature;
-use App\Models\Character\CharacterProfile;
-
-use App\Models\Currency\Currency;
-use App\Models\Currency\CurrencyLog;
-use App\Models\User\UserCurrency;
-use App\Models\Gallery\GallerySubmission;
-use App\Models\Character\CharacterCurrency;
-
-use App\Models\Item\Item;
-use App\Models\Item\ItemCategory;
-use App\Models\User\UserItem;
-use App\Models\Character\CharacterItem;
-use App\Models\Item\ItemLog;
-
-use App\Models\Character\CharacterTransfer;
-
-use App\Services\CurrencyManager;
-use App\Services\InventoryManager;
-use App\Services\CharacterManager;
-
-use App\Http\Controllers\Controller;
->>>>>>> Cylunny/extension/polls-and-forms
 
 class CharacterController extends Controller
 {
@@ -83,7 +48,6 @@ class CharacterController extends Controller
 
     /**
      * Create a new controller instance.
-<<<<<<< HEAD
      */
     public function __construct()
     {
@@ -160,21 +124,6 @@ class CharacterController extends Controller
             // checks stat propogation
             $this->character->propagateStats();
 
-=======
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $slug = Route::current()->parameter('slug');
-            $query = Character::myo(0)->where('slug', $slug);
-            if(!(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->where('is_visible', 1);
-            $this->character = $query->first();
-            if(!$this->character) abort(404);
-
-            $this->character->updateOwner();
->>>>>>> Cylunny/extension/polls-and-forms
             return $next($request);
         });
     }
@@ -182,18 +131,13 @@ class CharacterController extends Controller
     /**
      * Shows a character's masterlist entry.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacter($slug)
     {
         return view('character.character', [
-<<<<<<< HEAD
             'character'             => $this->character,
             'skills'                => Skill::where('parent_id', null)->orderBy('name', 'ASC')->get(),
             'pets'                  => $this->character->pets()->orderBy('sort', 'DESC')->take(4)->get(),
@@ -209,49 +153,33 @@ class CharacterController extends Controller
             'gear'                  => $this->character->gear()->get(),
             'showMention'           => true,
             'extPrevAndNextBtnsUrl' => '',
-=======
-            'character' => $this->character,
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows a character's profile.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacterProfile($slug)
     {
         return view('character.profile', [
-<<<<<<< HEAD
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/profile',
-=======
-            'character' => $this->character,
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows a character's edit profile page.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditCharacterProfile($slug)
     {
-<<<<<<< HEAD
         if (!Auth::check()) {
             abort(404);
         }
@@ -307,36 +235,19 @@ class CharacterController extends Controller
             ))),
             'itemLabels' => ['pets' => 'Pets', 'items' => 'Inventory', 'awards' => 'Badges'],
             'infoLabels' => ['profile' => 'Profile', 'charInfo' => 'Character Info', 'skills' => 'Skills'],
-=======
-        if(!Auth::check()) abort(404);
-
-        $isMod = Auth::user()->hasPower('manage_characters');
-        $isOwner = ($this->character->user_id == Auth::user()->id);
-        if(!$isMod && !$isOwner) abort(404);
-
-        return view('character.edit_profile', [
-            'character' => $this->character,
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Edits a character's profile.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param string                        $slug
      *
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postEditCharacterProfile(Request $request, CharacterManager $service, $slug)
     {
-<<<<<<< HEAD
         if (!Auth::check()) {
             abort(404);
         }
@@ -423,29 +334,12 @@ class CharacterController extends Controller
             }
         }
 
-=======
-        if(!Auth::check()) abort(404);
-
-        $isMod = Auth::user()->hasPower('manage_characters');
-        $isOwner = ($this->character->user_id == Auth::user()->id);
-        if(!$isMod && !$isOwner) abort(404);
-
-        $request->validate(CharacterProfile::$rules);
-
-        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'alert_user']), $this->character, Auth::user(), !$isOwner)) {
-            flash('Profile edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows a character's gallery.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -456,67 +350,39 @@ class CharacterController extends Controller
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/gallery',
             'submissions'           => GallerySubmission::whereIn('id', $this->character->gallerySubmissions->pluck('gallery_submission_id')->toArray())->visible(Auth::user() ?? null)->orderBy('created_at', 'DESC')->paginate(20),
-=======
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterGallery($slug)
-    {
-        return view('character.gallery', [
-            'character' => $this->character,
-            'submissions' => GallerySubmission::whereIn('id', $this->character->gallerySubmissions->pluck('gallery_submission_id')->toArray())->visible()->accepted()->orderBy('created_at', 'DESC')->paginate(20),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows a character's images.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacterImages($slug)
     {
         return view('character.images', [
-<<<<<<< HEAD
             'user'                  => Auth::user() ?? null,
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/images',
-=======
-            'user' => Auth::check() ? Auth::user() : null,
-            'character' => $this->character,
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows a character's inventory.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacterInventory($slug)
     {
-<<<<<<< HEAD
         $categories = ItemCategory::visible(Auth::user() ?? null)->where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
-=======
-        $categories = ItemCategory::where('is_character_owned', '1')->orderBy('sort', 'DESC')->get();
->>>>>>> Cylunny/extension/polls-and-forms
         $itemOptions = Item::whereIn('item_category_id', $categories->pluck('id'));
 
         $items = count($categories) ?
             $this->character->items()
-<<<<<<< HEAD
             ->with('category')
             ->where('count', '>', 0)
             ->orderByRaw('FIELD(item_category_id,' . implode(',', $categories->pluck('id')->toArray()) . ')')
@@ -542,59 +408,24 @@ class CharacterController extends Controller
             'itemOptions' => $itemOptions->pluck('name', 'id'),
             'page'        => 'character',
         ] : []));
-=======
-                ->where('count', '>', 0)
-                ->orderByRaw('FIELD(item_category_id,'.implode(',', $categories->pluck('id')->toArray()).')')
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['item_category_id', 'id']) :
-            $this->character->items()
-                ->where('count', '>', 0)
-                ->orderBy('name')
-                ->orderBy('updated_at')
-                ->get()
-                ->groupBy(['item_category_id', 'id']);
-        return view('character.inventory', [
-            'character' => $this->character,
-            'categories' => $categories->keyBy('id'),
-            'items' => $items,
-            'logs' => $this->character->getItemLogs(),
-            ] + (Auth::check() && (Auth::user()->hasPower('edit_inventories') || Auth::user()->id == $this->character->user_id) ? [
-                'itemOptions' => $itemOptions->pluck('name', 'id'),
-                'userInventory' => UserItem::with('item')->whereIn('item_id', $itemOptions->pluck('id'))->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get()->filter(function($userItem){return $userItem->isTransferrable == true;})->sortBy('item.name'),
-                'page' => 'character'
-            ] : []));
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Shows a character's bank.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
-=======
-     * @param  string  $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getCharacterBank($slug)
     {
         $character = $this->character;
-<<<<<<< HEAD
 
         return view('character.bank', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/bank',
             'currencies'            => $character->getCurrencies(true),
             'logs'                  => $this->character->getCurrencyLogs(),
-=======
-        return view('character.bank', [
-            'character' => $this->character,
-            'currencies' => $character->getCurrencies(true),
-            'logs' => $this->character->getCurrencyLogs(),
->>>>>>> Cylunny/extension/polls-and-forms
         ] + (Auth::check() && Auth::user()->id == $this->character->user_id ? [
             'takeCurrencyOptions' => Currency::where('allow_character_to_user', 1)->where('is_user_owned', 1)->where('is_character_owned', 1)->whereIn('id', CharacterCurrency::where('character_id', $this->character->id)->pluck('currency_id')->toArray())->orderBy('sort_character', 'DESC')->pluck('name', 'id')->toArray(),
             'giveCurrencyOptions' => Currency::where('allow_user_to_character', 1)->where('is_user_owned', 1)->where('is_character_owned', 1)->whereIn('id', UserCurrency::where('user_id', Auth::user()->id)->pluck('currency_id')->toArray())->orderBy('sort_user', 'DESC')->pluck('name', 'id')->toArray(),
@@ -605,7 +436,6 @@ class CharacterController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * Shows a character's awards.
      *
      * @param string $slug
@@ -649,30 +479,18 @@ class CharacterController extends Controller
      * @param App\Services\CharacterManager $service
      * @param string                        $slug
      *
-=======
-     * Transfers currency between the user and character.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCurrencyTransfer(Request $request, CurrencyManager $service, $slug)
     {
-<<<<<<< HEAD
         if (!Auth::check()) {
             abort(404);
         }
-=======
-        if(!Auth::check()) abort(404);
->>>>>>> Cylunny/extension/polls-and-forms
 
         $action = $request->get('action');
         $sender = ($action == 'take') ? $this->character : Auth::user();
         $recipient = ($action == 'take') ? Auth::user() : $this->character;
 
-<<<<<<< HEAD
         if ($service->transferCharacterCurrency($sender, $recipient, Currency::where(($action == 'take') ? 'allow_character_to_user' : 'allow_user_to_character', 1)->where('id', $request->get(($action == 'take') ? 'take_currency_id' : 'give_currency_id'))->first(), $request->get('quantity'))) {
             flash('Currency transferred successfully.')->success();
         } else {
@@ -681,42 +499,23 @@ class CharacterController extends Controller
             }
         }
 
-=======
-        if($service->transferCharacterCurrency($sender, $recipient, Currency::where(($action == 'take') ? 'allow_character_to_user' : 'allow_user_to_character', 1)->where('id', $request->get(($action == 'take') ? 'take_currency_id' : 'give_currency_id'))->first(), $request->get('quantity'))) {
-            flash('Currency transferred successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Handles inventory item processing, including transferring items between the user and character.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param string                        $slug
      *
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postInventoryEdit(Request $request, InventoryManager $service, $slug)
     {
-<<<<<<< HEAD
         if (!Auth::check()) {
             abort(404);
         }
         switch ($request->get('action')) {
-=======
-        if(!Auth::check()) abort(404);
-        switch($request->get('action')) {
->>>>>>> Cylunny/extension/polls-and-forms
             default:
                 flash('Invalid action selected.')->error();
                 break;
@@ -724,20 +523,12 @@ class CharacterController extends Controller
                 $sender = Auth::user();
                 $recipient = $this->character;
 
-<<<<<<< HEAD
                 if ($service->transferCharacterStack($sender, $recipient, UserItem::find($request->get('stack_id')), $request->get('stack_quantity'), Auth::user())) {
                     flash('Item transferred successfully.')->success();
                 } else {
                     foreach ($service->errors()->getMessages()['error'] as $error) {
                         flash($error)->error();
                     }
-=======
-                if($service->transferCharacterStack($sender, $recipient, UserItem::find($request->get('stack_id')), $request->get('stack_quantity'))) {
-                    flash('Item transferred successfully.')->success();
-                }
-                else {
-                    foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
->>>>>>> Cylunny/extension/polls-and-forms
                 }
                 break;
             case 'name':
@@ -755,7 +546,6 @@ class CharacterController extends Controller
     }
 
     /**
-<<<<<<< HEAD
      * Handles inventory award processing, including transferring awards between the user and character.
      *
      * @param App\Services\CharacterManager $service
@@ -1184,17 +974,10 @@ class CharacterController extends Controller
      *
      * @param App\Services\InventoryManager $service
      *
-=======
-     * Transfers inventory items back to a user.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\InventoryManager  $service
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     private function postItemTransfer(Request $request, InventoryManager $service)
     {
-<<<<<<< HEAD
         if ($service->transferCharacterStack($this->character, $this->character->user, CharacterItem::find($request->get('ids')), $request->get('quantities'), Auth::user())) {
             flash('Item transferred successfully.')->success();
         } else {
@@ -1203,32 +986,18 @@ class CharacterController extends Controller
             }
         }
 
-=======
-        if($service->transferCharacterStack($this->character, $this->character->user, CharacterItem::find($request->get('ids')), $request->get('quantities'))) {
-            flash('Item transferred successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Names an inventory stack.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      *
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     private function postName(Request $request, InventoryManager $service)
     {
-<<<<<<< HEAD
         $request->validate([
             'stack_name' => 'nullable|max:100',
         ]);
@@ -1241,32 +1010,18 @@ class CharacterController extends Controller
             }
         }
 
-=======
-        if($service->nameStack($this->character, CharacterItem::find($request->get('ids')), $request->get('stack_name'))) {
-            flash('Item named successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Deletes an inventory stack.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      *
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
->>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     private function postDelete(Request $request, InventoryManager $service)
     {
-<<<<<<< HEAD
         if ($service->deleteStack($this->character, CharacterItem::find($request->get('ids')), $request->get('quantities'), Auth::user())) {
             flash('Item deleted successfully.')->success();
         } else {
@@ -1275,19 +1030,10 @@ class CharacterController extends Controller
             }
         }
 
-=======
-        if($service->deleteStack($this->character, CharacterItem::find($request->get('ids')), $request->get('quantities'))) {
-            flash('Item deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
-<<<<<<< HEAD
      * Shows a character's images.
      *
      * @param string $slug
@@ -1304,23 +1050,10 @@ class CharacterController extends Controller
             'character' => $this->character,
             'image'     => $image,
             'ajax'      => true,
-=======
-     * Shows a character's currency logs.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterCurrencyLogs($slug)
-    {
-        return view('character.currency_logs', [
-            'character' => $this->character,
-            'logs' => $this->character->getCurrencyLogs(0)
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
-<<<<<<< HEAD
      * Opens a new design update approval request for a character. but with a specific image lmao
      *
      * @param  App\Services\DesignUpdateManager  $service
@@ -1337,162 +1070,6 @@ class CharacterController extends Controller
             return redirect()->to($request->url);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-=======
-     * Shows a character's item logs.
-     *
-     * @param  string  $name
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterItemLogs($slug)
-    {
-        return view('character.item_logs', [
-            'character' => $this->character,
-            'logs' => $this->character->getItemLogs(0)
-        ]);
-    }
-
-    /**
-     * Shows a character's ownership logs.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterOwnershipLogs($slug)
-    {
-        return view('character.ownership_logs', [
-            'character' => $this->character,
-            'logs' => $this->character->getOwnershipLogs(0)
-        ]);
-    }
-
-    /**
-     * Shows a character's ownership logs.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterLogs($slug)
-    {
-        return view('character.character_logs', [
-            'character' => $this->character,
-            'logs' => $this->character->getCharacterLogs()
-        ]);
-    }
-
-    /**
-     * Shows a character's submissions.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterSubmissions($slug)
-    {
-        return view('character.submission_logs', [
-            'character' => $this->character,
-            'logs' => $this->character->getSubmissions()
-        ]);
-    }
-
-    /**
-     * Shows a character's transfer page.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getTransfer($slug)
-    {
-        if(!Auth::check()) abort(404);
-
-        $isMod = Auth::user()->hasPower('manage_characters');
-        $isOwner = ($this->character->user_id == Auth::user()->id);
-        if(!$isMod && !$isOwner) abort(404);
-
-        return view('character.transfer', [
-            'character' => $this->character,
-            'transfer' => CharacterTransfer::active()->where('character_id', $this->character->id)->first(),
-            'cooldown' => Settings::get('transfer_cooldown'),
-            'transfersQueue' => Settings::get('open_transfers_queue'),
-            'userOptions' => User::visible()->orderBy('name')->pluck('name', 'id')->toArray(),
-        ]);
-    }
-
-    /**
-     * Opens a transfer request for a character.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postTransfer(Request $request, CharacterManager $service, $slug)
-    {
-        if(!Auth::check()) abort(404);
-
-        if($service->createTransfer($request->only(['recipient_id', 'user_reason']), $this->character, Auth::user())) {
-            flash('Transfer created successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-
-    /**
-     * Cancels a transfer request for a character.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCancelTransfer(Request $request, CharacterManager $service, $slug, $id)
-    {
-        if(!Auth::check()) abort(404);
-
-        if($service->cancelTransfer(['transfer_id' => $id], Auth::user())) {
-            flash('Transfer cancelled.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
-
-    /**
-     * Shows a character's design update approval page.
-     *
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getCharacterApproval($slug)
-    {
-        if(!Auth::check() || $this->character->user_id != Auth::user()->id) abort(404);
-
-        return view('character.update_form', [
-            'character' => $this->character,
-            'queueOpen' => Settings::get('is_design_updates_open'),
-            'request' => $this->character->designUpdate()->active()->first()
-        ]);
-    }
-
-    /**
-     * Opens a new design update approval request for a character.
-     *
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCharacterApproval($slug, CharacterManager $service)
-    {
-        if(!Auth::check() || $this->character->user_id != Auth::user()->id) abort(404);
-
-        if($request = $service->createDesignUpdateRequest($this->character, Auth::user())) {
-            flash('Successfully created new design update request draft.')->success();
-            return redirect()->to($request->url);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
->>>>>>> Cylunny/extension/polls-and-forms
         }
         return redirect()->back();
     }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -11,23 +10,6 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 
 class SalesService extends Service {
-=======
-<?php namespace App\Services;
-
-use App\Services\Service;
-
-use DB;
-use Config;
-use Validator;
-
-use App\Models\User\User;
-use App\Models\Sales\Sales;
-use App\Models\Sales\SalesCharacter;
-use App\Models\Character\Character;
-
-class SalesService extends Service
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Sales Service
@@ -40,43 +22,28 @@ class SalesService extends Service
     /**
      * Creates a Sales post.
      *
-<<<<<<< HEAD
      * @param array $data
      * @param User  $user
      *
      * @return bool|Sales
      */
     public function createSales($data, $user) {
-=======
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Sales\Sales
-     */
-    public function createSales($data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $data['parsed_text'] = parse($data['text']);
             $data['user_id'] = $user->id;
-<<<<<<< HEAD
             if (!isset($data['is_visible'])) {
                 $data['is_visible'] = 0;
             }
             if (!isset($data['is_open'])) {
                 $data['is_open'] = 0;
             }
-=======
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-            if(!isset($data['is_open'])) $data['is_open'] = 0;
->>>>>>> Cylunny/extension/polls-and-forms
 
             $sales = Sales::create($data);
 
             // The character identification comes in both the slug field and as character IDs
             // First, check if the characters are accessible to begin with.
-<<<<<<< HEAD
             if (isset($data['slug'])) {
                 $characters = Character::myo(0)->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
@@ -100,30 +67,12 @@ class SalesService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
-                if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters do not exist.");
-            }
-            else $characters = [];
-
-            // Process entered character data
-            if(isset($data['slug'])) $this->processCharacters($sales, $data);
-
-            if($sales->is_visible) $this->alertUsers();
-
-            return $this->commitReturn($sales);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a Sales post.
      *
-<<<<<<< HEAD
      * @param array $data
      * @param User  $user
      * @param mixed $sales
@@ -131,21 +80,11 @@ class SalesService extends Service
      * @return bool|Sales
      */
     public function updateSales($sales, $data, $user) {
-=======
-     * @param  \App\Models\Sales\Sales       $Sales
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Sales\Sales
-     */
-    public function updateSales($sales, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $data['parsed_text'] = parse($data['text']);
             $data['user_id'] = $user->id;
-<<<<<<< HEAD
             if (!isset($data['is_visible'])) {
                 $data['is_visible'] = 0;
             }
@@ -173,43 +112,18 @@ class SalesService extends Service
             if (isset($data['slug'])) {
                 $this->processCharacters($sales, $data);
             }
-=======
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-            if(!isset($data['is_open'])) $data['is_open'] = 0;
-
-            if(isset($data['bump']) && $data['is_visible'] == 1 && $data['bump'] == 1) $this->alertUsers();
-
-            // The character identification comes in both the slug field and as character IDs
-            // First, check if the characters are accessible to begin with.
-            if(isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
-                if(count($characters) != count($data['slug'])) throw new \Exception("One or more of the selected characters do not exist.");
-            }
-            else $characters = [];
-
-            // Remove existing attached characters, then process entered character data
-            $sales->characters()->delete();
-            if(isset($data['slug'])) $this->processCharacters($sales, $data);
->>>>>>> Cylunny/extension/polls-and-forms
 
             $sales->update($data);
 
             return $this->commitReturn($sales);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
-<<<<<<< HEAD
      * Deletes a Sales post.
      *
      * @param mixed $sales
@@ -217,91 +131,16 @@ class SalesService extends Service
      * @return bool
      */
     public function deleteSales($sales) {
-=======
-     * Processes sales data entered for characters.
-     *
-     * @param  App\Models\Sales\Sales                   $sales
-     * @param  array                                    $data
-     * @return bool
-     */
-    private function processCharacters($sales, $data)
-    {
-        foreach($data['slug'] as $key=>$slug) {
-            $character = Character::myo(0)->visible()->where('slug', $slug)->first();
-
-            // Assemble data
-            $charData[$key] = [];
-            $charData[$key]['type'] = $data['sale_type'][$key];
-            switch($charData[$key]['type']) {
-                case 'flatsale':
-                    $charData[$key]['price'] = $data['price'][$key];
-                    break;
-                case 'auction':
-                    $charData[$key]['starting_bid'] = $data['starting_bid'][$key];
-                    $charData[$key]['min_increment'] = $data['min_increment'][$key];
-                    if(isset($data['autobuy'][$key])) $charData[$key]['autobuy'] = $data['autobuy'][$key];
-                    if(isset($data['end_point'][$key])) $charData[$key]['end_point'] = $data['end_point'][$key];
-                    break;
-                case 'ota':
-                    if(isset($data['autobuy'][$key])) $charData[$key]['autobuy'] = $data['autobuy'][$key];
-                    if(isset($data['end_point'][$key])) $charData[$key]['end_point'] = $data['end_point'][$key];
-					if(isset($data['minimum'][$key])) $charData[$key]['minimum'] = $data['minimum'][$key];
-                    break;
-                case 'xta':
-                    if(isset($data['autobuy'][$key])) $charData[$key]['autobuy'] = $data['autobuy'][$key];
-                    if(isset($data['end_point'][$key])) $charData[$key]['end_point'] = $data['end_point'][$key];
-					if(isset($data['minimum'][$key])) $charData[$key]['minimum'] = $data['minimum'][$key];
-                    break;
-                case 'flaffle':
-                    $charData[$key]['price'] = $data['price'][$key];
-                    break;
-                case 'pwyw':
-                    if(isset($data['minimum'][$key])) $charData[$key]['minimum'] = $data['minimum'][$key];
-                    break;
-            }
-
-            // Validate data
-            $validator = Validator::make($charData[$key], SalesCharacter::$rules);
-            if($validator->fails()) throw new \Exception($validator->errors()->first());
-
-            // Record data/attach the character to the sales post
-            SalesCharacter::create([
-                'character_id' => $character->id,
-                'sales_id' => $sales->id,
-                'type' => $charData[$key]['type'],
-                'data' => json_encode($charData[$key]),
-                'description' => isset($data['description'][$key]) ? $data['description'][$key] : null,
-                'link' => isset($data['link'][$key]) ? $data['link'][$key] : null,
-                'is_open' => isset($data['character_is_open'][$character->slug]) ? $data['character_is_open'][$character->slug] : ($data['new_entry'][$key] ? 1 : 0)
-            ]);
-        }
-    }
-
-    /**
-     * Deletes a Sales post.
-     *
-     * @param  \App\Models\Sales\Sales  $Sales
-     * @return bool
-     */
-    public function deleteSales($sales)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $sales->delete();
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
@@ -311,16 +150,9 @@ class SalesService extends Service
      *
      * @return bool
      */
-<<<<<<< HEAD
     public function updateQueue() {
         $count = Sales::shouldBeVisible()->count();
         if ($count) {
-=======
-    public function updateQueue()
-    {
-        $count = Sales::shouldBeVisible()->count();
-        if($count) {
->>>>>>> Cylunny/extension/polls-and-forms
             DB::beginTransaction();
 
             try {
@@ -328,22 +160,15 @@ class SalesService extends Service
                 $this->alertUsers();
 
                 return $this->commitReturn(true);
-<<<<<<< HEAD
             } catch (\Exception $e) {
                 $this->setError('error', $e->getMessage());
             }
 
-=======
-            } catch(\Exception $e) {
-                $this->setError('error', $e->getMessage());
-            }
->>>>>>> Cylunny/extension/polls-and-forms
             return $this->rollbackReturn(false);
         }
     }
 
     /**
-<<<<<<< HEAD
      * Processes sales data entered for characters.
      *
      * @param App\Models\Sales\Sales $sales
@@ -425,22 +250,14 @@ class SalesService extends Service
     }
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Updates the unread Sales flag for all users so that
      * the new Sales notification is displayed.
      *
      * @return bool
      */
-<<<<<<< HEAD
     private function alertUsers() {
         User::query()->update(['is_sales_unread' => 1]);
 
-=======
-    private function alertUsers()
-    {
-        User::query()->update(['is_sales_unread' => 1]);
->>>>>>> Cylunny/extension/polls-and-forms
         return true;
     }
 }

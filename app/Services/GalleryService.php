@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -10,20 +9,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class GalleryService extends Service {
-=======
-<?php namespace App\Services;
-
-use App\Services\Service;
-
-use DB;
-use Config;
-
-use App\Models\Gallery\Gallery;
-use App\Models\Gallery\GallerySubmission;
-
-class GalleryService extends Service
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Gallery Service
@@ -36,7 +21,6 @@ class GalleryService extends Service
     /**
      * Creates a new gallery.
      *
-<<<<<<< HEAD
      * @param array                 $data
      * @param \App\Models\User\User $user
      *
@@ -78,36 +62,12 @@ class GalleryService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Gallery
-     */
-    public function createGallery($data, $user)
-    {
-        DB::beginTransaction();
-
-        try {
-            if(!isset($data['submissions_open'])) $data['submissions_open'] = 0;
-            if(!isset($data['currency_enabled'])) $data['currency_enabled'] = 0;
-            if(!isset($data['votes_required'])) $data['votes_required'] = 0;
-            if(!isset($data['hide_before_start'])) $data['hide_before_start'] = 0;
-            if(!isset($data['prompt_selection'])) $data['prompt_selection'] = 0;
-
-            $gallery = Gallery::create($data);
-
-            return $this->commitReturn($gallery);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a gallery.
      *
-<<<<<<< HEAD
      * @param \App\Models\Gallery   $gallery
      * @param array                 $data
      * @param \App\Models\User\User $user
@@ -115,20 +75,10 @@ class GalleryService extends Service
      * @return \App\Models\Gallery|bool
      */
     public function updateGallery($gallery, $data, $user) {
-=======
-     * @param  \App\Models\Gallery    $gallery
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\Gallery
-     */
-    public function updateGallery($gallery, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // More specific validation
-<<<<<<< HEAD
             if (Gallery::where('name', $data['name'])->where('id', '!=', $gallery->id)->exists()) {
                 throw new \Exception('The name has already been taken.');
             }
@@ -165,73 +115,36 @@ class GalleryService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(Gallery::where('name', $data['name'])->where('id', '!=', $gallery->id)->exists()) throw new \Exception("The name has already been taken.");
-
-            if(!isset($data['submissions_open'])) $data['submissions_open'] = 0;
-            if(!isset($data['currency_enabled'])) $data['currency_enabled'] = 0;
-            if(!isset($data['votes_required'])) $data['votes_required'] = 0;
-            if(!isset($data['hide_before_start'])) $data['hide_before_start'] = 0;
-            if(!isset($data['prompt_selection'])) $data['prompt_selection'] = 0;
-
-            $gallery->update($data);
-
-            return $this->commitReturn($gallery);
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Deletes a gallery.
      *
-<<<<<<< HEAD
      * @param \App\Models\Gallery $gallery
      * @param mixed               $user
      *
      * @return bool
      */
     public function deleteGallery($gallery, $user) {
-=======
-     * @param  \App\Models\Gallery  $gallery
-     * @return bool
-     */
-    public function deleteGallery($gallery)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             // Check first if submissions exist in this gallery, or the gallery has children
-<<<<<<< HEAD
             if (GallerySubmission::where('gallery_id', $gallery->id)->exists() || Gallery::where('parent_id', $gallery->id)->exists()) {
                 throw new \Exception("A gallery or submissions in this gallery exist. Consider setting the gallery's submissions to closed instead.");
             }
             if (!$this->logAdminAction($user, 'Deleted Gallery', 'Deleted '.$gallery->name)) {
                 throw new \Exception('Failed to log admin action.');
             }
-=======
-            if(GallerySubmission::where('gallery_id', $gallery->id)->exists() || Gallery::where('parent_id', $gallery->id)->exists()) throw new \Exception("A gallery or submissions in this gallery exist. Consider setting the gallery's submissions to closed instead.");
->>>>>>> Cylunny/extension/polls-and-forms
 
             $gallery->delete();
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
         return $this->rollbackReturn(false);
     }
-=======
-        } catch(\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-        return $this->rollbackReturn(false);
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
 }

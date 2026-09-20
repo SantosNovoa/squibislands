@@ -24,11 +24,7 @@ return [
     | Do not change this value!
     |
     */
-<<<<<<< HEAD
     'version'                                           => '3.0.0',
-=======
-    'version' => '2.1.5',
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -40,11 +36,7 @@ return [
     | site wherever the name needs to be displayed.
     |
     */
-<<<<<<< HEAD
     'site_name'                                         => 'Squib Islands',
-=======
-    'site_name' => 'Lorekeeper',
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +48,6 @@ return [
     | It is not, however, displayed on the site itself. This should be kept short and snappy!
     |
     */
-<<<<<<< HEAD
     'site_desc'                                         => 'A Closed Species ARPG',
 
     /*
@@ -73,9 +64,6 @@ return [
     |
     */
     'require_alias'                                     => 1,
-=======
-    'site_desc' => 'A Lorekeeper ARPG',
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -86,10 +74,7 @@ return [
     |       This is used in the automatic generation of character codes.
     |       {category}: This is replaced by the character category code.
     |       {number}: This is replaced by the character number.
-<<<<<<< HEAD
     |       {year}: This is replaced by the current year.
-=======
->>>>>>> Cylunny/extension/polls-and-forms
     |
     |       e.g. Under the default setting ({category}-{number}),
     |       a character in a category called "MYO" (code "MYO") with number 001
@@ -137,7 +122,6 @@ return [
     |       Default: 0/Disabled, 1 to enable.
     |
     */
-<<<<<<< HEAD
     'character_codes'                                   => '{category}-{number}',
     'character_number_digits'                           => 4,
     'character_pull_number'                             => 'category',
@@ -145,15 +129,6 @@ return [
     'reset_character_status_on_transfer'                => 0,
     'reset_character_profile_on_transfer'               => 0,
     'clear_myo_slot_name_on_approval'                   => 1,
-=======
-    'character_codes' => '{category}-{number}',
-    'character_number_digits' => 3,
-    'character_pull_number' => 'all',
-
-    'reset_character_status_on_transfer' => 0,
-    'reset_character_profile_on_transfer' => 0,
-    'clear_myo_slot_name_on_approval' => 0,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -162,22 +137,16 @@ return [
     |
     | 0: Do not watermark. 1: Automatically watermark masterlist images.
     |
-<<<<<<< HEAD
     | Dimension, in pixels, to scale submitted masterlist images to. Enter "0" to disable resizing.
     |
     | Which dimension to scale submitted masterlist images on. Options are 'shorter' and 'longer'.
     | Only takes effect if masterlist_image_dimension is set. Defaults to 'shorter'.
-=======
-    | Dimension, in pixels, to scale the shorter dimension (between width/height)
-    | of submitted masterlist images to. Enter "0" to disable resizing.
->>>>>>> Cylunny/extension/polls-and-forms
     |
     | File format to encode masterlist image uploads to.
     | Set to null to leave images in their original formats.
     | Example:
     | 'masterlist_image_format' => null,
     |
-<<<<<<< HEAD
     | Color to fill non-transparent images in when masterlist_image_format is set.
     | This is in an endeavor to make images with a transparent background
     | compress better. Set to null to disable.
@@ -192,19 +161,6 @@ return [
 
     'masterlist_image_format'                           => null,
     'masterlist_image_background'                       => null,
-=======
-    | Color to fill non-png images in when masterlist_image_format is set.
-    | This is in an endeavor to make images with a transparent background
-    | compress better. Set to null to disable.
-    | Example:
-    | 'masterlist_image_background' => 'png',
-    |
-    */
-    'watermark_masterlist_images' => 0,
-    'masterlist_image_dimension' => 0,
-    'masterlist_image_format' => null,
-    'masterlist_image_background' => '#ffffff',
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -217,7 +173,6 @@ return [
     | Size, in pixels, to cap full-sized masterlist images at (if storing full-sized images is enabled).
     | Images above this cap in either dimension will be resized to suit. Enter "0" to disable resizing.
     |
-<<<<<<< HEAD
     | File format to encode full-sized masterlist image uploads to.
     | Set to null to leave images in their original formats.
     | Example:
@@ -227,11 +182,6 @@ return [
     'store_masterlist_fullsizes'                        => 0,
     'masterlist_fullsizes_cap'                          => 2000,
     'masterlist_fullsizes_format'                       => null,
-=======
-    */
-    'store_masterlist_fullsizes' => 0,
-    'masterlist_fullsizes_cap' => 0,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -246,7 +196,6 @@ return [
     | Expects the whole of the character to be visible in the thumbnail.
     |
     */
-<<<<<<< HEAD
     'masterlist_thumbnails'                             => [
         'width'  => 250,
         'height' => 250,
@@ -278,13 +227,6 @@ return [
     'watermark_resizing'                                => 0,
     'watermark_percent'                                 => 0.9,
     'watermark_resizing_thumb'                          => 0,
-=======
-    'masterlist_thumbnails' => [
-        'width' => 200,
-        'height' => 200
-    ],
-    'watermark_masterlist_thumbnails' => 0,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -300,7 +242,6 @@ return [
     | Simply change to "1" to enable, or keep at "0" to disable.
     |
     */
-<<<<<<< HEAD
     'masterlist_image_automation'                       => 1,
 
     /*
@@ -340,9 +281,6 @@ return [
     */
     'gallery_images_cap'    => 2000,
     'gallery_images_format' => null,
-=======
-    'masterlist_image_automation' => 0,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -354,30 +292,18 @@ return [
     | there are limits on data storage, so raising this is not recommended.
     |
     */
-<<<<<<< HEAD
     'trade_asset_limit'                                 => 20,
-=======
-    'trade_asset_limit' => 20,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
     | Shop Purchase Limit
     |--------------------------------------------------------------------------
     |
-<<<<<<< HEAD
     | This is an arbitrary upper limit on how many items a user can buy in a
     | single shop transaction.
     |
     */
     'default_purchase_limit'                            => 99,
-=======
-    | This is an arbitrary upper limit on how many items a uses can buy in a
-    | single shop transaction.
-    |
-    */
-    'default_purchase_limit' => 99,
->>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -387,7 +313,6 @@ return [
     | Symbol for the (real world) currency used for sales posts.
     |
     */
-<<<<<<< HEAD
     'currency_symbol'                                   => '$',
 
     /*
@@ -457,8 +382,4 @@ return [
         "text" => '<strong>Squib Islands is a 16+ ARPG and community.</strong> By accessing this site and interacting with its users, you agree that you have read through our <a href="/info/terms" style="color: blue;">Terms of Service</a>.', 
         "button" => "Accept"
     ],
-=======
-    'currency_symbol' => '$'
-
->>>>>>> Cylunny/extension/polls-and-forms
 ];

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Sales\Sales;
 use App\Models\News;
@@ -23,20 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
 
 class HomeController extends Controller {
-=======
-use App\Models\SitePage;
-use App\Services\LinkService;
-use App\Services\UserService;
-use Auth;
-use Carbon\Carbon;
-use Config;
-use DB;
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
-
-class HomeController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Home Controller
@@ -51,7 +36,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getIndex() {
         if (config('lorekeeper.extensions.show_all_recent_submissions.enable')) {
             $query = GallerySubmission::visible(Auth::user() ?? null)->accepted()->orderBy('created_at', 'DESC');
@@ -83,17 +67,10 @@ class HomeController extends Controller
             'featuredFirst'       => Arr::first($specieses),
             'saleses'             => Sales::visible()->orderBy('id', 'DESC')->take(2)->get(),
             'newses'              => News::visible()->orderBy('updated_at', 'DESC')->take(2)->get(),
-=======
-    public function getIndex()
-    {
-        return view('welcome', [
-            'about' => SitePage::where('key', 'about')->first(),
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
-<<<<<<< HEAD
      * Gets random character from specified species.
      *
      * @param int (species_id) $species
@@ -121,18 +98,11 @@ class HomeController extends Controller
     }
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Shows the account linking page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getLink(Request $request) {
-=======
-    public function getLink(Request $request)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         // If the user already has a username associated with their account, redirect them
         if (Auth::check() && Auth::user()->hasAlias) {
             redirect()->to('home');
@@ -147,12 +117,7 @@ class HomeController extends Controller
      *
      * @param string $provider
      */
-<<<<<<< HEAD
     public function getAuthRedirect(LinkService $service, $provider) {
-=======
-    public function getAuthRedirect(LinkService $service, $provider)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         if (!$this->checkProvider($provider, Auth::user())) {
             flash($this->error)->error();
 
@@ -168,12 +133,7 @@ class HomeController extends Controller
      *
      * @param string $provider
      */
-<<<<<<< HEAD
     public function getAuthCallback(LinkService $service, $provider) {
-=======
-    public function getAuthCallback(LinkService $service, $provider)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         if (!$this->checkProvider($provider, Auth::user())) {
             flash($this->error)->error();
 
@@ -205,12 +165,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getBirthday(Request $request) {
-=======
-    public function getBirthday(Request $request)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         // If the user already has a username associated with their account, redirect them
         if (Auth::check() && Auth::user()->birthday) {
             return redirect()->to('/');
@@ -225,24 +180,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function postBirthday(Request $request) {
         $service = new UserService;
         // Make birthday into format we can store
         $data = $request->input('dob');
 
         if ($service->updateBirthday($data, Auth::user())) {
-=======
-    public function postBirthday(Request $request)
-    {
-        $service = new UserService;
-        // Make birthday into format we can store
-        $data = $request->input('dob');
-        $date = $data['day'].'-'.$data['month'].'-'.$data['year'];
-        $formatDate = Carbon::parse($date);
-
-        if ($service->updateBirthday($formatDate, Auth::user())) {
->>>>>>> Cylunny/extension/polls-and-forms
             flash('Birthday added successfully!');
 
             return redirect()->to('/');
@@ -260,12 +203,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getBirthdayBlocked(Request $request) {
-=======
-    public function getBirthdayBlocked(Request $request)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         // If the user already has a username associated with their account, redirect them
         if (Auth::check() && Auth::user()->checkBirthday) {
             return redirect()->to('/');
@@ -279,18 +217,10 @@ class HomeController extends Controller
         return view('auth.blocked');
     }
 
-<<<<<<< HEAD
     private function checkProvider($provider, $user) {
         // Check if the site can be used for authentication
         $isAllowed = false;
         foreach (config('lorekeeper.sites') as $key => $site) {
-=======
-    private function checkProvider($provider, $user)
-    {
-        // Check if the site can be used for authentication
-        $isAllowed = false;
-        foreach (Config::get('lorekeeper.sites') as $key => $site) {
->>>>>>> Cylunny/extension/polls-and-forms
             if ($key == $provider && isset($site['auth'])) {
                 // require a primary alias if the user does not already have one
                 if (!Auth::user()->has_alias && (!isset($site['primary_alias']) || !$site['primary_alias'])) {

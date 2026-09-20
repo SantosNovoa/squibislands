@@ -2,30 +2,18 @@
 
 namespace App\Models\Shop;
 
-<<<<<<< HEAD
 use App\Models\Item\Item;
 use App\Models\Model;
 
 class Shop extends Model {
-=======
-use Config;
-use App\Models\Model;
-
-class Shop extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_active', 'hash',
         'is_staff', 'use_coupons', 'is_restricted', 'is_fto', 'allowed_coupons', 'is_timed_shop', 'start_at', 'end_at',
-=======
-        'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_active'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -34,7 +22,6 @@ class Shop extends Model
      * @var string
      */
     protected $table = 'shops';
-<<<<<<< HEAD
 
     /**
      * Validation rules for creation.
@@ -45,27 +32,12 @@ class Shop extends Model
         'image'       => 'mimes:png',
     ];
 
-=======
-    
-    /**
-     * Validation rules for creation.
-     *
-     * @var array
-     */
-    public static $createRules = [
-        'name' => 'required|unique:item_categories|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
-    ];
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
-<<<<<<< HEAD
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
@@ -73,15 +45,6 @@ class Shop extends Model
 
     /**********************************************************************************************
 
-=======
-        'name' => 'required|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
-    ];
-
-    /**********************************************************************************************
-    
->>>>>>> Cylunny/extension/polls-and-forms
         RELATIONS
 
     **********************************************************************************************/
@@ -89,7 +52,6 @@ class Shop extends Model
     /**
      * Get the shop stock.
      */
-<<<<<<< HEAD
     public function stock() {
         return $this->hasMany(ShopStock::class);
     }
@@ -121,38 +83,12 @@ class Shop extends Model
 
     **********************************************************************************************/
 
-=======
-    public function stock() 
-    {
-        return $this->hasMany('App\Models\Shop\ShopStock');
-    }
-    
-    /**
-     * Get the shop stock as items for display purposes.
-     */
-    public function displayStock()
-    {
-        return $this->belongsToMany('App\Models\Item\Item', 'shop_stock')->withPivot('item_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'purchase_limit', 'id');
-    }
-
-    /**********************************************************************************************
-    
-        ACCESSORS
-
-    **********************************************************************************************/
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Displays the shop's name, linked to its purchase page.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
-=======
-    public function getDisplayNameAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-shop">'.$this->name.'</a>';
     }
 
@@ -161,12 +97,7 @@ class Shop extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
-=======
-    public function getImageDirectoryAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/shops';
     }
 
@@ -175,14 +106,8 @@ class Shop extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getShopImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
-=======
-    public function getShopImageFileNameAttribute()
-    {
-        return $this->id . '-image.png';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -190,36 +115,21 @@ class Shop extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getShopImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
-=======
-    public function getShopImagePathAttribute()
-    {
-        return public_path($this->imageDirectory);
-    }
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL of the model's image.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getShopImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->shopImageFileName);
-=======
-    public function getShopImageUrlAttribute()
-    {
-        if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->shopImageFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -227,7 +137,6 @@ class Shop extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
         return url('shops/'.$this->id);
     }
@@ -268,10 +177,4 @@ class Shop extends Model
 
         return $coupons;
     }
-=======
-    public function getUrlAttribute()
-    {
-        return url('shops/'.$this->id);
-    }
->>>>>>> Cylunny/extension/polls-and-forms
 }

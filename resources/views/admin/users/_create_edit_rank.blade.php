@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 @if ($rank)
     {!! Form::open(['url' => $rank->id ? 'admin/users/ranks/edit/' . $rank->id : 'admin/users/ranks/create']) !!}
-=======
-@if($rank)
-    {!! Form::open(['url' => $rank->id ? 'admin/users/ranks/edit/'.$rank->id : 'admin/users/ranks/create']) !!}
->>>>>>> Cylunny/extension/polls-and-forms
 
     <div class="form-group">
         {!! Form::label('Rank Name') !!}
@@ -16,15 +11,10 @@
         {!! Form::textarea('description', $rank->description, ['class' => 'form-control']) !!}
     </div>
 
-<<<<<<< HEAD
     {{-- Primary / fallback color --}}
     <div class="form-group">
         {!! Form::label('Colour (Hex code; optional)') !!}
         {!! add_help('This is the default colour used across all themes unless a per-theme override is set below.') !!}
-=======
-    <div class="form-group">
-        {!! Form::label('Colour (Hex code; optional)') !!}
->>>>>>> Cylunny/extension/polls-and-forms
         <div class="input-group cp">
             {!! Form::text('color', $rank->color, ['class' => 'form-control']) !!}
             <span class="input-group-append">
@@ -33,7 +23,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     {{-- Per-theme color overrides --}}
     @if (isset($themes) && $themes->count())
         <div class="form-group">
@@ -72,21 +61,12 @@
         </div>
         <div class="col-1 align-self-center text-right p-0">
             <i id="rankitem" class="{{ $rank->icon }}"></i>
-=======
-    <div class="form-group row px-0 mx-0">
-        <div class="col-5 align-self-center">
-          {!! Form::label('Icon (Font-awesome code; optional)') !!}
-        </div>
-        <div class="col-1 align-self-center text-right p-0">
-          <i id="rankitem" class="{{ $rank->icon }}"></i>
->>>>>>> Cylunny/extension/polls-and-forms
         </div>
         <div class="input-group col-6">
             {!! Form::text('icon', $rank->icon, ['class' => 'form-control', 'id' => 'icon']) !!}
         </div>
     </div>
 
-<<<<<<< HEAD
     @if ($editable != 2)
         {{-- Powers --}}
         <div class="form-group">
@@ -96,28 +76,11 @@
                         {!! Form::checkbox('powers[' . $key . ']', $key, $rankPowers ? isset($rankPowers[$key]) : false, ['class' => 'form-check-input', 'id' => 'powers[' . $key . ']']) !!}
                         {!! Form::label('powers[' . $key . ']', $power['name'], ['class' => 'form-check-label']) !!}
                         {!! add_help($power['description']) !!}
-=======
-    @if($editable != 2)
-        {{-- Powers --}}
-        <div class="form-group">
-            <div class="row">
-                @foreach($powers as $key => $power)
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            {!! Form::checkbox('powers[]', $key, $rankPowers ? isset($rankPowers[$key]) : false, ['class' => 'form-check-input']) !!}
-                            {!! Form::label('powers[]', $power['name'] , ['class' => 'form-check-label']) !!}
-                            {!! add_help($power['description']) !!}
-                        </div>
->>>>>>> Cylunny/extension/polls-and-forms
                     </div>
                 @endforeach
             </div>
         </div>
-<<<<<<< HEAD
     @else
-=======
-    @else 
->>>>>>> Cylunny/extension/polls-and-forms
         <div class="card bg-light mb-3">
             <div class="card-body">Powers for the admin rank cannot be edited. {!! add_help('The admin rank has the ability to edit any editable information on the site, and is always highest-ranked (cannot be edited by any other user).') !!}</div>
         </div>
@@ -131,7 +94,6 @@
 
     <script>
         $(document).ready(function() {
-<<<<<<< HEAD
             $("#icon").change(function() {
                 var text = $('#icon').val();
                 $("#rankitem").removeClass();
@@ -142,15 +104,3 @@
 @else
     Invalid rank selected.
 @endif
-=======
-          $("#icon").change(function(){
-             var text = $('#icon').val();
-            $("#rankitem").removeClass();
-            $("#rankitem").addClass(text);
-          });
-        });
-     </script>
-@else 
-    Invalid rank selected.
-@endif
->>>>>>> Cylunny/extension/polls-and-forms

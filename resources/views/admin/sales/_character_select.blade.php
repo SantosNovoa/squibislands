@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @php
     $characters = \App\Models\Character\Character::visible(Auth::user() ?? null)
         ->myo(0)
@@ -8,8 +7,6 @@
         ->toArray();
 @endphp
 
-=======
->>>>>>> Cylunny/extension/polls-and-forms
 <div id="characterComponents" class="hide">
     <div class="sales-character mb-3 card">
         <div class="card-body">
@@ -22,30 +19,19 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-<<<<<<< HEAD
                     <div class="form-group">
                         {!! Form::label('slug', 'Character Code') !!}
                         {!! Form::select('slug[]', $characters, null, ['class' => 'form-control character-code', 'placeholder' => 'Select Character', 'placeholder' => 'Select Character']) !!}
-=======
-                    <a href="#" class="float-right fas fa-close"></a>
-                    <div class="form-group">
-                        {!! Form::label('slug[]', 'Character Code') !!}
-                        {!! Form::text('slug[]', null, ['class' => 'form-control character-code']) !!}
->>>>>>> Cylunny/extension/polls-and-forms
                     </div>
                     <div class="character-details hide">
                         <h4>Sale Details</h4>
 
                         <div class="form-group mb-2">
                             {!! Form::label('Type') !!}
-<<<<<<< HEAD
                             {!! Form::select('sale_type[]', ['flatsale' => 'Flatsale', 'auction' => 'Auction', 'ota' => 'OTA', 'xta' => 'XTA', 'raffle' => 'Raffle', 'flaffle' => 'Flatsale Raffle', 'pwyw' => 'Pay What You Want'], null, [
                                 'class' => 'form-control character-sale-type',
                                 'placeholder' => 'Select Sale Type',
                             ]) !!}
-=======
-                            {!! Form::select('sale_type[]', ['flatsale' => 'Flatsale', 'auction' => 'Auction', 'ota' => 'OTA', 'xta' => 'XTA', 'raffle' => 'Raffle', 'flaffle' => 'Flatsale Raffle', 'pwyw' => 'Pay What You Want'], null, ['class' => 'form-control character-sale-type', 'placeholder' => 'Select Sale Type']) !!}
->>>>>>> Cylunny/extension/polls-and-forms
                         </div>
 
                         <div class="saleType">

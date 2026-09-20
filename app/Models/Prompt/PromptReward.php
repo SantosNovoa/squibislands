@@ -2,7 +2,6 @@
 
 namespace App\Models\Prompt;
 
-<<<<<<< HEAD
 use App\Models\Award\Award;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
@@ -15,24 +14,13 @@ use App\Models\Recipe\Recipe;
 use App\Models\Stat\Stat;
 
 class PromptReward extends Model {
-=======
-use Config;
-use App\Models\Model;
-
-class PromptReward extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'prompt_id', 'rewardable_type', 'rewardable_id', 'quantity',
-=======
-        'prompt_id', 'rewardable_type', 'rewardable_id', 'quantity'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -41,10 +29,6 @@ class PromptReward extends Model
      * @var string
      */
     protected $table = 'prompt_rewards';
-<<<<<<< HEAD
-=======
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
@@ -52,17 +36,10 @@ class PromptReward extends Model
      */
     public static $createRules = [
         'rewardable_type' => 'required',
-<<<<<<< HEAD
         'rewardable_id'   => 'required',
         'quantity'        => 'required|integer|min:1',
     ];
 
-=======
-        'rewardable_id' => 'required',
-        'quantity' => 'required|integer|min:1',
-    ];
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
@@ -70,7 +47,6 @@ class PromptReward extends Model
      */
     public static $updateRules = [
         'rewardable_type' => 'required',
-<<<<<<< HEAD
         'rewardable_id'   => 'required',
         'quantity'        => 'required|integer|min:1',
     ];
@@ -116,38 +92,6 @@ class PromptReward extends Model
                 break;
         }
 
-=======
-        'rewardable_id' => 'required',
-        'quantity' => 'required|integer|min:1',
-    ];
-
-    /**********************************************************************************************
-    
-        RELATIONS
-
-    **********************************************************************************************/
-    
-    /**
-     * Get the reward attached to the prompt reward.
-     */
-    public function reward() 
-    {
-        switch ($this->rewardable_type)
-        {
-            case 'Item':
-                return $this->belongsTo('App\Models\Item\Item', 'rewardable_id');
-                break;
-            case 'Currency':
-                return $this->belongsTo('App\Models\Currency\Currency', 'rewardable_id');
-                break;
-            case 'LootTable':
-                return $this->belongsTo('App\Models\Loot\LootTable', 'rewardable_id');
-                break;
-            case 'Raffle':
-                return $this->belongsTo('App\Models\Raffle\Raffle', 'rewardable_id');
-                break;
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return null;
     }
 }

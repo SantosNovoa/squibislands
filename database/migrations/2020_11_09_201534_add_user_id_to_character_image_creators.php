@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,21 +9,6 @@ class AddUserIdToCharacterImageCreators extends Migration {
      * Run the migrations.
      */
     public function up() {
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-class AddUserIdToCharacterImageCreators extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         Schema::table('character_image_creators', function (Blueprint $table) {
             //
             $table->integer('user_id')->unsigned()->nullable();
@@ -33,16 +17,8 @@ class AddUserIdToCharacterImageCreators extends Migration
 
     /**
      * Reverse the migrations.
-<<<<<<< HEAD
      */
     public function down() {
-=======
-     *
-     * @return void
-     */
-    public function down()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         Schema::table('character_image_creators', function (Blueprint $table) {
             //
             $table->dropColumn('user_id');

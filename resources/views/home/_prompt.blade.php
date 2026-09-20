@@ -1,7 +1,6 @@
 <div class="card">
     <div class="card-body">
         <h4>Default Prompt Rewards</h4>
-<<<<<<< HEAD
         @if (isset($staffView) && $staffView)
             <p>For reference, these are the default rewards for this prompt. The editable section above is <u>inclusive</u> of these rewards.</p>
             @if($count['all'])
@@ -30,18 +29,6 @@
             {{ $prompt->limit_period ? ' per '.strtolower($prompt->limit_period) : '' }}
             {{ $prompt->limit_character ? ' per character' : ''}}.</p>
             </div>
-=======
-        @if(isset($staffView) && $staffView)
-            <p>For reference, these are the default rewards for this prompt. The editable section above is <u>inclusive</u> of these rewards.</p>
-            @if($count)
-                <p>This user has completed this prompt <strong>{{ $count }}</strong> time{{ $count == 1 ? '' : 's' }}.</p>
-            @endif
-        @else
-            <p>These are the default rewards for this prompt. The actual rewards you receive may be edited by a staff member during the approval process.</p>
-            @if($count)
-                <p>You have completed this prompt <strong>{{ $count }}</strong> time{{ $count == 1 ? '' : 's' }}.</p>
-            @endif
->>>>>>> Cylunny/extension/polls-and-forms
         @endif
         <table class="table table-sm mb-0">
             <thead>
@@ -51,21 +38,14 @@
                 </tr>
             </thead>
             <tbody>
-<<<<<<< HEAD
                 @foreach ($prompt->rewards as $reward)
                     <tr>
                         <td>{!! $reward->reward ? $reward->reward->displayName : $reward->rewardable_type !!}</td>
-=======
-                @foreach($prompt->rewards as $reward)
-                    <tr>
-                        <td>{!! $reward->reward->displayName !!}</td>
->>>>>>> Cylunny/extension/polls-and-forms
                         <td>{{ $reward->quantity }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-<<<<<<< HEAD
         <hr>
         <h4>Default Skill Rewards</h4>
         <table class="table table-sm mb-0">
@@ -86,7 +66,3 @@
         </table>
     </div>
 </div>
-=======
-    </div>
-</div>
->>>>>>> Cylunny/extension/polls-and-forms

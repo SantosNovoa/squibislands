@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @php
     $characters = \App\Models\Character\Character::visible(Auth::user() ?? null)
         ->myo(0)
@@ -8,8 +7,6 @@
         ->toArray();
 @endphp
 
-=======
->>>>>>> Cylunny/extension/polls-and-forms
 <div class="sales-character-entry mb-3 card">
     <div class="card-body">
         <div class="text-right"><a href="#" class="remove-character text-muted"><i class="fas fa-times"></i></a></div>
@@ -19,38 +16,24 @@
                     <div class="character-image-blank hide">Enter character code.</div>
                     <div class="character-image-loaded">
                         @include('home._character', ['character' => $character->character])
-<<<<<<< HEAD
                         {!! Form::hidden('image_id[]', $character->image_id) !!}
-=======
->>>>>>> Cylunny/extension/polls-and-forms
                     </div>
                 </div>
             </div>
             <div class="col-md-10">
-<<<<<<< HEAD
                 <div class="form-group">
                     {!! Form::label('slug[]', 'Character Code') !!}
                     {!! Form::select('slug[]', $characters, $character->character->slug, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
-=======
-                <a href="#" class="float-right fas fa-close"></a>
-                <div class="form-group">
-                    {!! Form::label('slug[]', 'Character Code') !!}
-                    {!! Form::text('slug[]', $character->character->slug, ['class' => 'form-control character-code']) !!}
->>>>>>> Cylunny/extension/polls-and-forms
                 </div>
                 <div class="character-details">
                     <h4>Sale Details</h4>
 
                     <div class="form-group mb-2">
                         {!! Form::label('Type') !!}
-<<<<<<< HEAD
                         {!! Form::select('sale_type[]', ['flatsale' => 'Flatsale', 'auction' => 'Auction', 'ota' => 'OTA', 'xta' => 'XTA', 'raffle' => 'Raffle', 'flaffle' => 'Flatsale Raffle', 'pwyw' => 'Pay What You Want'], $character->type, [
                             'class' => 'form-control character-sale-type',
                             'placeholder' => 'Select Sale Type',
                         ]) !!}
-=======
-                        {!! Form::select('sale_type[]', ['flatsale' => 'Flatsale', 'auction' => 'Auction', 'ota' => 'OTA', 'xta' => 'XTA', 'raffle' => 'Raffle', 'flaffle' => 'Flatsale Raffle', 'pwyw' => 'Pay What You Want'], $character->type, ['class' => 'form-control character-sale-type', 'placeholder' => 'Select Sale Type']) !!}
->>>>>>> Cylunny/extension/polls-and-forms
                     </div>
 
                     <div class="saleType">
@@ -101,7 +84,6 @@
                         {!! Form::text('link[]', $character->link, ['class' => 'form-control', 'placeholder' => 'URL']) !!}
                     </div>
 
-<<<<<<< HEAD
                     @if ($sales->characters->count() > 1)
                         <div class="form-group text-right">
                             {!! Form::checkbox('character_is_open[' . $character->character->slug . ']', 1, $character->is_open, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
@@ -109,15 +91,6 @@
                         </div>
                     @else
                         {!! Form::hidden('character_is_open[' . $character->character->slug . ']', 1) !!}
-=======
-                    @if($sales->characters->count() > 1)
-                        <div class="form-group text-right">
-                            {!! Form::checkbox('character_is_open['.$character->character->slug.']', 1, $character->is_open, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-                            {!! Form::label('character_is_open', 'Is Open', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Whether or not this particular character is open or available. If the sale post itself is closed, all character sales attached will also be displayed as closed.') !!}
-                        </div>
-                    @else
-                        {!! Form::hidden('character_is_open['.$character->character->slug.']', 1) !!}
->>>>>>> Cylunny/extension/polls-and-forms
                     @endif
 
                     {!! Form::hidden('new_entry[]', 0) !!}
@@ -126,7 +99,3 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> Cylunny/extension/polls-and-forms

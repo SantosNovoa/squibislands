@@ -4,20 +4,13 @@ namespace App\Models\User;
 
 use App\Models\Model;
 
-<<<<<<< HEAD
 class UserUpdateLog extends Model {
-=======
-class UserUpdateLog extends Model
-{
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'staff_id', 'user_id', 'data', 'type',
     ];
 
@@ -28,12 +21,6 @@ class UserUpdateLog extends Model
      */
     protected $table = 'user_update_log';
     /**
-=======
-        'staff_id', 'user_id', 'data', 'type'
-    ];
-
-    /**
->>>>>>> Cylunny/extension/polls-and-forms
      * The primary key of the model.
      *
      * @var string
@@ -47,7 +34,6 @@ class UserUpdateLog extends Model
      */
     public $timestamps = true;
 
-<<<<<<< HEAD
     /**********************************************************************************************
 
         RELATIONS
@@ -70,39 +56,6 @@ class UserUpdateLog extends Model
 
     /**********************************************************************************************
 
-=======
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'user_update_log';
-
-    /**********************************************************************************************
-    
-        RELATIONS
-
-    **********************************************************************************************/
-    
-    /**
-     * Get the staff who updated the user.
-     */
-    public function staff() 
-    {
-        return $this->belongsTo('App\Models\User\User', 'staff_id');
-    }
-    
-    /**
-     * Get the user that was updated.
-     */
-    public function user() 
-    {
-        return $this->belongsTo('App\Models\User\User', 'user_id');
-    }
-
-    /**********************************************************************************************
-    
->>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -112,12 +65,7 @@ class UserUpdateLog extends Model
      *
      * @return array
      */
-<<<<<<< HEAD
     public function getDataAttribute() {
-=======
-    public function getDataAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return json_decode($this->attributes['data'], true);
     }
 }

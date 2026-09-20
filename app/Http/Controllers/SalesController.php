@@ -2,24 +2,12 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
 use App\Models\Sales\Sales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
 class SalesController extends Controller {
-=======
-use Auth;
-
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
-use App\Models\Sales\Sales;
-
-class SalesController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | sales Controller
@@ -30,7 +18,6 @@ class SalesController extends Controller
     */
 
     /**
-<<<<<<< HEAD
      * Create a new controller instance.
      */
     public function __construct() {
@@ -39,13 +26,10 @@ class SalesController extends Controller
     }
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Shows the sales index.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getIndex(Request $request) {
         if (Auth::check() && Auth::user()->is_sales_unread) {
             Auth::user()->update(['is_sales_unread' => 0]);
@@ -88,18 +72,11 @@ class SalesController extends Controller
         return view('sales.index', [
             'saleses' => $query->paginate(10)->appends($request->query()),
         ]);
-=======
-    public function getIndex()
-    {
-        if(Auth::check() && Auth::user()->is_sales_unread) Auth::user()->update(['is_sales_unread' => 0]);
-        return view('sales.index', ['saleses' => Sales::visible()->orderBy('id', 'DESC')->paginate(10)]);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Shows a sales post.
      *
-<<<<<<< HEAD
      * @param int         $id
      * @param string|null $slug
      *
@@ -111,16 +88,6 @@ class SalesController extends Controller
             abort(404);
         }
 
-=======
-     * @param  int          $id
-     * @param  string|null  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getSales($id, $slug = null)
-    {
-        $sales = Sales::where('id', $id)->where('is_visible', 1)->first();
-        if(!$sales) abort(404);
->>>>>>> Cylunny/extension/polls-and-forms
         return view('sales.sales', ['sales' => $sales]);
     }
 }

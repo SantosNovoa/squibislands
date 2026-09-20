@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
 use App\Models\User\User;
 use App\Traits\Commentable;
 use Carbon\Carbon;
@@ -11,17 +10,6 @@ use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
 class News extends Model implements Feedable {
-=======
-use Carbon\Carbon;
-use Config;
-use App\Models\Model;
-use Illuminate\Support\Str;
-
-use App\Traits\Commentable;
-
-class News extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     use Commentable;
     /**
      * The attributes that are mass assignable.
@@ -29,11 +17,7 @@ class News extends Model
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'user_id', 'text', 'parsed_text', 'title', 'is_visible', 'post_at',
-=======
-        'user_id', 'text', 'parsed_text', 'title', 'is_visible', 'post_at'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -44,7 +28,6 @@ class News extends Model
     protected $table = 'news';
 
     /**
-<<<<<<< HEAD
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -54,8 +37,6 @@ class News extends Model
     ];
 
     /**
-=======
->>>>>>> Cylunny/extension/polls-and-forms
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -63,31 +44,15 @@ class News extends Model
     public $timestamps = true;
 
     /**
-<<<<<<< HEAD
-=======
-     * Dates on the model to convert to Carbon instances.
-     *
-     * @var array
-     */
-    public $dates = ['post_at'];
-
-    /**
->>>>>>> Cylunny/extension/polls-and-forms
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
         'title' => 'required|between:3,100',
-<<<<<<< HEAD
         'text'  => 'required',
     ];
 
-=======
-        'text' => 'required',
-    ];
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
@@ -95,7 +60,6 @@ class News extends Model
      */
     public static $updateRules = [
         'title' => 'required|between:3,100',
-<<<<<<< HEAD
         'text'  => 'required',
     ];
 
@@ -114,27 +78,6 @@ class News extends Model
 
     /**********************************************************************************************
 
-=======
-        'text' => 'required',
-    ];
-
-    /**********************************************************************************************
-    
-        RELATIONS
-
-    **********************************************************************************************/
-    
-    /**
-     * Get the user who created the news post.
-     */
-    public function user() 
-    {
-        return $this->belongsTo('App\Models\User\User');
-    }
-
-    /**********************************************************************************************
-    
->>>>>>> Cylunny/extension/polls-and-forms
         SCOPES
 
     **********************************************************************************************/
@@ -142,47 +85,26 @@ class News extends Model
     /**
      * Scope a query to only include visible posts.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeVisible($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('is_visible', 1);
     }
 
     /**
      * Scope a query to only include posts that are scheduled to be posted and are ready to post.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeShouldBeVisible($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeShouldBeVisible($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->whereNotNull('post_at')->where('post_at', '<', Carbon::now())->where('is_visible', 0);
     }
 
     /**********************************************************************************************
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -192,14 +114,8 @@ class News extends Model
      *
      * @return bool
      */
-<<<<<<< HEAD
     public function getSlugAttribute() {
         return $this->id.'.'.Str::slug($this->title);
-=======
-    public function getSlugAttribute()
-    {
-        return $this->id . '.' . Str::slug($this->title);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -207,12 +123,7 @@ class News extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
-=======
-    public function getDisplayNameAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'">'.$this->title.'</a>';
     }
 
@@ -221,7 +132,6 @@ class News extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
         return url('news/'.$this->slug);
     }
@@ -273,10 +183,4 @@ class News extends Model
             'authorName' => $this->user->name,
         ]);
     }
-=======
-    public function getUrlAttribute()
-    {
-        return url('news/'.$this->slug);
-    }
->>>>>>> Cylunny/extension/polls-and-forms
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models\Feature;
 
-<<<<<<< HEAD
 use App\Models\Model;
 use App\Models\Rarity;
 use App\Models\Species\Species;
@@ -10,29 +9,14 @@ use App\Models\Species\Subtype;
 use Illuminate\Support\Facades\DB;
 
 class Feature extends Model {
-=======
-use Config;
-use DB;
-use App\Models\Model;
-use App\Models\Feature\FeatureCategory;
-use App\Models\Species\Species;
-use App\Models\Rarity;
-
-class Feature extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'feature_category_id', 'species_id', 'subtype_id', 'rarity_id', 'name', 'has_image', 'description', 'parsed_description', 'is_visible', 'hash',
         'parent_id', 'display_mode', 'display_separate',
-=======
-        'feature_category_id', 'species_id', 'subtype_id', 'rarity_id', 'name', 'has_image', 'description', 'parsed_description'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -41,10 +25,6 @@ class Feature extends Model
      * @var string
      */
     protected $table = 'features';
-<<<<<<< HEAD
-=======
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
@@ -52,21 +32,12 @@ class Feature extends Model
      */
     public static $createRules = [
         'feature_category_id' => 'nullable',
-<<<<<<< HEAD
         'species_id'          => 'nullable',
         'subtype_id'          => 'nullable',
         'rarity_id'           => 'required|exists:rarities,id',
         'name'                => 'required|unique:features|between:3,100',
         'description'         => 'nullable',
         'image'               => 'mimes:png',
-=======
-        'species_id' => 'nullable',
-        'subtype_id' => 'nullable',
-        'rarity_id' => 'required|exists:rarities,id',
-        'name' => 'required|unique:features|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -76,21 +47,12 @@ class Feature extends Model
      */
     public static $updateRules = [
         'feature_category_id' => 'nullable',
-<<<<<<< HEAD
         'species_id'          => 'nullable',
         'subtype_id'          => 'nullable',
         'rarity_id'           => 'required|exists:rarities,id',
         'name'                => 'required|between:3,100',
         'description'         => 'nullable',
         'image'               => 'mimes:png',
-=======
-        'species_id' => 'nullable',
-        'subtype_id' => 'nullable',
-        'rarity_id' => 'required|exists:rarities,id',
-        'name' => 'required|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
@@ -102,46 +64,27 @@ class Feature extends Model
     /**
      * Get the rarity of this feature.
      */
-<<<<<<< HEAD
     public function rarity() {
         return $this->belongsTo(Rarity::class);
-=======
-    public function rarity()
-    {
-        return $this->belongsTo('App\Models\Rarity');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the species the feature belongs to.
      */
-<<<<<<< HEAD
     public function species() {
         return $this->belongsTo(Species::class);
-=======
-    public function species()
-    {
-        return $this->belongsTo('App\Models\Species\Species');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the subtype the feature belongs to.
      */
-<<<<<<< HEAD
     public function subtype() {
         return $this->belongsTo(Subtype::class);
-=======
-    public function subtype()
-    {
-        return $this->belongsTo('App\Models\Species\Subtype');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the category the feature belongs to.
      */
-<<<<<<< HEAD
     public function category() {
         return $this->belongsTo(FeatureCategory::class, 'feature_category_id');
     }
@@ -158,11 +101,6 @@ class Feature extends Model
      */
     public function altTypes() {
         return $this->hasMany('App\Models\Feature\Feature', 'parent_id');
-=======
-    public function category()
-    {
-        return $this->belongsTo('App\Models\Feature\FeatureCategory', 'feature_category_id');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
@@ -174,28 +112,18 @@ class Feature extends Model
     /**
      * Scope a query to sort features in alphabetical order.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param bool                                  $reverse
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSortAlphabetical($query, $reverse = false) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  bool                                   $reverse
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortAlphabetical($query, $reverse = false)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->orderBy('name', $reverse ? 'DESC' : 'ASC');
     }
 
     /**
      * Scope a query to sort features in category order.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -206,22 +134,11 @@ class Feature extends Model
         }
 
         return $query;
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  bool                                   $reverse
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortCategory($query)
-    {
-        $ids = FeatureCategory::orderBy('sort', 'DESC')->pluck('id')->toArray();
-        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(feature_category_id, '.implode(',', $ids).')')) : $query;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to sort features in species order.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -243,22 +160,11 @@ class Feature extends Model
         $ids = Subtype::orderBy('sort', 'DESC')->pluck('id')->toArray();
 
         return count($ids) ? $query->orderByRaw(DB::raw('FIELD(subtype_id, '.implode(',', $ids).')')) : $query;
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  bool                                   $reverse
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortSpecies($query)
-    {
-        $ids = Species::orderBy('sort', 'DESC')->pluck('id')->toArray();
-        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(species_id, '.implode(',', $ids).')')) : $query;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to sort features in rarity order.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param bool                                  $reverse
      *
@@ -268,41 +174,22 @@ class Feature extends Model
         $ids = Rarity::orderBy('sort', $reverse ? 'ASC' : 'DESC')->pluck('id')->toArray();
 
         return count($ids) ? $query->orderBy(DB::raw('FIELD(rarity_id, '.implode(',', $ids).')')) : $query;
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  bool                                   $reverse
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortRarity($query, $reverse = false)
-    {
-        $ids = Rarity::orderBy('sort', $reverse ? 'ASC' : 'DESC')->pluck('id')->toArray();
-        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(rarity_id, '.implode(',', $ids).')')) : $query;
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to sort features by newest first.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeSortNewest($query) {
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortNewest($query)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return $query->orderBy('id', 'DESC');
     }
 
     /**
      * Scope a query to sort features oldest first.
      *
-<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -327,16 +214,6 @@ class Feature extends Model
         return $query->where('is_visible', 1);
     }
 
-=======
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortOldest($query)
-    {
-        return $query->orderBy('id');
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**********************************************************************************************
 
         ACCESSORS
@@ -348,7 +225,6 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
         if (($this->parent_id || $this->altTypes->count()) && $this->display_mode != 0) {
             switch ($this->display_mode) {
@@ -423,11 +299,6 @@ class Feature extends Model
         }
 
         return $name;
-=======
-    public function getDisplayNameAttribute()
-    {
-        return '<a href="'.$this->url.'" class="display-trait">'.$this->name.'</a>'.($this->rarity? ' (' . $this->rarity->displayName . ')' : '');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -435,12 +306,7 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
-=======
-    public function getImageDirectoryAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/traits';
     }
 
@@ -449,14 +315,8 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
-=======
-    public function getImageFileNameAttribute()
-    {
-        return $this->id . '-image.png';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -464,12 +324,7 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImagePathAttribute() {
-=======
-    public function getImagePathAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return public_path($this->imageDirectory);
     }
 
@@ -478,19 +333,12 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->imageFileName);
-=======
-    public function getImageUrlAttribute()
-    {
-        if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->imageFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -498,12 +346,7 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
-=======
-    public function getUrlAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return url('world/traits?name='.$this->name);
     }
 
@@ -512,7 +355,6 @@ class Feature extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getSearchUrlAttribute() {
         return url('masterlist?feature_id[]='.$this->id);
     }
@@ -576,10 +418,4 @@ class Feature extends Model
             return self::where('is_visible', '>=', $visibleOnly)->orderBy('name')->pluck('name', 'id')->toArray();
         }
     }
-=======
-    public function getSearchUrlAttribute()
-    {
-        return url('masterlist?feature_id[]='.$this->id);
-    }
->>>>>>> Cylunny/extension/polls-and-forms
 }

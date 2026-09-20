@@ -13,11 +13,7 @@ return [
     |
     */
 
-<<<<<<< HEAD
     'paths'    => [
-=======
-    'paths' => [
->>>>>>> Cylunny/extension/polls-and-forms
         resource_path('views'),
     ],
 

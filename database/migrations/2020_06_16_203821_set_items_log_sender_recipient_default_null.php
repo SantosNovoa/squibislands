@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,25 +13,6 @@ class SetItemsLogSenderRecipientDefaultNull extends Migration {
         DB::statement("ALTER TABLE items_log CHANGE COLUMN sender_type sender_type ENUM('User', 'Character') DEFAULT NULL");
         DB::statement("ALTER TABLE items_log CHANGE COLUMN recipient_type recipient_type ENUM('User', 'Character') DEFAULT NULL");
 
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-class SetItemsLogSenderRecipientDefaultNull extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        //Change default to null going forward
-        DB::statement("ALTER TABLE items_log CHANGE COLUMN sender_type sender_type ENUM('User', 'Character') DEFAULT NULL");
-        DB::statement("ALTER TABLE items_log CHANGE COLUMN recipient_type recipient_type ENUM('User', 'Character') DEFAULT NULL");
-        
->>>>>>> Cylunny/extension/polls-and-forms
         Schema::table('items_log', function (Blueprint $table) {
             //Actually drop them this time, please. Also drop the item_id column
             $table->dropForeign('inventory_log_sender_id_foreign');
@@ -44,16 +24,8 @@ class SetItemsLogSenderRecipientDefaultNull extends Migration
 
     /**
      * Reverse the migrations.
-<<<<<<< HEAD
      */
     public function down() {
-=======
-     *
-     * @return void
-     */
-    public function down()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         //
         DB::statement("ALTER TABLE items_log CHANGE COLUMN sender_type sender_type ENUM('User', 'Character') DEFAULT 'User'");
         DB::statement("ALTER TABLE items_log CHANGE COLUMN recipient_type recipient_type ENUM('User', 'Character') DEFAULT 'User'");

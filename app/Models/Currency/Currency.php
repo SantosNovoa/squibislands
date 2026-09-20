@@ -2,17 +2,9 @@
 
 namespace App\Models\Currency;
 
-<<<<<<< HEAD
 use App\Models\Model;
 
 class Currency extends Model {
-=======
-use Config;
-use App\Models\Model;
-
-class Currency extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
@@ -22,11 +14,7 @@ class Currency extends Model
         'is_user_owned', 'is_character_owned',
         'name', 'abbreviation', 'description', 'parsed_description', 'sort_user', 'sort_character',
         'is_displayed', 'allow_user_to_user', 'allow_user_to_character', 'allow_character_to_user',
-<<<<<<< HEAD
         'has_icon', 'has_image', 'hash',
-=======
-        'has_icon', 'has_image'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -35,29 +23,17 @@ class Currency extends Model
      * @var string
      */
     protected $table = 'currencies';
-<<<<<<< HEAD
-=======
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
-<<<<<<< HEAD
         'name'         => 'required|unique:currencies|between:3,100',
         'abbreviation' => 'nullable|unique:currencies|between:1,25',
         'description'  => 'nullable',
         'icon'         => 'mimes:png',
         'image'        => 'mimes:png',
-=======
-        'name' => 'required|unique:currencies|between:3,100',
-        'abbreviation' => 'nullable|unique:currencies|between:1,25',
-        'description' => 'nullable',
-        'icon' => 'mimes:png',
-        'image' => 'mimes:png'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -66,24 +42,15 @@ class Currency extends Model
      * @var array
      */
     public static $updateRules = [
-<<<<<<< HEAD
         'name'         => 'required|between:3,100',
         'abbreviation' => 'nullable|between:1,25',
         'description'  => 'nullable',
         'icon'         => 'mimes:png',
         'image'        => 'mimes:png',
-=======
-        'name' => 'required|between:3,100',
-        'abbreviation' => 'nullable|between:1,25',
-        'description' => 'nullable',
-        'icon' => 'mimes:png',
-        'image' => 'mimes:png'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
 
-<<<<<<< HEAD
         RELATIONSHIPS
 
     **********************************************************************************************/
@@ -97,8 +64,6 @@ class Currency extends Model
 
     /**********************************************************************************************
 
-=======
->>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -108,14 +73,8 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayIconAttribute() {
         return '<img src="'.$this->currencyIconUrl.'" title="'.$this->name.($this->abbreviation ? ' ('.$this->abbreviation.')' : '').'" data-toggle="tooltip" alt="'.$this->name.'"/>';
-=======
-    public function getDisplayIconAttribute()
-    {
-        return '<img src="'.$this->currencyIconUrl.'" title="'.$this->name . ($this->abbreviation ? ' ('.$this->abbreviation.')' : '') .'" data-toggle="tooltip" alt="'.$this->name.'"/>';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -123,12 +82,7 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
-=======
-    public function getImageDirectoryAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/currencies';
     }
 
@@ -137,14 +91,8 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
-=======
-    public function getCurrencyImageFileNameAttribute()
-    {
-        return $this->id . '-image.png';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -152,14 +100,8 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyIconFileNameAttribute() {
         return $this->hash.$this->id.'-icon.png';
-=======
-    public function getCurrencyIconFileNameAttribute()
-    {
-        return $this->id . '-icon.png';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -167,12 +109,7 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyImagePathAttribute() {
-=======
-    public function getCurrencyImagePathAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return public_path($this->imageDirectory);
     }
 
@@ -181,12 +118,7 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyIconPathAttribute() {
-=======
-    public function getCurrencyIconPathAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return public_path($this->imageDirectory);
     }
 
@@ -195,7 +127,6 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
@@ -215,12 +146,6 @@ class Currency extends Model
         }
 
         return asset($this->imageDirectory.'/'.$this->currencyImageFileName);
-=======
-    public function getCurrencyImageUrlAttribute()
-    {
-        if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->currencyImageFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -228,19 +153,12 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getCurrencyIconUrlAttribute() {
         if (!$this->has_icon) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->currencyIconFileName);
-=======
-    public function getCurrencyIconUrlAttribute()
-    {
-        if (!$this->has_icon) return null;
-        return asset($this->imageDirectory . '/' . $this->currencyIconFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
@@ -254,12 +172,7 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
-=======
-    public function getDisplayNameAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-currency">'.$this->name.'</a>';
     }
 
@@ -268,12 +181,7 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
-=======
-    public function getUrlAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return url('world/currencies?name='.$this->name);
     }
 
@@ -282,7 +190,6 @@ class Currency extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getAssetTypeAttribute() {
         return 'currencies';
     }
@@ -305,13 +212,6 @@ class Currency extends Model
         return 'edit_data';
     }
 
-=======
-    public function getAssetTypeAttribute()
-    {
-        return 'currencies';
-    }
-
->>>>>>> Cylunny/extension/polls-and-forms
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -321,7 +221,6 @@ class Currency extends Model
     /**
      * Displays a given value of the currency with icon, abbreviation or name.
      *
-<<<<<<< HEAD
      * @param mixed $value
      *
      * @return string
@@ -340,16 +239,5 @@ class Currency extends Model
         $ret .= ' '.$value;
 
         return $ret.'</span>';
-=======
-     * @return string
-     */
-    public function display($value)
-    {
-        $ret = '<span class="display-currency">' . $value . ' ';
-        if($this->has_icon) $ret .= $this->displayIcon;
-        elseif ($this->abbreviation) $ret .= $this->abbreviation;
-        else $ret .= $this->name;
-        return $ret . '</span>';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 }

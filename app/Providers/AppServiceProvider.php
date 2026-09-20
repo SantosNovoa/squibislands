@@ -2,25 +2,17 @@
 
 namespace App\Providers;
 
-<<<<<<< HEAD
 use App\Facades\Settings;
 use App\Models\Theme;
-=======
->>>>>>> Cylunny/extension/polls-and-forms
 use App\Providers\Socialite\ToyhouseProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
->>>>>>> Cylunny/extension/polls-and-forms
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,7 +31,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
-<<<<<<< HEAD
         Paginator::defaultView('layouts._pagination');
         Paginator::defaultSimpleView('layouts._simple-pagination');
         // Add any other views that require the theme variables below aka anything with tinymce initialization
@@ -62,10 +53,8 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'Currency' => \App\Models\Currency\Currency::class,
             'Item'     => \App\Models\Item\Item::class,
+            'SiteForm' => \App\Models\Forms\SiteForm::class,
         ]);
-=======
-        Paginator::useBootstrap();
->>>>>>> Cylunny/extension/polls-and-forms
 
         /*
          * Paginate a standard Laravel Collection.

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -11,20 +10,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
 class NewsService extends Service {
-=======
-<?php namespace App\Services;
-
-use App\Services\Service;
-
-use DB;
-use Config;
-
-use App\Models\User\User;
-use App\Models\News;
-
-class NewsService extends Service
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | News Service
@@ -37,27 +22,17 @@ class NewsService extends Service
     /**
      * Creates a news post.
      *
-<<<<<<< HEAD
      * @param array $data
      * @param User  $user
      *
      * @return bool|News
      */
     public function createNews($data, $user) {
-=======
-     * @param  array                  $data
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\News
-     */
-    public function createNews($data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $data['parsed_text'] = parse($data['text']);
             $data['user_id'] = $user->id;
-<<<<<<< HEAD
             if (!isset($data['is_visible'])) {
                 $data['is_visible'] = 0;
             }
@@ -74,25 +49,12 @@ class NewsService extends Service
             $this->setError('error', $e->getMessage());
         }
 
-=======
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-
-            $news = News::create($data);
-
-            if($news->is_visible) $this->alertUsers();
-
-            return $this->commitReturn($news);
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a news post.
      *
-<<<<<<< HEAD
      * @param News  $news
      * @param array $data
      * @param User  $user
@@ -100,21 +62,11 @@ class NewsService extends Service
      * @return bool|News
      */
     public function updateNews($news, $data, $user) {
-=======
-     * @param  \App\Models\News       $news
-     * @param  array                  $data 
-     * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\News
-     */
-    public function updateNews($news, $data, $user)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $data['parsed_text'] = parse($data['text']);
             $data['user_id'] = $user->id;
-<<<<<<< HEAD
             if (!isset($data['is_visible'])) {
                 $data['is_visible'] = 0;
             }
@@ -133,59 +85,35 @@ class NewsService extends Service
             // if (isset($data['bump']) && $data['is_visible'] == 1 && $data['bump'] == 1) {
             //     $this->alertUsers();
             // }
-=======
-            if(!isset($data['is_visible'])) $data['is_visible'] = 0;
-            if(isset($data['bump']) && $data['is_visible'] == 1 && $data['bump'] == 1) $this->alertUsers();
->>>>>>> Cylunny/extension/polls-and-forms
 
             $news->update($data);
 
             return $this->commitReturn($news);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Deletes a news post.
      *
-<<<<<<< HEAD
      * @param News $news
      *
      * @return bool
      */
     public function deleteNews($news) {
-=======
-     * @param  \App\Models\News  $news
-     * @return bool
-     */
-    public function deleteNews($news)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         DB::beginTransaction();
 
         try {
             $news->delete();
 
             return $this->commitReturn(true);
-<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
-=======
-        } catch(\Exception $e) { 
-            $this->setError('error', $e->getMessage());
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
@@ -195,7 +123,6 @@ class NewsService extends Service
      *
      * @return bool
      */
-<<<<<<< HEAD
     public function updateQueue() {
         $count = News::shouldBeVisible()->count();
         if ($count) {
@@ -212,22 +139,6 @@ class NewsService extends Service
                 $this->setError('error', $e->getMessage());
             }
 
-=======
-    public function updateQueue()
-    {
-        $count = News::shouldBeVisible()->count();
-        if($count) {
-            DB::beginTransaction();
-
-            try {
-                News::shouldBeVisible()->update(['is_visible' => 1]);
-                $this->alertUsers();
-
-                return $this->commitReturn(true);
-            } catch(\Exception $e) { 
-                $this->setError('error', $e->getMessage());
-            }
->>>>>>> Cylunny/extension/polls-and-forms
             return $this->rollbackReturn(false);
         }
     }
@@ -238,7 +149,6 @@ class NewsService extends Service
      *
      * @return bool
      */
-<<<<<<< HEAD
     private function alertUsers() {
         User::query()->update(['is_news_unread' => 1]);
 
@@ -274,11 +184,3 @@ class NewsService extends Service
         }
     }
 }
-=======
-    private function alertUsers()
-    {
-        User::query()->update(['is_news_unread' => 1]);
-        return true;
-    }
-}
->>>>>>> Cylunny/extension/polls-and-forms

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Data;
 
-<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Criteria\Criterion;
 use App\Models\Gallery\Gallery;
@@ -11,19 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GalleryController extends Controller {
-=======
-use Illuminate\Http\Request;
-
-use Auth;
-
-use App\Models\Gallery\Gallery;
-use App\Services\GalleryService;
-
-use App\Http\Controllers\Controller;
-
-class GalleryController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Admin / Gallery Controller
@@ -38,16 +24,9 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getIndex() {
         return view('admin.galleries.galleries', [
             'galleries' => Gallery::sort()->whereNull('parent_id')->paginate(10),
-=======
-    public function getIndex()
-    {
-        return view('admin.galleries.galleries', [
-            'galleries' => Gallery::sort()->whereNull('parent_id')->paginate(10)
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -56,26 +35,17 @@ class GalleryController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-<<<<<<< HEAD
     public function getCreateGallery() {
         return view('admin.galleries.create_edit_gallery', [
             'gallery'   => new Gallery,
             'galleries' => Gallery::sort()->pluck('name', 'id'),
             'criteria'  => Criterion::active()->orderBy('name')->pluck('name', 'id'),
-=======
-    public function getCreateGallery()
-    {
-        return view('admin.galleries.create_edit_gallery', [
-            'gallery' => new Gallery,
-            'galleries' => Gallery::sort()->pluck('name','id')
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Shows the edit gallery page.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -90,25 +60,12 @@ class GalleryController extends Controller
             'gallery'   => $gallery,
             'galleries' => Gallery::sort()->pluck('name', 'id')->forget($id),
             'criteria'  => Criterion::active()->orderBy('name')->pluck('name', 'id'),
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditGallery($id)
-    {
-        $gallery = Gallery::find($id);
-        if(!$gallery) abort(404);
-        return view('admin.galleries.create_edit_gallery', [
-            'gallery' => $gallery,
-            'galleries' => Gallery::sort()->pluck('name','id')->forget($id)
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Creates or edits a gallery.
      *
-<<<<<<< HEAD
      * @param App\Services\GalleryService $service
      * @param int|null                    $id
      *
@@ -132,36 +89,12 @@ class GalleryController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request    $request
-     * @param  App\Services\GalleryService $service
-     * @param  int|null                    $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateEditGallery(Request $request, GalleryService $service, $id = null)
-    {
-        $id ? $request->validate(Gallery::$updateRules) : $request->validate(Gallery::$createRules);
-        $data = $request->only([
-            'name', 'sort', 'parent_id', 'description', 'submissions_open', 'currency_enabled', 'votes_required', 'start_at', 'end_at', 'hide_before_start', 'prompt_selection'
-        ]);
-        if($id && $service->updateGallery(Gallery::find($id), $data, Auth::user())) {
-            flash('Gallery updated successfully.')->success();
-        }
-        else if (!$id && $gallery = $service->createGallery($data, Auth::user())) {
-            flash('Gallery created successfully.')->success();
-            return redirect()->to('admin/data/galleries/edit/'.$gallery->id);
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Gets the gallery deletion modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -169,14 +102,6 @@ class GalleryController extends Controller
     public function getDeleteGallery($id) {
         $gallery = Gallery::find($id);
 
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteGallery($id)
-    {
-        $gallery = Gallery::find($id);
->>>>>>> Cylunny/extension/polls-and-forms
         return view('admin.galleries._delete_gallery', [
             'gallery' => $gallery,
         ]);
@@ -185,7 +110,6 @@ class GalleryController extends Controller
     /**
      * Deletes a gallery.
      *
-<<<<<<< HEAD
      * @param App\Services\GalleryService $service
      * @param int                         $id
      *
@@ -200,21 +124,6 @@ class GalleryController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request    $request
-     * @param  App\Services\GalleryService  $service
-     * @param  int                         $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postDeleteGallery(Request $request, GalleryService $service, $id)
-    {
-        if($id && $service->deleteGallery(Gallery::find($id))) {
-            flash('Gallery deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to('admin/data/galleries');
     }
 }

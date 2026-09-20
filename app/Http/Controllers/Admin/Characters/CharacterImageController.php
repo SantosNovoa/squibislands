@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Characters;
 
-<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterImage;
@@ -18,27 +17,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
 
 class CharacterImageController extends Controller {
-=======
-use Illuminate\Http\Request;
-
-use Auth;
-
-use App\Models\Character\Character;
-use App\Models\Character\CharacterImage;
-use App\Models\Character\CharacterCategory;
-use App\Models\Rarity;
-use App\Models\User\User;
-use App\Models\Species\Species;
-use App\Models\Species\Subtype;
-use App\Models\Feature\Feature;
-
-use App\Services\CharacterManager;
-
-use App\Http\Controllers\Controller;
-
-class CharacterImageController extends Controller
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Admin / Character Image Controller
@@ -51,7 +29,6 @@ class CharacterImageController extends Controller
     /**
      * Shows the add image page. Existing characters only, not MYO slots.
      *
-<<<<<<< HEAD
      * @param string $slug
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -71,29 +48,10 @@ class CharacterImageController extends Controller
             'features'  => Feature::getDropdownItems(1),
             'transformations' => ['0' => 'Select '.ucfirst(__('transformations.transformation'))] + Transformation::where('species_id','=',$this->character->image->species_id)->orWhereNull('species_id')->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'isMyo'     => false,
-=======
-     * @param  string  $slug
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getNewImage($slug)
-    {
-        $this->character = Character::where('slug', $slug)->first();
-        if(!$this->character) abort(404);
-
-        return view('character.admin.upload_image', [
-            'character' => $this->character,
-            'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$this->character->image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
-            'isMyo' => false
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
-<<<<<<< HEAD
      * Shows the edit image subtype portion of the modal.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -120,26 +78,11 @@ class CharacterImageController extends Controller
             'transformations' => ['0' => 'Select '.ucfirst(__('transformations.transformation'))] + Transformation::where('species_id','=',$species)->orWhereNull('species_id')->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'transformation'  => $id,
         ]);
-=======
-     * Shows the edit image subtype portion of the modal
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getNewImageSubtype(Request $request) {
-      $species = $request->input('species');
-      $id = $request->input('id');
-      return view('character.admin._upload_image_subtype', [
-          'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-          'subtype' => $id
-      ]);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Creates a new image for a character.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param string                        $slug
      *
@@ -162,33 +105,12 @@ class CharacterImageController extends Controller
             return redirect()->back()->withInput();
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postNewImage(Request $request, CharacterManager $service, $slug)
-    {
-        $request->validate(CharacterImage::$createRules);
-        $data = $request->only(['image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper', 'artist_url', 'artist_id', 'designer_url', 'designer_id', 'species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data', 'is_valid', 'is_visible']);
-        $this->character = Character::where('slug', $slug)->first();
-        if(!$this->character) abort(404);
-        if($service->createImage($data, $this->character, Auth::user())) {
-            flash('Image uploaded successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-            return redirect()->back()->withInput();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to($this->character->url.'/images');
     }
 
     /**
      * Shows the edit image features modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -204,28 +126,12 @@ class CharacterImageController extends Controller
             'subtypes'  => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(1),
            'transformations' => ['0' => 'Select '.ucfirst(__('transformations.transformation'))] + Transformation::where('species_id','=',$image->species_id)->orWhereNull('species_id')->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditImageFeatures($id)
-    {
-      $image = CharacterImage::find($id);
-
-        return view('character.admin._edit_features_modal', [
-            'image' => $image,
-            'rarities' => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray()
->>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Edits the features of an image.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -245,29 +151,10 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postEditImageFeatures(Request $request, CharacterManager $service, $id)
-    {
-        $data = $request->only(['species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data']);
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->updateImageFeatures($data, $image, Auth::user())) {
-            flash('Character traits edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back()->withInput();
     }
 
     /**
-<<<<<<< HEAD
      * Shows the edit image subtype portion of the modal.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -303,30 +190,6 @@ class CharacterImageController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditImageNotes($id) {
-=======
-     * Shows the edit image subtype portion of the modal
-     *
-     * @param  Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditImageSubtype(Request $request) {
-      $species = $request->input('species');
-      $id = $request->input('id');
-      return view('character.admin._edit_features_subtype', [
-          'image' => CharacterImage::find($id),
-          'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id','=',$species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-      ]);
-    }
-
-    /**
-     * Shows the edit image notes modal.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditImageNotes($id)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return view('character.admin._edit_notes_modal', [
             'image' => CharacterImage::find($id),
         ]);
@@ -335,7 +198,6 @@ class CharacterImageController extends Controller
     /**
      * Edits the features of an image.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -355,43 +217,17 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postEditImageNotes(Request $request, CharacterManager $service, $id)
-    {
-        $data = $request->only(['description']);
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->updateImageNotes($data, $image, Auth::user())) {
-            flash('Image notes edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the edit image credits modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditImageCredits($id) {
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getEditImageCredits($id)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return view('character.admin._edit_credits_modal', [
             'image' => CharacterImage::find($id),
             'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
@@ -401,7 +237,6 @@ class CharacterImageController extends Controller
     /**
      * Edits the credits of an image.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -421,43 +256,17 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postEditImageCredits(Request $request, CharacterManager $service, $id)
-    {
-        $data = $request->only(['artist_url', 'artist_id', 'designer_url', 'designer_id']);
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->updateImageCredits($data, $image, Auth::user())) {
-            flash('Image credits edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the reupload image modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getImageReupload($id) {
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getImageReupload($id)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return view('character.admin._reupload_image_modal', [
             'image' => CharacterImage::find($id),
         ]);
@@ -466,7 +275,6 @@ class CharacterImageController extends Controller
     /**
      * Reuploads an image.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -487,31 +295,12 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postImageReupload(Request $request, CharacterManager $service, $id)
-    {
-        $data = $request->only(['image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper']);
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->reuploadImage($data, $image, Auth::user())) {
-            flash('Image uploaded successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Edits an image's settings.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -531,49 +320,22 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postImageSettings(Request $request, CharacterManager $service, $id)
-    {
-        $data = $request->only(['is_valid', 'is_visible']);
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->updateImageSettings($data, $image, Auth::user())) {
-            flash('Image settings edited successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the set active image modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getImageActive($id) {
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getImageActive($id)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return view('character.admin._active_image_modal', [
             'image' => CharacterImage::find($id),
         ]);
     }
 
-<<<<<<< HEAD
     /**
      * Sets an image to be the character's active image.
      *
@@ -595,46 +357,17 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-
-    /**
-     * Sets an image to be the character's active image.
-     *
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postImageActive(Request $request, CharacterManager $service, $id)
-    {
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->updateActiveImage($image, Auth::user())) {
-            flash('Active character image set successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the delete image modal.
      *
-<<<<<<< HEAD
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getImageDelete($id) {
-=======
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getImageDelete($id)
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return view('character.admin._delete_image_modal', [
             'image' => CharacterImage::find($id),
         ]);
@@ -643,7 +376,6 @@ class CharacterImageController extends Controller
     /**
      * Deletes an image.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
@@ -662,30 +394,12 @@ class CharacterImageController extends Controller
             }
         }
 
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  int                            $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postImageDelete(Request $request, CharacterManager $service, $id)
-    {
-        $image = CharacterImage::find($id);
-        if(!$image) abort(404);
-        if($service->deleteImage($image, Auth::user())) {
-            flash('Character image deleted successfully.')->success();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
->>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Sorts a character's images.
      *
-<<<<<<< HEAD
      * @param App\Services\CharacterManager $service
      * @param string                        $slug
      *
@@ -727,25 +441,4 @@ class CharacterImageController extends Controller
             'object' => $image,
         ]);
     }
-=======
-     * @param  \Illuminate\Http\Request       $request
-     * @param  App\Services\CharacterManager  $service
-     * @param  string                         $slug
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postSortImages(Request $request, CharacterManager $service, $slug)
-    {
-        $this->character = Character::where('slug', $slug)->first();
-        if(!$this->character) abort(404);
-
-        if ($service->sortImages($request->only(['sort']), $this->character, Auth::user())) {
-            flash('Images sorted successfully.')->success();
-            return redirect()->back();
-        }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
-        return redirect()->back();
-    }
->>>>>>> Cylunny/extension/polls-and-forms
 }

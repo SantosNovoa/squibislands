@@ -4,12 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
-<<<<<<< HEAD
 class VerifyCsrfToken extends Middleware {
-=======
-class VerifyCsrfToken extends Middleware
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Indicates whether the XSRF-TOKEN cookie should be set on the response.
      *
@@ -23,10 +18,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-<<<<<<< HEAD
         'stripe/webhook'
-=======
-        //
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 }

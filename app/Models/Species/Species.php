@@ -2,31 +2,19 @@
 
 namespace App\Models\Species;
 
-<<<<<<< HEAD
 use App\Models\Character\Sublist;
 use App\Models\Element\Typing;
 use App\Models\Feature\Feature;
 use App\Models\Model;
 
 class Species extends Model {
-=======
-use Config;
-use App\Models\Model;
-
-class Species extends Model
-{
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-<<<<<<< HEAD
         'name', 'sort', 'has_image', 'description', 'parsed_description', 'masterlist_sub_id', 'is_visible', 'hash',
-=======
-        'name', 'sort', 'has_image', 'description', 'parsed_description', 'masterlist_sub_id'
->>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -35,38 +23,23 @@ class Species extends Model
      * @var string
      */
     protected $table = 'specieses';
-<<<<<<< HEAD
-=======
-    
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
-<<<<<<< HEAD
         'name'        => 'required|unique:specieses|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
     ];
 
-=======
-        'name' => 'required|unique:specieses|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
-    ];
-    
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
-<<<<<<< HEAD
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
@@ -74,15 +47,6 @@ class Species extends Model
 
     /**********************************************************************************************
 
-=======
-        'name' => 'required|between:3,100',
-        'description' => 'nullable',
-        'image' => 'mimes:png',
-    ];
-
-    /**********************************************************************************************
-    
->>>>>>> Cylunny/extension/polls-and-forms
         RELATIONS
 
     **********************************************************************************************/
@@ -90,20 +54,13 @@ class Species extends Model
     /**
      * Get the subtypes for this species.
      */
-<<<<<<< HEAD
     public function subtypes() {
         return $this->hasMany(Subtype::class);
-=======
-    public function subtypes() 
-    {
-        return $this->hasMany('App\Models\Species\Subtype');
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the sub masterlist for this species.
      */
-<<<<<<< HEAD
     public function sublist() {
         return $this->belongsTo(Sublist::class, 'masterlist_sub_id');
     }
@@ -150,38 +107,12 @@ class Species extends Model
 
     **********************************************************************************************/
 
-=======
-    public function sublist() 
-    {
-        return $this->belongsTo('App\Models\Character\Sublist', 'masterlist_sub_id');
-    }
-    
-    /**
-     * Get the features associated with this species.
-     */
-    public function features() 
-    {
-        return $this->hasMany('App\Models\Feature\Feature');
-    }
-
-    /**********************************************************************************************
-    
-        ACCESSORS
-
-    **********************************************************************************************/
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getDisplayNameAttribute() {
-=======
-    public function getDisplayNameAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-species">'.$this->name.'</a>';
     }
 
@@ -190,12 +121,7 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
-=======
-    public function getImageDirectoryAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/species';
     }
 
@@ -204,14 +130,8 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getSpeciesImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
-=======
-    public function getSpeciesImageFileNameAttribute()
-    {
-        return $this->id . '-image.png';
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -219,36 +139,21 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getSpeciesImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
-=======
-    public function getSpeciesImagePathAttribute()
-    {
-        return public_path($this->imageDirectory);
-    }
-    
->>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL of the model's image.
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getSpeciesImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->speciesImageFileName);
-=======
-    public function getSpeciesImageUrlAttribute()
-    {
-        if (!$this->has_image) return null;
-        return asset($this->imageDirectory . '/' . $this->speciesImageFileName);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -256,12 +161,7 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getUrlAttribute() {
-=======
-    public function getUrlAttribute()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         return url('world/species?name='.$this->name);
     }
 
@@ -270,21 +170,12 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getSearchUrlAttribute() {
         if ($this->masterlist_sub_id != 0 && $this->sublist->show_main == 0) {
             return url('sublist/'.$this->sublist->key.'?species_id='.$this->id);
         } else {
             return url('masterlist?species_id='.$this->id);
         }
-=======
-    public function getSearchUrlAttribute()
-    {
-        if($this->masterlist_sub_id != 0 && $this->sublist->show_main == 0)
-        return url('sublist/'.$this->sublist->key.'?species_id='.$this->id);
-        else
-        return url('masterlist?species_id='.$this->id);
->>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -292,7 +183,6 @@ class Species extends Model
      *
      * @return string
      */
-<<<<<<< HEAD
     public function getVisualTraitsUrlAttribute() {
         return url('/world/species/'.$this->id.'/traits');
     }
@@ -314,10 +204,4 @@ class Species extends Model
     public function getAdminPowerAttribute() {
         return 'edit_data';
     }
-=======
-    public function getVisualTraitsUrlAttribute()
-    {
-        return url('/world/species/'.$this->id.'/traits');
-    }
->>>>>>> Cylunny/extension/polls-and-forms
 }

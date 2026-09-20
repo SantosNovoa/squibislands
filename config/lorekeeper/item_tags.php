@@ -13,7 +13,6 @@ return [
     |
     */
 
-<<<<<<< HEAD
     'box'  => [
         'name'             => 'Box',
         'text_color'       => '#ffffff',
@@ -79,17 +78,5 @@ return [
         'name'             => 'Theme',
         'text_color'       => '#ffffff',
         'background_color' => '#573f7e',
-=======
-    'box' => [
-        'name' => 'Box',
-        'text_color' => '#ffffff',
-        'background_color' => '#f6993f'
-    ],
-    
-    'slot' => [
-        'name' => 'Slot',
-        'text_color' => '#ffffff',
-        'background_color' => '#1fd1a7'
->>>>>>> Cylunny/extension/polls-and-forms
     ],
 ];

@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,21 +9,6 @@ class AddHoldingCountToUserItems extends Migration {
      * Run the migrations.
      */
     public function up() {
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-class AddHoldingCountToUserItems extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         Schema::table('user_items', function (Blueprint $table) {
             $table->unsignedInteger('holding_count')->default(0);
         });
@@ -32,16 +16,8 @@ class AddHoldingCountToUserItems extends Migration
 
     /**
      * Reverse the migrations.
-<<<<<<< HEAD
      */
     public function down() {
-=======
-     *
-     * @return void
-     */
-    public function down()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         Schema::table('user_items', function (Blueprint $table) {
             $table->dropColumn('holding_count');
         });

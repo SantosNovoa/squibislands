@@ -1,6 +1,5 @@
 <?php
 
-<<<<<<< HEAD
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,30 +9,10 @@ class MakeGalleryTables extends Migration {
      * Run the migrations.
      */
     public function up() {
-=======
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
-
-class MakeGalleryTables extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         // Gallery structure table
         Schema::create('galleries', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> Cylunny/extension/polls-and-forms
             // Parent gallery ID
             $table->integer('parent_id')->unsigned()->nullable();
 
@@ -54,11 +33,7 @@ class MakeGalleryTables extends Migration
         });
 
         // Gallery submission table
-<<<<<<< HEAD
         Schema::create('gallery_submissions', function (Blueprint $table) {
-=======
-        Schema::create('gallery_submissions', function(Blueprint $table) {
->>>>>>> Cylunny/extension/polls-and-forms
             $table->engine = 'InnoDB';
             $table->increments('id');
 
@@ -95,25 +70,13 @@ class MakeGalleryTables extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-<<<<<<< HEAD
-=======
-
->>>>>>> Cylunny/extension/polls-and-forms
         });
     }
 
     /**
      * Reverse the migrations.
-<<<<<<< HEAD
      */
     public function down() {
-=======
-     *
-     * @return void
-     */
-    public function down()
-    {
->>>>>>> Cylunny/extension/polls-and-forms
         //
         Schema::dropIfExists('galleries');
         Schema::dropIfExists('gallery_submissions');
