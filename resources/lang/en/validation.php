@@ -127,7 +127,6 @@ return [
     |
     */
 
-<<<<<<< HEAD
     'custom'               => [
         'attribute-name'       => [
             'rule-name' => 'custom-message',
@@ -141,18 +140,6 @@ return [
         'artist_url.*'         => [
             'url' => 'One or more of the artist URL(s) is invalid.',
         ],
-=======
-    'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
-        'designer_url.*' => [
-            'url' => 'One or more of the designer URL(s) is invalid.',
-        ],
-        'artist_url.*' => [
-            'url' => 'One or more of the artist URL(s) is invalid.',
-        ]
->>>>>>> Cylunny/extension/polls-and-forms
     ],
 
     /*
@@ -166,10 +153,6 @@ return [
     |
     */
 
-<<<<<<< HEAD
     'attributes'           => [],
-=======
-    'attributes' => [],
->>>>>>> Cylunny/extension/polls-and-forms
 
 ];
