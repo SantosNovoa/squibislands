@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @if ($data)
     @if ($data['user_items'])
         <div class="row">
@@ -6,6 +7,16 @@
                     <div class="text-center inventory-item">
                         <div class="mb-1">
                             @if (isset($stack->first()->item->imageUrl))
+=======
+@if($data)
+    @if($data['user_items'])
+        <div class="row">
+            @foreach($stacks as $stack)
+                <div class="col-sm-3 col-4 mb-3" title="{{ $stack->first()->item->name }}" data-toggle="tooltip">
+                    <div class="text-center inventory-item">
+                        <div class="mb-1">
+                            @if(isset($stack->first()->item->imageUrl))
+>>>>>>> Cylunny/extension/polls-and-forms
                                 <a class="inventory-stack"><img src="{{ $stack->first()->item->imageUrl }}" class="mw-100" alt="{{ $stack->first()->item->name }}" /></a>
                             @else
                                 {{ $stack->first()->item->name }}
@@ -17,6 +28,7 @@
             @endforeach
         </div>
     @endif
+<<<<<<< HEAD
     @if ($data['characters'])
         <div class="row">
             @foreach ($data['characters'] as $character)
@@ -25,15 +37,30 @@
                         <div class="mb-1">
                             <a class="inventory-stack"><img src="{{ $character['asset']->image->thumbnailUrl }}" class="img-thumbnail" title="{{ $character['asset']->fullName }}" data-toggle="tooltip"
                                     alt="Thumbnail for {{ $character['asset']->fullName }}" /></a>
+=======
+    @if($data['characters'])
+        <div class="row">
+            @foreach($data['characters'] as $character)
+                <div class="col-sm-3 col-4 mb-3">
+                    <div class="text-center inventory-item">
+                        <div class="mb-1">
+                            <a class="inventory-stack"><img src="{{ $character['asset']->image->thumbnailUrl }}" class="img-thumbnail" title="{{ $character['asset']->fullName }}" data-toggle="tooltip" alt="Thumbnail for {{ $character['asset']->fullName }}"/></a>
+>>>>>>> Cylunny/extension/polls-and-forms
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
     @endif
+<<<<<<< HEAD
     @if ($data['currencies'])
         <div>
             @foreach ($data['currencies'] as $currency)
+=======
+    @if($data['currencies'])
+        <div>
+            @foreach($data['currencies'] as $currency)
+>>>>>>> Cylunny/extension/polls-and-forms
                 <div>
                     {!! $currency['asset']->display($currency['quantity']) !!}
                 </div>

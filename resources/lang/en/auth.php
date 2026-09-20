@@ -13,7 +13,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'failed'   => 'These credentials do not match our records.',
+=======
+    'failed' => 'These credentials do not match our records.',
+>>>>>>> Cylunny/extension/polls-and-forms
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
 ];

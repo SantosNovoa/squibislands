@@ -2,9 +2,19 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use App\Traits\Commentable;
 
 class SitePage extends Model {
+=======
+use Config;
+use App\Models\Model;
+
+use App\Traits\Commentable;
+
+class SitePage extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     use Commentable;
 
     /**
@@ -13,7 +23,11 @@ class SitePage extends Model {
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'key', 'title', 'text', 'parsed_text', 'is_visible', 'can_comment', 'allow_dislikes',
+=======
+        'key', 'title', 'text', 'parsed_text', 'is_visible', 'can_comment'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -29,27 +43,45 @@ class SitePage extends Model {
      * @var string
      */
     public $timestamps = true;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
+<<<<<<< HEAD
         'key'   => 'required|unique:site_pages|between:3,25|alpha_dash',
         'title' => 'required|between:3,100',
         'text'  => 'nullable',
     ];
 
+=======
+        'key' => 'required|unique:site_pages|between:3,25|alpha_dash',
+        'title' => 'required|between:3,100',
+        'text' => 'nullable',
+    ];
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
+<<<<<<< HEAD
         'key'   => 'required|between:3,25|alpha_dash',
         'title' => 'required|between:3,100',
         'text'  => 'nullable',
+=======
+        'key' => 'required|between:3,25|alpha_dash',
+        'title' => 'required|between:3,100',
+        'text' => 'nullable',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -57,7 +89,12 @@ class SitePage extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
+=======
+    public function getUrlAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return url('info/'.$this->key);
     }
 
@@ -66,6 +103,7 @@ class SitePage extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
         return '<a href="'.$this->url.'">'.$this->title.'</a>';
     }
@@ -87,4 +125,10 @@ class SitePage extends Model {
     public function getAdminPowerAttribute() {
         return 'edit_pages';
     }
+=======
+    public function getDisplayNameAttribute()
+    {
+        return '<a href="'.$this->url.'">'.$this->title.'</a>';
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

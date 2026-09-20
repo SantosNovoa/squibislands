@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users;
 
+<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Mail\ModMail;
 use App\Models\Notification;
@@ -28,6 +29,26 @@ use Laravel\Fortify\RecoveryCode;
 use Settings;
 
 class AccountController extends Controller {
+=======
+use Auth;
+use File;
+use Image;
+
+use App\Models\User\User;
+use App\Models\User\UserAlias;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Notification;
+
+use App\Services\UserService;
+use App\Services\LinkService;
+
+use App\Http\Controllers\Controller;
+
+class AccountController extends Controller
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Account Controller
@@ -42,6 +63,7 @@ class AccountController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
      */
+<<<<<<< HEAD
     public function getBanned() {
         if (Auth::user()->is_banned) {
             return view('account.banned', [
@@ -63,6 +85,14 @@ class AccountController extends Controller {
         } else {
             return view('account.deactivated');
         }
+=======
+    public function getBanned()
+    {
+        if(Auth::user()->is_banned)
+            return view('account.banned');
+        else 
+            return redirect()->to('/');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -70,6 +100,7 @@ class AccountController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getSettings() {
         $interval = [
             0 => 'whenever',
@@ -143,10 +174,20 @@ class AccountController extends Controller {
     
     /**
      * Edits the user's staff contacts/links.
+=======
+    public function getSettings()
+    {
+        return view('account.settings');
+    }
+    
+    /**
+     * Edits the user's profile.
+>>>>>>> Cylunny/extension/polls-and-forms
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+<<<<<<< HEAD
     public function postStaffLinks(Request $request, UserService $service)
     {
         $request->validate(staffProfile::$createRules);
@@ -158,6 +199,11 @@ class AccountController extends Controller {
         }
         Auth::user()->profile->update([
             'pronouns' => $request->get('pronouns'),
+=======
+    public function postProfile(Request $request)
+    {
+        Auth::user()->profile->update([
+>>>>>>> Cylunny/extension/polls-and-forms
             'text' => $request->get('text'),
             'parsed_text' => parse($request->get('text'))
         ]);
@@ -168,6 +214,7 @@ class AccountController extends Controller {
     /**
      * Edits the user's avatar.
      *
+<<<<<<< HEAD
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postAvatar(Request $request, UserService $service) {
@@ -298,10 +345,67 @@ class AccountController extends Controller {
             }
         }
 
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postAvatar(Request $request, UserService $service)
+    {
+        if($service->updateAvatar($request->file('avatar'), Auth::user())) {
+            flash('Avatar updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+    
+    /**
+     * Changes the user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\UserService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postPassword(Request $request, UserService $service)
+    {
+        $request->validate( [
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed'
+        ]);
+        if($service->updatePassword($request->only(['old_password', 'new_password', 'new_password_confirmation']), Auth::user())) {
+            flash('Password updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+    
+    /**
+     * Changes the user's email address and sends a verification email.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\UserService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEmail(Request $request, UserService $service)
+    {
+        $request->validate( [
+            'email' => 'required|string|email|max:255|unique:users'
+        ]);
+        if($service->updateEmail($request->only(['email']), Auth::user())) {
+            flash('Email updated successfully. A verification email has been sent to your new email address.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
+<<<<<<< HEAD
      * Changes user birthday setting.
      *
      * @param App\Services\UserService $service
@@ -408,6 +512,22 @@ class AccountController extends Controller {
             }
         }
 
+=======
+     * Changes user birthday setting
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\UserService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postBirthday(Request $request, UserService $service)
+    {
+        if($service->updateDOB($request->input('birthday_setting'), Auth::user())) {
+            flash('Setting updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
@@ -416,13 +536,19 @@ class AccountController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getNotifications() {
+=======
+    public function getNotifications()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         $notifications = Auth::user()->notifications()->orderBy('id', 'DESC')->paginate(30);
         Auth::user()->notifications()->update(['is_unread' => 0]);
         Auth::user()->notifications_unread = 0;
         Auth::user()->save();
 
         return view('account.notifications', [
+<<<<<<< HEAD
             'notifications' => $notifications,
         ]);
     }
@@ -440,12 +566,28 @@ class AccountController extends Controller {
             $notification->delete();
         }
 
+=======
+            'notifications' => $notifications
+        ]);
+    }
+    
+    /**
+     * Deletes a notification and returns a response.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDeleteNotification($id)
+    {
+        $notification = Notification::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if($notification) $notification->delete();
+>>>>>>> Cylunny/extension/polls-and-forms
         return response(200);
     }
 
     /**
      * Deletes all of the user's notifications.
      *
+<<<<<<< HEAD
      * @param mixed|null $type
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -458,6 +600,15 @@ class AccountController extends Controller {
         }
         flash('Notifications cleared successfully.')->success();
 
+=======
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClearNotifications($type = null)
+    {
+        if(isset($type) && $type) Auth::user()->notifications()->where('notification_type_id', $type)->delete();
+        else Auth::user()->notifications()->delete();
+        flash('Notifications cleared successfully.')->success();
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
@@ -466,24 +617,37 @@ class AccountController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getAliases() {
+=======
+    public function getAliases()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('account.aliases');
     }
 
     /**
      * Shows the make primary alias modal.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getMakePrimary($id) {
+=======
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getMakePrimary($id)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('account._make_primary_modal', ['alias' => UserAlias::where('id', $id)->where('user_id', Auth::user()->id)->first()]);
     }
 
     /**
      * Makes an alias the user's primary alias.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -497,23 +661,43 @@ class AccountController extends Controller {
             }
         }
 
+=======
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postMakePrimary(LinkService $service, $id)
+    {
+        if($service->makePrimary($id, Auth::user())) {
+            flash('Your primary alias has been changed successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the hide alias modal.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getHideAlias($id) {
+=======
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getHideAlias($id)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('account._hide_alias_modal', ['alias' => UserAlias::where('id', $id)->where('user_id', Auth::user()->id)->first()]);
     }
 
     /**
      * Hides or unhides the selected alias from public view.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -527,23 +711,43 @@ class AccountController extends Controller {
             }
         }
 
+=======
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postHideAlias(LinkService $service, $id)
+    {
+        if($service->hideAlias($id, Auth::user())) {
+            flash('Your alias\'s visibility setting has been changed successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Shows the remove alias modal.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRemoveAlias($id) {
+=======
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getRemoveAlias($id)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('account._remove_alias_modal', ['alias' => UserAlias::where('id', $id)->where('user_id', Auth::user()->id)->first()]);
     }
 
     /**
      * Removes the selected alias from the user's account.
      *
+<<<<<<< HEAD
      * @param mixed $id
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -609,6 +813,18 @@ class AccountController extends Controller {
             }
         }
 
+=======
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postRemoveAlias(LinkService $service, $id)
+    {
+        if($service->removeAlias($id, Auth::user())) {
+            flash('Your alias has been removed successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 }

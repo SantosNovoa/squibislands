@@ -2,11 +2,19 @@
 
 namespace App\Models\Character;
 
+<<<<<<< HEAD
 use App\Models\Model;
 use App\Models\Rarity;
 use App\Models\Species\Species;
 use App\Models\Species\Subtype;
 use App\Models\User\User;
+=======
+use Config;
+use DB;
+use App\Models\Model;
+use App\Models\Feature\FeatureCategory;
+use App\Models\Character\CharacterCategory;
+>>>>>>> Cylunny/extension/polls-and-forms
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CharacterImage extends Model
@@ -19,6 +27,7 @@ class CharacterImage extends Model
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'character_id',
         'user_id',
         'species_id',
@@ -42,6 +51,13 @@ class CharacterImage extends Model
         'transformation_info',
         'transformation_description',
         'theme'
+=======
+        'character_id', 'user_id', 'species_id', 'subtype_id', 'rarity_id', 'url',
+        'extension', 'use_cropper', 'hash', 'fullsize_hash', 'sort',
+        'x0', 'x1', 'y0', 'y1',
+        'description', 'parsed_description',
+        'is_valid',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -65,9 +81,15 @@ class CharacterImage extends Model
      */
     public static $createRules = [
         'species_id' => 'required',
+<<<<<<< HEAD
         'rarity_id'  => 'required',
         'image'      => 'required|mimes:jpeg,jpg,gif,png,webp|max:2048',
         'thumbnail'  => 'nullable|mimes:jpeg,jpg,gif,png,webp|max:2048',
+=======
+        'rarity_id' => 'required',
+        'image' => 'required|mimes:jpeg,jpg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -77,26 +99,41 @@ class CharacterImage extends Model
      */
     public static $updateRules = [
         'character_id' => 'required',
+<<<<<<< HEAD
         'user_id'      => 'required',
         'species_id'   => 'required',
         'rarity_id'    => 'required',
         'description'  => 'nullable',
         'image'        => 'mimes:jpeg,jpg,gif,png,webp|max:2048',
         'thumbnail'    => 'nullable|mimes:jpeg,jpg,gif,png,webp|max:2048',
+=======
+        'user_id' => 'required',
+        'species_id' => 'required',
+        'rarity_id' => 'required',
+        'description' => 'nullable',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
 
         RELATIONS
 
+<<<<<<< HEAD
      **********************************************************************************************/
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Get the character associated with the image.
      */
     public function character()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Character::class, 'character_id');
+=======
+        return $this->belongsTo('App\Models\Character\Character', 'character_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -104,7 +141,11 @@ class CharacterImage extends Model
      */
     public function user()
     {
+<<<<<<< HEAD
         return $this->belongsTo(User::class, 'user_id');
+=======
+        return $this->belongsTo('App\Models\User\User', 'user_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -112,7 +153,11 @@ class CharacterImage extends Model
      */
     public function species()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Species::class, 'species_id');
+=======
+        return $this->belongsTo('App\Models\Species\Species', 'species_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -120,7 +165,11 @@ class CharacterImage extends Model
      */
     public function subtype()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Subtype::class, 'subtype_id');
+=======
+        return $this->belongsTo('App\Models\Species\Subtype', 'subtype_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -128,6 +177,7 @@ class CharacterImage extends Model
      */
     public function rarity()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Rarity::class, 'rarity_id');
     }
 
@@ -137,6 +187,9 @@ class CharacterImage extends Model
     public function titles()
     {
         return $this->hasMany(CharacterImageTitle::class, 'character_image_id');
+=======
+        return $this->belongsTo('App\Models\Rarity', 'rarity_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -144,6 +197,7 @@ class CharacterImage extends Model
      */
     public function features()
     {
+<<<<<<< HEAD
         $query = $this
             ->hasMany(CharacterFeature::class, 'character_image_id')->where('character_features.character_type', 'Character')
             ->join('features', 'features.id', '=', 'character_features.feature_id')
@@ -151,6 +205,13 @@ class CharacterImage extends Model
             ->select(['character_features.*', 'features.*', 'character_features.id AS character_feature_id', 'feature_categories.sort']);
 
         return $query->orderByDesc('sort');
+=======
+        $ids = FeatureCategory::orderBy('sort', 'DESC')->pluck('id')->toArray();
+
+        $query = $this->hasMany('App\Models\Character\CharacterFeature', 'character_image_id')->where('character_features.character_type', 'Character')->join('features', 'features.id', '=', 'character_features.feature_id')->select(['character_features.*', 'features.*', 'character_features.id AS character_feature_id']);
+
+        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(features.feature_category_id, '.implode(',', $ids).')')) : $query;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -158,7 +219,11 @@ class CharacterImage extends Model
      */
     public function creators()
     {
+<<<<<<< HEAD
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id');
+=======
+        return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -166,7 +231,11 @@ class CharacterImage extends Model
      */
     public function designers()
     {
+<<<<<<< HEAD
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id')->where('type', 'Designer')->where('character_type', 'Character');
+=======
+        return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')->where('type', 'Designer')->where('character_type', 'Character');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -174,6 +243,7 @@ class CharacterImage extends Model
      */
     public function artists()
     {
+<<<<<<< HEAD
         return $this->hasMany(CharacterImageCreator::class, 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
     }
 
@@ -183,35 +253,52 @@ class CharacterImage extends Model
     public function transformation()
     {
         return $this->belongsTo('App\Models\Character\CharacterTransformation', 'transformation_id');
+=======
+        return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')->where('type', 'Artist')->where('character_type', 'Character');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
 
         SCOPES
 
+<<<<<<< HEAD
      **********************************************************************************************/
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Scope a query to only include images visible to guests and regular logged-in users.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param mixed|null                            $user
      *
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeImages($query, $user = null)
     {
+<<<<<<< HEAD
         if (!$user || !$user->hasPower('manage_characters')) {
             return $query->where('is_visible', 1)->orderBy('sort')->orderBy('id', 'DESC');
         } else {
             return $query->orderBy('sort')->orderBy('id', 'DESC');
         }
+=======
+        if(!$user || !$user->hasPower('manage_characters')) return $query->where('is_visible', 1)->orderBy('sort')->orderBy('id', 'DESC');
+        else return $query->orderBy('sort')->orderBy('id', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
 
         ACCESSORS
 
+<<<<<<< HEAD
      **********************************************************************************************/
 
     /**
@@ -223,6 +310,9 @@ class CharacterImage extends Model
     {
         return '<a href="' . $this->character->url . '" class="display-character">' . $this->character->fullName . '</a>';
     }
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Gets the file directory containing the model's image.
@@ -231,7 +321,11 @@ class CharacterImage extends Model
      */
     public function getImageDirectoryAttribute()
     {
+<<<<<<< HEAD
         return 'images/characters/' . floor($this->id / 1000);
+=======
+        return 'images/characters/'.floor($this->id / 1000);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -241,7 +335,11 @@ class CharacterImage extends Model
      */
     public function getImageFileNameAttribute()
     {
+<<<<<<< HEAD
         return $this->id . '_' . $this->hash . '.' . $this->extension;
+=======
+        return $this->id . '_'.$this->hash.'.'.$this->extension;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -271,8 +369,12 @@ class CharacterImage extends Model
      */
     public function getFullsizeFileNameAttribute()
     {
+<<<<<<< HEAD
         // Backwards compatibility pre v3
         return $this->id . '_' . $this->hash . '_' . $this->fullsize_hash . '_full.' . ($this->fullsize_extension ?? $this->extension);
+=======
+        return $this->id . '_'.$this->hash.'_'.$this->fullsize_hash.'_full.'.$this->extension;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -288,18 +390,28 @@ class CharacterImage extends Model
     /**
      * Gets the file name of the model's fullsize image.
      *
+<<<<<<< HEAD
      * @param  User
      * @param mixed|null $user
      *
+=======
+     * @param  user
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return string
      */
     public function canViewFull($user = null)
     {
+<<<<<<< HEAD
         if (((isset($this->character->user_id) && ($user ? $this->character->user->id == $user->id : false)) || ($user ? $user->hasPower('manage_characters') : false))) {
             return true;
         } else {
             return false;
         }
+=======
+        if(((isset($this->character->user_id) && ($user ? $this->character->user->id == $user->id : false)) || ($user ? $user->hasPower('manage_characters') : false)))
+        return true;
+        else return false;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -309,7 +421,11 @@ class CharacterImage extends Model
      */
     public function getThumbnailFileNameAttribute()
     {
+<<<<<<< HEAD
         return $this->id . '_' . $this->hash . '_th.' . $this->extension;
+=======
+        return $this->id . '_'.$this->hash.'_th.'.$this->extension;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -331,6 +447,7 @@ class CharacterImage extends Model
     {
         return asset($this->imageDirectory . '/' . $this->thumbnailFileName);
     }
+<<<<<<< HEAD
 
     /**
      * Displays all of the image's visible titles.
@@ -423,4 +540,6 @@ class CharacterImage extends Model
 
         return $ids;
     }
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
 }

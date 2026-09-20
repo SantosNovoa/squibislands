@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
@@ -25,20 +26,64 @@ class CommentProvider extends ServiceProvider {
             'comments'
         ); // Swapped to / instead of \ because for some reason Dreamhost was Not Happy if it was \
     }
+=======
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
+
+class CommentProvider extends ServiceProvider
+{
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * If for some reason you want to override the component.
      */
+<<<<<<< HEAD
     protected function includeBladeComponent() {
+=======
+    protected function includeBladeComponent()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         Blade::include('comments::comments', 'comments');
     }
 
     /**
      * Define permission defined in the config.
      */
+<<<<<<< HEAD
     protected function definePermissions() {
         foreach (config('lorekeeper.comments.permissions', []) as $permission => $policy) {
             Gate::define($permission, $policy);
         }
     }
+=======
+    protected function definePermissions()
+    {
+        foreach(Config::get('lorekeeper.comments.permissions', []) as $permission => $policy) {
+            Gate::define($permission, $policy);
+        }
+    }
+
+    public function boot()
+    {
+        $this->loadViewsFrom(base_path('resources/views/comments'), 'comments');
+
+        $this->includeBladeComponent();
+
+        $this->definePermissions();
+
+        Route::model('comment', 'App\Models\Comment');
+    }
+
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            base_path('config/lorekeeper/comments.php'),
+            'comments'
+        ); // Swapped to / instead of \ because for some reason Dreamhost was Not Happy if it was \
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

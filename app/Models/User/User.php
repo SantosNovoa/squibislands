@@ -2,6 +2,7 @@
 
 namespace App\Models\User;
 
+<<<<<<< HEAD
 use App\Models\Award\AwardLog;
 use App\Models\Character\Character;
 use App\Models\Character\CharacterBookmark;
@@ -47,6 +48,34 @@ use App\Models\User\UserRecipeLog;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use Commenter, Notifiable, TwoFactorAuthenticatable;
+=======
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
+use Config;
+use Carbon\Carbon;
+
+use App\Models\Character\Character;
+use App\Models\Character\CharacterImageCreator;
+use App\Models\Rank\RankPower;
+use App\Models\Currency\Currency;
+use App\Models\Currency\CurrencyLog;
+use App\Models\Item\ItemLog;
+use App\Models\Shop\ShopLog;
+use App\Models\User\UserCharacterLog;
+use App\Models\Submission\Submission;
+use App\Models\Submission\SubmissionCharacter;
+use App\Models\Character\CharacterBookmark;
+use App\Models\Gallery\GallerySubmission;
+use App\Models\Gallery\GalleryCollaborator;
+use App\Models\Gallery\GalleryFavorite;
+use App\Traits\Commenter;
+
+class User extends Authenticatable implements MustVerifyEmail
+{
+    use Notifiable, Commenter;
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * The attributes that are mass assignable.
@@ -54,6 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'name',
         'alias',
         'rank_id',
@@ -76,6 +106,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'faction_id',
         'faction_changed',
         'pronouns',
+=======
+        'name', 'alias', 'rank_id', 'email', 'password', 'is_news_unread', 'is_banned', 'has_alias', 'avatar', 'is_sales_unread', 'birthday','is_polls_unread'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -84,8 +117,12 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
+<<<<<<< HEAD
         'password',
         'remember_token',
+=======
+        'password', 'remember_token',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -94,6 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
+<<<<<<< HEAD
         'email_verified_at'        => 'datetime',
         'birthday'                 => 'datetime',
         'home_changed'             => 'datetime',
@@ -101,11 +139,25 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+=======
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    protected $dates = ['birthday'];
+
+    /**
+>>>>>>> Cylunny/extension/polls-and-forms
      * Accessors to append to the model.
      *
      * @var array
      */
     protected $appends = [
+<<<<<<< HEAD
         'verified_name',
     ];
 
@@ -116,6 +168,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $with = [
         'rank',
+=======
+        'verified_name'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -129,6 +184,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         RELATIONS
 
+<<<<<<< HEAD
      **********************************************************************************************/
 
     /**
@@ -138,12 +194,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserUpdateLog::class);
     }
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Get user settings.
      */
     public function settings()
     {
+<<<<<<< HEAD
         return $this->hasOne(UserSettings::class);
     }
 
@@ -169,6 +229,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function themes()
     {
         return $this->belongsToMany(Theme::class, 'user_themes')->withPivot('id');
+=======
+        return $this->hasOne('App\Models\User\UserSettings');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -176,6 +239,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function profile()
     {
+<<<<<<< HEAD
         return $this->hasOne(UserProfile::class);
     }
 
@@ -201,6 +265,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function level()
     {
         return $this->hasOne(UserLevel::class);
+=======
+        return $this->hasOne('App\Models\User\UserProfile');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -208,7 +275,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function aliases()
     {
+<<<<<<< HEAD
         return $this->hasMany(UserAlias::class);
+=======
+        return $this->hasMany('App\Models\User\UserAlias');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -216,7 +287,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function primaryAlias()
     {
+<<<<<<< HEAD
         return $this->hasOne(UserAlias::class)->where('is_primary_alias', 1);
+=======
+        return $this->hasOne('App\Models\User\UserAlias')->where('is_primary_alias', 1);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -224,7 +299,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function notifications()
     {
+<<<<<<< HEAD
         return $this->hasMany(Notification::class);
+=======
+        return $this->hasMany('App\Models\Notification');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -232,7 +311,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function allCharacters()
     {
+<<<<<<< HEAD
         return $this->hasMany(Character::class)->orderBy('sort', 'DESC');
+=======
+        return $this->hasMany('App\Models\Character\Character')->orderBy('sort', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -240,7 +323,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function characters()
     {
+<<<<<<< HEAD
         return $this->hasMany(Character::class)->where('is_myo_slot', 0)->orderBy('sort', 'DESC');
+=======
+        return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 0)->orderBy('sort', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -248,7 +335,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function myoSlots()
     {
+<<<<<<< HEAD
         return $this->hasMany(Character::class)->where('is_myo_slot', 1)->orderBy('id', 'DESC');
+=======
+        return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 1)->orderBy('id', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -256,6 +347,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function rank()
     {
+<<<<<<< HEAD
         return $this->belongsTo(Rank::class);
     }
 
@@ -273,6 +365,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function faction()
     {
         return $this->belongsTo(Faction::class, 'faction_id');
+=======
+        return $this->belongsTo('App\Models\Rank\Rank');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -280,6 +375,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function items()
     {
+<<<<<<< HEAD
         return $this->belongsToMany(Item::class, 'user_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('user_items.deleted_at');
     }
 
@@ -305,6 +401,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function pets()
     {
         return $this->belongsToMany(Pet::class, 'user_pets')->withPivot('data', 'updated_at', 'id', 'variant_id', 'character_id', 'pet_name', 'has_image', 'evolution_id')->whereNull('user_pets.deleted_at');
+=======
+        return $this->belongsToMany('App\Models\Item\Item', 'user_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('user_items.deleted_at');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -312,11 +411,15 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function gallerySubmissions()
     {
+<<<<<<< HEAD
         return $this->hasMany(GallerySubmission::class)
             ->where('user_id', $this->id)
             ->orWhereIn('id', GalleryCollaborator::where('user_id', $this->id)
                 ->where('type', 'Collab')->pluck('gallery_submission_id')->toArray())
             ->orderBy('created_at', 'DESC');
+=======
+        return $this->hasMany('App\Models\Gallery\GallerySubmission')->where('user_id', $this->id)->orWhereIn('id', GalleryCollaborator::where('user_id', $this->id)->where('type', 'Collab')->pluck('gallery_submission_id')->toArray())->visible($this)->accepted()->orderBy('created_at', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -324,6 +427,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function galleryFavorites()
     {
+<<<<<<< HEAD
         return $this->hasMany(GalleryFavorite::class)->where('user_id', $this->id);
     }
 
@@ -365,23 +469,43 @@ class User extends Authenticatable implements MustVerifyEmail
     public function folders()
     {
         return $this->hasMany('App\Models\Character\CharacterFolder');
+=======
+        return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
+    }
+    
+    /**
+     * Get all of the user's character bookmarks.
+     */
+    public function bookmarks() 
+    {
+        return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
 
         SCOPES
 
+<<<<<<< HEAD
      **********************************************************************************************/
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Scope a query to only include visible (non-banned) users.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query)
     {
+<<<<<<< HEAD
         return $query->where('is_banned', 0)->where('is_deactivated', 0);
     }
 
@@ -409,12 +533,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->leftJoin('user_aliases', 'users.id', '=', 'user_aliases.user_id')
             ->orderByRaw('user_aliases.alias IS NULL ASC, user_aliases.alias ' . ($reverse ? 'DESC' : 'ASC'));
+=======
+        return $query->where('is_banned', 0);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
 
         ACCESSORS
 
+<<<<<<< HEAD
      **********************************************************************************************/
 
     /**
@@ -432,6 +560,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $default ? true : $user_has;
     }
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Get the user's alias.
@@ -450,10 +581,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getHasAliasAttribute()
     {
+<<<<<<< HEAD
         if (!config('lorekeeper.settings.require_alias')) {
             return true;
         }
 
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->attributes['has_alias'];
     }
 
@@ -474,14 +608,21 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getIsStaffAttribute()
     {
+<<<<<<< HEAD
         return RankPower::where('rank_id', $this->rank_id)->exists() || $this->isAdmin;
+=======
+        return (RankPower::where('rank_id', $this->rank_id)->exists() || $this->isAdmin);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Checks if the user has the given power.
      *
+<<<<<<< HEAD
      * @param mixed $power
      *
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return bool
      */
     public function hasPower($power)
@@ -506,7 +647,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getUrlAttribute()
     {
+<<<<<<< HEAD
         return url('user/' . $this->name);
+=======
+        return url('user/'.$this->name);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -516,7 +661,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAdminUrlAttribute()
     {
+<<<<<<< HEAD
         return url('admin/users/' . $this->name . '/edit');
+=======
+        return url('admin/users/'.$this->name.'/edit');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -526,6 +675,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayNameAttribute()
     {
+<<<<<<< HEAD
         $color = $this->rank->getColorForCurrentTheme();
         $colorStyle = $color ? 'color: #' . $color . ';' : '';
 
@@ -566,12 +716,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
     /**
+=======
+        return ($this->is_banned ? '<strike>' : '') . '<a href="'.$this->url.'" class="display-user" '.($this->rank->color ? 'style="color: #'.$this->rank->color.';"' : '').'>'.$this->name.'</a>' . ($this->is_banned ? '</strike>' : '');
+    }
+
+        /**
+>>>>>>> Cylunny/extension/polls-and-forms
      * Displays the user's name, linked to their profile page.
      *
      * @return string
      */
     public function getCommentDisplayNameAttribute()
     {
+<<<<<<< HEAD
         $color = $this->rank->getColorForCurrentTheme();
         $colorStyle = $color ? 'background-color: #' . $color . '!important;color:#000!important;' : '';
 
@@ -581,6 +738,9 @@ class User extends Authenticatable implements MustVerifyEmail
             . $this->name
             . '</a></small>'
             . ($this->is_banned ? '</strike>' : '');
+=======
+        return '<small><a href="'. $this->url .'" class="btn btn-primary btn-sm"'.($this->rank->color ? 'style="background-color: #'.$this->rank->color.'!important;color:#000!important;"' : '').'><i class="'.($this->rank->icon ? $this->rank->icon : 'fas fa-user').' mr-1" style="opacity: 50%;"></i>'. $this->name .'</a></small>';
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -590,6 +750,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getDisplayAliasAttribute()
     {
+<<<<<<< HEAD
         if (!config('lorekeeper.settings.require_alias') && !$this->attributes['has_alias']) {
             return '(No Alias)';
         }
@@ -602,11 +763,20 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Displays the user's avatar.
+=======
+        if (!$this->hasAlias) return '(Unverified)';
+        return $this->primaryAlias->displayAlias;
+    }
+
+    /**
+     * Displays the user's avatar
+>>>>>>> Cylunny/extension/polls-and-forms
      *
      * @return string
      */
     public function getAvatar()
     {
+<<<<<<< HEAD
         return $this->avatar;
     }
 
@@ -634,6 +804,9 @@ class User extends Authenticatable implements MustVerifyEmail
         $version = file_exists($avatarPath) ? filemtime($avatarPath) : time();
 
         return url('images/avatars/' . $this->avatar . '?v=' . $version);
+=======
+        return ($this->avatar);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -647,6 +820,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+<<<<<<< HEAD
      * Checks if the user can change location.
      *
      * @return string
@@ -722,12 +896,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get's user birthday setting.
+=======
+     * Get's user birthday setting
+>>>>>>> Cylunny/extension/polls-and-forms
      */
     public function getBirthdayDisplayAttribute()
     {
         //
         $icon = null;
         $bday = $this->birthday;
+<<<<<<< HEAD
         if (!isset($bday)) {
             return 'N/A';
         }
@@ -757,10 +935,30 @@ class User extends Authenticatable implements MustVerifyEmail
             case 5:
                 return $bday->format('M');
                 break;
+=======
+        if(!isset($bday)) return 'N/A';
+
+        if($bday->format('d M') == carbon::now()->format('d M')) $icon = '<i class="fas fa-birthday-cake ml-1"></i>';
+        //
+        switch($this->settings->birthday_setting) {
+            case 0:
+                return null;
+            break;
+            case 1:
+                if(Auth::check()) return $bday->format('d M') . $icon;
+            break;
+            case 2:
+                return $bday->format('d M') . $icon;
+            break;
+            case 3:
+                return $bday->format('d M Y') . $icon;
+            break;
+>>>>>>> Cylunny/extension/polls-and-forms
         }
     }
 
     /**
+<<<<<<< HEAD
      * Check if user is of age.
      */
     public function getcheckBirthdayAttribute()
@@ -879,18 +1077,34 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return false;
         }
+=======
+     * Check if user is of age
+     */
+    public function getcheckBirthdayAttribute()
+    {
+        $bday = $this->birthday; 
+        if(!$bday || $bday->diffInYears(carbon::now()) < 13) return false;
+        else return true;
+>>>>>>> Cylunny/extension/polls-and-forms
     }
     /**********************************************************************************************
 
         OTHER FUNCTIONS
 
+<<<<<<< HEAD
      **********************************************************************************************/
+=======
+    **********************************************************************************************/
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Checks if the user can edit the given rank.
      *
+<<<<<<< HEAD
      * @param mixed $rank
      *
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return bool
      */
     public function canEditRank($rank)
@@ -901,8 +1115,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the user's held currencies.
      *
+<<<<<<< HEAD
      * @param bool $showAll
      *
+=======
+     * @param  bool  $showAll
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Support\Collection
      */
     public function getCurrencies($showAll = false)
@@ -914,6 +1132,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $owned = UserCurrency::where('user_id', $this->id)->pluck('quantity', 'currency_id')->toArray();
 
         $currencies = Currency::where('is_user_owned', 1);
+<<<<<<< HEAD
         if ($showAll) {
             $currencies->where(function ($query) use ($owned) {
                 $query->where('is_displayed', 1)->orWhereIn('id', array_keys($owned));
@@ -926,6 +1145,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
         foreach ($currencies as $currency) {
             $currency->quantity = $owned[$currency->id] ?? 0;
+=======
+        if($showAll) $currencies->where(function($query) use($owned) {
+            $query->where('is_displayed', 1)->orWhereIn('id', array_keys($owned));
+        });
+        else $currencies = $currencies->where('is_displayed', 1);
+
+        $currencies = $currencies->orderBy('sort_user', 'DESC')->get();
+
+        foreach($currencies as $currency) {
+            $currency->quantity = isset($owned[$currency->id]) ? $owned[$currency->id] : 0;
+>>>>>>> Cylunny/extension/polls-and-forms
         }
 
         return $currencies;
@@ -934,30 +1164,43 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the user's held currencies as an array for select inputs.
      *
+<<<<<<< HEAD
      * @param mixed $isTransferrable
      *
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return array
      */
     public function getCurrencySelect($isTransferrable = false)
     {
         $query = UserCurrency::query()->where('user_id', $this->id)->leftJoin('currencies', 'user_currencies.currency_id', '=', 'currencies.id')->orderBy('currencies.sort_user', 'DESC');
+<<<<<<< HEAD
         if ($isTransferrable) {
             $query->where('currencies.allow_user_to_user', 1);
         }
 
+=======
+        if($isTransferrable) $query->where('currencies.allow_user_to_user', 1);
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->get()->pluck('name_with_quantity', 'currency_id')->toArray();
     }
 
     /**
      * Get the user's currency logs.
      *
+<<<<<<< HEAD
      * @param int $limit
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+=======
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+>>>>>>> Cylunny/extension/polls-and-forms
      */
     public function getCurrencyLogs($limit = 10)
     {
         $user = $this;
+<<<<<<< HEAD
         $query = CurrencyLog::with('currency')->where(function ($query) use ($user) {
             $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards', 'Gallery Submission Reward']);
         })->orWhere(function ($query) use ($user) {
@@ -1032,18 +1275,33 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return $query->paginate(30);
         }
+=======
+        $query = CurrencyLog::with('currency')->where(function($query) use ($user) {
+            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards', 'Gallery Submission Reward']);
+        })->orWhere(function($query) use ($user) {
+            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+        })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the user's item logs.
      *
+<<<<<<< HEAD
      * @param int $limit
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+=======
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+>>>>>>> Cylunny/extension/polls-and-forms
      */
     public function getItemLogs($limit = 10)
     {
         $user = $this;
+<<<<<<< HEAD
         $query = ItemLog::with('item')->where(function ($query) use ($user) {
             $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
         })->orWhere(function ($query) use ($user) {
@@ -1168,16 +1426,37 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param int $limit
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
+=======
+        $query = ItemLog::with('item')->where(function($query) use ($user) {
+            $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
+        })->orWhere(function($query) use ($user) {
+            $query->with('recipient')->where('recipient_type', 'User')->where('recipient_id', $user->id)->where('log_type', '!=', 'Staff Removal');
+        })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+    }
+
+    /**
+     * Get the user's shop purchase logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+>>>>>>> Cylunny/extension/polls-and-forms
      */
     public function getShopLogs($limit = 10)
     {
         $user = $this;
         $query = ShopLog::where('user_id', $this->id)->with('character')->with('shop')->with('item')->with('currency')->orderBy('id', 'DESC');
+<<<<<<< HEAD
         if ($limit) {
             return $query->take($limit)->get();
         } else {
             return $query->paginate(30);
         }
+=======
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -1188,12 +1467,20 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getOwnershipLogs()
     {
         $user = $this;
+<<<<<<< HEAD
         $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->with('character')->where(function ($query) use ($user) {
             $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Character Created', 'MYO Slot Created', 'Character Design Updated', 'MYO Design Approved']);
         })->orWhere(function ($query) use ($user) {
             $query->where('recipient_id', $user->id);
         })->orderBy('id', 'DESC');
 
+=======
+        $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->with('character')->where(function($query) use ($user) {
+            $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Character Created', 'MYO Slot Created', 'Character Design Updated', 'MYO Design Approved']);
+        })->orWhere(function($query) use ($user) {
+            $query->where('recipient_id', $user->id);
+        })->orderBy('id', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->paginate(30);
     }
 
@@ -1202,6 +1489,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function updateCharacters()
     {
+<<<<<<< HEAD
         if (!$this->attributes['has_alias']) {
             return;
         }
@@ -1226,6 +1514,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
         //
         if ($count > 0) {
+=======
+        if(!$this->hasAlias) return;
+
+        // Pluck alias from url and check for matches
+        $urlCharacters = Character::whereNotNull('owner_url')->pluck('owner_url','id');
+        $matches = []; $count = 0;
+        foreach($this->aliases as $alias) {
+            // Find all urls from the same site as this alias
+            foreach($urlCharacters as $key=>$character) preg_match_all(Config::get('lorekeeper.sites.'.$alias->site.'.regex'), $character, $matches[$key]);
+            // Find all alias matches within those, and update the character's owner
+            foreach($matches as $key=>$match) if($match[1] != [] && strtolower($match[1][0]) == strtolower($alias->alias)) {Character::find($key)->update(['owner_url' => null, 'user_id' => $this->id]); $count += 1;}
+        }
+
+        //
+        if($count > 0) {
+>>>>>>> Cylunny/extension/polls-and-forms
             $this->settings->is_fto = 0;
         }
         $this->settings->save();
@@ -1236,6 +1540,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function updateArtDesignCredits()
     {
+<<<<<<< HEAD
         if (!$this->attributes['has_alias']) {
             return;
         }
@@ -1254,14 +1559,29 @@ class User extends Authenticatable implements MustVerifyEmail
                     CharacterImageCreator::find($key)->update(['url' => null, 'user_id' => $this->id]);
                 }
             }
+=======
+        if(!$this->hasAlias) return;
+
+        // Pluck alias from url and check for matches
+        $urlCreators = CharacterImageCreator::whereNotNull('url')->pluck('url','id');
+        $matches = [];
+        foreach($this->aliases as $alias) {
+            // Find all urls from the same site as this alias
+            foreach($urlCreators as $key=>$creator) preg_match_all(Config::get('lorekeeper.sites.'.$alias->site.'.regex'), $creator, $matches[$key]);
+            // Find all alias matches within those, and update the relevant CharacterImageCreator
+            foreach($matches as $key=>$match) if($match[1] != [] && strtolower($match[1][0]) == strtolower($alias->alias)) CharacterImageCreator::find($key)->update(['url' => null, 'user_id' => $this->id]);
+>>>>>>> Cylunny/extension/polls-and-forms
         }
     }
 
     /**
      * Get the user's submissions.
      *
+<<<<<<< HEAD
      * @param mixed|null $user
      *
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getSubmissions($user = null)
@@ -1273,14 +1593,19 @@ class User extends Authenticatable implements MustVerifyEmail
      * Checks if the user has bookmarked a character.
      * Returns the bookmark if one exists.
      *
+<<<<<<< HEAD
      * @param mixed $character
      *
      * @return CharacterBookmark
+=======
+     * @return \App\Models\Character\CharacterBookmark
+>>>>>>> Cylunny/extension/polls-and-forms
      */
     public function hasBookmarked($character)
     {
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
+<<<<<<< HEAD
 
     /**
      * Checks if the user has the named recipe
@@ -1315,4 +1640,6 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return $recipeCollection;
     }
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
 }

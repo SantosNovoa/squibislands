@@ -2,12 +2,19 @@
 
 namespace App\Traits;
 
+<<<<<<< HEAD
 use App\Models\Comment\Comment;
+=======
+use App\Models\Comment;
+
+use Config;
+>>>>>>> Cylunny/extension/polls-and-forms
 
 /**
  * Add this trait to any model that you want to be able to
  * comment upon or get comments for.
  */
+<<<<<<< HEAD
 trait Commentable {
     /**
      * Returns all comments for this model.
@@ -23,11 +30,16 @@ trait Commentable {
         return $this->morphMany('App\Models\Comment\Comment', 'commentable')->where('approved', true)->withTrashed();
     }
 
+=======
+trait Commentable
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * This static method does voodoo magic to
      * delete leftover comments once the commentable
      * model is deleted.
      */
+<<<<<<< HEAD
     protected static function bootCommentable() {
         static::deleted(function ($commentable) {
             if (config('lorekeeper.comments.soft_deletes') == true) {
@@ -37,4 +49,35 @@ trait Commentable {
             }
         });
     }
+=======
+    protected static function bootCommentable()
+    {
+        static::deleted(function($commentable) {
+            
+            if (Config::get('lorekeeper.comments.soft_deletes') == true) {
+                Comment::where('commentable_type', get_class($commentable))->where('commentable_id', $commentable->id)->delete();
+            }
+            else {
+                Comment::where('commentable_type', get_class($commentable))->where('commentable_id', $commentable->id)->forceDelete();
+            }
+            
+        });
+    }
+
+    /**
+     * Returns all comments for this model.
+     */
+    public function commentz()
+    {
+        return $this->morphMany('App\Models\Comment', 'commentable');
+    }
+
+    /**
+     * Returns only approved comments for this model.
+     */
+    public function approvedComments()
+    {
+        return $this->morphMany('App\Models\Comment', 'commentable')->where('approved', true);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

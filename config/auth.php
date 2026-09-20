@@ -13,8 +13,13 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'defaults'  => [
         'guard'     => 'web',
+=======
+    'defaults' => [
+        'guard' => 'web',
+>>>>>>> Cylunny/extension/polls-and-forms
         'passwords' => 'users',
     ],
 
@@ -35,16 +40,28 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'guards'    => [
         'web' => [
             'driver'   => 'session',
+=======
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+>>>>>>> Cylunny/extension/polls-and-forms
             'provider' => 'users',
         ],
 
         'api' => [
+<<<<<<< HEAD
             'driver'   => 'token',
             'provider' => 'users',
             'hash'     => false,
+=======
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
     ],
 
@@ -68,7 +85,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
+<<<<<<< HEAD
             'model'  => App\Models\User\User::class,
+=======
+            'model' => App\Models\User\User::class,
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
 
         // 'users' => [
@@ -95,8 +116,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+<<<<<<< HEAD
             'table'    => 'password_resets',
             'expire'   => 60,
+=======
+            'table' => 'password_resets',
+            'expire' => 60,
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
     ],
 

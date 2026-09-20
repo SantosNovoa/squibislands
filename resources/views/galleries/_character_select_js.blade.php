@@ -14,14 +14,23 @@
             $clone = $components.find('.submission-character').clone();
             attachListeners($clone);
             $characters.append($clone);
+<<<<<<< HEAD
             $clone.find('.character-code').selectize();
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
             count++;
         });
 
         function attachListeners(node) {
+<<<<<<< HEAD
             node.find('.character-code').on('input', function(e) {
                 var $parent = $(this).parent().parent().parent().parent();
                 $parent.find('.character-image-loaded').load('{{ url('gallery/submit/character') }}/' + $(this).val(), function(response, status, xhr) {
+=======
+            node.find('.character-code').on('change', function(e) {
+                var $parent = $(this).parent().parent().parent().parent();
+                $parent.find('.character-image-loaded').load('{{ url('gallery/submit/character') }}/'+$(this).val(), function(response, status, xhr) {
+>>>>>>> Cylunny/extension/polls-and-forms
                     $parent.find('.character-image-blank').addClass('hide');
                     $parent.find('.character-image-loaded').removeClass('hide');
                     $parent.find('.character-rewards').removeClass('hide');
@@ -34,4 +43,8 @@
         }
 
     });
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> Cylunny/extension/polls-and-forms

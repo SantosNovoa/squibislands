@@ -18,7 +18,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'driver'          => env('SESSION_DRIVER', 'file'),
+=======
+    'driver' => env('SESSION_DRIVER', 'file'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +35,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'lifetime'        => env('SESSION_LIFETIME', 120),
+=======
+    'lifetime' => env('SESSION_LIFETIME', 120),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     'expire_on_close' => false,
 
@@ -46,7 +54,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'encrypt'         => false,
+=======
+    'encrypt' => false,
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -59,7 +71,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'files'           => storage_path('framework/sessions'),
+=======
+    'files' => storage_path('framework/sessions'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -72,7 +88,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'connection'      => env('SESSION_CONNECTION', null),
+=======
+    'connection' => env('SESSION_CONNECTION', null),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +105,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'table'           => 'sessions',
+=======
+    'table' => 'sessions',
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -98,7 +122,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'store'           => env('SESSION_STORE', null),
+=======
+    'store' => env('SESSION_STORE', null),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -111,7 +139,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'lottery'         => [2, 100],
+=======
+    'lottery' => [2, 100],
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +156,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'cookie'          => env(
+=======
+    'cookie' => env(
+>>>>>>> Cylunny/extension/polls-and-forms
         'SESSION_COOKIE',
         Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
     ),
@@ -140,7 +176,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'path'            => '/',
+=======
+    'path' => '/',
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -153,7 +193,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'domain'          => env('SESSION_DOMAIN', null),
+=======
+    'domain' => env('SESSION_DOMAIN', null),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -166,7 +210,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'secure'          => env('SESSION_SECURE_COOKIE', false),
+=======
+    'secure' => env('SESSION_SECURE_COOKIE', false),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -179,7 +227,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'http_only'       => true,
+=======
+    'http_only' => true,
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -194,6 +246,10 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'same_site'       => null,
+=======
+    'same_site' => null,
+>>>>>>> Cylunny/extension/polls-and-forms
 
 ];

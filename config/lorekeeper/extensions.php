@@ -20,6 +20,7 @@ return [
     */
 
     // Navbar News Notif - Juni
+<<<<<<< HEAD
     'navbar_news_notif' => 1,
 
     // Species Trait Index - Mercury
@@ -46,22 +47,44 @@ return [
 
     // Character TH Profile Link - Juni
     'character_TH_profile_link' => 1,
+=======
+    'navbar_news_notif' => 0,
+
+    // Species Trait Index - Mercury
+    'species_trait_index' => 0,
+
+    // Character Status Badges - Juni
+    'character_status_badges' => 0,
+
+    // Character TH Profile Link - Juni
+    'character_TH_profile_link' => 0,
+>>>>>>> Cylunny/extension/polls-and-forms
 
     // Design Update Voting - Mercury
     'design_update_voting' => 0,
 
     // Item Entry Expansion - Mercury
     'item_entry_expansion' => [
+<<<<<<< HEAD
         'extra_fields'    => 0,
         'resale_function' => 0,
         'loot_tables'     => [
             // Adds the ability to use either rarity criteria for items or item categories with rarity criteria in loot tables. Note that disabling this does not apply retroactively.
             'enable'              => 0,
             'alternate_filtering' => 0, // By default this uses more broadly compatible methods to filter by rarity. If you are on Dreamhost/know your DB software can handle searching in JSON, it's recommended to set this to 1 instead.
+=======
+        'extra_fields' => 0,
+        'resale_function' => 0,
+        'loot_tables' => [
+            // Adds the ability to use either rarity criteria for items or item categories with rarity criteria in loot tables. Note that disabling this does not apply retroactively.
+            'enable' => 0,
+            'alternate_filtering' => 0 // By default this uses more broadly compatible methods to filter by rarity. If you are on Dreamhost/know your DB software can handle searching in JSON, it's recommended to set this to 1 instead.
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
     ],
 
     // Group Traits By Category - Uri
+<<<<<<< HEAD
     'traits_by_category' => 1,
 
     // Scroll To Top - Uri
@@ -141,4 +164,14 @@ return [
 
     // Allow users to return a pending design update to drafts, for instance if they make a mistake. - Uri
     'design_return_to_draft' => 1,
+=======
+    'traits_by_category' => 0,
+
+    // Character Reward Expansion - Uri
+    'character_reward_expansion' => [
+        'expanded' => 1,
+        'default_recipient' => 0, // 0 to default to the character's owner (if a user), 1 to default to the submission user.
+    ],
+
+>>>>>>> Cylunny/extension/polls-and-forms
 ];

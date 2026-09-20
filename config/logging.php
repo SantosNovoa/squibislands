@@ -16,7 +16,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'default'  => env('LOG_CHANNEL', 'stack'),
+=======
+    'default' => env('LOG_CHANNEL', 'stack'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +38,7 @@ return [
     */
 
     'channels' => [
+<<<<<<< HEAD
         'stack'      => [
             'driver'            => 'stack',
             'channels'          => ['daily'],
@@ -65,11 +70,45 @@ return [
             'driver'       => 'monolog',
             'level'        => 'debug',
             'handler'      => SyslogUdpHandler::class,
+=======
+        'stack' => [
+            'driver' => 'stack',
+            'channels' => ['daily'],
+            'ignore_exceptions' => false,
+        ],
+
+        'single' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+        ],
+
+        'daily' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/laravel.log'),
+            'level' => 'debug',
+            'days' => 14,
+        ],
+
+        'slack' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'username' => 'Laravel Log',
+            'emoji' => ':boom:',
+            'level' => 'critical',
+        ],
+
+        'papertrail' => [
+            'driver' => 'monolog',
+            'level' => 'debug',
+            'handler' => SyslogUdpHandler::class,
+>>>>>>> Cylunny/extension/polls-and-forms
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
             ],
         ],
+<<<<<<< HEAD
         'throttle' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/throttle.log'),
@@ -81,10 +120,19 @@ return [
             'handler'   => StreamHandler::class,
             'formatter' => env('LOG_STDERR_FORMATTER'),
             'with'      => [
+=======
+
+        'stderr' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'formatter' => env('LOG_STDERR_FORMATTER'),
+            'with' => [
+>>>>>>> Cylunny/extension/polls-and-forms
                 'stream' => 'php://stderr',
             ],
         ],
 
+<<<<<<< HEAD
         'syslog'     => [
             'driver' => 'syslog',
             'level'  => 'debug',
@@ -98,6 +146,16 @@ return [
         'too_many_attempts' => [
             'driver' => 'daily',
             'path' => storage_path('logs/too-many-attempts.log'),
+=======
+        'syslog' => [
+            'driver' => 'syslog',
+            'level' => 'debug',
+        ],
+
+        'errorlog' => [
+            'driver' => 'errorlog',
+            'level' => 'debug',
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
     ],
 

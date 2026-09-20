@@ -2,6 +2,7 @@
 
 namespace App\Models\Sales;
 
+<<<<<<< HEAD
 use App\Models\Model;
 use App\Models\User\User;
 use App\Traits\Commentable;
@@ -11,6 +12,16 @@ use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
 class Sales extends Model implements Feedable {
+=======
+use Carbon\Carbon;
+use Config;
+use App\Models\Model;
+use App\Traits\Commentable;
+use Illuminate\Support\Str;
+
+class Sales extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     use Commentable;
     /**
      * The attributes that are mass assignable.
@@ -19,7 +30,11 @@ class Sales extends Model implements Feedable {
      */
     protected $fillable = [
         'user_id', 'text', 'parsed_text', 'title', 'is_visible', 'post_at',
+<<<<<<< HEAD
         'is_open', 'comments_open_at',
+=======
+        'is_open', 'comments_open_at'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -30,6 +45,7 @@ class Sales extends Model implements Feedable {
     protected $table = 'sales';
 
     /**
+<<<<<<< HEAD
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -40,6 +56,8 @@ class Sales extends Model implements Feedable {
     ];
 
     /**
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -47,13 +65,27 @@ class Sales extends Model implements Feedable {
     public $timestamps = true;
 
     /**
+<<<<<<< HEAD
+=======
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    public $dates = ['post_at', 'comments_open_at'];
+
+    /**
+>>>>>>> Cylunny/extension/polls-and-forms
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
         'title' => 'required|between:3,100',
+<<<<<<< HEAD
         'text'  => 'required',
+=======
+        'text' => 'required',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -63,7 +95,11 @@ class Sales extends Model implements Feedable {
      */
     public static $updateRules = [
         'title' => 'required|between:3,100',
+<<<<<<< HEAD
         'text'  => 'required',
+=======
+        'text' => 'required',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
@@ -75,15 +111,27 @@ class Sales extends Model implements Feedable {
     /**
      * Get the user who created the Sales post.
      */
+<<<<<<< HEAD
     public function user() {
         return $this->belongsTo(User::class);
+=======
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User\User');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the characters associated with the sales post.
      */
+<<<<<<< HEAD
     public function characters() {
         return $this->hasMany(SalesCharacter::class, 'sales_id');
+=======
+    public function characters()
+    {
+        return $this->hasMany('App\Models\Sales\SalesCharacter', 'sales_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
@@ -95,17 +143,27 @@ class Sales extends Model implements Feedable {
     /**
      * Scope a query to only include visible posts.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeVisible($query) {
         return $query->where('is_visible', 1);
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        return $query->orderBy('updated_at', 'DESC')->where('is_visible', 1);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Scope a query to only include posts that are scheduled to be posted and are ready to post.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -160,6 +218,16 @@ class Sales extends Model implements Feedable {
         return $query->orderBy('updated_at', $reverse ? 'DESC' : 'ASC');
     }
 
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeShouldBeVisible($query)
+    {
+        return $query->whereNotNull('post_at')->where('post_at', '<', Carbon::now())->where('is_visible', 0);
+    }
+
+>>>>>>> Cylunny/extension/polls-and-forms
     /**********************************************************************************************
 
         ACCESSORS
@@ -171,8 +239,14 @@ class Sales extends Model implements Feedable {
      *
      * @return bool
      */
+<<<<<<< HEAD
     public function getSlugAttribute() {
         return $this->id.'.'.Str::slug($this->title);
+=======
+    public function getSlugAttribute()
+    {
+        return $this->id . '.' . Str::slug($this->title);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -180,7 +254,12 @@ class Sales extends Model implements Feedable {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'"> ['.($this->is_open ? (isset($this->comments_open_at) && $this->comments_open_at > Carbon::now() ? 'Preview' : 'Open') : 'Closed').'] '.$this->title.'</a>';
     }
 
@@ -189,6 +268,7 @@ class Sales extends Model implements Feedable {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
         return url('sales/'.$this->slug);
     }
@@ -242,4 +322,10 @@ class Sales extends Model implements Feedable {
             'authorName' => $this->user->name,
         ]);
     }
+=======
+    public function getUrlAttribute()
+    {
+        return url('sales/'.$this->slug);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

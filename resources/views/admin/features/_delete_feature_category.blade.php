@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 @if ($category)
     {!! Form::open(['url' => 'admin/data/trait-categories/delete/' . $category->id]) !!}
+=======
+@if($category)
+    {!! Form::open(['url' => 'admin/data/trait-categories/delete/'.$category->id]) !!}
+>>>>>>> Cylunny/extension/polls-and-forms
 
     <p>You are about to delete the category <strong>{{ $category->name }}</strong>. This is not reversible. If traits in this category exist, you will not be able to delete this category.</p>
     <p>Are you sure you want to delete <strong>{{ $category->name }}</strong>?</p>
@@ -9,6 +14,12 @@
     </div>
 
     {!! Form::close() !!}
+<<<<<<< HEAD
 @else
     Invalid category selected.
 @endif
+=======
+@else 
+    Invalid category selected.
+@endif
+>>>>>>> Cylunny/extension/polls-and-forms

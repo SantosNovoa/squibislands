@@ -1,6 +1,13 @@
 <script>
     $(document).ready(function() {
         $('#userSelect').selectize();
+<<<<<<< HEAD
+=======
+        $( "#datepicker" ).datetimepicker({
+            dateFormat: "yy-mm-dd",
+            timeFormat: 'HH:mm:ss',
+        });
+>>>>>>> Cylunny/extension/polls-and-forms
         // Resell options /////////////////////////////////////////////////////////////////////////////
 
         var $resellable = $('#resellable');
@@ -17,8 +24,16 @@
         });
 
         function updateOptions() {
+<<<<<<< HEAD
             if (resellable) $resellOptions.removeClass('hide');
             else $resellOptions.addClass('hide');
         }
     });
 </script>
+=======
+            if(resellable) $resellOptions.removeClass('hide');
+            else $resellOptions.addClass('hide');
+        }
+    });
+</script>
+>>>>>>> Cylunny/extension/polls-and-forms

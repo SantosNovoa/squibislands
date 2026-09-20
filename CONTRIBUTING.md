@@ -4,7 +4,11 @@ For support and general questions and discussions, please visit the [support Dis
 
 The following are accepted uses for the [issue tracker](https://github.com/corowne/Lorekeeper/issues):
 - Bug reports
+<<<<<<< HEAD
 - Feature or enhancement requests *or* discussion of potential new features (within reason)-- note that these may be denied if they are deemed out of scope of the project and/or are not feasible to implement for any reason.
+=======
+- Feature or enhancement requests (within reason)-- note that these may be denied if they are deemed out of scope of the project and/or are not feasible to implement for any reason.
+>>>>>>> Cylunny/extension/polls-and-forms
 
 ## Opening an Issue
 ### Reporting a bug
@@ -24,7 +28,11 @@ Avoid listing multiple requests in one issue. One issue per request makes it eas
 
 ## Contributing Code
 
+<<<<<<< HEAD
 Please see the full [Contribution Guide](https://lk-arpg.github.io/lk-docs/prerelease/contributing/) for more information!
+=======
+Please see the full [Contribution Guide](http://wiki.lorekeeper.me/index.php?title=Contributing_to_Lorekeeper) for more information!
+>>>>>>> Cylunny/extension/polls-and-forms
 
 ### About abandoned pull requests
 

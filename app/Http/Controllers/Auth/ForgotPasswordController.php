@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
+<<<<<<< HEAD
 class ForgotPasswordController extends Controller {
+=======
+class ForgotPasswordController extends Controller
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -21,9 +26,17 @@ class ForgotPasswordController extends Controller {
 
     /**
      * Create a new controller instance.
+<<<<<<< HEAD
      */
     public function __construct() {
         parent::__construct();
+=======
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         $this->middleware('guest');
     }
 }

@@ -20,4 +20,8 @@
             });
         }
     });
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> Cylunny/extension/polls-and-forms

@@ -13,7 +13,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'default'     => env('QUEUE_CONNECTION', 'sync'),
+=======
+    'default' => env('QUEUE_CONNECTION', 'sync'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -30,6 +34,7 @@ return [
 
     'connections' => [
 
+<<<<<<< HEAD
         'sync'       => [
             'driver' => 'sync',
         ],
@@ -38,10 +43,21 @@ return [
             'driver'      => 'database',
             'table'       => 'jobs',
             'queue'       => 'default',
+=======
+        'sync' => [
+            'driver' => 'sync',
+        ],
+
+        'database' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'default',
+>>>>>>> Cylunny/extension/polls-and-forms
             'retry_after' => 90,
         ],
 
         'beanstalkd' => [
+<<<<<<< HEAD
             'driver'      => 'beanstalkd',
             'host'        => 'localhost',
             'queue'       => 'default',
@@ -64,6 +80,30 @@ return [
             'queue'       => env('REDIS_QUEUE', 'default'),
             'retry_after' => 90,
             'block_for'   => null,
+=======
+            'driver' => 'beanstalkd',
+            'host' => 'localhost',
+            'queue' => 'default',
+            'retry_after' => 90,
+            'block_for' => 0,
+        ],
+
+        'sqs' => [
+            'driver' => 'sqs',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
+            'queue' => env('SQS_QUEUE', 'your-queue-name'),
+            'region' => env('AWS_REGION', 'us-east-1'),
+        ],
+
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => env('REDIS_QUEUE', 'default'),
+            'retry_after' => 90,
+            'block_for' => null,
+>>>>>>> Cylunny/extension/polls-and-forms
         ],
 
     ],
@@ -79,9 +119,15 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'failed'      => [
         'database' => env('DB_CONNECTION', 'mysql'),
         'table'    => 'failed_jobs',
+=======
+    'failed' => [
+        'database' => env('DB_CONNECTION', 'mysql'),
+        'table' => 'failed_jobs',
+>>>>>>> Cylunny/extension/polls-and-forms
     ],
 
 ];

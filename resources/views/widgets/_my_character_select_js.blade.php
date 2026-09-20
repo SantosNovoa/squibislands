@@ -5,7 +5,11 @@
             refreshCharacterCategory();
         });
         $('.character-stack').on('click', function(e) {
+<<<<<<< HEAD
             if (!$(this).parent().parent().hasClass('disabled')) {
+=======
+            if(!$(this).parent().parent().hasClass('disabled')) {
+>>>>>>> Cylunny/extension/polls-and-forms
                 var $parent = $(this).parent().parent().parent();
                 $parent.toggleClass('category-selected');
                 $parent.find('.character-checkbox').prop('checked', $parent.hasClass('category-selected'));
@@ -31,4 +35,8 @@
             $('.user-characters .category-' + display).removeClass('hide');
         }
     });
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> Cylunny/extension/polls-and-forms

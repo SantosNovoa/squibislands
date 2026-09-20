@@ -4,7 +4,12 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+<<<<<<< HEAD
 class Kernel extends HttpKernel {
+=======
+class Kernel extends HttpKernel
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The application's global HTTP middleware stack.
      *
@@ -13,12 +18,20 @@ class Kernel extends HttpKernel {
      * @var array
      */
     protected $middleware = [
+<<<<<<< HEAD
         Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         Middleware\TrustProxies::class,
         Middleware\ParsePostRequestFields::class,
+=======
+        \App\Http\Middleware\CheckForMaintenanceMode::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrustProxies::class,
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -28,12 +41,20 @@ class Kernel extends HttpKernel {
      */
     protected $middlewareGroups = [
         'web' => [
+<<<<<<< HEAD
            \App\Http\Middleware\EncryptCookies::class,
+=======
+            \App\Http\Middleware\EncryptCookies::class,
+>>>>>>> Cylunny/extension/polls-and-forms
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+<<<<<<< HEAD
             Middleware\VerifyCsrfToken::class,
+=======
+            \App\Http\Middleware\VerifyCsrfToken::class,
+>>>>>>> Cylunny/extension/polls-and-forms
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -51,6 +72,7 @@ class Kernel extends HttpKernel {
      * @var array
      */
     protected $routeMiddleware = [
+<<<<<<< HEAD
         'auth'          => Middleware\Authenticate::class,
         'auth.basic'    => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings'      => \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -65,6 +87,21 @@ class Kernel extends HttpKernel {
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'      => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'post.throttle' => Middleware\PostRequestThrottleMiddleware::class,
+=======
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'alias' => \App\Http\Middleware\CheckAlias::class,
+        'power' => \App\Http\Middleware\CheckPower::class,
+        'admin' => \App\Http\Middleware\CheckAdmin::class,
+        'staff' => \App\Http\Middleware\CheckStaff::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -77,7 +114,11 @@ class Kernel extends HttpKernel {
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+<<<<<<< HEAD
         Middleware\Authenticate::class,
+=======
+        \App\Http\Middleware\Authenticate::class,
+>>>>>>> Cylunny/extension/polls-and-forms
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,

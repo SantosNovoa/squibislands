@@ -2,14 +2,26 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 class Rarity extends Model {
+=======
+use Config;
+use App\Models\Model;
+
+class Rarity extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'name', 'sort', 'color', 'has_image', 'description', 'parsed_description', 'hash', 'has_icon', 'icon_hash',
+=======
+        'name', 'sort', 'color', 'has_image', 'description', 'parsed_description'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -18,12 +30,17 @@ class Rarity extends Model {
      * @var string
      */
     protected $table = 'rarities';
+<<<<<<< HEAD
+=======
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
+<<<<<<< HEAD
         'name'        => 'required|unique:rarities|between:3,100',
         'color'       => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
         'description' => 'nullable',
@@ -31,12 +48,21 @@ class Rarity extends Model {
         'icon'        => 'mimes:png',
     ];
 
+=======
+        'name' => 'required|unique:rarities|between:3,100',
+        'color' => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
+<<<<<<< HEAD
         'name'        => 'required|between:3,100',
         'color'       => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
         'description' => 'nullable',
@@ -50,11 +76,26 @@ class Rarity extends Model {
 
     **********************************************************************************************/
 
+=======
+        'name' => 'required|between:3,100',
+        'color' => 'nullable|regex:/^#?[0-9a-fA-F]{6}$/i',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+
+    /**********************************************************************************************
+    
+        ACCESSORS
+
+    **********************************************************************************************/
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
         $string = '';
 
@@ -71,6 +112,10 @@ class Rarity extends Model {
      * @return string
      */
     public function getDisplayNameNoIconAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-rarity" '.($this->color ? 'style="color: #'.$this->color.';"' : '').'>'.$this->name.'</a>';
     }
 
@@ -79,7 +124,12 @@ class Rarity extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
+=======
+    public function getImageDirectoryAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/rarities';
     }
 
@@ -88,8 +138,14 @@ class Rarity extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getRarityImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
+=======
+    public function getRarityImageFileNameAttribute()
+    {
+        return $this->id . '-image.png';
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -97,21 +153,36 @@ class Rarity extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getRarityImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
+=======
+    public function getRarityImagePathAttribute()
+    {
+        return public_path($this->imageDirectory);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL of the model's image.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getRarityImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->rarityImageFileName);
+=======
+    public function getRarityImageUrlAttribute()
+    {
+        if (!$this->has_image) return null;
+        return asset($this->imageDirectory . '/' . $this->rarityImageFileName);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -119,24 +190,41 @@ class Rarity extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
         return url('world/rarities?name='.$this->name);
     }
 
+=======
+    public function getUrlAttribute()
+    {
+        return url('world/rarities?name='.$this->name);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL for an encyclopedia search of features (character traits) in this category.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getSearchFeaturesUrlAttribute() {
         return url('world/traits?rarity_id='.$this->id);
     }
 
+=======
+    public function getSearchFeaturesUrlAttribute()
+    {
+        return url('world/traits?rarity_id='.$this->id);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL for a masterlist search of characters of this rarity.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getSearchCharactersUrlAttribute() {
         return url('masterlist?rarity_id='.$this->id);
     }
@@ -180,4 +268,10 @@ class Rarity extends Model {
 
         return asset($this->imageDirectory.'/'.$this->rarityIconFileName);
     }
+=======
+    public function getSearchCharactersUrlAttribute()
+    {
+        return url('masterlist?rarity_id='.$this->id);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

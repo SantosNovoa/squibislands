@@ -7,6 +7,7 @@ use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
 use Laravel\Socialite\Two\User;
 
+<<<<<<< HEAD
 class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
     protected $scopes = [];
 
@@ -14,6 +15,12 @@ class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
         return $this->redirectUrl;
     }
 
+=======
+class ToyhouseProvider extends AbstractProvider implements ProviderInterface
+{
+    protected $scopes = [];
+
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Get the authentication URL for the provider.
      *
@@ -21,7 +28,12 @@ class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
      *
      * @return string
      */
+<<<<<<< HEAD
     protected function getAuthUrl($state) {
+=======
+    protected function getAuthUrl($state)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->buildAuthUrlFromBase('https://toyhou.se/~oauth/authorize', $state);
     }
 
@@ -30,7 +42,12 @@ class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
      *
      * @return string
      */
+<<<<<<< HEAD
     protected function getTokenUrl() {
+=======
+    protected function getTokenUrl()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'https://toyhou.se/~oauth/token';
     }
 
@@ -41,7 +58,12 @@ class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
      *
      * @return array
      */
+<<<<<<< HEAD
     protected function getUserByToken($token) {
+=======
+    protected function getUserByToken($token)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         $response = $this->getHttpClient()->get(
             'https://toyhou.se/~api/v1/me',
             [
@@ -57,9 +79,16 @@ class ToyhouseProvider extends AbstractProvider implements ProviderInterface {
     /**
      * Map the raw user array to a Socialite User instance.
      *
+<<<<<<< HEAD
      * @return User
      */
     protected function mapUserToObject(array $user) {
+=======
+     * @return \Laravel\Socialite\Two\User
+     */
+    protected function mapUserToObject(array $user)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return (new User)->setRaw($user)->map([
             'id'   => $user['id'], 'nickname' => $user['username'],
             'name' => null, 'email' => null, 'avatar' => $user['avatar'],

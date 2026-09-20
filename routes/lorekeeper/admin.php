@@ -153,7 +153,6 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('species/edit/{id?}', 'SpeciesController@postCreateEditSpecies');
     Route::post('species/delete/{id}', 'SpeciesController@postDeleteSpecies');
     Route::post('species/sort', 'SpeciesController@postSortSpecies');
-
     Route::get('subtypes', 'SpeciesController@getSubtypeIndex');
     Route::get('subtypes/create', 'SpeciesController@getCreateSubtype');
     Route::get('subtypes/edit/{id}', 'SpeciesController@getEditSubtype');
@@ -477,8 +476,25 @@ Route::group(['prefix' => 'news', 'middleware' => 'power:manage_news'], function
     Route::post('delete/{id}', 'NewsController@postDeleteNews');
 });
 
-// SALES
+
+# FORMS
+Route::group(['prefix' => 'forms', 'middleware' => 'power:edit_pages'], function() {
+
+    Route::get('/', 'SiteFormController@getIndex');
+    Route::get('create', 'SiteFormController@getCreateSiteForm');
+    Route::get('edit/{id}', 'SiteFormController@getEditSiteForm');
+    Route::get('delete/{id}', 'SiteFormController@getDeleteSiteForm');
+    Route::post('create', 'SiteFormController@postCreateEditSiteForm');
+    Route::post('edit/{id?}', 'SiteFormController@postCreateEditSiteForm');
+    Route::post('delete/{id}', 'SiteFormController@postDeleteSiteForm');
+    Route::get('results/{id}', 'SiteFormController@getSiteFormResults');
+
+});
+
+
+# SALES
 Route::group(['prefix' => 'sales', 'middleware' => 'power:manage_sales'], function () {
+
     Route::get('/', 'SalesController@getIndex');
     Route::get('create', 'SalesController@getCreateSales');
     Route::get('edit/{id}', 'SalesController@getEditSales');

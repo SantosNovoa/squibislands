@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Data;
 
+<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
@@ -12,6 +13,20 @@ use App\Services\ShopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+=======
+use Illuminate\Http\Request;
+
+use Auth;
+
+use App\Models\Shop\Shop;
+use App\Models\Shop\ShopStock;
+use App\Models\Item\Item;
+use App\Models\Currency\Currency;
+
+use App\Services\ShopService;
+
+use App\Http\Controllers\Controller;
+>>>>>>> Cylunny/extension/polls-and-forms
 
 class ShopController extends Controller
 {
@@ -32,10 +47,17 @@ class ShopController extends Controller
     public function getIndex()
     {
         return view('admin.shops.shops', [
+<<<<<<< HEAD
             'shops' => Shop::orderBy('sort', 'DESC')->get(),
         ]);
     }
 
+=======
+            'shops' => Shop::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Shows the create shop page.
      *
@@ -43,6 +65,7 @@ class ShopController extends Controller
      */
     public function getCreateShop()
     {
+<<<<<<< HEAD
         // get all items where they have a tag 'coupon'
         $coupons = Item::whereHas('tags', function ($query) {
             $query->where('tag', 'coupon')->where('is_active', 1);
@@ -60,11 +83,23 @@ class ShopController extends Controller
      *
      * @param int $id
      *
+=======
+        return view('admin.shops.create_edit_shop', [
+            'shop' => new Shop
+        ]);
+    }
+    
+    /**
+     * Shows the edit shop page.
+     *
+     * @param  int  $id
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getEditShop($id)
     {
         $shop = Shop::find($id);
+<<<<<<< HEAD
         if (!$shop) {
             abort(404);
         }
@@ -80,21 +115,35 @@ class ShopController extends Controller
             'pets'       => Pet::orderBy('name')->pluck('name', 'id'),
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
             'coupons'    => $coupons,
+=======
+        if(!$shop) abort(404);
+        return view('admin.shops.create_edit_shop', [
+            'shop' => $shop,
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Creates or edits a shop.
      *
+<<<<<<< HEAD
      * @param App\Services\ShopService $service
      * @param int|null                 $id
      *
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ShopService  $service
+     * @param  int|null                  $id
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postCreateEditShop(Request $request, ShopService $service, $id = null)
     {
         $id ? $request->validate(Shop::$updateRules) : $request->validate(Shop::$createRules);
         $data = $request->only([
+<<<<<<< HEAD
             'name',
             'description',
             'image',
@@ -225,12 +274,27 @@ class ShopController extends Controller
             }
         }
 
+=======
+            'name', 'description', 'image', 'remove_image', 'is_active'
+        ]);
+        if($id && $service->updateShop(Shop::find($id), $data, Auth::user())) {
+            flash('Shop updated successfully.')->success();
+        }
+        else if (!$id && $shop = $service->createShop($data, Auth::user())) {
+            flash('Shop created successfully.')->success();
+            return redirect()->to('admin/data/shops/edit/'.$shop->id);
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
     /**
      * Edits a shop's stock.
      *
+<<<<<<< HEAD
      * @param App\Services\ShopService $service
      * @param int                      $id
      *
@@ -317,12 +381,41 @@ class ShopController extends Controller
      *
      * @param int $id
      *
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ShopService  $service
+     * @param  int                       $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postEditShopStock(Request $request, ShopService $service, $id)
+    {
+        $data = $request->only([
+            'shop_id', 'item_id', 'currency_id', 'cost', 'use_user_bank', 'use_character_bank', 'is_limited_stock', 'quantity', 'purchase_limit'
+        ]);
+        if($service->updateShopStock(Shop::find($id), $data, Auth::user())) {
+            flash('Shop stock updated successfully.')->success();
+            return redirect()->back();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+    
+    /**
+     * Gets the shop deletion modal.
+     *
+     * @param  int  $id
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getDeleteShop($id)
     {
         $shop = Shop::find($id);
+<<<<<<< HEAD
 
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('admin.shops._delete_shop', [
             'shop' => $shop,
         ]);
@@ -331,13 +424,20 @@ class ShopController extends Controller
     /**
      * Deletes a shop.
      *
+<<<<<<< HEAD
      * @param App\Services\ShopService $service
      * @param int                      $id
      *
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ShopService  $service
+     * @param  int                       $id
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeleteShop(Request $request, ShopService $service, $id)
     {
+<<<<<<< HEAD
         if ($id && $service->deleteShop(Shop::find($id))) {
             flash('Shop deleted successfully.')->success();
         } else {
@@ -346,18 +446,32 @@ class ShopController extends Controller
             }
         }
 
+=======
+        if($id && $service->deleteShop(Shop::find($id))) {
+            flash('Shop deleted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->to('admin/data/shops');
     }
 
     /**
      * Sorts shops.
      *
+<<<<<<< HEAD
      * @param App\Services\ShopService $service
      *
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ShopService  $service
+>>>>>>> Cylunny/extension/polls-and-forms
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortShop(Request $request, ShopService $service)
     {
+<<<<<<< HEAD
         if ($service->sortShop($request->get('sort'))) {
             flash('Shop order updated successfully.')->success();
         } else {
@@ -386,4 +500,15 @@ class ShopController extends Controller
 
         return redirect()->back();
     }
+=======
+        if($service->sortShop($request->get('sort'))) {
+            flash('Shop order updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+>>>>>>> Cylunny/extension/polls-and-forms
 }

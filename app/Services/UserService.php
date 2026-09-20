@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -27,6 +28,35 @@ use Intervention\Image\Facades\Image;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
 class UserService extends Service {
+=======
+<?php namespace App\Services;
+
+use App\Services\Service;
+
+use DB;
+use Auth;
+use File;
+use Image;
+use Carbon\Carbon;
+
+use App\Models\User\User;
+use App\Models\Rank\Rank;
+use App\Models\Character\CharacterTransfer;
+use App\Models\Character\CharacterDesignUpdate;
+use App\Models\Submission\Submission;
+use App\Models\Gallery\GallerySubmission;
+use App\Models\User\UserUpdateLog;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
+use App\Services\SubmissionManager;
+use App\Services\GalleryManager;
+use App\Services\CharacterManager;
+use App\Models\Trade;
+
+class UserService extends Service
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | User Service
@@ -39,6 +69,7 @@ class UserService extends Service {
     /**
      * Create a user.
      *
+<<<<<<< HEAD
      * @param array $data
      *
      * @return User
@@ -61,21 +92,46 @@ class UserService extends Service {
             'has_alias' => $data['has_alias'] ?? false,
             // Verify the email if we're logging them in with their social
             'email_verified_at' => (!isset($data['password']) && !isset($data['email'])) ? now() : null,
+=======
+     * @param  array  $data
+     * @return \App\Models\User\User
+     */
+    public function createUser($data)
+    {
+        // If the rank is not given, create a user with the lowest existing rank.
+        if(!isset($data['rank_id'])) $data['rank_id'] = Rank::orderBy('sort')->first()->id;
+
+        // Make birthday into format we can store
+        $date = $data['dob']['day']."-".$data['dob']['month']."-".$data['dob']['year'];
+        $formatDate = carbon::parse($date);
+
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'rank_id' => $data['rank_id'],
+            'password' => Hash::make($data['password']),
+            'birthday' => $formatDate,
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
         $user->settings()->create([
             'user_id' => $user->id,
         ]);
         $user->profile()->create([
+<<<<<<< HEAD
             'user_id' => $user->id,
         ]);
         $user->level()->create([
             'user_id' => $user->id,
+=======
+            'user_id' => $user->id
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
 
         return $user;
     }
 
     /**
+<<<<<<< HEAD
      * Get a validator for an incoming registration request.
      *
      * @param mixed $socialite
@@ -129,11 +185,24 @@ class UserService extends Service {
         if ($user) {
             $user->update($data);
         }
+=======
+     * Updates a user. Used in modifying the admin user on the command line.
+     *
+     * @param  array  $data
+     * @return \App\Models\User\User
+     */
+    public function updateUser($data)
+    {
+        $user = User::find($data['id']);
+        if(isset($data['password'])) $data['password'] = Hash::make($data['password']);
+        if($user) $user->update($data);
+>>>>>>> Cylunny/extension/polls-and-forms
 
         return $user;
     }
 
     /**
+<<<<<<< HEAD
      * Updates a user. Used in modifying the admin user on the command line.
      *
      * @param mixed $id
@@ -245,19 +314,42 @@ class UserService extends Service {
             if (Hash::make($data['new_password']) == $user->password) {
                 throw new \Exception('Please enter a different password.');
             }
+=======
+     * Updates the user's password. 
+     *
+     * @param  array                  $data
+     * @param  \App\Models\User\User  $user
+     * @return bool
+     */
+    public function updatePassword($data, $user)
+    {
+
+        DB::beginTransaction();
+
+        try {
+            if(!Hash::check($data['old_password'], $user->password)) throw new \Exception("Please enter your old password.");
+            if(Hash::make($data['new_password']) == $user->password) throw new \Exception("Please enter a different password.");
+>>>>>>> Cylunny/extension/polls-and-forms
 
             $user->password = Hash::make($data['new_password']);
             $user->save();
 
             return $this->commitReturn(true);
+<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
+=======
+        } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
+<<<<<<< HEAD
      * Updates the user's email and resends a verification email.
      *
      * @param array $data
@@ -266,6 +358,16 @@ class UserService extends Service {
      * @return bool
      */
     public function updateEmail($data, $user) {
+=======
+     * Updates the user's email and resends a verification email. 
+     *
+     * @param  array                  $data
+     * @param  \App\Models\User\User  $user
+     * @return bool
+     */
+    public function updateEmail($data, $user)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         $user->email = $data['email'];
         $user->email_verified_at = null;
         $user->save();
@@ -276,6 +378,7 @@ class UserService extends Service {
     }
 
     /**
+<<<<<<< HEAD
      * Updates user's birthday.
      *
      * @param mixed $data
@@ -437,12 +540,20 @@ class UserService extends Service {
     public function updateTheme($data, $user) {
         $user->theme_id = $data['theme'];
         $user->decorator_theme_id = $data['decorator_theme'];
+=======
+     * Updates user's birthday
+     */
+    public function updateBirthday($data, $user)
+    {
+        $user->birthday = $data;
+>>>>>>> Cylunny/extension/polls-and-forms
         $user->save();
 
         return true;
     }
 
     /**
+<<<<<<< HEAD
      * Updates a user's username.
      *
      * @param string $username
@@ -500,10 +611,68 @@ class UserService extends Service {
             $this->setError('error', $e->getMessage());
         }
 
+=======
+     * Updates user's birthday setting
+     */
+    public function updateDOB($data, $user)
+    {
+        $user->settings->birthday_setting = $data;
+        $user->settings->save();
+
+        return true;
+    }
+
+    /**
+     * Updates the user's avatar. 
+     *
+     * @param  array                  $data
+     * @param  \App\Models\User\User  $user
+     * @return bool
+     */
+    public function updateAvatar($avatar, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            if(!$avatar) throw new \Exception ("Please upload a file.");
+            $filename = $user->id . '.' . $avatar->getClientOriginalExtension();
+            
+            if ($user->avatar !== 'default.jpg') {
+                $file = 'images/avatars/' . $user->avatar;
+                //$destinationPath = 'uploads/' . $id . '/';
+
+                if (File::exists($file)) {
+                    if(!unlink($file)) throw new \Exception("Failed to unlink old avatar.");
+                }
+            }
+
+            // Checks if uploaded file is a GIF
+            if ($avatar->getClientOriginalExtension() == 'gif') {
+            
+                if(!copy($avatar, $file)) throw new \Exception("Failed to copy file.");
+                if(!$file->move( public_path('images/avatars', $filename))) throw new \Exception("Failed to move file."); 
+                if(!$avatar->move( public_path('images/avatars', $filename))) throw new \Exception("Failed to move file."); 
+                
+            }
+
+            else {
+                if(!Image::make($avatar)->resize(150, 150)->save( public_path('images/avatars/' . $filename))) 
+                throw new \Exception("Failed to process avatar.");
+            }
+
+            $user->avatar = $filename;
+            $user->save();
+
+            return $this->commitReturn($avatar);
+        } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
+<<<<<<< HEAD
      * Bans a user.
      *
      * @param array $data
@@ -530,17 +699,47 @@ class UserService extends Service {
                 foreach ($transfers as $transfer) {
                     $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient').' has been banned from site activity.'], $staff);
                 }
+=======
+     * Bans a user. 
+     *
+     * @param  array                  $data
+     * @param  \App\Models\User\User  $user
+     * @param  \App\Models\User\User  $staff
+     * @return bool
+     */
+    public function ban($data, $user, $staff)
+    {
+        DB::beginTransaction();
+
+        try {
+            if(!$user->is_banned) {
+                // New ban (not just editing the reason), clear all their engagements
+
+                // 1. Character transfers
+                $characterManager = new CharacterManager;
+                $transfers = CharacterTransfer::where(function($query) use ($user) {
+                    $query->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+                })->where('status', 'Pending')->get();
+                foreach($transfers as $transfer)
+                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient') . ' has been banned from site activity.'], $staff);
+>>>>>>> Cylunny/extension/polls-and-forms
 
                 // 2. Submissions and claims
                 $submissionManager = new SubmissionManager;
                 $submissions = Submission::where('user_id', $user->id)->where('status', 'Pending')->get();
+<<<<<<< HEAD
                 foreach ($submissions as $submission) {
                     $submissionManager->rejectSubmission(['submission' => $submission, 'staff_comments' => 'User has been banned from site activity.'], $staff);
                 }
+=======
+                foreach($submissions as $submission)
+                    $submissionManager->rejectSubmission(['submission' => $submission, 'staff_comments' => 'User has been banned from site activity.']);
+>>>>>>> Cylunny/extension/polls-and-forms
 
                 // 3. Gallery Submissions
                 $galleryManager = new GalleryManager;
                 $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Pending')->get();
+<<<<<<< HEAD
                 foreach ($gallerySubmissions as $submission) {
                     $galleryManager->rejectSubmission($submission, $staff);
                     $galleryManager->postStaffComments($submission->id, ['staff_comments' => 'User has been banned from site activity.'], $staff);
@@ -570,28 +769,69 @@ class UserService extends Service {
                 }
 
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'Yes', 'ban_reason' => $data['ban_reason'] ?? null]), 'type' => 'Ban']);
+=======
+                foreach($gallerySubmissions as $submission) {
+                    $galleryManager->rejectSubmission($submission);
+                    $galleryManager->postStaffComments($submission->id, ['staff_comments' => 'User has been banned from site activity.'], $staff);
+                }
+                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Accepted')->get();
+                foreach($gallerySubmissions as $submission)
+                    $submission->update(['is_visible' => 0]);
+
+                // 4. Design approvals
+                $requests = CharacterDesignUpdate::where('user_id', $user->id)->where(function($query) {
+                    $query->where('status', 'Pending')->orWhere('status', 'Draft');
+                })->get();
+                foreach($requests as $request)
+                    $characterManager->rejectRequest(['staff_comments' => 'User has been banned from site activity.'], $request, $staff, true);
+
+                // 5. Trades
+                $tradeManager = new TradeManager;
+                $trades = Trade::where(function($query) {
+                    $query->where('status', 'Open')->orWhere('status', 'Pending');
+                })->where(function($query) use ($user) {
+                    $query->where('sender_id', $user->id)->where('recipient_id', $user->id);
+                })->get();
+                foreach($trades as $trade)
+                    $tradeManager->rejectTrade(['trade' => $trade, 'reason' => 'User has been banned from site activity.'], $staff);
+
+                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_banned' => 'Yes', 'ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban']);
+>>>>>>> Cylunny/extension/polls-and-forms
 
                 $user->settings->banned_at = Carbon::now();
 
                 $user->is_banned = 1;
                 $user->rank_id = Rank::orderBy('sort')->first()->id;
                 $user->save();
+<<<<<<< HEAD
             } else {
                 UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['ban_reason' => $data['ban_reason'] ?? null]), 'type' => 'Ban Update']);
+=======
+            }
+            else {
+                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['ban_reason' => isset($data['ban_reason']) ? $data['ban_reason'] : null]), 'type' => 'Ban Update']);
+>>>>>>> Cylunny/extension/polls-and-forms
             }
 
             $user->settings->ban_reason = isset($data['ban_reason']) && $data['ban_reason'] ? $data['ban_reason'] : null;
             $user->settings->save();
 
             return $this->commitReturn(true);
+<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
+=======
+        } catch(\Exception $e) { 
+            $this->setError('error', $e->getMessage());
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
+<<<<<<< HEAD
      * Unbans a user.
      *
      * @param User $user
@@ -618,6 +858,23 @@ class UserService extends Service {
                 $user->is_banned = 0;
                 $user->save();
 
+=======
+     * Unbans a user. 
+     *
+     * @param  \App\Models\User\User  $user
+     * @param  \App\Models\User\User  $staff
+     * @return bool
+     */
+    public function unban($user, $staff)
+    {
+        DB::beginTransaction();
+
+        try {
+            if($user->is_banned) {
+                $user->is_banned = 0;
+                $user->save();
+                
+>>>>>>> Cylunny/extension/polls-and-forms
                 $user->settings->ban_reason = null;
                 $user->settings->banned_at = null;
                 $user->settings->save();
@@ -625,6 +882,7 @@ class UserService extends Service {
             }
 
             return $this->commitReturn(true);
+<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -827,6 +1085,8 @@ class UserService extends Service {
             }
             
             return $this->commitReturn($staffProfile);
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
         } catch(\Exception $e) { 
             $this->setError('error', $e->getMessage());
         }

@@ -14,6 +14,10 @@ return [
     */
 
     'previous' => '&laquo; Previous',
+<<<<<<< HEAD
     'next'     => 'Next &raquo;',
+=======
+    'next' => 'Next &raquo;',
+>>>>>>> Cylunny/extension/polls-and-forms
 
 ];

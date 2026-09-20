@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 @if ($table)
     {!! Form::open(['url' => 'admin/data/loot-tables/delete/' . $table->id]) !!}
+=======
+@if($table)
+    {!! Form::open(['url' => 'admin/data/loot-tables/delete/'.$table->id]) !!}
+>>>>>>> Cylunny/extension/polls-and-forms
 
     <p>You are about to delete the loot table <strong>{{ $table->name }}</strong>. This is not reversible. If prompts that use this loot table exist, you will not be able to delete this table.</p>
     <p>Are you sure you want to delete <strong>{{ $table->name }}</strong>?</p>
@@ -9,6 +14,12 @@
     </div>
 
     {!! Form::close() !!}
+<<<<<<< HEAD
 @else
     Invalid loot table selected.
 @endif
+=======
+@else 
+    Invalid loot table selected.
+@endif
+>>>>>>> Cylunny/extension/polls-and-forms

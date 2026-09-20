@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
+<<<<<<< HEAD
 class Authenticate extends Middleware {
     /**
      * Get the path the user should be redirected to when they are not authenticated.
@@ -14,6 +15,19 @@ class Authenticate extends Middleware {
      */
     protected function redirectTo($request) {
         if (!$request->expectsJson()) {
+=======
+class Authenticate extends Middleware
+{
+    /**
+     * Get the path the user should be redirected to when they are not authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    protected function redirectTo($request)
+    {
+        if (! $request->expectsJson()) {
+>>>>>>> Cylunny/extension/polls-and-forms
             return route('login');
         }
     }

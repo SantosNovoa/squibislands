@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Users;
 
+<<<<<<< HEAD
 use App\Http\Controllers\Controller;
 use App\Models\Award\Award;
 use Config;
@@ -34,21 +35,54 @@ use Illuminate\Support\Facades\Auth;
 use App\Services\RecipeService;
 
 class GrantController extends Controller {
+=======
+use Auth;
+use Config;
+use Illuminate\Http\Request;
+
+use App\Models\User\User;
+use App\Models\Item\Item;
+use App\Models\Currency\Currency;
+
+use App\Models\User\UserItem;
+use App\Models\Character\CharacterItem;
+use App\Models\Trade;
+use App\Models\Character\CharacterDesignUpdate;
+use App\Models\Submission\Submission;
+
+use App\Models\Character\Character;
+use App\Services\CurrencyManager;
+use App\Services\InventoryManager;
+
+use App\Http\Controllers\Controller;
+
+class GrantController extends Controller
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Show the currency grant page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getUserCurrency() {
         return view('admin.grants.user_currency', [
             'users'          => User::orderBy('id')->pluck('name', 'id'),
             'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
+=======
+    public function getUserCurrency()
+    {
+        return view('admin.grants.user_currency', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id')
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
     /**
      * Grants or removes currency from multiple users.
      *
+<<<<<<< HEAD
      * @param App\Services\CurrencyManager $service
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -63,6 +97,21 @@ class GrantController extends Controller {
             }
         }
 
+=======
+     * @param  \Illuminate\Http\Request      $request
+     * @param  App\Services\CurrencyManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postUserCurrency(Request $request, CurrencyManager $service)
+    {
+        $data = $request->only(['names', 'currency_id', 'quantity', 'data']);
+        if($service->grantUserCurrencies($data, Auth::user())) {
+            flash('Currency granted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return redirect()->back();
     }
 
@@ -71,6 +120,7 @@ class GrantController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getItems() {
         return view('admin.grants.items', [
             'users' => User::orderBy('id')->pluck('name', 'id'),
@@ -108,6 +158,13 @@ class GrantController extends Controller {
         return view('admin.grants.recipes', [
             'users' => User::orderBy('id')->pluck('name', 'id'),
             'recipes' => Recipe::orderBy('name')->pluck('name', 'id')
+=======
+    public function getItems()
+    {
+        return view('admin.grants.items', [
+            'users' => User::orderBy('id')->pluck('name', 'id'),
+            'items' => Item::orderBy('name')->pluck('name', 'id')
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 
@@ -118,16 +175,25 @@ class GrantController extends Controller {
      * @param  App\Services\InventoryManager  $service
      * @return \Illuminate\Http\RedirectResponse
      */
+<<<<<<< HEAD
     public function postRecipes(Request $request, RecipeService $service) {
         $data = $request->only(['names', 'recipe_ids', 'data']);
         if($service->grantRecipes($data, Auth::user())) {
             flash('Recipes granted successfully.')->success();
+=======
+    public function postItems(Request $request, InventoryManager $service)
+    {
+        $data = $request->only(['names', 'item_ids', 'quantities', 'data', 'disallow_transfer', 'notes']);
+        if($service->grantItems($data, Auth::user())) {
+            flash('Items granted successfully.')->success();
+>>>>>>> Cylunny/extension/polls-and-forms
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
     }
+<<<<<<< HEAD
     /*
      * Grants or removes exp (show).
      *
@@ -394,14 +460,26 @@ class GrantController extends Controller {
     }
 
     /*
+=======
+
+    /**
+>>>>>>> Cylunny/extension/polls-and-forms
      * Show the item search page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getItemSearch(Request $request) {
         $item = Item::find($request->only(['item_id']))->first();
 
         if ($item) {
+=======
+    public function getItemSearch(Request $request)
+    {
+        $item = Item::find($request->only(['item_id']))->first();
+
+        if($item) {
+>>>>>>> Cylunny/extension/polls-and-forms
             // Gather all instances of this item
             $userItems = UserItem::where('item_id', $item->id)->where('count', '>', 0)->get();
             $characterItems = CharacterItem::where('item_id', $item->id)->where('count', '>', 0)->get();
@@ -417,6 +495,7 @@ class GrantController extends Controller {
         }
 
         return view('admin.grants.item_search', [
+<<<<<<< HEAD
             'item'           => $item ? $item : null,
             'items'          => Item::orderBy('name')->pluck('name', 'id'),
             'userItems'      => $item ? $userItems : null,
@@ -428,4 +507,18 @@ class GrantController extends Controller {
             'submissions'    => $item ? $submissions : null,
         ]);
     }
+=======
+            'item' => $item ? $item : null,
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'userItems' => $item ? $userItems : null,
+            'characterItems' => $item ? $characterItems : null,
+            'users' => $item ? $users : null,
+            'characters' => $item ? $characters : null,
+            'designUpdates' => $item ? $designUpdates :null,
+            'trades' => $item ? $trades : null,
+            'submissions' => $item ? $submissions : null,
+        ]);
+    }
+
+>>>>>>> Cylunny/extension/polls-and-forms
 }

@@ -1,10 +1,19 @@
 <h1>Welcome, {!! Auth::user()->displayName !!}!</h1>
+<<<<<<< HEAD
 
 @include('widgets._news', ['textPreview' => true])
 @include('widgets._sales')
 
 
 {{-- <div class="row justify-content-center">
+=======
+<div class="card mb-4 timestamp">
+    <div class="card-body">
+        <i class="far fa-clock"></i> {!! format_date(Carbon\Carbon::now()) !!}
+    </div>
+</div>
+<div class="row">
+>>>>>>> Cylunny/extension/polls-and-forms
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-body text-center">
@@ -31,6 +40,11 @@
             </ul>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+</div>
+<div class="row">
+>>>>>>> Cylunny/extension/polls-and-forms
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-body text-center">
@@ -55,6 +69,7 @@
             </ul>
         </div>
     </div>
+<<<<<<< HEAD
     <div class="col-md-6">
         <div class="card mb-12">
             <div class="card-body text-center">
@@ -70,3 +85,6 @@
 </div> --}}
 
 @include('widgets._recent_gallery_submissions', ['gallerySubmissions' => $gallerySubmissions])
+=======
+</div>
+>>>>>>> Cylunny/extension/polls-and-forms

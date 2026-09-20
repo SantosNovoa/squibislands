@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace App\Services;
@@ -9,6 +10,22 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class LootService extends Service {
+=======
+<?php namespace App\Services;
+
+use App\Services\Service;
+
+use DB;
+use Config;
+
+use Illuminate\Support\Arr;
+use App\Models\Loot\LootTable;
+use App\Models\Loot\Loot;
+use App\Models\Prompt\PromptReward;
+
+class LootService extends Service
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Loot Service
@@ -21,6 +38,7 @@ class LootService extends Service {
     /**
      * Creates a loot table.
      *
+<<<<<<< HEAD
      * @param array $data
      *
      * @return bool|LootTable
@@ -50,6 +68,27 @@ class LootService extends Service {
                     if (!isset($data['rarity'][$key]) || !$data['rarity'][$key]) {
                         throw new \Exception('A rarity is required for conditional item categories.');
                     }
+=======
+     * @param  array  $data
+     * @return bool|\App\Models\Loot\LootTable
+     */
+    public function createLootTable($data)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // More specific validation
+            foreach($data['rewardable_type'] as $key => $type)
+            {
+                if(!$type) throw new \Exception("Loot type is required.");
+                if($type != 'ItemRarity' && !$data['rewardable_id'][$key]) throw new \Exception("Reward is required.");
+                if(!$data['quantity'][$key] || $data['quantity'][$key] < 1) throw new \Exception("Quantity is required and must be an integer greater than 0.");
+                if(!$data['weight'][$key] || $data['weight'][$key] < 1) throw new \Exception("Weight is required and must be an integer greater than 0.");
+                if($type == 'ItemCategoryRarity') {
+                    if(!isset($data['criteria'][$key]) || !$data['criteria'][$key]) throw new \Exception("Criteria is required for conditional item categories.");
+                    if(!isset($data['rarity'][$key]) || !$data['rarity'][$key]) throw new \Exception("A rarity is required for conditional item categories.");
+>>>>>>> Cylunny/extension/polls-and-forms
                 }
             }
 
@@ -58,16 +97,23 @@ class LootService extends Service {
             $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'weight', 'criteria', 'rarity']));
 
             return $this->commitReturn($table);
+<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
+=======
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Updates a loot table.
      *
+<<<<<<< HEAD
      * @param LootTable $table
      * @param array     $data
      *
@@ -98,6 +144,28 @@ class LootService extends Service {
                     if (!isset($data['rarity'][$key]) || !$data['rarity'][$key]) {
                         throw new \Exception('A rarity is required for conditional item categories.');
                     }
+=======
+     * @param  \App\Models\Loot\LootTable  $table
+     * @param  array                       $data
+     * @return bool|\App\Models\Loot\LootTable
+     */
+    public function updateLootTable($table, $data)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            // More specific validation
+            foreach($data['rewardable_type'] as $key => $type)
+            {
+                if(!$type) throw new \Exception("Loot type is required.");
+                if($type != 'ItemRarity' && !$data['rewardable_id'][$key]) throw new \Exception("Reward is required.");
+                if(!$data['quantity'][$key] || $data['quantity'][$key] < 1) throw new \Exception("Quantity is required and must be an integer greater than 0.");
+                if(!$data['weight'][$key] || $data['weight'][$key] < 1) throw new \Exception("Weight is required and must be an integer greater than 0.");
+                if($type == 'ItemCategoryRarity') {
+                    if(!isset($data['criteria'][$key]) || !$data['criteria'][$key]) throw new \Exception("Criteria is required for conditional item categories.");
+                    if(!isset($data['rarity'][$key]) || !$data['rarity'][$key]) throw new \Exception("A rarity is required for conditional item categories.");
+>>>>>>> Cylunny/extension/polls-and-forms
                 }
             }
 
@@ -106,6 +174,7 @@ class LootService extends Service {
             $this->populateLootTable($table, Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity', 'weight', 'criteria', 'rarity']));
 
             return $this->commitReturn($table);
+<<<<<<< HEAD
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
@@ -139,12 +208,18 @@ class LootService extends Service {
             $this->setError('error', $e->getMessage());
         }
 
+=======
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->rollbackReturn(false);
     }
 
     /**
      * Handles the creation of loot for a loot table.
      *
+<<<<<<< HEAD
      * @param LootTable $table
      * @param array     $data
      */
@@ -159,10 +234,28 @@ class LootService extends Service {
                     'rarity'   => $data['rarity'][$key],
                 ];
             }
+=======
+     * @param  \App\Models\Loot\LootTable  $table
+     * @param  array                       $data
+     */
+    private function populateLootTable($table, $data)
+    {
+        // Clear the old loot...
+        $table->loot()->delete();
+
+        foreach($data['rewardable_type'] as $key => $type)
+        {
+            if($type == 'ItemCategoryRarity' || $type == 'ItemRarity')
+                $lootData = [
+                    'criteria' => $data['criteria'][$key],
+                    'rarity' => $data['rarity'][$key]
+                ];
+>>>>>>> Cylunny/extension/polls-and-forms
 
             Loot::create([
                 'loot_table_id'   => $table->id,
                 'rewardable_type' => $type,
+<<<<<<< HEAD
                 'rewardable_id'   => $data['rewardable_id'][$key] ?? 1,
                 'quantity'        => $data['quantity'][$key],
                 'weight'          => $data['weight'][$key],
@@ -170,4 +263,39 @@ class LootService extends Service {
             ]);
         }
     }
+=======
+                'rewardable_id'   => isset($data['rewardable_id'][$key]) ? $data['rewardable_id'][$key] : 1,
+                'quantity'        => $data['quantity'][$key],
+                'weight'          => $data['weight'][$key],
+                'data'            => isset($lootData) ? json_encode($lootData) : null
+            ]);
+        }
+    }
+
+    /**
+     * Deletes a loot table.
+     *
+     * @param  \App\Models\Loot\LootTable  $table
+     * @return bool
+     */
+    public function deleteLootTable($table)
+    {
+        DB::beginTransaction();
+
+        try {
+            // Check first if the table is currently in use
+            // - Prompts
+            // - Box rewards (unfortunately this can't be checked easily)
+            if(PromptReward::where('rewardable_type', 'LootTable')->where('rewardable_id', $table->id)->exists()) throw new \Exception("A prompt uses this table to distribute rewards. Please remove it from the rewards list first.");
+
+            $table->loot()->delete();
+            $table->delete();
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

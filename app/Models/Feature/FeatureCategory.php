@@ -2,16 +2,28 @@
 
 namespace App\Models\Feature;
 
+<<<<<<< HEAD
 use App\Models\Model;
 
 class FeatureCategory extends Model {
+=======
+use Config;
+use App\Models\Model;
+
+class FeatureCategory extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_visible', 'hash',
+=======
+        'name', 'sort', 'has_image', 'description', 'parsed_description'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -20,24 +32,37 @@ class FeatureCategory extends Model {
      * @var string
      */
     protected $table = 'feature_categories';
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
+<<<<<<< HEAD
         'name'        => 'required|unique:feature_categories|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
     ];
 
+=======
+        'name' => 'required|unique:feature_categories|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
+<<<<<<< HEAD
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
@@ -71,12 +96,30 @@ class FeatureCategory extends Model {
 
     **********************************************************************************************/
 
+=======
+        'name' => 'required|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+
+    /**********************************************************************************************
+    
+        ACCESSORS
+
+    **********************************************************************************************/
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-category">'.$this->name.'</a>';
     }
 
@@ -85,7 +128,12 @@ class FeatureCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
+=======
+    public function getImageDirectoryAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/trait-categories';
     }
 
@@ -94,8 +142,14 @@ class FeatureCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
+=======
+    public function getCategoryImageFileNameAttribute()
+    {
+        return $this->id . '-image.png';
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -103,21 +157,36 @@ class FeatureCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
+=======
+    public function getCategoryImagePathAttribute()
+    {
+        return public_path($this->imageDirectory);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL of the model's image.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->categoryImageFileName);
+=======
+    public function getCategoryImageUrlAttribute()
+    {
+        if (!$this->has_image) return null;
+        return asset($this->imageDirectory . '/' . $this->categoryImageFileName);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -125,7 +194,12 @@ class FeatureCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
+=======
+    public function getUrlAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return url('world/trait-categories?name='.$this->name);
     }
 
@@ -134,6 +208,7 @@ class FeatureCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getSearchUrlAttribute() {
         return url('world/traits?feature_category_id='.$this->id);
     }
@@ -155,4 +230,10 @@ class FeatureCategory extends Model {
     public function getAdminPowerAttribute() {
         return 'edit_data';
     }
+=======
+    public function getSearchUrlAttribute()
+    {
+        return url('world/traits?feature_category_id='.$this->id);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

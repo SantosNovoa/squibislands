@@ -1,4 +1,5 @@
 @php
+<<<<<<< HEAD
     if (old('stack_id') && old('stack_quantity')) {
         $old_selection = array_combine(old('stack_id'), old('stack_quantity'));
     }
@@ -7,6 +8,13 @@
     Your Inventory <a class="small inventory-collapse-toggle collapse-toggle collapsed" href="#userInventory" data-toggle="collapse">Show</a></h3>
 <hr>
 <div class="{{ isset($selected) && count($selected) ? '' : 'collapse' }}" id="userInventory">
+=======
+    if(old('stack_id')) $old_selection = array_combine(old('stack_id'), old('stack_quantity'));
+@endphp
+<h3>Your Inventory <a class="small inventory-collapse-toggle collapse-toggle collapsed" href="#userInventory" data-toggle="collapse">Show</a></h3>
+<hr>
+<div class="collapse" id="userInventory">
+>>>>>>> Cylunny/extension/polls-and-forms
     <div class="card mb-3">
         <div class="card-body">
             <div class="text-left mb-3">
@@ -24,7 +32,11 @@
                         <option value="selected">Selected Items</option>
                         <option disabled>&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;</option>
                         <option value="0">Miscellaneous</option>
+<<<<<<< HEAD
                         @foreach ($categories as $category)
+=======
+                        @foreach($categories as $category)
+>>>>>>> Cylunny/extension/polls-and-forms
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
@@ -47,6 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
+<<<<<<< HEAD
                         @foreach ($inventory as $itemRow)
                             <tr id="itemRow{{ $itemRow->id }}"
                                 class="d-flex {{ $itemRow->isTransferrable ? '' : 'accountbound' }} user-item select-item-row item-all category-all item-{{ $itemRow->item->id }} category-{{ $itemRow->item->item_category_id ?: 0 }} {{ (isset($selected) && in_array($itemRow->id, array_keys($selected))) || (isset($old_selection) && isset($old_selection[$itemRow->id])) ? 'category-selected' : '' }}">
@@ -74,11 +87,34 @@
                                                 @if ($itemRow->getOthers(0, $selected[$itemRow->id]))
                                                     {{ $itemRow->getOthers(0, $selected[$itemRow->id]) }}
                                                 @endif
+=======
+                        @foreach($inventory as $itemRow)
+                            <tr id ="itemRow{{ $itemRow->id }}" class="d-flex {{ $itemRow->isTransferrable ? '' : 'accountbound' }} user-item select-item-row item-all category-all item-{{ $itemRow->item->id }} category-{{ $itemRow->item->item_category_id ? : 0 }} {{ (isset($selected) && in_array($itemRow->id, array_keys($selected))) || (isset($old_selection) && isset($old_selection[$itemRow->id])) ? 'category-selected' : '' }}">
+                                <td class="col-1">{!! Form::checkbox((isset($fieldName) && $fieldName ? $fieldName : 'stack_id[]'), $itemRow->id, isset($selected) && in_array($itemRow->id, array_keys($selected)) ? true : false, ['class' => 'inventory-checkbox']) !!}</td>
+                                <td class="col-2">@if(isset($itemRow->item->image_url)) <img class="small-icon" src="{{ $itemRow->item->image_url }}" alt="{{ $itemRow->item->name }}"> @endif {!! $itemRow->item->name !!}
+                                <td class="col-4">{!! array_key_exists('data', $itemRow->data) ? ($itemRow->data['data'] ? $itemRow->data['data'] : 'N/A') : 'N/A' !!}</td>
+                                <td class="col-3">{!! array_key_exists('notes', $itemRow->data) ? ($itemRow->data['notes'] ? $itemRow->data['notes'] : 'N/A') : 'N/A' !!}</td>
+                                @if($itemRow->availableQuantity || in_array($itemRow->id, array_keys($selected)))
+                                    @if(isset($old_selection) && isset($old_selection[$itemRow->id]))
+                                        <td class="col-2">{!! Form::selectRange(
+                                            'stack_quantity['.$itemRow->id.']',
+                                            1,
+                                            $itemRow->getAvailableContextQuantity($selected[$itemRow->id] ?? 0),
+                                            $old_selection[$itemRow->id],
+                                            ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!}
+                                            /
+                                            {{ $itemRow->getAvailableContextQuantity($selected[$itemRow->id] ?? 0) }}
+                                            @if($page == 'trade')
+                                                @if($itemRow->getOthers($selected[$itemRow->id], 0)) {{ $itemRow->getOthers($selected[$itemRow->id], 0) }} @endif
+                                            @elseif($page == 'update')
+                                                @if($itemRow->getOthers(0, $selected[$itemRow->id])) {{ $itemRow->getOthers(0, $selected[$itemRow->id]) }} @endif
+>>>>>>> Cylunny/extension/polls-and-forms
                                             @elseif($itemRow->getOthers())
                                                 {{ $itemRow->getOthers() }}
                                             @endif
                                         </td>
                                     @elseif(in_array($itemRow->id, array_keys($selected)))
+<<<<<<< HEAD
                                         <td class="col-2">{!! Form::selectRange('stack_quantity[' . $itemRow->id . ']', 1, $itemRow->getAvailableContextQuantity($selected[$itemRow->id]), $selected[$itemRow->id], ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!}
                                             /
                                             {{ $itemRow->getAvailableContextQuantity($selected[$itemRow->id]) }}
@@ -90,11 +126,26 @@
                                                 @if ($itemRow->getOthers(0, $selected[$itemRow->id]))
                                                     {{ $itemRow->getOthers(0, $selected[$itemRow->id]) }}
                                                 @endif
+=======
+                                        <td class="col-2">{!! Form::selectRange(
+                                            'stack_quantity['.$itemRow->id.']',
+                                            1,
+                                            $itemRow->getAvailableContextQuantity($selected[$itemRow->id]),
+                                            $selected[$itemRow->id],
+                                            ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!}
+                                            /
+                                            {{ $itemRow->getAvailableContextQuantity($selected[$itemRow->id]) }}
+                                            @if($page == 'trade')
+                                                @if($itemRow->getOthers($selected[$itemRow->id], 0)) {{ $itemRow->getOthers($selected[$itemRow->id], 0) }} @endif
+                                            @elseif($page == 'update')
+                                                @if($itemRow->getOthers(0, $selected[$itemRow->id])) {{ $itemRow->getOthers(0, $selected[$itemRow->id]) }} @endif
+>>>>>>> Cylunny/extension/polls-and-forms
                                             @elseif($itemRow->getOthers())
                                                 {{ $itemRow->getOthers() }}
                                             @endif
                                         </td>
                                     @else
+<<<<<<< HEAD
                                         <td class="col-2">{!! Form::selectRange('', 1, $itemRow->availableQuantity, 1, ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!} /{{ $itemRow->availableQuantity }} @if ($itemRow->getOthers())
                                                 {{ $itemRow->getOthers() }}
                                             @endif
@@ -105,6 +156,12 @@
                                             {{ $itemRow->getOthers() }}
                                         @endif
                                     </td>
+=======
+                                        <td class="col-2">{!! Form::selectRange('', 1, $itemRow->availableQuantity, 1, ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;']) !!} /{{ $itemRow->availableQuantity }} @if($itemRow->getOthers()) {{ $itemRow->getOthers() }} @endif</td>
+                                    @endif
+                                @else
+                                    <td class="col-2">{!! Form::selectRange('', 0, 0, 0, ['class' => 'quantity-select', 'type' => 'number', 'style' => 'min-width:40px;', 'disabled']) !!} /{{ $itemRow->availableQuantity }} @if($itemRow->getOthers()) {{ $itemRow->getOthers() }} @endif</td>
+>>>>>>> Cylunny/extension/polls-and-forms
                                 @endif
                             </tr>
                         @endforeach

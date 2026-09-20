@@ -1,8 +1,13 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> Cylunny/extension/polls-and-forms
 <script>
 $( document ).ready(function() {    
     var $lootTable  = $('#lootTableBody');
     var $lootRow = $('#lootRow').find('.loot-row');
     var $itemSelect = $('#lootRowData').find('.item-select');
+<<<<<<< HEAD
     var $PetSelect = $('#lootRowData').find('.pet-select');
     var $WeaponSelect = $('#lootRowData').find('.weapon-select');
     var $GearSelect = $('#lootRowData').find('.gear-select');
@@ -10,18 +15,24 @@ $( document ).ready(function() {
     var $statSelect = $('#lootRowData').find('.stat-select');
     var $claymoreSelect = $('#lootRowData').find('.claymore-select');
     var $awardSelect = $('#lootRowData').find('.award-select');
+=======
+    var $currencySelect = $('#lootRowData').find('.currency-select');
+>>>>>>> Cylunny/extension/polls-and-forms
     @if($showLootTables)
         var $tableSelect = $('#lootRowData').find('.table-select');
     @endif
     @if($showRaffles)
         var $raffleSelect = $('#lootRowData').find('.raffle-select');
     @endif
+<<<<<<< HEAD
     @if($showRecipes)
         var $recipeSelect = $('#lootRowData').find('.recipe-select');
     @endif
     @if (isset($showThemes) && $showThemes)
             var $themeSelect = $('#lootRowData').find('.theme-select');
     @endif
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
 
     $('#lootTableBody .selectize').selectize();
     attachRemoveListener($('#lootTableBody .remove-loot-button'));
@@ -35,10 +46,33 @@ $( document ).ready(function() {
     });
 
     $('.reward-type').on('change', function(e) {
+<<<<<<< HEAD
+=======
+        var val = $(this).val();
+        var $cell = $(this).parent().find('.loot-row-select');
+
+        var $clone = null;
+        if(val == 'Item') $clone = $itemSelect.clone();
+        else if (val == 'Currency') $clone = $currencySelect.clone();
+        @if($showLootTables)
+            else if (val == 'LootTable') $clone = $tableSelect.clone();
+        @endif
+        @if($showRaffles)
+            else if (val == 'Raffle') $clone = $raffleSelect.clone();
+        @endif
+
+        $cell.html('');
+        $cell.append($clone);
+    });
+
+    function attachRewardTypeListener(node) {
+        node.on('change', function(e) {
+>>>>>>> Cylunny/extension/polls-and-forms
             var val = $(this).val();
             var $cell = $(this).parent().parent().find('.loot-row-select');
 
             var $clone = null;
+<<<<<<< HEAD
             if (val == 'Item') $clone = $itemSelect.clone();
             else if (val == 'Currency') $clone = $currencySelect.clone();
             else if (val == 'Award') $clone = $awardSelect.clone();
@@ -106,3 +140,30 @@ $( document ).ready(function() {
 
     });
 </script>
+=======
+            if(val == 'Item') $clone = $itemSelect.clone();
+            else if (val == 'Currency') $clone = $currencySelect.clone();
+            @if($showLootTables)
+                else if (val == 'LootTable') $clone = $tableSelect.clone();
+            @endif
+            @if($showRaffles)
+                else if (val == 'Raffle') $clone = $raffleSelect.clone();
+            @endif
+
+            $cell.html('');
+            $cell.append($clone);
+            $clone.selectize();
+        });
+    }
+
+    function attachRemoveListener(node) {
+        node.on('click', function(e) {
+            e.preventDefault();
+            $(this).parent().parent().remove();
+        });
+    }
+
+});
+    
+</script>
+>>>>>>> Cylunny/extension/polls-and-forms

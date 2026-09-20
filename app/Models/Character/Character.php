@@ -2,6 +2,7 @@
 
 namespace App\Models\Character;
 
+<<<<<<< HEAD
 use App\Facades\Notifications;
 use App\Models\Award\Award;
 use App\Models\Award\AwardLog;
@@ -32,6 +33,36 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Settings;
 
 class Character extends Model {
+=======
+use Config;
+use DB;
+use Carbon\Carbon;
+use Notifications;
+use App\Models\Model;
+
+use App\Models\User\User;
+use App\Models\User\UserCharacterLog;
+
+use App\Models\Character\Character;
+use App\Models\Character\CharacterCategory;
+use App\Models\Character\CharacterTransfer;
+use App\Models\Character\CharacterBookmark;
+
+use App\Models\Character\CharacterCurrency;
+use App\Models\Currency\Currency;
+use App\Models\Currency\CurrencyLog;
+
+use App\Models\Character\CharacterItem;
+use App\Models\Item\Item;
+use App\Models\Item\ItemLog;
+
+use App\Models\Submission\Submission;
+use App\Models\Submission\SubmissionCharacter;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Character extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     use SoftDeletes;
 
     /**
@@ -45,8 +76,12 @@ class Character extends Model {
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
+<<<<<<< HEAD
         'is_myo_slot', 'name', 'trade_id', 'owner_url',
         'home_id', 'home_changed', 'faction_id', 'faction_changed', 'folder_id', 'class_id',
+=======
+        'is_myo_slot', 'name', 'trade_id', 'owner_url'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -57,6 +92,7 @@ class Character extends Model {
     protected $table = 'characters';
 
     /**
+<<<<<<< HEAD
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -68,6 +104,8 @@ class Character extends Model {
     ];
 
     /**
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * Whether the model contains timestamps to be saved and updated.
      *
      * @var string
@@ -75,6 +113,16 @@ class Character extends Model {
     public $timestamps = true;
 
     /**
+<<<<<<< HEAD
+=======
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    public $dates = ['transferrable_at'];
+
+    /**
+>>>>>>> Cylunny/extension/polls-and-forms
      * Accessors to append to the model.
      *
      * @var array
@@ -88,6 +136,7 @@ class Character extends Model {
      */
     public static $createRules = [
         'character_category_id' => 'required',
+<<<<<<< HEAD
         'rarity_id'             => 'required',
         'user_id'               => 'nullable',
         'number'                => 'required',
@@ -97,6 +146,17 @@ class Character extends Model {
         'image'                 => 'required|mimes:jpeg,jpg,gif,png|max:2048',
         'thumbnail'             => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
         'owner_url'             => 'url|nullable',
+=======
+        'rarity_id' => 'required',
+        'user_id' => 'nullable',
+        'number' => 'required',
+        'slug' => 'required|alpha_dash',
+        'description' => 'nullable',
+        'sale_value' => 'nullable',
+        'image' => 'required|mimes:jpeg,jpg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,jpg,gif,png|max:20000',
+        'owner_url' => 'url|nullable',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -106,12 +166,19 @@ class Character extends Model {
      */
     public static $updateRules = [
         'character_category_id' => 'required',
+<<<<<<< HEAD
         'number'                => 'required',
         'slug'                  => 'required|alpha_dash',
         'description'           => 'nullable',
         'sale_value'            => 'nullable',
         'image'                 => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
         'thumbnail'             => 'nullable|mimes:jpeg,jpg,gif,png|max:2048',
+=======
+        'number' => 'required',
+        'slug' => 'required',
+        'description' => 'nullable',
+        'sale_value' => 'nullable',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -120,6 +187,7 @@ class Character extends Model {
      * @var array
      */
     public static $myoRules = [
+<<<<<<< HEAD
         'rarity_id'   => 'nullable',
         'user_id'     => 'nullable',
         'number'      => 'nullable',
@@ -129,6 +197,17 @@ class Character extends Model {
         'name'        => 'required',
         'image'       => 'nullable|mimes:jpeg,gif,png|max:2048',
         'thumbnail'   => 'nullable|mimes:jpeg,gif,png|max:2048',
+=======
+        'rarity_id' => 'nullable',
+        'user_id' => 'nullable',
+        'number' => 'nullable',
+        'slug' => 'nullable',
+        'description' => 'nullable',
+        'sale_value' => 'nullable',
+        'name' => 'required',
+        'image' => 'nullable|mimes:jpeg,gif,png|max:20000',
+        'thumbnail' => 'nullable|mimes:jpeg,gif,png|max:20000',
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**********************************************************************************************
@@ -140,36 +219,62 @@ class Character extends Model {
     /**
      * Get the user who owns the character.
      */
+<<<<<<< HEAD
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
+=======
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User\User', 'user_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the category the character belongs to.
      */
+<<<<<<< HEAD
     public function category() {
         return $this->belongsTo(CharacterCategory::class, 'character_category_id');
+=======
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Character\CharacterCategory', 'character_category_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the masterlist image of the character.
      */
+<<<<<<< HEAD
     public function image() {
         return $this->belongsTo(CharacterImage::class, 'character_image_id');
+=======
+    public function image()
+    {
+        return $this->belongsTo('App\Models\Character\CharacterImage', 'character_image_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get all images associated with the character.
+<<<<<<< HEAD
      *
      * @param mixed|null $user
      */
     public function images($user = null) {
         return $this->hasMany(CharacterImage::class, 'character_id')->images($user);
+=======
+     */
+    public function images($user = null)
+    {
+        return $this->hasMany('App\Models\Character\CharacterImage', 'character_id')->images($user);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the user-editable profile data of the character.
      */
+<<<<<<< HEAD
     public function profile() {
         return $this->hasOne(CharacterProfile::class, 'character_id');
     }
@@ -186,18 +291,30 @@ class Character extends Model {
      */
     public function stats() {
         return $this->hasMany(CharacterStat::class, 'character_id');
+=======
+    public function profile()
+    {
+        return $this->hasOne('App\Models\Character\CharacterProfile', 'character_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the character's active design update.
      */
+<<<<<<< HEAD
     public function designUpdate() {
         return $this->hasMany(CharacterDesignUpdate::class, 'character_id');
+=======
+    public function designUpdate()
+    {
+        return $this->hasMany('App\Models\Character\CharacterDesignUpdate', 'character_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the trade this character is attached to.
      */
+<<<<<<< HEAD
     public function trade() {
         return $this->belongsTo(Trade::class, 'trade_id');
     }
@@ -214,11 +331,17 @@ class Character extends Model {
      */
     public function faction() {
         return $this->belongsTo('App\Models\WorldExpansion\Faction', 'faction_id');
+=======
+    public function trade()
+    {
+        return $this->belongsTo('App\Models\Trade', 'trade_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the rarity of this character.
      */
+<<<<<<< HEAD
     public function rarity() {
         return $this->belongsTo(Rarity::class, 'rarity_id');
     }
@@ -250,18 +373,30 @@ class Character extends Model {
      */
     public function equipment() {
         return $this->hasMany(UserGear::class, 'character_id')->get()->concat($this->hasMany(UserWeapon::class, 'character_id')->get());
+=======
+    public function rarity()
+    {
+        return $this->belongsTo('App\Models\Rarity', 'rarity_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the character's associated gallery submissions.
      */
+<<<<<<< HEAD
     public function gallerySubmissions() {
         return $this->hasMany(GalleryCharacter::class, 'character_id');
+=======
+    public function gallerySubmissions()
+    {
+        return $this->hasMany('App\Models\Gallery\GalleryCharacter', 'character_id');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the character's items.
      */
+<<<<<<< HEAD
     public function items() {
         return $this->belongsToMany(Item::class, 'character_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_items.deleted_at');
     }
@@ -292,6 +427,11 @@ class Character extends Model {
      */
     public function skills() {
         return $this->hasMany(CharacterSkill::class, 'character_id');
+=======
+    public function items()
+    {
+        return $this->belongsToMany('App\Models\Item\Item', 'character_items')->withPivot('count', 'data', 'updated_at', 'id')->whereNull('character_items.deleted_at');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**********************************************************************************************
@@ -303,18 +443,28 @@ class Character extends Model {
     /**
      * Scope a query to only include either characters of MYO slots.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param bool                                  $isMyo
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeMyo($query, $isMyo = false) {
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  bool                                   $isMyo
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMyo($query, $isMyo = false)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('is_myo_slot', $isMyo);
     }
 
     /**
      * Scope a query to only include visible characters.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param mixed|null                            $user
      *
@@ -325,23 +475,39 @@ class Character extends Model {
             return $query;
         }
 
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('is_visible', 1);
     }
 
     /**
      * Scope a query to only include characters that the owners are interested in trading.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeTrading($query) {
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTrading($query)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->where('is_trading', 1);
     }
 
     /**
      * Scope a query to only include characters that can be traded.
      *
+<<<<<<< HEAD
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -351,6 +517,17 @@ class Character extends Model {
             $query->whereNull('transferrable_at')->orWhere('transferrable_at', '<', Carbon::now());
         })->where(function ($query) {
             $query->where('is_sellable', 1)->orWhere('is_tradeable', 1)->orWhere('is_giftable', 1);
+=======
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTradable($query)
+    {
+        return $query->where(function($query) {
+            $query->whereNull('transferrable_at')->orWhere('transferrable_at', '<', Carbon::now());
+        })->where(function($query) {
+          $query->where('is_sellable', 1)->orWhere('is_tradeable', 1)->orWhere('is_giftable', 1);
+>>>>>>> Cylunny/extension/polls-and-forms
         });
     }
 
@@ -365,6 +542,7 @@ class Character extends Model {
      *
      * @return bool
      */
+<<<<<<< HEAD
     public function getIsAvailableAttribute() {
         if ($this->designUpdate()->active()->exists()) {
             return false;
@@ -376,6 +554,13 @@ class Character extends Model {
             return false;
         }
 
+=======
+    public function getIsAvailableAttribute()
+    {
+        if($this->designUpdate()->active()->exists()) return false;
+        if($this->trade_id) return false;
+        if(CharacterTransfer::active()->where('character_id', $this->id)->exists()) return false;
+>>>>>>> Cylunny/extension/polls-and-forms
         return true;
     }
 
@@ -385,12 +570,19 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayOwnerAttribute() {
         if ($this->user_id) {
             return $this->user->displayName;
         } else {
             return prettyProfileLink($this->owner_url);
         }
+=======
+    public function getDisplayOwnerAttribute()
+    {
+        if($this->user_id) return $this->user->displayName;
+        else return prettyProfileLink($this->owner_url);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -399,12 +591,19 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getSlugAttribute() {
         if ($this->is_myo_slot) {
             return $this->name;
         } else {
             return $this->attributes['slug'];
         }
+=======
+    public function getSlugAttribute()
+    {
+        if($this->is_myo_slot) return $this->name;
+        else return $this->attributes['slug'];
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -412,7 +611,12 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-character">'.$this->fullName.'</a>';
     }
 
@@ -422,12 +626,19 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getFullNameAttribute() {
         if ($this->is_myo_slot) {
             return $this->name;
         } else {
             return $this->slug.($this->name ? ': '.$this->name : '');
         }
+=======
+    public function getFullNameAttribute()
+    {
+        if($this->is_myo_slot) return $this->name;
+        else return $this->slug . ($this->name ? ': '.$this->name : '');
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -435,12 +646,19 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
         if ($this->is_myo_slot) {
             return url('myo/'.$this->id);
         } else {
             return url('character/'.$this->slug);
         }
+=======
+    public function getUrlAttribute()
+    {
+        if($this->is_myo_slot) return url('myo/'.$this->id);
+        else return url('character/'.$this->slug);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -448,7 +666,12 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getAssetTypeAttribute() {
+=======
+    public function getAssetTypeAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'characters';
     }
 
@@ -457,6 +680,7 @@ class Character extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getLogTypeAttribute() {
         return 'Character';
     }
@@ -572,6 +796,13 @@ class Character extends Model {
         return ' ・ <i class="fas fa-info-circle help-icon m-0" data-toggle="tooltip" data-html="true" title="'.$nonMyoSection.$tradingSection.'"></i>';
     }
 
+=======
+    public function getLogTypeAttribute()
+    {
+        return 'Character';
+    }
+
+>>>>>>> Cylunny/extension/polls-and-forms
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -581,6 +812,7 @@ class Character extends Model {
     /**
      * Checks if the character's owner has registered on the site and updates ownership accordingly.
      */
+<<<<<<< HEAD
     public function updateOwner() {
         // Return if the character has an owner on the site already.
         if ($this->user_id) {
@@ -590,6 +822,16 @@ class Character extends Model {
         // Check if the owner has an account and update the character's user ID for them.
         $owner = checkAlias($this->owner_url);
         if (is_object($owner)) {
+=======
+    public function updateOwner()
+    {
+        // Return if the character has an owner on the site already.
+        if($this->user_id) return;
+
+        // Check if the owner has an account and update the character's user ID for them.
+        $owner = checkAlias($this->owner_url);
+        if(is_object($owner)) {
+>>>>>>> Cylunny/extension/polls-and-forms
             $this->user_id = $owner->id;
             $this->owner_url = null;
             $this->save();
@@ -602,11 +844,19 @@ class Character extends Model {
     /**
      * Get the character's held currencies.
      *
+<<<<<<< HEAD
      * @param bool $showAll
      *
      * @return \Illuminate\Support\Collection
      */
     public function getCurrencies($showAll = false) {
+=======
+     * @param  bool  $displayedOnly
+     * @return \Illuminate\Support\Collection
+     */
+    public function getCurrencies($displayedOnly = false)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         // Get a list of currencies that need to be displayed
         // On profile: only ones marked is_displayed
         // In bank: ones marked is_displayed + the ones the user has
@@ -614,6 +864,7 @@ class Character extends Model {
         $owned = CharacterCurrency::where('character_id', $this->id)->pluck('quantity', 'currency_id')->toArray();
 
         $currencies = Currency::where('is_character_owned', 1);
+<<<<<<< HEAD
         if ($showAll) {
             $currencies->where(function ($query) use ($owned) {
                 $query->where('is_displayed', 1)->orWhereIn('id', array_keys($owned));
@@ -626,12 +877,24 @@ class Character extends Model {
 
         foreach ($currencies as $currency) {
             $currency->quantity = $owned[$currency->id] ?? 0;
+=======
+        if($displayedOnly) $currencies->where(function($query) use($owned) {
+            $query->where('is_displayed', 1)->orWhereIn('id', array_keys($owned));
+        });
+        else $currencies = $currencies->where('is_displayed', 1);
+
+        $currencies = $currencies->orderBy('sort_character', 'DESC')->get();
+
+        foreach($currencies as $currency) {
+            $currency->quantity = isset($owned[$currency->id]) ? $owned[$currency->id] : 0;
+>>>>>>> Cylunny/extension/polls-and-forms
         }
 
         return $currencies;
     }
 
     /**
+<<<<<<< HEAD
      * Get the character's exp logs.
      *
      * @param int $limit
@@ -733,17 +996,25 @@ class Character extends Model {
     }
 
     /**
+=======
+>>>>>>> Cylunny/extension/polls-and-forms
      * Get the character's held currencies as an array for select inputs.
      *
      * @return array
      */
+<<<<<<< HEAD
     public function getCurrencySelect() {
+=======
+    public function getCurrencySelect()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return CharacterCurrency::where('character_id', $this->id)->leftJoin('currencies', 'character_currencies.currency_id', '=', 'currencies.id')->orderBy('currencies.sort_character', 'DESC')->get()->pluck('name_with_quantity', 'currency_id')->toArray();
     }
 
     /**
      * Get the character's currency logs.
      *
+<<<<<<< HEAD
      * @param int $limit
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
@@ -760,11 +1031,27 @@ class Character extends Model {
         } else {
             return $query->paginate(30);
         }
+=======
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getCurrencyLogs($limit = 10)
+    {
+        $character = $this;
+        $query = CurrencyLog::with('currency')->where(function($query) use ($character) {
+            $query->with('sender.rank')->where('sender_type', 'Character')->where('sender_id', $character->id)->where('log_type', '!=', 'Staff Grant');
+        })->orWhere(function($query) use ($character) {
+            $query->with('recipient.rank')->where('recipient_type', 'Character')->where('recipient_id', $character->id)->where('log_type', '!=', 'Staff Removal');
+        })->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
      * Get the character's item logs.
      *
+<<<<<<< HEAD
      * @param int $limit
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
@@ -806,6 +1093,23 @@ class Character extends Model {
         } else {
             return $query->paginate(30);
         }
+=======
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getItemLogs($limit = 10)
+    {
+        $character = $this;
+
+        $query = ItemLog::with('item')->where(function($query) use ($character) {
+            $query->with('sender.rank')->where('sender_type', 'Character')->where('sender_id', $character->id)->where('log_type', '!=', 'Staff Grant');
+        })->orWhere(function($query) use ($character) {
+            $query->with('recipient.rank')->where('recipient_type', 'Character')->where('recipient_id', $character->id)->where('log_type', '!=', 'Staff Removal');
+        })->orderBy('id', 'DESC');
+
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -813,9 +1117,15 @@ class Character extends Model {
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
+<<<<<<< HEAD
     public function getOwnershipLogs() {
         $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->where('character_id', $this->id)->orderBy('id', 'DESC');
 
+=======
+    public function getOwnershipLogs()
+    {
+        $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->where('character_id', $this->id)->orderBy('id', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->paginate(30);
     }
 
@@ -824,6 +1134,7 @@ class Character extends Model {
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
+<<<<<<< HEAD
     public function getCharacterLogs() {
         $query = CharacterLog::with('sender.rank')->where('character_id', $this->id)->where('log_type', '!=', 'Skill Awarded')->orderBy('id', 'DESC');
 
@@ -838,6 +1149,11 @@ class Character extends Model {
     public function getCharacterSkillLogs() {
         $query = CharacterLog::with('sender.rank')->where('character_id', $this->id)->where('log_type', 'Skill Awarded')->orderBy('id', 'DESC');
 
+=======
+    public function getCharacterLogs()
+    {
+        $query = CharacterLog::with('sender.rank')->where('character_id', $this->id)->orderBy('id', 'DESC');
+>>>>>>> Cylunny/extension/polls-and-forms
         return $query->paginate(30);
     }
 
@@ -846,7 +1162,12 @@ class Character extends Model {
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
+<<<<<<< HEAD
     public function getSubmissions() {
+=======
+    public function getSubmissions()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return Submission::with('user.rank')->with('prompt')->where('status', 'Approved')->whereIn('id', SubmissionCharacter::where('character_id', $this->id)->pluck('submission_id')->toArray())->paginate(30);
 
         // Untested
@@ -862,6 +1183,7 @@ class Character extends Model {
 
     /**
      * Notifies character's bookmarkers in case of a change.
+<<<<<<< HEAD
      *
      * @param mixed $type
      */
@@ -870,6 +1192,15 @@ class Character extends Model {
         if ($this->is_visible) {
             $column = null;
             switch ($type) {
+=======
+     */
+    public function notifyBookmarkers($type)
+    {
+        // Bookmarkers will not be notified if the character is set to not visible
+        if($this->is_visible) {
+            $column = null;
+            switch($type) {
+>>>>>>> Cylunny/extension/polls-and-forms
                 case 'BOOKMARK_TRADING':
                     $column = 'notify_on_trade_status';
                     break;
@@ -890,14 +1221,19 @@ class Character extends Model {
             // The owner of the character themselves will not be notified, in the case that
             // they still have a bookmark on the character after it was transferred to them
             $bookmarkers = CharacterBookmark::where('character_id', $this->id)->where('user_id', '!=', $this->user_id);
+<<<<<<< HEAD
             if ($column) {
                 $bookmarkers = $bookmarkers->where($column, 1);
             }
+=======
+            if($column) $bookmarkers = $bookmarkers->where($column, 1);
+>>>>>>> Cylunny/extension/polls-and-forms
 
             $bookmarkers = User::whereIn('id', $bookmarkers->pluck('user_id')->toArray())->get();
 
             // This may have to be redone more efficiently in the case of large numbers of bookmarkers,
             // but since we're not expecting many users on the site to begin with it should be fine
+<<<<<<< HEAD
             foreach ($bookmarkers as $bookmarker) {
                 Notifications::create($type, $bookmarker, [
                     'character_url'  => $this->url,
@@ -1020,4 +1356,13 @@ class Character extends Model {
             return $equipment->equipment->stats()->where('stat_id', $stat_id)->first();
         });
     }
+=======
+            foreach($bookmarkers as $bookmarker)
+                Notifications::create($type, $bookmarker, [
+                    'character_url' => $this->url,
+                    'character_name' => $this->fullName
+                ]);
+        }
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

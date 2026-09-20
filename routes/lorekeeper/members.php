@@ -372,3 +372,13 @@ Route::group(['prefix' => 'criteria'], function () {
 
 Route::post('premium-shop/intent/{id}', 'PremiumShopController@postCreateIntent');
 Route::get('premium-shop/history', 'PremiumShopController@getHistory');
+
+/**************************************************************************************************
+    Forms & Polls
+**************************************************************************************************/
+Route::group(['prefix' => 'forms'], function() {
+    Route::post('/send/{id}', 'SiteFormController@postSiteForm');
+    Route::get('/send/{id}', 'SiteFormController@editSiteForm');
+    Route::post('/like/{id}', 'SiteFormController@postLikeAnswer');
+    Route::post('/unlike/{id}', 'SiteFormController@postUnlikeAnswer');
+});

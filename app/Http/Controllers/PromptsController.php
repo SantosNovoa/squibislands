@@ -2,12 +2,25 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use App\Models\Prompt\Prompt;
 use App\Models\Prompt\PromptCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PromptsController extends Controller {
+=======
+use Illuminate\Http\Request;
+
+use App\Models\Currency\Currency;
+use App\Models\Item\ItemCategory;
+use App\Models\Item\Item;
+use App\Models\Prompt\PromptCategory;
+use App\Models\Prompt\Prompt;
+
+class PromptsController extends Controller
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Prompts Controller
@@ -23,13 +36,19 @@ class PromptsController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+<<<<<<< HEAD
     public function getIndex() {
+=======
+    public function getIndex()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return view('prompts.index');
     }
 
     /**
      * Shows the prompt categories page.
      *
+<<<<<<< HEAD
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPromptCategories(Request $request) {
@@ -40,6 +59,17 @@ class PromptsController extends Controller {
         }
 
         return view('prompts.prompt_categories', [
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPromptCategories(Request $request)
+    {
+        $query = PromptCategory::query();
+        $name = $request->get('name');
+        if($name) $query->where('name', 'LIKE', '%'.$name.'%');
+        return view('prompts.prompt_categories', [  
+>>>>>>> Cylunny/extension/polls-and-forms
             'categories' => $query->orderBy('sort', 'DESC')->paginate(20)->appends($request->query()),
         ]);
     }
@@ -47,6 +77,7 @@ class PromptsController extends Controller {
     /**
      * Shows the prompts page.
      *
+<<<<<<< HEAD
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getPrompts(Request $request) {
@@ -80,6 +111,23 @@ class PromptsController extends Controller {
 
         if (isset($data['sort'])) {
             switch ($data['sort']) {
+=======
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getPrompts(Request $request)
+    {
+        $query = Prompt::active()->with('category');
+        $data = $request->only(['prompt_category_id', 'name', 'sort']);
+        if(isset($data['prompt_category_id']) && $data['prompt_category_id'] != 'none') 
+            $query->where('prompt_category_id', $data['prompt_category_id']);
+        if(isset($data['name'])) 
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+        if(isset($data['sort'])) 
+        {
+            switch($data['sort']) {
+>>>>>>> Cylunny/extension/polls-and-forms
                 case 'alpha':
                     $query->sortAlphabetical();
                     break;
@@ -108,6 +156,7 @@ class PromptsController extends Controller {
                     $query->sortEnd(true);
                     break;
             }
+<<<<<<< HEAD
         } else {
             $query->sortCategory();
         }
@@ -134,6 +183,14 @@ class PromptsController extends Controller {
 
         return view('prompts.prompt', [
             'prompt' => $prompt,
+=======
+        } 
+        else $query->sortCategory();
+
+        return view('prompts.prompts', [
+            'prompts' => $query->paginate(20)->appends($request->query()),
+            'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+>>>>>>> Cylunny/extension/polls-and-forms
         ]);
     }
 }

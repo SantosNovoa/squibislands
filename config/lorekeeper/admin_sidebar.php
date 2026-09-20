@@ -14,11 +14,16 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'Admin'      => [
+=======
+    'Admin' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'admin',
         'links' => [
             [
                 'name' => 'User Ranks',
+<<<<<<< HEAD
                 'url'  => 'admin/users/ranks',
             ],
             [
@@ -32,10 +37,18 @@ return [
         ],
     ],
     'Reports'    => [
+=======
+                'url' => 'admin/users/ranks'
+            ]
+        ]
+    ],
+    'Reports' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'manage_reports',
         'links' => [
             [
                 'name' => 'Report Queue',
+<<<<<<< HEAD
                 'url'  => 'admin/reports/pending',
             ],
         ],
@@ -68,10 +81,39 @@ return [
         ],
     ],
     'Users'      => [
+=======
+                'url' => 'admin/reports/pending'
+            ]
+        ]
+    ],
+    'Site' => [
+        'power' => 'edit_pages',
+        'links' => [
+            [
+                'name' => 'News',
+                'url' => 'admin/news'
+            ],
+            [
+                'name' => 'Sales',
+                'url' => 'admin/sales'
+            ],
+            [
+                'name' => 'Pages',
+                'url' => 'admin/pages'
+            ],
+            [
+                'name' => 'Forms & Polls',
+                'url' => 'admin/forms'
+            ]
+        ]
+    ],
+    'Users' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'edit_user_info',
         'links' => [
             [
                 'name' => 'User Index',
+<<<<<<< HEAD
                 'url'  => 'admin/users',
             ],
             [
@@ -85,10 +127,22 @@ return [
         ],
     ],
     'Queues'     => [
+=======
+                'url' => 'admin/users'
+            ],
+            [
+                'name' => 'Invitation Keys',
+                'url' => 'admin/invitations'
+            ],
+        ]
+    ],
+    'Queues' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'manage_submissions',
         'links' => [
             [
                 'name' => 'Gallery Submissions',
+<<<<<<< HEAD
                 'url'  => 'admin/gallery/submissions',
             ],
             [
@@ -106,10 +160,30 @@ return [
         ],
     ],
     'Grants'     => [
+=======
+                'url' => 'admin/gallery/submissions'
+            ],
+            [
+                'name' => 'Gallery Currency Awards',
+                'url' => 'admin/gallery/currency'
+            ],
+            [
+                'name' => 'Prompt Submissions',
+                'url' => 'admin/submissions'
+            ],
+            [
+                'name' => 'Claim Submissions',
+                'url' => 'admin/claims'
+            ],
+        ]
+    ],
+    'Grants' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'edit_inventories',
         'links' => [
             [
                 'name' => 'Currency Grants',
+<<<<<<< HEAD
                 'url'  => 'admin/grants/user-currency',
             ],
             [
@@ -149,12 +223,22 @@ return [
                 'url'  => 'admin/grants/skills',
             ],
         ],
+=======
+                'url' => 'admin/grants/user-currency'
+            ],
+            [
+                'name' => 'Item Grants',
+                'url' => 'admin/grants/items'
+            ],
+        ]
+>>>>>>> Cylunny/extension/polls-and-forms
     ],
     'Masterlist' => [
         'power' => 'manage_characters',
         'links' => [
             [
                 'name' => 'Create Character',
+<<<<<<< HEAD
                 'url'  => 'admin/masterlist/create-character',
             ],
             [
@@ -180,10 +264,38 @@ return [
         ],
     ],
     'Data'       => [
+=======
+                'url' => 'admin/masterlist/create-character'
+            ],
+            [
+                'name' => 'Create MYO Slot',
+                'url' => 'admin/masterlist/create-myo'
+            ],
+            [
+                'name' => 'Character Transfers',
+                'url' => 'admin/masterlist/transfers/incoming'
+            ],
+            [
+                'name' => 'Character Trades',
+                'url' => 'admin/masterlist/trades/incoming'
+            ],
+            [
+                'name' => 'Design Updates',
+                'url' => 'admin/design-approvals/pending'
+            ],
+            [
+                'name' => 'MYO Approvals',
+                'url' => 'admin/myo-approvals/pending'
+            ],
+        ]
+    ],
+    'Data' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'edit_data',
         'links' => [
             [
                 'name' => 'Galleries',
+<<<<<<< HEAD
                 'url'  => 'admin/data/galleries',
             ],
             [
@@ -348,19 +460,79 @@ return [
         ],
     ],
     'Raffles'    => [
+=======
+                'url' => 'admin/data/galleries'
+            ],
+            [
+                'name' => 'Character Categories',
+                'url' => 'admin/data/character-categories'
+            ],
+            [
+                'name' => 'Sub Masterlists',
+                'url' => 'admin/data/sublists'
+            ],
+            [
+                'name' => 'Rarities',
+                'url' => 'admin/data/rarities'
+            ],
+            [
+                'name' => 'Species',
+                'url' => 'admin/data/species'
+            ],
+            [
+                'name' => 'Subtypes',
+                'url' => 'admin/data/subtypes'
+            ],
+            [
+                'name' => 'Traits',
+                'url' => 'admin/data/traits'
+            ],
+            [
+                'name' => 'Shops',
+                'url' => 'admin/data/shops'
+            ],
+            [
+                'name' => 'Currencies',
+                'url' => 'admin/data/currencies'
+            ],
+            [
+                'name' => 'Prompts',
+                'url' => 'admin/data/prompts'
+            ],
+            [
+                'name' => 'Loot Tables',
+                'url' => 'admin/data/loot-tables'
+            ],
+            [
+                'name' => 'Items',
+                'url' => 'admin/data/items'
+            ],
+        ]
+    ],
+    'Raffles' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'manage_raffles',
         'links' => [
             [
                 'name' => 'Raffles',
+<<<<<<< HEAD
                 'url'  => 'admin/raffles',
             ],
         ],
     ],
     'Settings'   => [
+=======
+                'url' => 'admin/raffles'
+            ],
+        ]
+    ],
+    'Settings' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'power' => 'edit_site_settings',
         'links' => [
             [
                 'name' => 'Site Settings',
+<<<<<<< HEAD
                 'url'  => 'admin/settings',
             ],
             [
@@ -385,5 +557,18 @@ return [
             'url' => 'admin/featured-character',
         ],
         ],
+=======
+                'url' => 'admin/settings'
+            ],
+            [
+                'name' => 'Site Images',
+                'url' => 'admin/images'
+            ],
+            [
+                'name' => 'File Manager',
+                'url' => 'admin/files'
+            ],
+        ]
+>>>>>>> Cylunny/extension/polls-and-forms
     ],
 ];

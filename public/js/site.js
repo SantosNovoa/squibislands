@@ -9,6 +9,7 @@ function loadModal(url, title) {
         else {
             $('#modal [data-toggle=tooltip]').tooltip({html: true});
             $('#modal [data-toggle=toggle]').bootstrapToggle();
+<<<<<<< HEAD
             $('#modal .cp').colorpicker({
                 'autoInputFallback': false,
                 'autoHexInputFallback': false,
@@ -18,6 +19,9 @@ function loadModal(url, title) {
                     name: 'blurValid'
                 }]
             });
+=======
+            $('#modal .cp').colorpicker();
+>>>>>>> Cylunny/extension/polls-and-forms
         }
     });
     $('#modal').modal('show');

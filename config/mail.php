@@ -16,7 +16,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'driver'      => env('MAIL_DRIVER', 'smtp'),
+=======
+    'driver' => env('MAIL_DRIVER', 'smtp'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +33,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'host'        => env('MAIL_HOST', 'smtp.mailgun.org'),
+=======
+    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +50,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'port'        => env('MAIL_PORT', 587),
+=======
+    'port' => env('MAIL_PORT', 587),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +67,15 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'from'        => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name'    => env('MAIL_FROM_NAME', 'Example'),
+=======
+    'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Example'),
+>>>>>>> Cylunny/extension/polls-and-forms
     ],
 
     /*
@@ -71,7 +89,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'encryption'  => env('MAIL_ENCRYPTION', 'tls'),
+=======
+    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +106,15 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'username'    => env('MAIL_USERNAME'),
 
     'password'    => env('MAIL_PASSWORD'),
+=======
+    'username' => env('MAIL_USERNAME'),
+
+    'password' => env('MAIL_PASSWORD'),
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -99,7 +127,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'sendmail'    => '/usr/sbin/sendmail -bs',
+=======
+    'sendmail' => '/usr/sbin/sendmail -bs',
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /*
     |--------------------------------------------------------------------------
@@ -112,7 +144,11 @@ return [
     |
     */
 
+<<<<<<< HEAD
     'markdown'    => [
+=======
+    'markdown' => [
+>>>>>>> Cylunny/extension/polls-and-forms
         'theme' => 'default',
 
         'paths' => [

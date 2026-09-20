@@ -2,44 +2,71 @@
 
 namespace App\Models\Item;
 
+<<<<<<< HEAD
 use App\Models\Model;
 
 class ItemCategory extends Model {
+=======
+use Config;
+use App\Models\Model;
+
+class ItemCategory extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_character_owned', 'character_limit', 'can_name', 'is_visible', 'hash',
     ];
 
     protected $appends = ['image_url'];
 
+=======
+        'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_character_owned', 'character_limit', 'can_name'
+    ];
+
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'item_categories';
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for creation.
      *
      * @var array
      */
     public static $createRules = [
+<<<<<<< HEAD
         'name'        => 'required|unique:item_categories|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
     ];
 
+=======
+        'name' => 'required|unique:item_categories|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Validation rules for updating.
      *
      * @var array
      */
     public static $updateRules = [
+<<<<<<< HEAD
         'name'        => 'required|between:3,100',
         'description' => 'nullable',
         'image'       => 'mimes:png',
@@ -69,6 +96,15 @@ class ItemCategory extends Model {
 
     /**********************************************************************************************
 
+=======
+        'name' => 'required|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
+
+    /**********************************************************************************************
+    
+>>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -78,7 +114,12 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-category">'.$this->name.'</a>';
     }
 
@@ -87,7 +128,12 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getImageDirectoryAttribute() {
+=======
+    public function getImageDirectoryAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'images/data/item-categories';
     }
 
@@ -96,8 +142,14 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImageFileNameAttribute() {
         return $this->hash.$this->id.'-image.png';
+=======
+    public function getCategoryImageFileNameAttribute()
+    {
+        return $this->id . '-image.png';
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -105,21 +157,36 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImagePathAttribute() {
         return public_path($this->imageDirectory);
     }
 
+=======
+    public function getCategoryImagePathAttribute()
+    {
+        return public_path($this->imageDirectory);
+    }
+    
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Gets the URL of the model's image.
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getCategoryImageUrlAttribute() {
         if (!$this->has_image) {
             return null;
         }
 
         return asset($this->imageDirectory.'/'.$this->categoryImageFileName);
+=======
+    public function getCategoryImageUrlAttribute()
+    {
+        if (!$this->has_image) return null;
+        return asset($this->imageDirectory . '/' . $this->categoryImageFileName);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 
     /**
@@ -127,7 +194,12 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getUrlAttribute() {
+=======
+    public function getUrlAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return url('world/item-categories?name='.$this->name);
     }
 
@@ -136,6 +208,7 @@ class ItemCategory extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getSearchUrlAttribute() {
         return url('world/items?item_category_id='.$this->id);
     }
@@ -157,4 +230,10 @@ class ItemCategory extends Model {
     public function getAdminPowerAttribute() {
         return 'edit_data';
     }
+=======
+    public function getSearchUrlAttribute()
+    {
+        return url('world/items?item_category_id='.$this->id);
+    }
+>>>>>>> Cylunny/extension/polls-and-forms
 }

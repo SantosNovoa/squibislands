@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace App\Models\Raffle;
@@ -5,13 +6,26 @@ namespace App\Models\Raffle;
 use App\Models\Model;
 
 class Raffle extends Model {
+=======
+<?php namespace App\Models\Raffle;
+
+use App\Models\Model;
+use DB;
+
+class Raffle extends Model
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+<<<<<<< HEAD
         'name', 'is_active', 'winner_count', 'group_id', 'order', 'ticket_cap',
+=======
+        'name', 'is_active', 'winner_count', 'group_id', 'order'
+>>>>>>> Cylunny/extension/polls-and-forms
     ];
 
     /**
@@ -20,6 +34,7 @@ class Raffle extends Model {
      * @var string
      */
     protected $table = 'raffles';
+<<<<<<< HEAD
     /**
      * The attributes that should be cast to native types.
      *
@@ -28,6 +43,15 @@ class Raffle extends Model {
     protected $casts = [
         'rolled_at' => 'datetime',
     ];
+=======
+
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    public $dates = ['rolled_at'];
+>>>>>>> Cylunny/extension/polls-and-forms
 
     /**
      * Accessors to append to the model.
@@ -41,6 +65,7 @@ class Raffle extends Model {
      *
      * @var string
      */
+<<<<<<< HEAD
     public $timestamps = false;
 
     /**********************************************************************************************
@@ -65,6 +90,34 @@ class Raffle extends Model {
 
     /**********************************************************************************************
 
+=======
+    public $timestamps = false; 
+
+    /**********************************************************************************************
+    
+        RELATIONS
+
+    **********************************************************************************************/
+    
+    /**
+     * Get the raffle tickets attached to this raffle.
+     */
+    public function tickets()
+    {
+        return $this->hasMany('App\Models\Raffle\RaffleTicket');
+    }
+    
+    /**
+     * Get the group that this raffle belongs to.
+     */
+    public function group()
+    {
+        return $this->belongsTo('App\Models\Raffle\RaffleGroup', 'group_id');
+    }
+
+    /**********************************************************************************************
+    
+>>>>>>> Cylunny/extension/polls-and-forms
         ACCESSORS
 
     **********************************************************************************************/
@@ -74,7 +127,12 @@ class Raffle extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getDisplayNameAttribute() {
+=======
+    public function getDisplayNameAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return $this->displayName();
     }
 
@@ -83,6 +141,7 @@ class Raffle extends Model {
      *
      * @return string
      */
+<<<<<<< HEAD
     public function getNameWithGroupAttribute() {
         return ($this->group_id ? '['.$this->group->name.'] ' : '').$this->name;
     }
@@ -93,10 +152,25 @@ class Raffle extends Model {
      * @return string
      */
     public function getAssetTypeAttribute() {
+=======
+    public function getNameWithGroupAttribute()
+    {
+        return ($this->group_id ? '[' . $this->group->name . '] ' : '') . $this->name;
+    }
+
+    /**
+     * Gets the raffle's asset type for asset management. 
+     *
+     * @return string
+     */
+    public function getAssetTypeAttribute()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return 'raffle_tickets';
     }
 
     /**
+<<<<<<< HEAD
      * Gets the raffle's url.
      *
      * @return string
@@ -125,6 +199,19 @@ class Raffle extends Model {
 
     /**********************************************************************************************
 
+=======
+     * Gets the raffle's url. 
+     *
+     * @return string
+     */
+    public function getUrlAttribute()
+    {
+        return url('raffles/view/'.$this->id);
+    }
+
+    /**********************************************************************************************
+    
+>>>>>>> Cylunny/extension/polls-and-forms
         OTHER FUNCTIONS
 
     **********************************************************************************************/
@@ -132,11 +219,18 @@ class Raffle extends Model {
     /**
      * Displays the raffle's name, linked to the raffle page.
      *
+<<<<<<< HEAD
      * @param mixed $asReward
      *
      * @return string
      */
     public function displayName($asReward = true) {
+=======
+     * @return string
+     */
+    public function displayName($asReward = true)
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         return '<a href="'.$this->url.'" class="display-raffle">'.$this->name.($asReward ? ' (Raffle Ticket)' : '').'</a>';
     }
 }

@@ -3,9 +3,17 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\DB;
 
 class UpdateExtensionTracker extends Command {
+=======
+use DB;
+use Config;
+
+class UpdateExtensionTracker extends Command
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * The name and signature of the console command.
      *
@@ -22,8 +30,16 @@ class UpdateExtensionTracker extends Command {
 
     /**
      * Create a new command instance.
+<<<<<<< HEAD
      */
     public function __construct() {
+=======
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         parent::__construct();
     }
 
@@ -32,11 +48,19 @@ class UpdateExtensionTracker extends Command {
      *
      * @return mixed
      */
+<<<<<<< HEAD
     public function handle() {
+=======
+    public function handle()
+    {
+        $extensions = Config::get('lorekeeper.extension_tracker');
+
+>>>>>>> Cylunny/extension/polls-and-forms
         $this->info("\n".'****************************');
         $this->info('* UPDATE EXTENSION TRACKER *');
         $this->info('****************************');
 
+<<<<<<< HEAD
         $extendos = [];
         foreach (glob('config/lorekeeper/ext-tracker/*.php') as $extension) {
             $extendos[basename($extension, '.php')] = include $extension;
@@ -98,5 +122,42 @@ class UpdateExtensionTracker extends Command {
         }
 
         $this->info("\n".'All extensions are in tracker.'."\n");
+=======
+        $this->line('Adding site extensions...existing entries will be updated.'."\n");
+
+        foreach($extensions as $data)
+        {
+            $extension = DB::table('site_extensions')->where('key', $data['key']);
+            if(!$extension->exists())
+            {
+                DB::table('site_extensions')->insert([
+                    'key' => $data['key'],
+                    'wiki_key' => $data['wiki_key'],
+                    'creators' => $data['creators'],
+                    'version' => $data['version'],
+                ]);
+                $this->info('Added:   '.$data['key'].' / Version: '.$data['version']);
+            }
+            elseif($extension->first()->version != $data['version'])
+            {
+                $this->info(ucfirst($data['key']).' version mismatch. Old version: '.$extension->first()->version.' / New version: '.$data['version']);
+                $confirm = $this->confirm('Do you want to update the listed version of '.$data['key'].' to '.$data['version'].'? This will not affect any other files.');
+                if($confirm){
+                    DB::table('site_extensions')->where('key', $data['key'])->update([
+                        'key' => $data['key'],
+                        'wiki_key' => $data['wiki_key'],
+                        'creators' => $data['creators'],
+                        'version' => $data['version'],
+                    ]);
+                    $this->info('Updated:   '.$data['key'].' / Version: '.$data['version']);
+                }
+                else $this->line('Skipped: '.$data['key'].' / Version: '.$extension->first()->version);
+            }
+            else $this->line('Skipped: '.$data['key'].' / Version: '.$data['version']);
+        }
+        
+        $this->info("\n".'All extensions are in tracker.'."\n");
+
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 }

@@ -7,6 +7,7 @@
             <div class="col-md text-center">
                 <div class="mt-2">
                     <h5>
+<<<<<<< HEAD
                         {{ $character->displayType }}: <a href="{{ $character->character->url }}">{!! $character->character->slug !!}</a> ・ <span
                             class="{{ $character->is_open && $character->sales->is_open ? 'text-success' : '' }}">[{{ $character->is_open && $character->sales->is_open ? 'Open' : 'Closed' }}]</span><br />
                         <small>
@@ -41,6 +42,37 @@
                                                     @endif
                                                 @endif
                                             </div>
+=======
+                        {{ $character->displayType }}: <a href="{{ $character->character->url }}">{!! $character->character->slug !!}</a> ・ <span class="{{ $character->is_open && $character->sales->is_open ? 'text-success' : '' }}">[{{ $character->is_open && $character->sales->is_open ? 'Open' : 'Closed' }}]</span><br/>
+                        <small>
+                            {!! $character->image->species->displayName !!} ・ {!! $character->image->rarity->displayName !!}<br/>
+                        </small>
+                    </h5>
+
+                    @if($loop->count == 1)
+                        <div class="mb-2">
+                            @if(Config::get('lorekeeper.extensions.traits_by_category'))
+                                <div>
+                                    @php $traitgroup = $character->image->features()->get()->groupBy('feature_category_id') @endphp
+                                    @if($character->image->features()->count())
+                                        @foreach($traitgroup as $key => $group)
+                                        <div>
+                                            @if($group->count() > 1)
+                                                <div>
+                                                    <strong>{!! $key ? $group->first()->feature->category->displayName : 'Miscellaneous' !!}:</strong>
+                                                    @foreach($group as $feature)
+                                                        {!! $feature->feature->displayName !!}@if($feature->data) ({{ $feature->data }})@endif{{ !$loop->last ? ', ' : '' }}
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <strong>{!! $key ? $group->first()->feature->category->displayName : 'Miscellaneous' !!}:</strong>
+                                                {!! $group->first()->feature->displayName !!}
+                                                    @if($group->first()->data)
+                                                        ({{ $group->first()->data }})
+                                                    @endif
+                                            @endif
+                                        </div>
+>>>>>>> Cylunny/extension/polls-and-forms
                                         @endforeach
                                     @else
                                         <div>No traits listed.</div>
@@ -49,6 +81,7 @@
                             @else
                                 <div>
                                     <?php $features = $character->image->features()->with('feature.category')->get(); ?>
+<<<<<<< HEAD
                                     @if ($features->count())
                                         @foreach ($features as $feature)
                                             <div>
@@ -58,6 +91,11 @@
                                                         ({{ $feature->data }})
                                                     @endif
                                             </div>
+=======
+                                    @if($features->count())
+                                        @foreach($features as $feature)
+                                            <div>@if($feature->feature->feature_category_id) <strong>{!! $feature->feature->category->displayName !!}:</strong> @endif {!! $feature->feature->displayName !!} @if($feature->data) ({{ $feature->data }}) @endif</div>
+>>>>>>> Cylunny/extension/polls-and-forms
                                         @endforeach
                                     @else
                                         <div>No traits listed.</div>
@@ -70,22 +108,38 @@
                     <h6>
                         <div class="mb-2">
                             Design:
+<<<<<<< HEAD
                             @foreach ($character->image->designers as $designer)
                                 {!! $designer->displayLink() !!}{{ !$loop->last ? ', ' : '' }}
                             @endforeach ・
                             Art:
                             @foreach ($character->image->artists as $artist)
+=======
+                            @foreach($character->image->designers as $designer)
+                                {!! $designer->displayLink() !!}{{ !$loop->last ? ', ' : '' }}
+                            @endforeach ・
+                            Art:
+                            @foreach($character->image->artists as $artist)
+>>>>>>> Cylunny/extension/polls-and-forms
                                 {!! $artist->displayLink() !!}{{ !$loop->last ? ', ' : '' }}
                             @endforeach
                         </div>
 
                         {!! $character->price !!}
                         {!! isset($character->link) || isset($character->data['end_point']) ? '<br/>' : '' !!}
+<<<<<<< HEAD
                         @if (isset($character->data['end_point']))
                             {{ $character->data['end_point'] }}
                         @endif
                         {{ isset($character->link) && (!isset($character->sales->comments_open_at) || (Auth::check() && Auth::user()->hasPower('edit_pages')) || $character->sales->comments_open_at < Carbon\Carbon::now()) && isset($character->data['end_point']) ? ' ・ ' : '' }}
                         @if (isset($character->link) && (!isset($character->sales->comments_open_at) || (Auth::check() && Auth::user()->hasPower('edit_pages')) || $character->sales->comments_open_at < Carbon\Carbon::now()))
+=======
+                        @if(isset($character->data['end_point']))
+                            {{ $character->data['end_point'] }}
+                        @endif
+                        {{ (isset($character->link) && ((!isset($character->sales->comments_open_at) || Auth::check() && Auth::user()->hasPower('edit_pages')) || $character->sales->comments_open_at < Carbon\Carbon::now())) && isset($character->data['end_point']) ? ' ・ ' : '' }}
+                        @if(isset($character->link) && ((!isset($character->sales->comments_open_at) || Auth::check() && Auth::user()->hasPower('edit_pages')) || $character->sales->comments_open_at < Carbon\Carbon::now()))
+>>>>>>> Cylunny/extension/polls-and-forms
                             <a href="{{ $character->link }}">{{ $character->typeLink }}</a>
                         @endif
                     </h6>

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 @if ($sublist)
     {!! Form::open(['url' => 'admin/data/sublists/delete/' . $sublist->id]) !!}
+=======
+@if($sublist)
+    {!! Form::open(['url' => 'admin/data/sublists/delete/'.$sublist->id]) !!}
+>>>>>>> Cylunny/extension/polls-and-forms
 
     <p>You are about to delete the sublist <strong>{{ $sublist->name }}</strong>. This is not reversible.</p>
     <p>Are you sure you want to delete <strong>{{ $sublist->name }}</strong>?</p>
@@ -9,6 +14,12 @@
     </div>
 
     {!! Form::close() !!}
+<<<<<<< HEAD
 @else
     Invalid sublist selected.
 @endif
+=======
+@else 
+    Invalid sublist selected.
+@endif
+>>>>>>> Cylunny/extension/polls-and-forms

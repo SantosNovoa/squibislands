@@ -320,3 +320,13 @@ Route::group(['prefix' => 'terms'], function() {
 **************************************************************************************************/
 Route::get('premium-shop', 'PremiumShopController@getIndex');
 Route::get('premium-shop/complete', 'PremiumShopController@getComplete');
+
+
+/**************************************************************************************************
+    Forms & Polls
+**************************************************************************************************/
+Route::group(['prefix' => 'forms'], function() {
+    Route::get('/', 'SiteFormController@getIndex');
+    Route::get('{id}.{slug?}', 'SiteFormController@getSiteForm');
+    Route::get('{id}.', 'SiteFormController@getSiteForm');
+});

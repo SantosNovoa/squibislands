@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD
 use App\Models\User\User;
 use App\Models\User\UserAlias;
 use App\Services\LinkService;
@@ -10,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller {
+=======
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\User\User;
+
+class LoginController extends Controller
+{
+>>>>>>> Cylunny/extension/polls-and-forms
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -21,6 +29,11 @@ class LoginController extends Controller {
     |
     */
 
+<<<<<<< HEAD
+=======
+    use AuthenticatesUsers;
+
+>>>>>>> Cylunny/extension/polls-and-forms
     /**
      * Where to redirect users after login.
      *
@@ -30,13 +43,22 @@ class LoginController extends Controller {
 
     /**
      * Create a new controller instance.
+<<<<<<< HEAD
      */
     public function __construct() {
         parent::__construct();
+=======
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+>>>>>>> Cylunny/extension/polls-and-forms
         $this->middleware('guest')->except('logout');
     }
 
     /**
+<<<<<<< HEAD
      * Authenticate via Aliases.
      *
      * @param mixed $provider
@@ -72,5 +94,14 @@ class LoginController extends Controller {
         Auth::login($user->user);
 
         return redirect($this->redirectTo);
+=======
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('auth.login', ['userCount' => User::count()]);
+>>>>>>> Cylunny/extension/polls-and-forms
     }
 }
