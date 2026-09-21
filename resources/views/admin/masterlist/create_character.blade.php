@@ -78,38 +78,6 @@
             {!! Form::textarea('description', old('description'), ['class' => 'form-control wysiwyg']) !!}
         </div>
 
-        @if (!$isMyo)
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('Character Category') !!}
-                        <select name="character_category_id" id="category" class="form-control" placeholder="Select Category">
-                            <option value="" data-code="">Select Category</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" data-code="{{ $category->code }}" {{ old('character_category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }} ({{ $category->code }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {!! Form::label('Number') !!} {!! add_help('This number helps to identify the character and should preferably be unique either within the category, or among all characters.') !!}
-                        <div class="d-flex">
-                            {!! Form::text('number', old('number'), ['class' => 'form-control mr-2', 'id' => 'number']) !!}
-                            <a href="#" id="pull-number" class="btn btn-primary" data-toggle="tooltip"
-                                title="This will find the highest number assigned to a character currently and add 1 to it. It can be adjusted to pull the highest number in the category or the highest overall number - this setting is in the code.">Pull
-                                Next Number</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                {!! Form::label('Character Code') !!} {!! add_help('This code identifies the character itself. You don\'t have to use the automatically generated code, but this must be unique among all characters (as it\'s used to generate the character\'s page URL).') !!}
-                {!! Form::text('slug', old('slug'), ['class' => 'form-control', 'id' => 'code']) !!}
-            </div>
-        @endif
-
         <div class="form-group">
             {!! Form::checkbox('is_visible', 1, old('is_visible'), ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help(
@@ -146,7 +114,7 @@
         </div>
         <div class="form-group">
             {!! Form::label('On Transfer Cooldown Until (Optional)') !!}
-                        {!! Form::text('transferrable_at', old('transferrable_at'), ['class' => 'form-control datepicker']) !!}
+            {!! Form::text('transferrable_at', old('transferrable_at'), ['class' => 'form-control datepicker']) !!}
         </div>
 
         <h3>Image Upload</h3>
@@ -344,42 +312,6 @@
             @endif
         </div>
 
-        <div class="form-group" id="subtypes">
-            {!! Form::label('Subtype (Optional)') !!} @if ($isMyo)
-                {!! add_help(
-                    'This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.',
-                ) !!}
-            @endif
-            {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('Character Rarity') !!} @if ($isMyo)
-                {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!}
-            @endif
-            {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control']) !!}
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('Traits') !!} @if ($isMyo)
-                {!! add_help(
-                    'These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.',
-                ) !!}
-            @endif
-            <div><a href="#" class="btn btn-primary mb-2" id="add-feature">Add Trait</a></div>
-            <div id="featureList">
-            </div>
-            <div class="feature-row hide mb-2">
-                {!! Form::select('feature_id[]', $features, null, ['class' => 'form-control mr-2 feature-select', 'placeholder' => 'Select Trait']) !!}
-                {!! Form::text('feature_data[]', null, ['class' => 'form-control mr-2', 'placeholder' => 'Extra Info (Optional)']) !!}
-                <a href="#" class="remove-feature btn btn-danger mb-2">×</a>
-            </div>
-        </div>
-
-        <div class="text-right">
-            {!! Form::submit('Create Character', ['class' => 'btn btn-primary']) !!}
-        </div>
-        {!! Form::close() !!}
     @endif
 
 @endsection
@@ -415,17 +347,6 @@
             }).done(function(res) {
                 $("#transformations").html(res);
             });
-
-            // // Check stats
-            // $.ajax({
-            //     type: "GET",
-            //     url: "{{ url('admin/masterlist/check-stats') }}?species=" + species + "&subtype=" + subtype,
-            //     dataType: "text"
-            // }).done(function(res) {
-            //     $("#stats").html(res);
-            // }).fail(function(jqXHR, textStatus, errorThrown) {
-            //     alert("AJAX call failed: " + textStatus + ", " + errorThrown);
-            // });
         });
 
         $("#subtypes").change(function() {
