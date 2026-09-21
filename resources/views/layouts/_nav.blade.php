@@ -172,6 +172,9 @@
                                     <a class="dropdown-item" href="{{ url('dailies') }}">
                                         <i class="fa-solid fa-alarm-clock"></i> Dailies
                                     </a>
+                                    <a class="dropdown-item" href="{{ url('world/bosses') }}">
+                                        <i class="fa-solid fa-dice"></i> Bosses
+                                    </a>
                                     <a class="dropdown-item" href="{{ url('gallery') }}">
                                         <i class="fa-solid fa-images"></i> Galleries
                                     </a>
