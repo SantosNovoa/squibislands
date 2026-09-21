@@ -203,7 +203,7 @@
                         <div class="dropdown-menu" aria-labelledby="browseDropdown">
                             <div class="dropdown-menu-inner">
                                 <a class="dropdown-item" href="{{ url('forms') }}">
-                                    <i class="fa-solid fa-clipboard-question"></i> Forms & Polls
+                                    <i class="fa-solid fa-clipboard-question"></i> Feedback
                                 </a>
                                 <a class="dropdown-item" href="{{ url('users') }}">
                                     <i class="fa-solid fa-users"></i> Users
