@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Models\Recipe\Recipe;
+use Illuminate\Support\Facades\Auth;
 
 class SubmissionManager extends Service {
     /*

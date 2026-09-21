@@ -37,7 +37,7 @@
 @endif
 
 <script>
-    let ratios = {!! json_encode($data['damage_ratio']) !!};
+    let ratios = {!! json_encode($data['damage_ratio'] ?? []) !!};
 
     $(document).ready(function() {
         $('.currency').change(function() {

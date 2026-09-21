@@ -29,7 +29,7 @@
             {!! Form::label('Damage Calculation Method') !!}
             {!! Form::select('attack_methods_info[prompt][damage_calculation_method]', ['currency' => 'Based on Currency', 'input' => 'Staff Input'], $data['damage_calculation_method'] ?? null, [
                 'class' => 'form-control prompt-damage-calculation',
-                'placeholder' => 'Damage Calculation Method',
+                'placeholder' => 'None (No Prompt Damage)',
             ]) !!}
         </div>
 

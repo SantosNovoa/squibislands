@@ -50,6 +50,7 @@ class BossController extends Controller {
             return redirect()->to('/boss');
         }
 
+
         return view('boss.boss', [
             'boss' => $boss,
         ]);

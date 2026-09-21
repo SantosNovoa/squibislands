@@ -141,7 +141,6 @@ class BossService extends Service {
         DB::beginTransaction();
 
         try {
-            dd('asdnlasdlksa');
             if (!$this->logAdminAction($user, 'Deleted Boss', 'Deleted '.$boss->name)) {
                 throw new \Exception('Failed to log admin action.');
             }

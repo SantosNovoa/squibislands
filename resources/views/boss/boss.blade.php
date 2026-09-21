@@ -19,7 +19,9 @@
             </div>
             <div class="card-body">
                 @if ($boss->has_image)
-                    <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3 img-fluid w-75">
+                <div class="boss-img-container w-100 d-flex justify-content-center">
+                    <img src="{{ $boss->getCurrentImage() }}" class="img-thumbnail mb-3 img-fluid">
+                </div>
                 @endif
                 @if ($boss->type == 'User')
                     {!! $boss->healthBar(false, Auth::user() ?? null) !!}
