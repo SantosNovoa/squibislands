@@ -1027,5 +1027,4 @@ class DesignUpdateManager extends Service {
 
         return $this->rollbackReturn(false);
     }
-
 }

@@ -50,12 +50,14 @@
             $('.user-item.category-' + display + '.item-' + (itemId ? itemId : 'all')).removeClass('hide');
             $('#toggle-checks').prop('checked', false);
         }
+
         function selectVisible() {
             var $target = $('.user-item:not(.hide)');
             $target.find('.inventory-checkbox').prop('checked', true);
             $target.find('.inventory-checkbox').trigger('change');
             $('#toggle-checks').prop('checked', true);
         }
+
         function deselectVisible() {
             var $target = $('.user-item:not(.hide)');
             $target.find('.inventory-checkbox').prop('checked', false);

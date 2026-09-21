@@ -1,6 +1,5 @@
 @extends('home.layout')
 
-
 @section('home-title')
     My Characters
 @endsection
@@ -41,7 +40,7 @@
     <div class="edit-get-button btn btn-primary"><i class="fas fa-edit"></i> Edit Folder</a></div>
 </div>
 
-<p>This is a list of characters you own. Drag and drop to rearrange them.</p>
+    <p>This is a list of characters you own. Drag and drop to rearrange them.</p>
 
 {!! Form::open(['url' => 'characters/sort', 'class' => 'text-right']) !!}
 <div id="sortable" class="row sortable">

@@ -22,7 +22,6 @@ class Shop extends Model {
      * @var string
      */
     protected $table = 'shops';
-
     /**
      * Validation rules for creation.
      */

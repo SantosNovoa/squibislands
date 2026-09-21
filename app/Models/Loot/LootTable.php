@@ -190,6 +190,7 @@ class LootTable extends Model {
                 addAsset($rewards, $result, 1);
             }
         }
+
         return $rewards;
     }
 
@@ -225,6 +226,7 @@ class LootTable extends Model {
                 addAsset($rewards, $result, 1);
             }
         }
+
         return $rewards;
     }
 }

@@ -114,8 +114,8 @@ class GrantController extends Controller {
     /**
      * Grants or removes items from multiple users.
      *
-     * @param  \Illuminate\Http\Request        $request
-     * @param  App\Services\InventoryManager  $service
+     * @param App\Services\InventoryManager $service
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postRecipes(Request $request, RecipeService $service) {
@@ -123,9 +123,7 @@ class GrantController extends Controller {
         if($service->grantRecipes($data, Auth::user())) {
             flash('Recipes granted successfully.')->success();
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
+
         return redirect()->back();
     }
     /*

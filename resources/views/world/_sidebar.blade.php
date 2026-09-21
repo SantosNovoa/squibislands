@@ -50,4 +50,8 @@
         <div class="sidebar-section-header">Recipes</div>
         <div class="sidebar-item"><a href="{{ url('world/recipes') }}" class="{{ set_active('world/recipes*') }}">All Recipes</a></div>
     </li>
+    <li class="sidebar-section">
+        <div class="sidebar-section-header">Boss Battles</div>
+        <div class="sidebar-item"><a href="{{ url('world/bosses') }}" class="{{ set_active('world/bosses*') }}">Bosses</a></div>
+    </li>
 </ul>

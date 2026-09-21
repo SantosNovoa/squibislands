@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\Recipe\Recipe;
 use App\Http\Controllers\Controller;
+use App\Models\Boss\Boss;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
 use App\Models\Criteria\Criterion;
@@ -246,10 +247,25 @@ class SubmissionController extends Controller {
             $limit = $prompt->limit;
         }
 
+        $promptBosses = [];
+        $bosses = Boss::active(Auth::user() ?? null)->get();
+        foreach ($bosses as $boss) {
+            $data = $boss->getAttackMethodInformation('prompt');
+            if (!$data) {
+                continue;
+            }
+
+            if ((isset($data['prompt_ids']) && (in_array($prompt->id, $data['prompt_ids']) || in_array('any', $data['prompt_ids']))) ||
+                (isset($data['prompt_category_ids']) && in_array($prompt->prompt_category_id, $data['prompt_category_ids']))) {
+                $promptBosses[] = $boss;
+            }
+        }
+
         return view('home._prompt', [
             'prompt' => $prompt,
-            'count' => $count,
-            'limit' => $limit
+            'count'  => $count,
+            'limit'  => $limit,
+            'bosses' => $promptBosses,
         ]);
     }
 

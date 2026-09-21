@@ -97,7 +97,15 @@
                 </div>
             </div>
         @endif
+
         {!! Form::open(['url' => url()->current(), 'id' => 'submissionForm', 'onsubmit' => "$(this).find('input').prop('disabled', false)"]) !!}
+
+        @if ($submission->prompt_id && isset($submission->data['bosses']) && $submission->data['bosses'])
+            <h2>Boss{{ count($submission->data['bosses']) > 1 ? 'es' : '' }}</h2>
+            @foreach ($submission->data['bosses'] as $id => $damage)
+                @include('admin.bosses.attack_methods.widgets.prompt', ['boss' => \App\Models\Boss\Boss::find($id)])
+            @endforeach
+        @endif
 
         @if (isset($submission->data['criterion']))
             <h2 class="mt-5">Criteria Rewards</h2>

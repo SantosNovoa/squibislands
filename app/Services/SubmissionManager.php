@@ -6,6 +6,7 @@ use App\Facades\Notifications;
 use App\Facades\Settings;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
+use App\Models\Boss\Boss;
 use App\Models\Criteria\Criterion;
 use App\Models\Currency\Currency;
 use App\Models\Element\Element;
@@ -32,7 +33,7 @@ class SubmissionManager extends Service {
     |
     */
 
-    /**
+        /**
      * Creates a new submission.
      *
      * @param array $data
@@ -142,6 +143,26 @@ class SubmissionManager extends Service {
                 'prompt_id' => $prompt->id,
             ]));
 
+            // Boss data, if applicable
+            $promptBosses = null;
+            if (!$isClaim) {
+                $promptBosses = [];
+                $bosses = Boss::active(Auth::user() ?? null)->get();
+                foreach ($bosses as $boss) {
+                    $bossData = $boss->getAttackMethodInformation('prompt');
+                    if (!$bossData) {
+                        continue;
+                    }
+
+                    if ((isset($bossData['prompt_ids']) && (in_array($prompt->id, $bossData['prompt_ids']) || in_array('any', $bossData['prompt_ids']))) ||
+                        (isset($bossData['prompt_category_ids']) && in_array($prompt->prompt_category_id, $bossData['prompt_category_ids']))) {
+                        $promptBosses[$boss->id] = [
+                            'damage' => null,
+                        ];
+                    }
+                }
+            }
+
             // Set items that have been attached
             $assets = $this->createUserAttachments($submission, $data, $user);
             $userAssets = $assets['userAssets'];
@@ -152,6 +173,7 @@ class SubmissionManager extends Service {
                     'user'      => Arr::only(getDataReadyAssets($userAssets), ['user_items', 'currencies']),
                     'rewards'   => getDataReadyAssets($promptRewards),
                     'criterion' => $data['criterion'] ?? null,
+                    'bosses'    => $promptBosses ?? null,
                 ] + (config('lorekeeper.settings.allow_gallery_submissions_on_prompts') ? ['gallery_submission_id' => $data['gallery_submission_id'] ?? null] : [])),
             ]);
 
@@ -219,6 +241,26 @@ class SubmissionManager extends Service {
                 $submission->update(['status' => 'Pending']);
             }
 
+            // Boss data, if applicable
+            $promptBosses = null;
+            if (!$isClaim) {
+                $promptBosses = [];
+                $bosses = Boss::active(Auth::user() ?? null)->get();
+                foreach ($bosses as $boss) {
+                    $bossData = $boss->getAttackMethodInformation('prompt');
+                    if (!$bossData) {
+                        continue;
+                    }
+
+                    if ((isset($bossData['prompt_ids']) && (in_array($prompt->id, $bossData['prompt_ids']) || in_array('any', $bossData['prompt_ids']))) ||
+                        (isset($bossData['prompt_category_ids']) && in_array($prompt->prompt_category_id, $bossData['prompt_category_ids']))) {
+                        $promptBosses[$boss->id] = [
+                            'damage' => null,
+                        ];
+                    }
+                }
+            }
+
             // Then, re-attach everything fresh.
             $assets = $this->createUserAttachments($submission, $data, $user);
             $userAssets = $assets['userAssets'];
@@ -227,13 +269,14 @@ class SubmissionManager extends Service {
 
             // Modify submission
             $submission->update([
-                'url'           => $data['url'] ?? null,
-                'updated_at'    => Carbon::now(),
-                'comments'      => $data['comments'],
-                'data'          => json_encode([
-                    'user'          => Arr::only(getDataReadyAssets($userAssets), ['user_items', 'currencies']),
-                    'rewards'       => getDataReadyAssets($promptRewards),
-                    'criterion'     => $data['criterion'] ?? null,
+                'url'        => $data['url'] ?? null,
+                'updated_at' => Carbon::now(),
+                'comments'   => $data['comments'],
+                'data'       => json_encode([
+                    'user'      => Arr::only(getDataReadyAssets($userAssets), ['user_items', 'currencies']),
+                    'rewards'   => getDataReadyAssets($promptRewards),
+                    'criterion' => $data['criterion'] ?? null,
+                    'bosses'    => $promptBosses ?? null,
                 ] + (config('lorekeeper.settings.allow_gallery_submissions_on_prompts') ? ['gallery_submission_id' => $data['gallery_submission_id'] ?? null] : [])),
             ] + ($isClaim ? [] : ['prompt_id' => $prompt->id]));
 
@@ -525,7 +568,7 @@ class SubmissionManager extends Service {
             } elseif (isset($data['character_rewardable_id'])) {
                 $data['character_rewardable_id'] = array_map([$this, 'innerNull'], $data['character_rewardable_id']);
                 foreach ($data['character_rewardable_id'] as $ckey => $c) {
-                    foreach ($c as $key                            => $id) {
+                    foreach ($c as $key => $id) {
                         switch ($data['character_rewardable_type'][$ckey][$key]) {
                             case 'Currency': $currencyIds[] = $id;
                                 break;
@@ -615,6 +658,24 @@ class SubmissionManager extends Service {
                 $data['parsed_staff_comments'] = null;
             }
 
+            // BOSS STUFF
+            $submissionBosses = null;
+            $service = new BossAttackManager;
+            if (isset($submission->data['bosses']) && $submission->data['bosses']) {
+                $submissionBosses = [];
+                foreach ($submission->data['bosses'] as $id=>$damage) {
+                    $submissionBosses[$id] = [
+                        'damage' => null,
+                    ];
+                    $boss = Boss::find($id);
+                    if (!$damage = $service->attackPrompt($boss, $submission, $data, $rewards)) {
+                        throw new \Exception('Failed to attack boss.');
+                    }
+
+                    $submissionBosses[$id]['damage'] = $damage['damage']; // this is to allow 0 values
+                }
+            }
+
             // Finally, set:
             // 1. staff comments
             // 2. staff ID
@@ -631,6 +692,7 @@ class SubmissionManager extends Service {
                     'criterion'             => $data['criterion'] ?? null,
                     'gallery_submission_id' => $submission->data['gallery_submission_id'] ?? null,
                     'skills'                => $skills ?? null,
+                    'bosses'                => $submissionBosses,
                 ]), // list of rewards
             ]);
 

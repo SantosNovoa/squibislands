@@ -185,6 +185,8 @@ Route::group(['prefix' => 'world'], function () {
     Route::get('elements/{id}', 'WorldController@getElement');
     Route::get('character-titles', 'WorldController@getCharacterTitles');
     Route::get('character-titles/{name}', 'WorldController@getCharacterTitle');
+    Route::get('bosses', 'WorldController@getBosses');
+    Route::get('bosses/{name}', 'WorldController@getBoss');
 });
 
 Route::group(['prefix' => 'prompts'], function () {

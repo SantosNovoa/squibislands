@@ -13,8 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class ShopController extends Controller
-{
+class ShopController extends Controller {
     /*
     |--------------------------------------------------------------------------
     | Admin / Shop Controller
@@ -29,8 +28,7 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return view('admin.shops.shops', [
             'shops' => Shop::orderBy('sort', 'DESC')->get(),
         ]);
@@ -62,8 +60,7 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditShop($id)
-    {
+    public function getEditShop($id) {
         $shop = Shop::find($id);
         if (!$shop) {
             abort(404);
@@ -91,8 +88,7 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditShop(Request $request, ShopService $service, $id = null)
-    {
+    public function postCreateEditShop(Request $request, ShopService $service, $id = null) {
         $id ? $request->validate(Shop::$updateRules) : $request->validate(Shop::$createRules);
         $data = $request->only([
             'name',
@@ -319,9 +315,9 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteShop($id)
-    {
+    public function getDeleteShop($id) {
         $shop = Shop::find($id);
+
         return view('admin.shops._delete_shop', [
             'shop' => $shop,
         ]);

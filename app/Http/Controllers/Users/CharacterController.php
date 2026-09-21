@@ -153,10 +153,12 @@ class CharacterController extends Controller {
         if ($service->selectCharacter($request->only(['character_id']), Auth::user())) {
             flash('Character selected successfully.')->success();
             return redirect()->back();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
+
         return redirect()->back();
     }
 

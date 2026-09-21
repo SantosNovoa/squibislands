@@ -367,6 +367,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Models\Character\CharacterFolder');
     }
 
+    /**
+     * Gets the user's boss attack logs.
+     */
+    public function bossAttacks() {
+        return $this->hasMany(UserBossAttacks::class);
+    }
+
     /**********************************************************************************************
 
         SCOPES
@@ -438,9 +445,8 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getVerifiedNameAttribute()
-    {
-        return $this->name . ($this->hasAlias ? '' : ' (Unverified)');
+    public function getVerifiedNameAttribute() {
+        return $this->name.($this->hasAlias ? '' : ' (Unverified)');
     }
 
     /**
@@ -462,8 +468,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function getIsAdminAttribute()
-    {
+    public function getIsAdminAttribute() {
         return $this->rank->isAdmin;
     }
 
@@ -484,8 +489,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function hasPower($power)
-    {
+    public function hasPower($power) {
         return $this->rank->hasPower($power);
     }
 
@@ -494,8 +498,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array
      */
-    public function getPowers()
-    {
+    public function getPowers() {
         return $this->rank->getPowers();
     }
 
@@ -641,8 +644,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return string
      */
-    public function getLogTypeAttribute()
-    {
+    public function getLogTypeAttribute() {
         return 'User';
     }
 
@@ -723,8 +725,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get's user birthday setting.
      */
-    public function getBirthdayDisplayAttribute()
-    {
+    public function getBirthdayDisplayAttribute() {
         //
         $icon = null;
         $bday = $this->birthday;
@@ -893,8 +894,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function canEditRank($rank)
-    {
+    public function canEditRank($rank) {
         return $this->rank->canEditRank($rank);
     }
 
@@ -905,8 +905,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getCurrencies($showAll = false)
-    {
+    public function getCurrencies($showAll = false) {
         // Get a list of currencies that need to be displayed
         // On profile: only ones marked is_displayed
         // In bank: ones marked is_displayed + the ones the user has
@@ -938,8 +937,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return array
      */
-    public function getCurrencySelect($isTransferrable = false)
-    {
+    public function getCurrencySelect($isTransferrable = false) {
         $query = UserCurrency::query()->where('user_id', $this->id)->leftJoin('currencies', 'user_currencies.currency_id', '=', 'currencies.id')->orderBy('currencies.sort_user', 'DESC');
         if ($isTransferrable) {
             $query->where('currencies.allow_user_to_user', 1);
@@ -955,8 +953,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
      */
-    public function getCurrencyLogs($limit = 10)
-    {
+    public function getCurrencyLogs($limit = 10) {
         $user = $this;
         $query = CurrencyLog::with('currency')->where(function ($query) use ($user) {
             $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards', 'Gallery Submission Reward']);
@@ -1041,8 +1038,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
      */
-    public function getItemLogs($limit = 10)
-    {
+    public function getItemLogs($limit = 10) {
         $user = $this;
         $query = ItemLog::with('item')->where(function ($query) use ($user) {
             $query->with('sender')->where('sender_type', 'User')->where('sender_id', $user->id)->whereNotIn('log_type', ['Staff Grant', 'Prompt Rewards', 'Claim Rewards']);
@@ -1169,8 +1165,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator|\Illuminate\Support\Collection
      */
-    public function getShopLogs($limit = 10)
-    {
+    public function getShopLogs($limit = 10) {
         $user = $this;
         $query = ShopLog::where('user_id', $this->id)->with('character')->with('shop')->with('item')->with('currency')->orderBy('id', 'DESC');
         if ($limit) {
@@ -1185,8 +1180,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getOwnershipLogs()
-    {
+    public function getOwnershipLogs() {
         $user = $this;
         $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->with('character')->where(function ($query) use ($user) {
             $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Character Created', 'MYO Slot Created', 'Character Design Updated', 'MYO Design Approved']);
@@ -1264,8 +1258,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public function getSubmissions($user = null)
-    {
+    public function getSubmissions($user = null) {
         return Submission::with('user')->with('prompt')->viewable($user ? $user : null)->where('user_id', $this->id)->orderBy('id', 'DESC')->paginate(30);
     }
 
@@ -1277,8 +1270,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return CharacterBookmark
      */
-    public function hasBookmarked($character)
-    {
+    public function hasBookmarked($character) {
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
 

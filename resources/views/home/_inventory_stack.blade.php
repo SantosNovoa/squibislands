@@ -175,6 +175,7 @@
             updateQuantities(checkbox);
         });
     }
+
     function updateQuantities($checkbox) {
         var $rowId = "#itemRow" + $checkbox.value
         $($rowId).find('.quantity-select').prop('name', $checkbox.checked ? 'quantities[]' : '')

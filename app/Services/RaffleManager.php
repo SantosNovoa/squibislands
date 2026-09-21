@@ -252,6 +252,7 @@ class RaffleManager extends Service {
             $ticketPool = $ticketPool->values();
             $ticketCount = $ticketPool->count();
         }
+
         return $winners;
     }
 

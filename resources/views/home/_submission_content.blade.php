@@ -106,6 +106,30 @@
         </div>
     </div>
 @endif
+@if (isset($submission->data['bosses']) && $submission->data['bosses'])
+    <div class="card mb-3">
+        <div class="card-header h2">Boss{{ count($submission->data['bosses']) > 1 ? 'es' : '' }}</div>
+        <div class="card-body">
+            <p>This submission includes the following boss battles:</p>
+            <table class="table table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="70%">Boss</th>
+                        <th>Damage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($submission->data['bosses'] as $id => $boss)
+                        <tr>
+                            <td>{!! \App\Models\Boss\Boss::find($id)?->displayName !!}</td>
+                            <td>{{ isset($boss['damage']) ? $boss['damage'] : 'N/A' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endif
 
 @if (array_filter(parseAssetData(isset($submission->data['rewards']) ? $submission->data['rewards'] : $submission->data)))
     <div class="card mb-3">
@@ -215,7 +239,6 @@
         @endforeach
     </div>
 </div>
-
 
 @if (isset($inventory['user_items']) && array_filter($inventory['user_items']))
     <div class="card mb-3">

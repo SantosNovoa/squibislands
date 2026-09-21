@@ -280,7 +280,7 @@ class UserController extends Controller {
     public function postStaffProfile(Request $request, $name)
     {
         $user = User::where('name', $name)->first();
-        if(!$user) {
+        if (!$user) {
             flash('Invalid user.')->error();
         }
 
@@ -313,9 +313,7 @@ class UserController extends Controller {
             UserUpdateLog::create(['staff_id' => Auth::user()->id, 'user_id' => $user->id, 'data' => json_encode($logData), 'type' => 'Staff Links Update']);
             flash($name.'\'s staff profile links updated successfully!')->success();
         }
-        else {
-            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
-        }
+
         return redirect()->back();
     }
 

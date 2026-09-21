@@ -33,6 +33,7 @@ class FileManager extends Service {
             }
             chmod($dir, 0755);
         }
+
         return true;
     }
 

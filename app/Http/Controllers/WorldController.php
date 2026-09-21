@@ -13,6 +13,7 @@ use App\Models\Claymore\WeaponCategory;
 use App\Models\Character\CharacterTitle;
 use App\Models\Currency\Currency;
 use App\Models\Element\Element;
+use App\Models\Boss\Boss;
 use App\Models\Feature\Feature;
 use App\Models\Feature\FeatureCategory;
 use App\Models\Item\Item;
@@ -757,7 +758,6 @@ class WorldController extends Controller
     /**
      * Shows the items page.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecipes(Request $request)
@@ -795,7 +795,8 @@ class WorldController extends Controller
     /**
      * Shows an individual recipe;ss page.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getRecipe($id)
@@ -1017,9 +1018,6 @@ class WorldController extends Controller
                 case 'alpha-reverse':
                     $query->sortAlphabetical(true);
                     break;
-                case 'category':
-                    $query->sortCategory();
-                    break;
                 case 'newest':
                     $query->sortNewest();
                     break;
@@ -1050,6 +1048,8 @@ class WorldController extends Controller
             if (Auth::check() ? !Auth::user()->isStaff : true) {
                 abort(404);
             }
+        } else {
+            $query->sortAlphabetical();
         }
 
         return view('world.pet_page', [
@@ -1330,6 +1330,68 @@ class WorldController extends Controller
 
         return view('world.element_page', [
             'element' => $element,
+        ]);
+    }
+
+    /**
+     * Shows the bosses page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBosses(Request $request)
+    {
+        $query = Boss::query()->visible(Auth::user() ?? null);
+        $data = $request->only(['name', 'sort']);
+        if (isset($data['name'])) {
+            $query->where('name', 'LIKE', '%' . $data['name'] . '%');
+        }
+
+        if (isset($data['sort'])) {
+            switch ($data['sort']) {
+                case 'alpha':
+                    $query->sortAlphabetical();
+                    break;
+                case 'alpha-reverse':
+                    $query->sortAlphabetical(true);
+                    break;
+                case 'newest':
+                    $query->sortNewest();
+                    break;
+                case 'oldest':
+                    $query->sortOldest();
+                    break;
+            }
+        } else {
+            $query->sortAlphabetical();
+        }
+
+        $currentBosses = Boss::active(Auth::user() ?? null)->get()->filter(function ($boss) {
+            return $boss->isActive();
+        });
+
+        return view('world.bosses', [
+            'bosses'        => $query->orderBy('id')->paginate(20)->appends($request->query()),
+            'currentBosses' => $currentBosses,
+        ]);
+    }
+
+    /**
+     * Gets an inactive bosses world page.
+     *
+     * @param string $name
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBoss($name)
+    {
+        $name = str_replace('-', ' ', $name);
+        $boss = Boss::query()->visible(Auth::check() ? Auth::user() : null)->where('name', $name)->first();
+        if (!$boss) {
+            abort(404);
+        }
+
+        return view('world.boss', [
+            'boss' => $boss,
         ]);
     }
 }

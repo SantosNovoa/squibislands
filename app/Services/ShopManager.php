@@ -12,8 +12,7 @@ use App\Models\User\UserItem;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
-class ShopManager extends Service
-{
+class ShopManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Shop Manager
@@ -31,8 +30,7 @@ class ShopManager extends Service
      *
      * @return App\Models\Shop\Shop|bool
      */
-    public function buyStock($data, $user)
-    {
+    public function buyStock($data, $user) {
         DB::beginTransaction();
 
         try {

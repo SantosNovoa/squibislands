@@ -60,6 +60,7 @@ class BoxService extends Service {
                 }
             }
         }
+
         return $rewards;
     }
 

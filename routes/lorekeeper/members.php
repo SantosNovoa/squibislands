@@ -196,7 +196,6 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::get('{slug}/tab-order', 'CharacterController@getTabOrder');
     Route::post('{slug}/tab-order', 'CharacterController@postTabOrder');
 });
-
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
     Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
     Route::post('{id}/profile/edit', 'MyoController@postEditCharacterProfile');
@@ -381,4 +380,13 @@ Route::group(['prefix' => 'forms'], function() {
     Route::get('/send/{id}', 'SiteFormController@editSiteForm');
     Route::post('/like/{id}', 'SiteFormController@postLikeAnswer');
     Route::post('/unlike/{id}', 'SiteFormController@postUnlikeAnswer');
+});
+/**************************************************************************************************
+    Bosses
+**************************************************************************************************/
+Route::group(['prefix' => 'boss'], function () {
+    Route::get('/', 'BossController@getIndex');
+    Route::get('{name}', 'BossController@getBoss');
+    Route::post('{id}/attack/{attack_method}', 'BossController@handleBossAttack');
+    Route::post('{id}/claim', 'BossController@handleClaimRewards');
 });

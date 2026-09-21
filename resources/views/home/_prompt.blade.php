@@ -1,3 +1,14 @@
+@if (isset($bosses) && count($bosses))
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle"></i> Completing this prompt will attack the following boss{{ count($bosses) > 1 ? 'es' : '' }}:
+        <ul class="mb-0">
+            @foreach ($bosses as $boss)
+                <li>{!! $boss->displayName !!}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="card">
     <div class="card-body">
         <h4>Default Prompt Rewards</h4>

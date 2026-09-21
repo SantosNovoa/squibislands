@@ -204,6 +204,10 @@ return [
                 'url'  => 'admin/data/awards',
             ],
             [
+                'name' => 'Bosses',
+                'url'  => 'admin/data/bosses',
+            ],
+            [
                 'name' => 'Character Categories',
                 'url'  => 'admin/data/character-categories',
             ],

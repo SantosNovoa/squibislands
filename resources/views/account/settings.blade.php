@@ -166,9 +166,9 @@
     {!! Form::close() !!}
 </div>
 
-<div class="card p-3 mb-2">
-    <h3>Birthday Publicity</h3>
-    {!! Form::open(['url' => 'account/dob']) !!}
+    <div class="card p-3 mb-2">
+        <h3>Birthday Publicity</h3>
+        {!! Form::open(['url' => 'account/dob']) !!}
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">

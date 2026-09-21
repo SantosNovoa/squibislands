@@ -64,6 +64,7 @@
             e.preventDefault();
             addDesignerRow($(this));
         });
+
         function addDesignerRow($trigger) {
             var $clone = $('.designer-row').clone();
             $('#designerList').append($clone);
@@ -83,6 +84,7 @@
             e.preventDefault();
             addArtistRow($(this));
         });
+
         function addArtistRow($trigger) {
             var $clone = $('.artist-row').clone();
             $('#artistList').append($clone);

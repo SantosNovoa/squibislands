@@ -452,6 +452,14 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('premium-shop/delete/{id}', 'PremiumShopController@getDeleteProduct');
     Route::post('premium-shop/delete/{id}', 'PremiumShopController@postDeleteProduct');
     Route::get('premium-shop/purchases', 'PremiumShopController@getPurchases');
+    // BOSSES
+    Route::get('bosses', 'BossController@getBossIndex');
+    Route::get('bosses/create', 'BossController@getCreateBoss');
+    Route::get('bosses/edit/{id}', 'BossController@getEditBoss');
+    Route::get('bosses/delete/{id}', 'BossController@getDeleteBoss');
+    Route::post('bosses/create', 'BossController@postCreateEditBoss');
+    Route::post('bosses/edit/{id?}', 'BossController@postCreateEditBoss');
+    Route::post('bosses/delete/{id}', 'BossController@postDeleteBoss');
 });
 
 // PAGES

@@ -135,8 +135,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacter($slug)
-    {
+    public function getCharacter($slug) {
         return view('character.character', [
             'character'             => $this->character,
             'skills'                => Skill::where('parent_id', null)->orderBy('name', 'ASC')->get(),
@@ -163,8 +162,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterProfile($slug)
-    {
+    public function getCharacterProfile($slug) {
         return view('character.profile', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/profile',
@@ -360,8 +358,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterImages($slug)
-    {
+    public function getCharacterImages($slug) {
         return view('character.images', [
             'user'                  => Auth::user() ?? null,
             'character'             => $this->character,
@@ -417,8 +414,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterBank($slug)
-    {
+    public function getCharacterBank($slug) {
         $character = $this->character;
 
         return view('character.bank', [
@@ -594,8 +590,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterCurrencyLogs($slug)
-    {
+    public function getCharacterCurrencyLogs($slug) {
         return view('character.currency_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/currency-logs',
@@ -610,8 +605,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterItemLogs($slug)
-    {
+    public function getCharacterItemLogs($slug) {
         return view('character.item_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/item-logs',
@@ -750,8 +744,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterOwnershipLogs($slug)
-    {
+    public function getCharacterOwnershipLogs($slug) {
         return view('character.ownership_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/ownership',
@@ -766,8 +759,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterLogs($slug)
-    {
+    public function getCharacterLogs($slug) {
         return view('character.character_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/change-log',
@@ -782,8 +774,7 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterSubmissions($slug)
-    {
+    public function getCharacterSubmissions($slug) {
         return view('character.submission_logs', [
             'character'             => $this->character,
             'extPrevAndNextBtnsUrl' => '/submissions',
@@ -1067,10 +1058,12 @@ class CharacterController extends Controller
 
         if ($request = $service->createDesignUpdateRequest($this->character, Auth::user(), $image, true)) {
             flash('Successfully created new design update request draft.')->success();
+
             return redirect()->to($request->url);
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
+
         return redirect()->back();
     }
 }

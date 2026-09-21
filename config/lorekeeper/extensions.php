@@ -48,7 +48,7 @@ return [
     'character_TH_profile_link' => 1,
 
     // Design Update Voting - Mercury
-    'design_update_voting' => 0,
+    'design_update_voting'                 => 0,
 
     // Item Entry Expansion - Mercury
     'item_entry_expansion' => [

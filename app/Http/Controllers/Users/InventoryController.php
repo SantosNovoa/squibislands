@@ -148,7 +148,6 @@ class InventoryController extends Controller {
                     break;
             }
         }
-        return redirect()->back();
     }
 
     /**

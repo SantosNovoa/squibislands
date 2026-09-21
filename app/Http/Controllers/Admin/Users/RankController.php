@@ -16,8 +16,7 @@ class RankController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return view('admin.users.ranks', [
             'ranks' => Rank::orderBy('sort', 'DESC')->get(),
         ]);
@@ -28,8 +27,7 @@ class RankController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateRank()
-    {
+    public function getCreateRank() {
         return view('admin.users._create_edit_rank', [
             'rank'       => new Rank,
             'rankPowers' => null,
@@ -90,27 +88,6 @@ class RankController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Get the rank deletion modal.
-     *
-     * @param mixed $id
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getDeleteRank($id)
-    {
-        $rank = Rank::find($id);
-        $editable = Auth::user()->canEditRank($rank);
-        if (!$editable) {
-            $rank = null;
-        }
-
-        return view('admin.users._delete_rank', [
-            'rank'     => $rank,
-            'editable' => $editable,
-        ]);
     }
 
     /**

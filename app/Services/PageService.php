@@ -5,8 +5,7 @@ namespace App\Services;
 use App\Models\SitePage;
 use Illuminate\Support\Facades\DB;
 
-class PageService extends Service
-{
+class PageService extends Service {
     /*
     |--------------------------------------------------------------------------
     | Page Service
@@ -24,8 +23,7 @@ class PageService extends Service
      *
      * @return bool|SitePage
      */
-    public function createPage($data, $user)
-    {
+    public function createPage($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -63,8 +61,7 @@ class PageService extends Service
      *
      * @return bool|SitePage
      */
-    public function updatePage($page, $data, $user)
-    {
+    public function updatePage($page, $data, $user) {
         DB::beginTransaction();
 
         try {
@@ -105,8 +102,7 @@ class PageService extends Service
      *
      * @return bool
      */
-    public function deletePage($page)
-    {
+    public function deletePage($page) {
         DB::beginTransaction();
 
         try {

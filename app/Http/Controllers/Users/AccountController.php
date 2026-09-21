@@ -162,6 +162,7 @@ class AccountController extends Controller {
             'parsed_text' => parse($request->get('text'))
         ]);
         flash('Profile updated successfully.')->success();
+
         return redirect()->back();
     }
 

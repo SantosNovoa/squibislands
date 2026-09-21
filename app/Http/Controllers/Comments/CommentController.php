@@ -110,19 +110,19 @@ class CommentController extends Controller
             case 'App\Models\User\UserProfile':
                 $recipient = User::find($comment->commentable_id);
                 $post = 'your profile';
-                $link = $recipient->url . '/#comment-' . $comment->getKey();
+                $link = $recipient->url.'/#comment-'.$comment->getKey();
                 break;
             case 'App\Models\Sales\Sales':
                 $sale = Sales::find($comment->commentable_id);
                 $recipient = $sale->user; // User that has been commented on (or owner of sale post)
                 $post = 'your sales post'; // Simple message to show if it's profile/sales/news
-                $link = $sale->url . '/#comment-' . $comment->getKey();
+                $link = $sale->url.'/#comment-'.$comment->getKey();
                 break;
             case 'App\Models\News':
                 $news = News::find($comment->commentable_id);
                 $recipient = $news->user; // User that has been commented on (or owner of sale post)
                 $post = 'your news post'; // Simple message to show if it's profile/sales/news
-                $link = $news->url . '/#comment-' . $comment->getKey();
+                $link = $news->url.'/#comment-'.$comment->getKey();
                 break;
             case 'App\Models\Report\Report':
                 $report = Report::find($comment->commentable_id);
@@ -139,7 +139,7 @@ class CommentController extends Controller
                 $page = SitePage::find($comment->commentable_id);
                 $recipient = User::find(Settings::get('admin_user'));
                 $post = 'your site page';
-                $link = $page->url . '/#comment-' . $comment->getKey();
+                $link = $page->url.'/#comment-'.$comment->getKey();
                 break;
             case 'App\Models\Gallery\GallerySubmission':
                 $submission = GallerySubmission::find($comment->commentable_id);
@@ -149,7 +149,7 @@ class CommentController extends Controller
                     $recipient = $submission->user;
                 }
                 $post = (($type != 'User-User') ? 'your gallery submission\'s staff comments' : 'your gallery submission');
-                $link = (($type != 'User-User') ? $submission->queueUrl . '/#comment-' . $comment->getKey() : $submission->url . '/#comment-' . $comment->getKey());
+                $link = (($type != 'User-User') ? $submission->queueUrl.'/#comment-'.$comment->getKey() : $submission->url.'/#comment-'.$comment->getKey());
                 break;
             case 'App\Models\Mail\ModMail':
                 $mail = ModMail::find($comment->commentable_id);
@@ -183,8 +183,7 @@ class CommentController extends Controller
     /**
      * Updates the message of the comment.
      */
-    public function update(Request $request, Comment $comment)
-    {
+    public function update(Request $request, Comment $comment) {
         Gate::authorize('edit-comment', $comment);
 
         Validator::make($request->all(), [
@@ -206,14 +205,17 @@ class CommentController extends Controller
             'comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message,
         ]);
 
-        return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+        $comment->update([
+            'comment' => config('lorekeeper.settings.wysiwyg_comments') ? parse($request->message) : $request->message,
+        ]);
+
+        return Redirect::to(URL::previous().'#comment-'.$comment->getKey());
     }
 
     /**
      * Deletes a comment.
      */
-    public function destroy(Comment $comment)
-    {
+    public function destroy(Comment $comment) {
         Gate::authorize('delete-comment', $comment);
 
         if (config('comments.soft_deletes') == true) {
@@ -228,8 +230,7 @@ class CommentController extends Controller
     /**
      * Creates a reply "comment" to a comment.
      */
-    public function reply(Request $request, Comment $comment)
-    {
+    public function reply(Request $request, Comment $comment) {
         Gate::authorize('reply-to-comment', $comment);
 
         Validator::make($request->all(), [
@@ -260,7 +261,7 @@ class CommentController extends Controller
             ]);
         }
 
-        return Redirect::to(URL::previous() . '#comment-' . $reply->getKey());
+        return Redirect::to(URL::previous().'#comment-'.$reply->getKey());
     }
 
     /**
@@ -277,7 +278,7 @@ class CommentController extends Controller
             $comment->update(['is_featured' => 0]);
         }
 
-        return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+        return Redirect::to(URL::previous().'#comment-'.$comment->getKey());
     }
 
     /**
@@ -286,8 +287,7 @@ class CommentController extends Controller
      * @param mixed $id
      * @param mixed $action
      */
-    public function like(Request $request, $id, $action = 1)
-    {
+    public function like(Request $request, $id, $action = 1) {
         $user = Auth::user();
         if (!$user) {
             return Redirect::back();
@@ -303,7 +303,7 @@ class CommentController extends Controller
                 $comment->likes()->where('user_id', $user->id)->update(['is_like' => !$comment->likes()->where('user_id', $user->id)->first()->is_like]);
             }
 
-            return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+            return Redirect::to(URL::previous().'#comment-'.$comment->getKey());
         }
 
         $comment->likes()->create([
@@ -311,7 +311,7 @@ class CommentController extends Controller
             'is_like' => $action,
         ]);
 
-        return Redirect::to(URL::previous() . '#comment-' . $comment->getKey());
+        return Redirect::to(URL::previous().'#comment-'.$comment->getKey());
     }
 
     /**
@@ -319,8 +319,7 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLikedComments(Request $request)
-    {
+    public function getLikedComments(Request $request) {
         return view('home.liked_comments', [
             'user' => Auth::user(),
         ]);

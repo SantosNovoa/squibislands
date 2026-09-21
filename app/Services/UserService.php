@@ -134,6 +134,45 @@ class UserService extends Service {
     }
 
     /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param mixed $socialite
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(array $data, $socialite = false) {
+        return Validator::make($data, [
+            'name'      => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
+            'email'     => ($socialite ? [] : ['required']) + ['string', 'email', 'max:255', 'unique:users'],
+            'agreement' => ['required', 'accepted'],
+            'password'  => ($socialite ? [] : ['required']) + ['string', 'min:8', 'confirmed'],
+            'dob'       => [
+                'required', function ($attribute, $value, $fail) {
+                    $formatDate = Carbon::createFromFormat('Y-m-d', $value);
+                    $now = Carbon::now();
+                    if ($formatDate->diffInYears($now) < 13) {
+                        $fail('You must be 13 or older to access this site.');
+                    }
+                },
+            ],
+            'code'                 => ['string', function ($attribute, $value, $fail) {
+                if (!Settings::get('is_registration_open')) {
+                    if (!$value) {
+                        $fail('An invitation code is required to register an account.');
+                    }
+                    $invitation = Invitation::where('code', $value)->whereNull('recipient_id')->first();
+                    if (!$invitation) {
+                        $fail('Invalid code entered.');
+                    }
+                }
+            },
+            ],
+        ] + (config('app.env') == 'production' && config('lorekeeper.extensions.use_recaptcha') ? [
+            'g-recaptcha-response' => 'required|recaptchav3:register,0.5',
+        ] : []));
+    }
+
+    /**
      * Updates a user. Used in modifying the admin user on the command line.
      *
      * @param mixed $id
@@ -830,6 +869,144 @@ class UserService extends Service {
         } catch(\Exception $e) { 
             $this->setError('error', $e->getMessage());
         }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Deactivates a user.
+     *
+     * @param array                 $data
+     * @param \App\Models\User\User $user
+     * @param \App\Models\User\User $staff
+     *
+     * @return bool
+     */
+    public function deactivate($data, $user, $staff = null) {
+        DB::beginTransaction();
+
+        try {
+            if (!$staff) {
+                $staff = $user;
+            }
+            if (!$user->is_deactivated) {
+                // New deactivation (not just editing the reason), clear all their engagements
+
+                // 1. Character transfers
+                $characterManager = new CharacterManager;
+                $transfers = CharacterTransfer::where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
+                })->where('status', 'Pending')->get();
+                foreach ($transfers as $transfer) {
+                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient').'\'s account was deactivated.'], ($staff ? $staff : $user));
+                }
+
+                // 2. Submissions and claims
+                $submissionManager = new SubmissionManager;
+                $submissions = Submission::where('user_id', $user->id)->where('status', 'Pending')->get();
+                foreach ($submissions as $submission) {
+                    $submissionManager->rejectSubmission(['submission' => $submission, 'staff_comments' => 'User\'s account was deactivated.'], $staff);
+                }
+
+                // 3. Gallery Submissions
+                $galleryManager = new GalleryManager;
+                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Pending')->get();
+                foreach ($gallerySubmissions as $submission) {
+                    $galleryManager->rejectSubmission($submission, $staff);
+                    $galleryManager->postStaffComments($submission->id, ['staff_comments' => 'User\'s account was deactivated.'], $staff);
+                }
+                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Accepted')->get();
+                foreach ($gallerySubmissions as $submission) {
+                    $submission->update(['is_visible' => 0]);
+                }
+
+                // 4. Design approvals
+                $requests = CharacterDesignUpdate::where('user_id', $user->id)->where(function ($query) {
+                    $query->where('status', 'Pending')->orWhere('status', 'Draft');
+                })->get();
+                foreach ($requests as $request) {
+                    (new DesignUpdateManager)->rejectRequest(['staff_comments' => 'User\'s account was deactivated.'], $request, $staff, true);
+                }
+
+                // 5. Trades
+                $tradeManager = new TradeManager;
+                $trades = Trade::where(function ($query) {
+                    $query->where('status', 'Open')->orWhere('status', 'Pending');
+                })->where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id)->where('recipient_id', $user->id);
+                })->get();
+                foreach ($trades as $trade) {
+                    $tradeManager->rejectTrade(['trade' => $trade, 'reason' => 'User\'s account was deactivated.'], $staff);
+                }
+
+                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_deactivated' => 'Yes', 'deactivate_reason' => $data['deactivate_reason'] ?? null]), 'type' => 'Deactivation']);
+
+                $user->settings->deactivated_at = Carbon::now();
+
+                $user->is_deactivated = 1;
+                $user->deactivater_id = $staff->id;
+                $user->rank_id = Rank::orderBy('sort')->first()->id;
+                $user->save();
+
+                Notifications::create('USER_DEACTIVATED', User::find(Settings::get('admin_user')), [
+                    'user_url'   => $user->url,
+                    'user_name'  => $user->name,
+                    'staff_url'  => $staff->url,
+                    'staff_name' => $staff->name,
+                ]);
+            } else {
+                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['deactivate_reason' => $data['deactivate_reason'] ?? null]), 'type' => 'Deactivation Update']);
+            }
+
+            $user->settings->deactivate_reason = isset($data['deactivate_reason']) && $data['deactivate_reason'] ? $data['deactivate_reason'] : null;
+            $user->settings->save();
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Reactivates a user account.
+     *
+     * @param \App\Models\User\User $user
+     * @param \App\Models\User\User $staff
+     *
+     * @return bool
+     */
+    public function reactivate($user, $staff = null) {
+        DB::beginTransaction();
+
+        try {
+            if (!$staff) {
+                $staff = $user;
+            }
+            if ($user->is_deactivated) {
+                $user->is_deactivated = 0;
+                $user->deactivater_id = null;
+                $user->save();
+
+                $user->settings->deactivate_reason = null;
+                $user->settings->deactivated_at = null;
+                $user->settings->save();
+                UserUpdateLog::create(['staff_id' => $staff ? $staff->id : $user->id, 'user_id' => $user->id, 'data' => json_encode(['is_deactivated' => 'No']), 'type' => 'Reactivation']);
+            }
+
+            Notifications::create('USER_REACTIVATED', User::find(Settings::get('admin_user')), [
+                'user_url'   => $user->url,
+                'user_name'  => ucfirst($user->name),
+                'staff_url'  => $staff->url,
+                'staff_name' => $staff->name,
+            ]);
+
+            return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
         return $this->rollbackReturn(false);
     }
 }

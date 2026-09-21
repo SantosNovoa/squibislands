@@ -37,7 +37,7 @@ function getAssetKeys($isCharacter = false) {
  */
 function getAssetModelString($type, $namespaced = true) {
     switch ($type) {
-        case 'items': case 'item':
+        case 'items':
             if ($namespaced) {
                 return '\App\Models\Item\Item';
             } else {

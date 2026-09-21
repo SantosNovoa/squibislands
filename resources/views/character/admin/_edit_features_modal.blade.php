@@ -120,6 +120,7 @@
             e.preventDefault();
             removeFeatureRow($(this));
         })
+
         function addFeatureRow() {
             var $clone = $('.feature-row').clone();
             $('#featureList').append($clone);

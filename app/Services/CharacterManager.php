@@ -33,8 +33,7 @@ use Intervention\Image\Facades\Image;
 use App\Models\Character\CharacterTransformation as Transformation;
 use App\Models\Rarity;
 
-class CharacterManager extends Service
-{
+class CharacterManager extends Service {
     /*
     |--------------------------------------------------------------------------
     | Character Manager
@@ -91,8 +90,7 @@ class CharacterManager extends Service
      *
      * @return bool|Character
      */
-    public function createCharacter($data, $user, $isMyo = false)
-    {
+    public function createCharacter($data, $user, $isMyo = false) {
         DB::beginTransaction();
 
         try {
@@ -549,8 +547,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function createLog($senderId, $senderUrl, $recipientId, $recipientUrl, $characterId, $type, $data, $logType, $isUpdate = false, $oldData = null, $newData = null)
-    {
+    public function createLog($senderId, $senderUrl, $recipientId, $recipientUrl, $characterId, $type, $data, $logType, $isUpdate = false, $oldData = null, $newData = null) {
         return DB::table($logType == 'character' ? 'character_log' : 'user_character_log')->insert(
             [
                 'sender_id'     => $senderId,
@@ -582,8 +579,7 @@ class CharacterManager extends Service
      *
      * @return bool|Character
      */
-    public function createImage($data, $character, $user)
-    {
+    public function createImage($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -671,8 +667,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateImageFeatures($data, $image, $user)
-    {
+    public function updateImageFeatures($data, $image, $user) {
         DB::beginTransaction();
 
         try {
@@ -795,8 +790,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateImageNotes($data, $image, $user)
-    {
+    public function updateImageNotes($data, $image, $user) {
         DB::beginTransaction();
 
         try {
@@ -832,8 +826,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateImageCredits($data, $image, $user)
-    {
+    public function updateImageCredits($data, $image, $user) {
         DB::beginTransaction();
 
         try {
@@ -925,8 +918,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function reuploadImage($data, $image, $user)
-    {
+    public function reuploadImage($data, $image, $user) {
         DB::beginTransaction();
 
         try {
@@ -1045,8 +1037,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateImageSettings($data, $image, $user)
-    {
+    public function updateImageSettings($data, $image, $user) {
         DB::beginTransaction();
 
         try {
@@ -1082,8 +1073,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateActiveImage($image, $user)
-    {
+    public function updateActiveImage($image, $user) {
         DB::beginTransaction();
 
         try {
@@ -1122,8 +1112,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function sortImages($data, $character, $user)
-    {
+    public function sortImages($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1170,8 +1159,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function sortCharacters($data, $user)
-    {
+    public function sortCharacters($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -1278,8 +1266,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateCharacterStats($data, $character, $user)
-    {
+    public function updateCharacterStats($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1363,7 +1350,7 @@ class CharacterManager extends Service
 
                 // Add a log for the character
                 // This logs all the updates made to the character
-                $this->createLog($user->id, null, null, null, $character->id, 'Character Updated', ucfirst(implode(', ', $result)) . ' edited', 'character', true, $old, $new);
+                $this->createLog($user->id, null, null, null, $character->id, 'Character Updated', ucfirst(implode(', ', $result)).' edited', 'character', true, $old, $new);
             }
 
             return $this->commitReturn(true);
@@ -1383,8 +1370,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateCharacterDescription($data, $character, $user)
-    {
+    public function updateCharacterDescription($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1420,8 +1406,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateCharacterSettings($data, $character, $user)
-    {
+    public function updateCharacterSettings($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1456,8 +1441,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function updateCharacterProfile($data, $character, $user, $isAdmin = false)
-    {
+    public function updateCharacterProfile($data, $character, $user, $isAdmin = false) {
         DB::beginTransaction();
 
         try {
@@ -1596,6 +1580,7 @@ class CharacterManager extends Service
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
+
         return $this->rollbackReturn(false);
     }
 
@@ -1607,8 +1592,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function deleteCharacter($character, $user)
-    {
+    public function deleteCharacter($character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1661,8 +1645,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function createTransfer($data, $character, $user)
-    {
+    public function createTransfer($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1748,8 +1731,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function adminTransfer($data, $character, $user)
-    {
+    public function adminTransfer($data, $character, $user) {
         DB::beginTransaction();
 
         try {
@@ -1840,8 +1822,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function processTransfer($data, $user)
-    {
+    public function processTransfer($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -1909,8 +1890,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function cancelTransfer($data, $user)
-    {
+    public function cancelTransfer($data, $user) {
         DB::beginTransaction();
 
         try {
@@ -1946,8 +1926,7 @@ class CharacterManager extends Service
      *
      * @return bool
      */
-    public function processTransferQueue($data, $user)
-    {
+    public function processTransferQueue($data, $user) {
         DB::beginTransaction();
 
         try {
