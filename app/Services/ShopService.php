@@ -50,6 +50,9 @@ class ShopService extends Service {
 
             $shop = Shop::create($data);
 
+            $this->logAdminAction($user, 'Created Shop', 'Created shop ' . $shop->name);
+
+
             if ($image) {
                 $this->handleImage($image, $shop->shopImagePath, $shop->shopImageFileName);
             }
@@ -93,6 +96,8 @@ class ShopService extends Service {
             $data['is_timed_shop'] = isset($data['is_timed_shop']);
 
             $shop->update($data);
+
+            $this->logAdminAction($user, 'Updated Shop', 'Updated shop ' . $shop->name);
 
             if ($shop) {
                 $this->handleImage($image, $shop->shopImagePath, $shop->shopImageFileName);
@@ -241,6 +246,8 @@ class ShopService extends Service {
                 $this->deleteImage($shop->shopImagePath, $shop->shopImageFileName);
             }
             $shop->delete();
+
+            $this->logAdminAction($this->user(), 'Deleted Shop', 'Deleted shop ' . $shop->name);
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

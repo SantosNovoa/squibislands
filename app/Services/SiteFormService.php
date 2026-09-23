@@ -39,6 +39,8 @@ class SiteFormService extends Service
             $data['user_id'] = $user->id;
             $form = SiteForm::create($data);
 
+            $this->logAdminAction($user, 'Created Form', 'Created form ' . $form->title);
+
             $this->createFormQuestions($data['questions'], $data['options'], $data['is_mandatory'] ?? [], $data['is_multichoice'] ?? [], $form);
             $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $form);
 
@@ -69,6 +71,8 @@ class SiteFormService extends Service
             $form->update($data);
             $this->updateFormQuestions($data['questions'], $data['options'], $data['is_mandatory'] ?? [], $data['is_multichoice'] ?? [], $form);
             $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $form);
+
+            $this->logAdminAction($user, 'Updated Form', 'Updated form ' . $form->title);
 
             if(isset($data['bump']) && $data['is_active'] == 1 && $data['bump'] == 1) $this->alertUsers();
             
@@ -104,6 +108,8 @@ class SiteFormService extends Service
             }
             if ($form->rewards()->count() > 0) $form->rewards()->delete();
             $form->delete();
+
+            $this->logAdminAction($this->user(), 'Deleted Form', 'Deleted form ' . $form->title);
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

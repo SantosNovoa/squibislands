@@ -30,6 +30,8 @@ class RaffleService extends Service {
             $data['is_active'] = 0;
         }
         $raffle = Raffle::create(Arr::only($data, ['name', 'is_active', 'winner_count', 'group_id', 'order']));
+
+        $this->logAdminAction($this->user(), 'Created Raffle', 'Created raffle ' . $raffle->name);
         DB::commit();
 
         return $raffle;
@@ -49,6 +51,7 @@ class RaffleService extends Service {
             $data['is_active'] = 0;
         }
         $raffle->update(Arr::only($data, ['name', 'is_active', 'winner_count', 'group_id', 'order', 'ticket_cap']));
+        $this->logAdminAction($this->user(), 'Updated Raffle', 'Updated raffle ' . $raffle->name);
         DB::commit();
 
         return $raffle;
@@ -67,6 +70,7 @@ class RaffleService extends Service {
             $ticket->delete();
         }
         $raffle->delete();
+        $this->logAdminAction($this->user(), 'Deleted Raffle', 'Deleted raffle ' . $raffle->name);
         DB::commit();
 
         return true;

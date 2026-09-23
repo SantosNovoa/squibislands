@@ -266,7 +266,7 @@ class PetController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postDeletePet(Request $request, PetService $service, $id) {
-        if ($id && $service->deletePet(Pet::find($id))) {
+        if ($id && $service->deletePet(Pet::find($id), Auth::user())) {
             flash('Pet deleted successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {

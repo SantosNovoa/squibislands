@@ -11,7 +11,8 @@ use App\Models\User\UserPet;
 use App\Models\User\UserPetLevel;
 use Illuminate\Support\Facades\DB;
 
-class PetService extends Service {
+class PetService extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | Pet Service
@@ -25,7 +26,7 @@ class PetService extends Service {
 
         PET CATEGORIES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Create a category.
@@ -35,7 +36,8 @@ class PetService extends Service {
      *
      * @return bool|PetCategory
      */
-    public function createPetCategory($data, $user) {
+    public function createPetCategory($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -73,7 +75,8 @@ class PetService extends Service {
      *
      * @return bool|PetCategory
      */
-    public function updatePetCategory($category, $data, $user) {
+    public function updatePetCategory($category, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -112,7 +115,8 @@ class PetService extends Service {
      *
      * @return bool
      */
-    public function deletePetCategory($category) {
+    public function deletePetCategory($category)
+    {
         DB::beginTransaction();
 
         try {
@@ -141,7 +145,8 @@ class PetService extends Service {
      *
      * @return bool
      */
-    public function sortPetCategory($data) {
+    public function sortPetCategory($data)
+    {
         DB::beginTransaction();
 
         try {
@@ -164,7 +169,7 @@ class PetService extends Service {
 
         PETS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Creates a new pet.
@@ -174,7 +179,8 @@ class PetService extends Service {
      *
      * @return bool|Pet
      */
-    public function createPet($data, $user) {
+    public function createPet($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -199,6 +205,8 @@ class PetService extends Service {
 
             $pet = Pet::create($data);
 
+            $this->logAdminAction($user, 'Created Pet', 'Created pet ' . $pet->name);
+
             if ($image) {
                 $this->handleImage($image, $pet->imagePath, $pet->imageFileName);
             }
@@ -220,7 +228,8 @@ class PetService extends Service {
      *
      * @return bool|Pet
      */
-    public function updatePet($pet, $data, $user) {
+    public function updatePet($pet, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -247,6 +256,8 @@ class PetService extends Service {
 
             $pet->update($data);
 
+            $this->logAdminAction($user, 'Updated Pet', 'Updated pet ' . $pet->name);
+
             if ($pet) {
                 $this->handleImage($image, $pet->imagePath, $pet->imageFileName);
             }
@@ -260,18 +271,20 @@ class PetService extends Service {
     }
 
     /**
-     * Deletes an pet.
+     * Deletes a pet.
      *
-     * @param Pet $pet
+     * @param Pet                   $pet
+     * @param \App\Models\User\User $user
      *
      * @return bool
      */
-    public function deletePet($pet) {
+    public function deletePet($pet, $user)
+    {
         DB::beginTransaction();
 
         try {
             // Check first if the pet is currently owned or if some other site feature uses it
-            if (DB::table('user_pets')->where('pet_id', $pet->id)->where('count', '>', 0)->where('deleted_at', '!=', null)->exists()) {
+            if (DB::table('user_pets')->where('pet_id', $pet->id)->where('count', '>', 0)->whereNull('deleted_at')->exists()) {
                 throw new \Exception('At least one user currently owns this pet. Please remove the pet(s) before deleting it.');
             }
             if (DB::table('loots')->where('rewardable_type', 'Pet')->where('rewardable_id', $pet->id)->exists()) {
@@ -287,6 +300,8 @@ class PetService extends Service {
                 throw new \Exception('A shop currently stocks this pet. Please remove the pet before deleting it.');
             }
 
+            $name = $pet->name;
+
             // Delete character drops and drop data if they exist
             if ($pet->dropData) {
                 $pet->dropData->petDrops()->delete();
@@ -294,6 +309,10 @@ class PetService extends Service {
             }
 
             $pet->delete();
+
+            if (!$this->logAdminAction($user, 'Deleted Pet', 'Deleted pet ' . $name)) {
+                throw new \Exception('Failed to log admin action.');
+            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
@@ -307,7 +326,7 @@ class PetService extends Service {
 
         PET VARIANTS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Creates a new variant for a pet.
@@ -315,7 +334,8 @@ class PetService extends Service {
      * @param mixed $pet
      * @param mixed $data
      */
-    public function createVariant($pet, $data) {
+    public function createVariant($pet, $data)
+    {
         DB::beginTransaction();
 
         try {
@@ -355,7 +375,8 @@ class PetService extends Service {
      * @param mixed $variant
      * @param mixed $data
      */
-    public function editVariant($variant, $data) {
+    public function editVariant($variant, $data)
+    {
         DB::beginTransaction();
 
         try {
@@ -416,7 +437,7 @@ class PetService extends Service {
 
         PET EVOLUTIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Creates a pet evolution.
@@ -424,7 +445,8 @@ class PetService extends Service {
      * @param mixed $pet
      * @param mixed $data
      */
-    public function createEvolution($pet, $data) {
+    public function createEvolution($pet, $data)
+    {
         DB::beginTransaction();
 
         try {
@@ -469,7 +491,8 @@ class PetService extends Service {
      * @param mixed $evolution
      * @param mixed $data
      */
-    public function editEvolution($evolution, $data) {
+    public function editEvolution($evolution, $data)
+    {
         DB::beginTransaction();
 
         try {
@@ -548,7 +571,7 @@ class PetService extends Service {
 
         PET LEVELS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Creates a new pet level.
@@ -558,7 +581,8 @@ class PetService extends Service {
      *
      * @return bool|PetLevel
      */
-    public function createPetLevel($data, $user) {
+    public function createPetLevel($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -589,7 +613,8 @@ class PetService extends Service {
      *
      * @return bool|PetLevel
      */
-    public function updatePetLevel($level, $data, $user) {
+    public function updatePetLevel($level, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -635,7 +660,8 @@ class PetService extends Service {
      *
      * @return bool
      */
-    public function deletePetLevel($level) {
+    public function deletePetLevel($level)
+    {
         DB::beginTransaction();
 
         try {
@@ -660,7 +686,8 @@ class PetService extends Service {
      * @param mixed $pet_ids
      * @param mixed $level
      */
-    public function addPetsToLevel($pet_ids, $level) {
+    public function addPetsToLevel($pet_ids, $level)
+    {
         DB::beginTransaction();
 
         try {
@@ -688,7 +715,8 @@ class PetService extends Service {
      * @param mixed $petLevel
      * @param mixed $data
      */
-    public function editPetLevelPetRewards($petLevel, $data) {
+    public function editPetLevelPetRewards($petLevel, $data)
+    {
         DB::beginTransaction();
 
         try {
@@ -724,7 +752,8 @@ class PetService extends Service {
      *
      * @return array
      */
-    private function populateCategoryData($data, $category = null) {
+    private function populateCategoryData($data, $category = null)
+    {
         if (isset($data['description']) && $data['description']) {
             $data['parsed_description'] = parse($data['description']);
         }
@@ -761,7 +790,8 @@ class PetService extends Service {
      *
      * @return array
      */
-    private function populateData($data, $pet = null) {
+    private function populateData($data, $pet = null)
+    {
         if (isset($data['description']) && $data['description']) {
             $data['parsed_description'] = parse($data['description']);
         }
