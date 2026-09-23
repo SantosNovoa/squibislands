@@ -67,6 +67,10 @@ return [
         'name'        => 'Manage Sales',
         'description' => 'Allow rank to create/edit sales and comment on sales in preview mode.',
     ],
+    'manage_custom_profile' => [
+        'name'        => 'Manage Custom Artist Profile',
+        'description' => 'Allows the user to edit their own entry on the Official Customs page.',
+    ],
     'comment_on_sales' => [
         'name'        => 'Comment on Sales',
         'description' => 'Allow rank to comment on sales in preview mode.',

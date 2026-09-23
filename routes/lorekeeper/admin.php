@@ -977,6 +977,17 @@ Route::group(['prefix' => 'featured-character'], function () {
     Route::post('set', 'FeaturedCharacterController@postSet');
 });
 
+Route::group(['prefix' => 'custom-profile', 'middleware' => 'custom.artist'], function () {
+    Route::get('/', 'CustomArtistController@getProfile');
+    Route::post('/', 'CustomArtistController@postProfile');
+});
+
+Route::group(['prefix' => 'custom-artists', 'middleware' => 'power:edit_ranks'], function () {
+    Route::get('/', 'CustomArtistController@getAccess');
+    Route::post('grant', 'CustomArtistController@postGrant');
+    Route::post('revoke/{id}', 'CustomArtistController@postRevoke');
+});
+
 // // PREMIUM SHOP
 // Route::group(['prefix' => 'premium-shop'], function () {
 //     Route::get('/', 'PremiumShopController@getIndex');

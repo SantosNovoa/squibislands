@@ -9,15 +9,19 @@
     {!! breadcrumbs([$page->title => $page->url]) !!}
     <h1 class="text-center">{{ $page->title }}</h1>
     <div class="mb-4">
-    @if(Auth::check() && Auth::user()->isStaff)
-        <div><strong>Created:</strong> {!! format_date($page->created_at) !!}</div>
-        <div><strong>Last updated:</strong> {!! format_date($page->updated_at) !!}</div>
-    @endif
+        @if (Auth::check() && Auth::user()->isStaff)
+            <div><strong>Created:</strong> {!! format_date($page->created_at) !!}</div>
+            <div><strong>Last updated:</strong> {!! format_date($page->updated_at) !!}</div>
+        @endif
     </div>
 
     <div class="site-page-content parsed-text">
         {!! $page->parsed_text !!}
     </div>
+
+    @if ($page->key == 'official_customs')
+        @include('pages._official_customs')
+    @endif
 
     @if ($page->can_comment)
         <div class="container">

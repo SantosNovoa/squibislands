@@ -67,6 +67,15 @@ return [
             ],
         ],
     ],
+    'Custom Artists' => [
+        'power' => 'manage_custom_profile',
+        'links' => [
+            [
+                'name' => 'My Customs Entry',
+                'url'  => 'admin/custom-profile',
+            ],
+        ],
+    ],
     'Forms & Polls' => [
         'power' => 'edit_pages',
         'links' => [

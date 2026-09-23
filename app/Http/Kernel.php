@@ -65,6 +65,7 @@ class Kernel extends HttpKernel {
         'throttle'      => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'      => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'post.throttle' => Middleware\PostRequestThrottleMiddleware::class,
+        'custom.artist' => \App\Http\Middleware\CheckCustomArtist::class,
     ];
 
     /**
