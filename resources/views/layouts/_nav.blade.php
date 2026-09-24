@@ -208,9 +208,6 @@
                                 <a class="dropdown-item" href="{{ url('users') }}">
                                     <i class="fa-solid fa-users"></i> Users
                                 </a>
-                                <a class="dropdown-item" href="{{ url('redeem-code') }}">
-                                    Redeem Code
-                                </a>
                                 <a class="dropdown-item" href="https://discord.gg/whc3mVZJMp" target="_blank" rel="noopener noreferrer">
                                     <i class="fa-brands fa-discord"></i> Discord
                                 </a>
