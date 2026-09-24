@@ -11,6 +11,7 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterFolder;
 use App\Models\Character\Sublist;
+use App\Models\User\UserPrizeLog;
 use App\Models\Claymore\GearCategory;
 use App\Models\Claymore\WeaponCategory;
 use App\Models\Currency\Currency;
@@ -717,6 +718,22 @@ class UserController extends Controller {
             'user'       => $this->user,
             'characters' => true,
             'favorites'  => $this->user->characters->count() ? GallerySubmission::whereIn('id', $userFavorites)->whereIn('id', GalleryCharacter::whereIn('character_id', $userCharacters)->pluck('gallery_submission_id')->toArray())->visible(Auth::check() ? Auth::user() : null)->orderBy('created_at', 'DESC')->paginate(20)->appends($request->query()) : null,
+        ]);
+    }
+
+        /**
+     * Shows a user's redeem logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserRedeemLogs($name)
+    {
+        $user = $this->user;
+        return view('home._redeem_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getRedeemLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
 }

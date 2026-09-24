@@ -248,7 +248,10 @@
                     </a> 
                     <a href="{{ url('dailies') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
                         Dailies <i class="fas fa-arrow-right"></i>
-                    </a> 
+                    </a>
+                    <a href="{{ url('redeem-codes') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
+                        Codes <i class="fas fa-arrow-right"></i>
+                    </a>  
                 </li>
             </ul>
         @endif

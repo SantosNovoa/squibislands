@@ -390,3 +390,8 @@ Route::group(['prefix' => 'boss'], function () {
     Route::post('{id}/attack/{attack_method}', 'BossController@handleBossAttack');
     Route::post('{id}/claim', 'BossController@handleClaimRewards');
 });
+
+Route::group(['prefix' => 'redeem-code', 'namespace' => 'Users'], function() {
+    Route::get('/', 'PrizeCodeController@getIndex');
+    Route::post('/redeem', 'PrizeCodeController@postRedeemPrize');
+});

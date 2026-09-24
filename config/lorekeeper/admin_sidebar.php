@@ -279,7 +279,11 @@ return [
                 'name' => 'Pets',
                 'url'  => 'admin/data/pets',
             ],
+            [
 
+                'name' => 'Codes',
+                'url' => 'admin/prizecodes'
+            ],
         ]
     ],
     'WorldExpansion' => [

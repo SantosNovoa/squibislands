@@ -88,6 +88,8 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/submissions', 'UserController@getUserSubmissions');
     Route::get('{name}/gear-logs', 'UserController@getUserGearLogs');
     Route::get('{name}/weapon-logs', 'UserController@getUserWeaponLogs');
+
+    Route::get('{name}/redeem-logs', 'UserController@getUserRedeemLogs');
 });
 
 # STAFF TEAM
