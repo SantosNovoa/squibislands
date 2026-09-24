@@ -8,7 +8,7 @@
 <h1>
 Code Redemption
 </h1>
-<p> Here you can redeem a code for prizes. Check in with the site's social media and updates to see if any codes have been posted.</p>
+<p> Here you can redeem a code for rewards. Check the site news or Discord server to see if any codes have been posted.</p>
 
 <hr> 
 <div class="text-center">

@@ -10,6 +10,7 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Invitation;
+use App\Models\Border\Border;
 use App\Models\Rank\Rank;
 use App\Models\Submission\Submission;
 use App\Models\Trade;
@@ -26,7 +27,8 @@ use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Laravel\Fortify\Contracts\TwoFactorAuthenticationProvider;
 
-class UserService extends Service {
+class UserService extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | User Service
@@ -34,7 +36,7 @@ class UserService extends Service {
     |
     | Handles the creation and editing of users.
     |
-    */
+     */
 
     /**
      * Create a user.
@@ -43,7 +45,8 @@ class UserService extends Service {
      *
      * @return User
      */
-    public function createUser($data) {
+    public function createUser($data)
+    {
         // If the rank is not given, create a user with the lowest existing rank.
         if (!isset($data['rank_id'])) {
             $data['rank_id'] = Rank::orderBy('sort')->first()->id;
@@ -82,14 +85,16 @@ class UserService extends Service {
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(array $data, $socialite = false) {
+    public function validator(array $data, $socialite = false)
+    {
         return Validator::make($data, [
             'name'      => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
             'email'     => ($socialite ? [] : ['required']) + ['string', 'email', 'max:255', 'unique:users'],
             'agreement' => ['required', 'accepted'],
             'password'  => ($socialite ? [] : ['required']) + ['string', 'min:8', 'confirmed'],
             'dob'       => [
-                'required', function ($attribute, $value, $fail) {
+                'required',
+                function ($attribute, $value, $fail) {
                     $formatDate = Carbon::createFromFormat('Y-m-d', $value);
                     $now = Carbon::now();
                     if ($formatDate->diffInYears($now) < 13) {
@@ -97,17 +102,19 @@ class UserService extends Service {
                     }
                 },
             ],
-            'code'                 => ['string', function ($attribute, $value, $fail) {
-                if (!Settings::get('is_registration_open')) {
-                    if (!$value) {
-                        $fail('An invitation code is required to register an account.');
+            'code'                 => [
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!Settings::get('is_registration_open')) {
+                        if (!$value) {
+                            $fail('An invitation code is required to register an account.');
+                        }
+                        $invitation = Invitation::where('code', $value)->whereNull('recipient_id')->first();
+                        if (!$invitation) {
+                            $fail('Invalid code entered.');
+                        }
                     }
-                    $invitation = Invitation::where('code', $value)->whereNull('recipient_id')->first();
-                    if (!$invitation) {
-                        $fail('Invalid code entered.');
-                    }
-                }
-            },
+                },
             ],
         ] + (config('app.env') == 'production' && config('lorekeeper.extensions.use_recaptcha') ? [
             'g-recaptcha-response' => 'required|recaptchav3:register,0.5',
@@ -121,7 +128,8 @@ class UserService extends Service {
      *
      * @return User
      */
-    public function updateUser($data) {
+    public function updateUser($data)
+    {
         $user = User::find($data['id']);
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
@@ -134,45 +142,6 @@ class UserService extends Service {
     }
 
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param mixed $socialite
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function validator(array $data, $socialite = false) {
-        return Validator::make($data, [
-            'name'      => ['required', 'string', 'min:3', 'max:25', 'alpha_dash', 'unique:users'],
-            'email'     => ($socialite ? [] : ['required']) + ['string', 'email', 'max:255', 'unique:users'],
-            'agreement' => ['required', 'accepted'],
-            'password'  => ($socialite ? [] : ['required']) + ['string', 'min:8', 'confirmed'],
-            'dob'       => [
-                'required', function ($attribute, $value, $fail) {
-                    $formatDate = Carbon::createFromFormat('Y-m-d', $value);
-                    $now = Carbon::now();
-                    if ($formatDate->diffInYears($now) < 13) {
-                        $fail('You must be 13 or older to access this site.');
-                    }
-                },
-            ],
-            'code'                 => ['string', function ($attribute, $value, $fail) {
-                if (!Settings::get('is_registration_open')) {
-                    if (!$value) {
-                        $fail('An invitation code is required to register an account.');
-                    }
-                    $invitation = Invitation::where('code', $value)->whereNull('recipient_id')->first();
-                    if (!$invitation) {
-                        $fail('Invalid code entered.');
-                    }
-                }
-            },
-            ],
-        ] + (config('app.env') == 'production' && config('lorekeeper.extensions.use_recaptcha') ? [
-            'g-recaptcha-response' => 'required|recaptchav3:register,0.5',
-        ] : []));
-    }
-
-    /**
      * Updates a user. Used in modifying the admin user on the command line.
      *
      * @param mixed $id
@@ -180,7 +149,8 @@ class UserService extends Service {
      *
      * @return User
      */
-    public function updateLocation($id, $user) {
+    public function updateLocation($id, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -218,7 +188,8 @@ class UserService extends Service {
      *
      * @return User
      */
-    public function updateFaction($id, $user) {
+    public function updateFaction($id, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -274,7 +245,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function updatePassword($data, $user) {
+    public function updatePassword($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -304,7 +276,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function updateEmail($data, $user) {
+    public function updateEmail($data, $user)
+    {
         $user->email = $data['email'];
         $user->email_verified_at = null;
         $user->save();
@@ -320,7 +293,8 @@ class UserService extends Service {
      * @param mixed $data
      * @param mixed $user
      */
-    public function updateBirthday($data, $user) {
+    public function updateBirthday($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -341,7 +315,8 @@ class UserService extends Service {
      * @param mixed $data
      * @param mixed $user
      */
-    public function updateBirthdayVisibilitySetting($data, $user) {
+    public function updateBirthdayVisibilitySetting($data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -365,7 +340,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function confirmTwoFactor($code, $data, $user) {
+    public function confirmTwoFactor($code, $data, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -394,7 +370,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function disableTwoFactor($code, $user) {
+    public function disableTwoFactor($code, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -423,18 +400,18 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function updateAvatar($avatar, $user) {
+    public function updateAvatar($avatar, $user)
+    {
         DB::beginTransaction();
 
         try {
             if (!$avatar) {
                 throw new \Exception('Please upload a file.');
             }
-            $filename = $user->id.'.'.$avatar->getClientOriginalExtension();
+            $filename = $user->id . '.' . $avatar->getClientOriginalExtension();
 
             if ($user->avatar != 'default.jpg') {
-                $file = 'images/avatars/'.$user->avatar;
-                //$destinationPath = 'uploads/' . $id . '/';
+                $file = 'images/avatars/' . $user->avatar;
 
                 if (File::exists($file)) {
                     if (!unlink($file)) {
@@ -449,7 +426,7 @@ class UserService extends Service {
                     throw new \Exception('Failed to move file.');
                 }
             } else {
-                if (!Image::make($avatar)->resize(150, 150)->save(public_path('images/avatars/'.$filename))) {
+                if (!Image::make($avatar)->resize(150, 150)->save(public_path('images/avatars/' . $filename))) {
                     throw new \Exception('Failed to process avatar.');
                 }
             }
@@ -473,7 +450,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function updateTheme($data, $user) {
+    public function updateTheme($data, $user)
+    {
         $user->theme_id = $data['theme'];
         $user->decorator_theme_id = $data['decorator_theme'];
         $user->save();
@@ -489,7 +467,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function updateUsername($username, $user) {
+    public function updateUsername($username, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -513,13 +492,11 @@ class UserService extends Service {
             }
             // check if there is a cooldown
             if (config('lorekeeper.settings.username_change_cooldown')) {
-                // these logs are different to the ones in the admin panel
-                // different type
                 $last_change = UserUpdateLog::where('user_id', $user->id)->where('type', 'Username Change')->orderBy('created_at', 'desc')->first();
                 if ($last_change && $last_change->created_at->diffInDays(Carbon::now()) < config('lorekeeper.settings.username_change_cooldown')) {
                     throw new \Exception('You must wait '
-                        .config('lorekeeper.settings.username_change_cooldown') - $last_change->created_at->diffInDays(Carbon::now()).
-                    ' days before changing your username again.');
+                        . config('lorekeeper.settings.username_change_cooldown') - $last_change->created_at->diffInDays(Carbon::now()) .
+                        ' days before changing your username again.');
                 }
             }
 
@@ -551,13 +528,14 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function ban($data, $user, $staff) {
+    public function ban($data, $user, $staff)
+    {
         DB::beginTransaction();
 
         try {
             if (!$user->is_banned) {
                 // New ban (not just editing the reason), clear all their engagements
-                if (!$this->logAdminAction($staff, 'Banned User', 'Banned '.$user->displayname)) {
+                if (!$this->logAdminAction($staff, 'Banned User', 'Banned ' . $user->displayname)) {
                     throw new \Exception('Failed to log admin action.');
                 }
 
@@ -567,7 +545,7 @@ class UserService extends Service {
                     $query->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
                 })->where('status', 'Pending')->get();
                 foreach ($transfers as $transfer) {
-                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient').' has been banned from site activity.'], $staff);
+                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient') . ' has been banned from site activity.'], $staff);
                 }
 
                 // 2. Submissions and claims
@@ -638,17 +616,18 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function unban($user, $staff = null) {
+    public function unban($user, $staff = null)
+    {
         DB::beginTransaction();
 
         try {
             if (!$staff) {
                 $staff = $user;
-                if (!$this->logAdminAction($staff, 'Unbanned User', 'Unbanned '.$user->displayname.' after strike expiry.')) {
+                if (!$this->logAdminAction($staff, 'Unbanned User', 'Unbanned ' . $user->displayname . ' after strike expiry.')) {
                     throw new \Exception('Failed to log admin action.');
                 }
             } else {
-                if (!$this->logAdminAction($staff, 'Unbanned User', 'Unbanned '.$user->displayname)) {
+                if (!$this->logAdminAction($staff, 'Unbanned User', 'Unbanned ' . $user->displayname)) {
                     throw new \Exception('Failed to log admin action.');
                 }
             }
@@ -680,7 +659,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function deactivate($data, $user, $staff = null) {
+    public function deactivate($data, $user, $staff = null)
+    {
         DB::beginTransaction();
 
         try {
@@ -696,7 +676,7 @@ class UserService extends Service {
                     $query->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
                 })->where('status', 'Pending')->get();
                 foreach ($transfers as $transfer) {
-                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient').'\'s account was deactivated.'], ($staff ? $staff : $user));
+                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient') . '\'s account was deactivated.'], ($staff ? $staff : $user));
                 }
 
                 // 2. Submissions and claims
@@ -775,7 +755,8 @@ class UserService extends Service {
      *
      * @return bool
      */
-    public function reactivate($user, $staff = null) {
+    public function reactivate($user, $staff = null)
+    {
         DB::beginTransaction();
 
         try {
@@ -807,30 +788,31 @@ class UserService extends Service {
 
         return $this->rollbackReturn(false);
     }
-    /** 
+
+    /**
      * Updates or creates a user's staff profile
      */
-    public function updateStaffProfile($data, $user) {
+    public function updateStaffProfile($data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            if(!$user->isStaff) throw new \Exception("You must be a current staff member to update a staff profile.");
+            if (!$user->isStaff) throw new \Exception("You must be a current staff member to update a staff profile.");
 
             $staffProfile = StaffProfile::find($user->id);
-            if($staffProfile) {
+            if ($staffProfile) {
                 $staffProfile->update([
                     'text' => $data['text']
-                    ]);
-            }
-            else {
+                ]);
+            } else {
                 $staffProfile = StaffProfile::create([
                     'user_id' => $user->id,
                     'text' => $data['text']
-                    ]);
+                ]);
             }
-            
+
             return $this->commitReturn($staffProfile);
-        } catch(\Exception $e) { 
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -839,23 +821,23 @@ class UserService extends Service {
     /**
      * Updates or creates a user's staff links
      */
-    public function updateStaffLinks($data, $user) {
+    public function updateStaffLinks($data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            if(!$user->isStaff) throw new \Exception("You must be a current staff member to update your staff links.");
+            if (!$user->isStaff) throw new \Exception("You must be a current staff member to update your staff links.");
 
             $staffProfile = StaffProfile::find($user->id);
 
-            if($staffProfile) {
+            if ($staffProfile) {
                 $staffProfile->update([
                     'contacts' => !$data ? null : json_encode([
                         'site' => $data['site'],
                         'url' =>  $data['url']
                     ])
                 ]);
-            }
-            else {
+            } else {
                 $staffProfile = StaffProfile::create([
                     'user_id' => $user->id,
                     'contacts' => !$data ? null : json_encode([
@@ -864,9 +846,9 @@ class UserService extends Service {
                     ])
                 ]);
             }
-            
+
             return $this->commitReturn($staffProfile);
-        } catch(\Exception $e) { 
+        } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
 
@@ -874,139 +856,104 @@ class UserService extends Service {
     }
 
     /**
-     * Deactivates a user.
+     * Updates the user's border.
      *
-     * @param array                 $data
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
-     *
+     * @param  array                  $data
+     * @param  \App\Models\User\User  $user
      * @return bool
      */
-    public function deactivate($data, $user, $staff = null) {
+    public function updateBorder($data, $user)
+    {
         DB::beginTransaction();
 
         try {
-            if (!$staff) {
-                $staff = $user;
-            }
-            if (!$user->is_deactivated) {
-                // New deactivation (not just editing the reason), clear all their engagements
+            $border = Border::find($data['border']);
 
-                // 1. Character transfers
-                $characterManager = new CharacterManager;
-                $transfers = CharacterTransfer::where(function ($query) use ($user) {
-                    $query->where('sender_id', $user->id)->orWhere('recipient_id', $user->id);
-                })->where('status', 'Pending')->get();
-                foreach ($transfers as $transfer) {
-                    $characterManager->processTransferQueue(['transfer' => $transfer, 'action' => 'Reject', 'reason' => ($transfer->sender_id == $user->id ? 'Sender' : 'Recipient').'\'s account was deactivated.'], ($staff ? $staff : $user));
+            //do some validation...
+            if (!Auth::user()->isStaff && $border) {
+                if ($border->parent_id) {
+                    abort(404);
                 }
-
-                // 2. Submissions and claims
-                $submissionManager = new SubmissionManager;
-                $submissions = Submission::where('user_id', $user->id)->where('status', 'Pending')->get();
-                foreach ($submissions as $submission) {
-                    $submissionManager->rejectSubmission(['submission' => $submission, 'staff_comments' => 'User\'s account was deactivated.'], $staff);
+                if (!$border->is_default) {
+                    if (!Auth::user()->hasBorder($border->id)) {
+                        throw new \Exception("You do not own this border.");
+                    }
                 }
-
-                // 3. Gallery Submissions
-                $galleryManager = new GalleryManager;
-                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Pending')->get();
-                foreach ($gallerySubmissions as $submission) {
-                    $galleryManager->rejectSubmission($submission, $staff);
-                    $galleryManager->postStaffComments($submission->id, ['staff_comments' => 'User\'s account was deactivated.'], $staff);
+                if (!$border->is_active) {
+                    throw new \Exception("This border is not active.");
                 }
-                $gallerySubmissions = GallerySubmission::where('user_id', $user->id)->where('status', 'Accepted')->get();
-                foreach ($gallerySubmissions as $submission) {
-                    $submission->update(['is_visible' => 0]);
+                if ($border->admin_only) {
+                    throw new \Exception("You cannot select a staff border.");
                 }
-
-                // 4. Design approvals
-                $requests = CharacterDesignUpdate::where('user_id', $user->id)->where(function ($query) {
-                    $query->where('status', 'Pending')->orWhere('status', 'Draft');
-                })->get();
-                foreach ($requests as $request) {
-                    (new DesignUpdateManager)->rejectRequest(['staff_comments' => 'User\'s account was deactivated.'], $request, $staff, true);
-                }
-
-                // 5. Trades
-                $tradeManager = new TradeManager;
-                $trades = Trade::where(function ($query) {
-                    $query->where('status', 'Open')->orWhere('status', 'Pending');
-                })->where(function ($query) use ($user) {
-                    $query->where('sender_id', $user->id)->where('recipient_id', $user->id);
-                })->get();
-                foreach ($trades as $trade) {
-                    $tradeManager->rejectTrade(['trade' => $trade, 'reason' => 'User\'s account was deactivated.'], $staff);
-                }
-
-                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['is_deactivated' => 'Yes', 'deactivate_reason' => $data['deactivate_reason'] ?? null]), 'type' => 'Deactivation']);
-
-                $user->settings->deactivated_at = Carbon::now();
-
-                $user->is_deactivated = 1;
-                $user->deactivater_id = $staff->id;
-                $user->rank_id = Rank::orderBy('sort')->first()->id;
-                $user->save();
-
-                Notifications::create('USER_DEACTIVATED', User::find(Settings::get('admin_user')), [
-                    'user_url'   => $user->url,
-                    'user_name'  => $user->name,
-                    'staff_url'  => $staff->url,
-                    'staff_name' => $staff->name,
-                ]);
-            } else {
-                UserUpdateLog::create(['staff_id' => $staff->id, 'user_id' => $user->id, 'data' => json_encode(['deactivate_reason' => $data['deactivate_reason'] ?? null]), 'type' => 'Deactivation Update']);
             }
 
-            $user->settings->deactivate_reason = isset($data['deactivate_reason']) && $data['deactivate_reason'] ? $data['deactivate_reason'] : null;
+            if ($data['border_variant_id'] > 0) {
+                $variant = Border::where('id', $data['border_variant_id'])->whereNotNull('parent_id')->first();
+                if (!$variant) {
+                    abort(404);
+                }
+                //do some validation...
+                if (!Auth::user()->isStaff) {
+                    if (!$variant->parent->is_default) {
+                        if (!Auth::user()->hasBorder($variant->parent->id)) {
+                            throw new \Exception("You do not own this border.");
+                        }
+                    }
+                    if (!$variant->is_active) {
+                        throw new \Exception("This border variant is not active.");
+                    }
+                    if ($variant->parent->admin_only) {
+                        throw new \Exception("You cannot select a staff border.");
+                    }
+                }
+            }
+            if (!$data['bottom_border_id'] && $data['top_border_id'] || $data['bottom_border_id'] && !$data['top_border_id']) {
+                throw new \Exception("You must select both a top border and a bottom border.");
+            }
+            if ($data['bottom_border_id'] > 0) {
+                $layer = Border::where('id', $data['bottom_border_id'])->whereNotNull('parent_id')->where('border_type', 'bottom')->first();
+                if (!$layer) {
+                    throw new \Exception("That bottom border does not exist.");
+                }
+                $toplayer = Border::where('id', $data['top_border_id'])->whereNotNull('parent_id')->where('border_type', 'top')->first();
+                if (!$toplayer) {
+                    throw new \Exception("That top border does not exist.");
+                }
+                //do some validation...
+                if (!Auth::user()->isStaff) {
+                    if (!$layer->parent->is_default || !$toplayer->parent->is_default) {
+                        if (!Auth::user()->hasBorder($layer->parent->id) || !Auth::user()->hasBorder($toplayer->parent->id)) {
+                            throw new \Exception("You do not own this border.");
+                        }
+                    }
+                    if (!$layer->is_active) {
+                        throw new \Exception("This bottom border is not active.");
+                    }
+                    if (!$toplayer->is_active) {
+                        throw new \Exception("This top border is not active.");
+                    }
+                    if ($layer->parent->admin_only || $toplayer->parent->admin_only) {
+                        throw new \Exception("You cannot select a staff border.");
+                    }
+                }
+            }
+
+            $user->border_id = $data['border'];
+            $user->border_variant_id = $data['border_variant_id'];
+            $user->bottom_border_id = $data['bottom_border_id'];
+            $user->top_border_id = $data['top_border_id'];
+
+            $user->save();
+
+            $user->settings->border_settings = [
+                'border_flip' => $data['border_flip'] ?? 0,
+            ];
             $user->settings->save();
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
-
-        return $this->rollbackReturn(false);
-    }
-
-    /**
-     * Reactivates a user account.
-     *
-     * @param \App\Models\User\User $user
-     * @param \App\Models\User\User $staff
-     *
-     * @return bool
-     */
-    public function reactivate($user, $staff = null) {
-        DB::beginTransaction();
-
-        try {
-            if (!$staff) {
-                $staff = $user;
-            }
-            if ($user->is_deactivated) {
-                $user->is_deactivated = 0;
-                $user->deactivater_id = null;
-                $user->save();
-
-                $user->settings->deactivate_reason = null;
-                $user->settings->deactivated_at = null;
-                $user->settings->save();
-                UserUpdateLog::create(['staff_id' => $staff ? $staff->id : $user->id, 'user_id' => $user->id, 'data' => json_encode(['is_deactivated' => 'No']), 'type' => 'Reactivation']);
-            }
-
-            Notifications::create('USER_REACTIVATED', User::find(Settings::get('admin_user')), [
-                'user_url'   => $user->url,
-                'user_name'  => ucfirst($user->name),
-                'staff_url'  => $staff->url,
-                'staff_name' => $staff->name,
-            ]);
-
-            return $this->commitReturn(true);
-        } catch (\Exception $e) {
-            $this->setError('error', $e->getMessage());
-        }
-
         return $this->rollbackReturn(false);
     }
 }

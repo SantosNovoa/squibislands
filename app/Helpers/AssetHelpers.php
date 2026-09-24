@@ -20,7 +20,7 @@
  */
 function getAssetKeys($isCharacter = false) {
     if (!$isCharacter) {
-        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes'];
+        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes', 'borders'];
     } else {
         return ['currencies', 'items', 'character_items', 'loot_tables', 'awards', 'elements', 'exp', 'points'];
     }
@@ -158,6 +158,11 @@ function getAssetModelString($type, $namespaced = true) {
 
         case 'points':
             return 'Points';
+            break;
+
+        case 'borders':
+            if($namespaced) return '\App\Models\Border\Border';
+            else return 'Border';
             break;
     }
 
@@ -505,6 +510,12 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
             $service = new \App\Services\RecipeService;
             foreach($contents as $asset)
                 if(!$service->creditRecipe($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
+        }
+        elseif($key == 'borders' && count($contents))
+        {
+            $service = new \App\Services\BorderService;
+            foreach($contents as $asset)
+                if(!$service->creditBorder($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
         }
     }
 

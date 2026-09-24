@@ -10,7 +10,6 @@
         ->pluck('name', 'id');
     $gears = \App\Models\Claymore\Gear::orderBy('name')->pluck('name', 'id');
     $weapons = \App\Models\Claymore\Weapon::orderBy('name')->pluck('name', 'id');
-    $pets = \App\Models\Pet\Pet::orderBy('name')->pluck('name', 'id');
     $stats =
         ['none' => 'General Point'] +
         \App\Models\Stat\Stat::orderBy('name')
@@ -31,6 +30,9 @@
             ->where('is_user_selectable', 0)
             ->pluck('name', 'id');
     }
+    if (isset($showBorders) && $showBorders) {
+        $borders = \App\Models\Border\Border::orderBy('name')->pluck('name', 'id');
+    }
 @endphp
 
 <div id="lootRowData" class="hide">
@@ -39,11 +41,12 @@
             <tr class="loot-row">
                 <td>{!! Form::select(
                         'rewardable_type[]',
-                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points'] 
+                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points']
                         + ($showLootTables ? ['LootTable' => 'Loot Table'] : [])
                         + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : [])
                         + (isset($showRecipes) && $showRecipes ? ['Recipe' => 'Recipe'] : [])
-                        + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : []),
+                        + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : [])
+                        + (isset($showBorders) && $showBorders ? ['Border' => 'Border'] : []),
                     null,
                     ['class' => 'form-control reward-type', 'placeholder' => 'Select Reward Type']
                 ) !!}
@@ -67,12 +70,14 @@
     @if ($showRaffles)
         {!! Form::select('rewardable_id[]', $raffles, null, ['class' => 'form-control raffle-select', 'placeholder' => 'Select Raffle']) !!}
     @endif
-    @if(isset($showRecipes) && $showRecipes)
+    @if (isset($showRecipes) && $showRecipes)
         {!! Form::select('rewardable_id[]', $recipes, null, ['class' => 'form-control recipe-select', 'placeholder' => 'Select Recipe']) !!}
     @endif
     @if (isset($showThemes) && $showThemes)
         {!! Form::select('rewardable_id[]', $themes, null, ['class' => 'form-control theme-select', 'placeholder' => 'Select Theme']) !!}
     @endif
+    @if (isset($showBorders) && $showBorders)
+        {!! Form::select('rewardable_id[]', $borders, null, ['class' => 'form-control border-select', 'placeholder' => 'Select Border']) !!}
+    @endif
     {!! Form::select('rewardable_id[]', $awards, null, ['class' => 'form-control award-select', 'placeholder' => 'Select ' . ucfirst(__('awards.award'))]) !!}
-
 </div>

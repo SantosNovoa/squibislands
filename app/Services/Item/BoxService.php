@@ -10,6 +10,7 @@ use App\Models\Currency\Currency;
 use App\Models\Loot\LootTable;
 use App\Models\Raffle\Raffle;
 use App\Models\Recipe\Recipe;
+use App\Models\Border\Border;
 
 class BoxService extends Service {
     /*
@@ -35,6 +36,7 @@ class BoxService extends Service {
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
             'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
+            'borders' => Border::base()->orderBy('name')->where('is_default', 0)->where('admin_only', 0)->pluck('name', 'id'),
         ];
     }
 
@@ -115,6 +117,8 @@ class BoxService extends Service {
                         break;
                     case 'Theme':
                         $type = 'App\Models\Theme';
+                    case 'Border':
+                        $type = 'App\Models\Border\Border';
                         break;
                 }
                 $asset = $type::find($data['rewardable_id'][$key]);

@@ -185,4 +185,5 @@ class Notification extends Model {
     public const CHARACTER_AWARD_REMOVAL = 346;
     public const RECIPE_GRANT = 600; // Draginraptor - Crafting
     public const DIRECT_MESSAGE_RECEIVED = 1005;
+    public const BORDER_GRANT                      = 1106;
 }

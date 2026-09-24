@@ -166,7 +166,11 @@ return [
                 'name' => 'Skill Grants',
                 'url'  => 'admin/grants/skills',
             ],
-        ],
+            [    
+                'name' => 'Border Grants',
+                'url' => 'admin/grants/borders'
+            ],
+        ]
     ],
     'Masterlist' => [
         'power' => 'manage_characters',
@@ -292,6 +296,10 @@ return [
 
                 'name' => 'Codes',
                 'url' => 'admin/prizecodes'
+            ],
+            [
+                'name' => 'User Borders',
+                'url' => 'admin/data/borders'
             ],
         ]
     ],

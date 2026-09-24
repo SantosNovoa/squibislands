@@ -19,7 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Character\CharacterTransformation as Transformation;
 
-class BrowseController extends Controller {
+class BrowseController extends Controller
+{
     /*
     |--------------------------------------------------------------------------
     | Browse Controller
@@ -34,13 +35,14 @@ class BrowseController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUsers(Request $request) {
+    public function getUsers(Request $request)
+    {
         $query = User::visible()->with('primaryAlias')->join('ranks', 'users.rank_id', '=', 'ranks.id')->select('ranks.name AS rank_name', 'users.*');
         $sort = $request->only(['sort']);
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('users.name', 'LIKE', '%'.$request->get('name').'%');
+                $query->where('users.name', 'LIKE', '%' . $request->get('name') . '%');
             });
         }
         if ($request->get('rank_id')) {
@@ -87,17 +89,20 @@ class BrowseController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeactivated(Request $request) {
+    public function getDeactivated(Request $request)
+    {
         $canView = false;
         $key = Settings::get('deactivated_key');
 
         // First, check the display settings for the deactivated...
         $privacy = Settings::get('deactivated_privacy');
-        if ($privacy == 3 ||
+        if (
+            $privacy == 3 ||
             (Auth::check() &&
-            ($privacy == 2 ||
-            ($privacy == 1 && Auth::user()->isStaff) ||
-            ($privacy == 0 && Auth::user()->isAdmin)))) {
+                ($privacy == 2 ||
+                    ($privacy == 1 && Auth::user()->isStaff) ||
+                    ($privacy == 0 && Auth::user()->isAdmin)))
+        ) {
             // Next, check if the deactivated requires a key
             $canView = true;
             if ($key != '0' && ($request->get('key') != $key)) {
@@ -119,34 +124,37 @@ class BrowseController extends Controller {
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function getTeamIndex()
-{
-    $staffRanks = RankPower::distinct()->get(['rank_id']);
-    $staffRanks->push(User::where("id", Settings::get('admin_user'))->first()->rank_id);
-    $staff = User::whereIn('rank_id', $staffRanks)->get()->groupBy('rank_id');
-    $ranks = Rank::orderBy('sort', 'DESC')->get();
-    
-    return view('browse.team_index', [
-        'staff' => $staff,
-        'ranks' => $ranks
-    ]);
-}
+    {
+        $staffRankIds = RankPower::distinct()->pluck('rank_id');
+        $staffRankIds->push(User::where('id', Settings::get('admin_user'))->first()->rank_id);
+        $staff = User::whereIn('rank_id', $staffRankIds)->get()->groupBy('rank_id');
+        $ranks = Rank::orderBy('sort', 'DESC')->get();
+
+        return view('browse.team_index', [
+            'staff' => $staff,
+            'ranks' => $ranks,
+        ]);
+    }
 
     /**
      * Shows the user blacklist.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getBlacklist(Request $request) {
+    public function getBlacklist(Request $request)
+    {
         $canView = false;
         $key = Settings::get('blacklist_key');
 
         // First, check the display settings for the blacklist...
         $privacy = Settings::get('blacklist_privacy');
-        if ($privacy == 3 ||
+        if (
+            $privacy == 3 ||
             (Auth::check() &&
-            ($privacy == 2 ||
-            ($privacy == 1 && Auth::user()->isStaff) ||
-            ($privacy == 0 && Auth::user()->isAdmin)))) {
+                ($privacy == 2 ||
+                    ($privacy == 1 && Auth::user()->isStaff) ||
+                    ($privacy == 0 && Auth::user()->isAdmin)))
+        ) {
             // Next, check if the blacklist requires a key
             $canView = true;
             if ($key != '0' && ($request->get('key') != $key)) {
@@ -167,7 +175,8 @@ class BrowseController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacters(Request $request) {
+    public function getCharacters(Request $request)
+    {
         $query = Character::with('user.rank', 'image.features', 'rarity', 'image.species', 'image.rarity')->myo(0);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features', 'rarity', 'species', 'features');
 
@@ -185,7 +194,7 @@ class BrowseController extends Controller {
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('characters.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('characters.slug', 'LIKE', '%'.$request->get('name').'%');
+                $query->where('characters.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('characters.slug', 'LIKE', '%' . $request->get('name') . '%');
             });
         }
         if ($request->get('rarity_id')) {
@@ -224,7 +233,7 @@ class BrowseController extends Controller {
         if ($request->get('owner_url')) {
             $ownerUrl = $request->get('owner_url');
             $query->where(function ($query) use ($ownerUrl) {
-                $query->where('owner_url', 'LIKE', '%'.$ownerUrl.'%');
+                $query->where('owner_url', 'LIKE', '%' . $ownerUrl . '%');
             });
         }
 
@@ -262,9 +271,9 @@ class BrowseController extends Controller {
                 $imageQuery->whereRelation('titles', 'title_id', $request->get('title_id'));
             }
         }
-        
+
         if ($request->get('title_id') == 'custom' && $request->get('title_data')) {
-            $imageQuery->whereRelation('titles', 'title_data', 'LIKE', '%'.$request->get('title_data').'%');
+            $imageQuery->whereRelation('titles', 'title_data', 'LIKE', '%' . $request->get('title_data') . '%');
         }
 
         if ($request->get('artist')) {
@@ -282,19 +291,19 @@ class BrowseController extends Controller {
         if ($request->get('artist_url')) {
             $artistUrl = $request->get('artist_url');
             $imageQuery->whereHas('artists', function ($query) use ($artistUrl) {
-                $query->where('url', 'LIKE', '%'.$artistUrl.'%');
+                $query->where('url', 'LIKE', '%' . $artistUrl . '%');
             });
         }
         if ($request->get('designer_url')) {
             $designerUrl = $request->get('designer_url');
             $imageQuery->whereHas('designers', function ($query) use ($designerUrl) {
-                $query->where('url', 'LIKE', '%'.$designerUrl.'%');
+                $query->where('url', 'LIKE', '%' . $designerUrl . '%');
             });
         }
 
         //search theme
-        if($request->get('theme')) {
-            $imageQuery->where('theme', 'LIKE', '%' . $request->get('theme') . '%');    
+        if ($request->get('theme')) {
+            $imageQuery->where('theme', 'LIKE', '%' . $request->get('theme') . '%');
         }
 
         $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
@@ -364,7 +373,7 @@ class BrowseController extends Controller {
             'features'    => Feature::getDropdownItems(),
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'transformations' => [0 => 'Any '.ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'transformations' => [0 => 'Any ' . ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'titles'      => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }
@@ -374,14 +383,15 @@ class BrowseController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyos(Request $request) {
+    public function getMyos(Request $request)
+    {
         $query = Character::with('user.rank', 'image.features', 'rarity', 'image.species', 'image.rarity')->myo(1);
 
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features', 'rarity', 'species', 'features');
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('characters.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('characters.slug', 'LIKE', '%'.$request->get('name').'%');
+                $query->where('characters.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('characters.slug', 'LIKE', '%' . $request->get('name') . '%');
             });
         }
         if ($request->get('rarity_id')) {
@@ -417,7 +427,7 @@ class BrowseController extends Controller {
         if ($request->get('owner_url')) {
             $ownerUrl = $request->get('owner_url');
             $query->where(function ($query) use ($ownerUrl) {
-                $query->where('owner_url', 'LIKE', '%'.$ownerUrl.'%');
+                $query->where('owner_url', 'LIKE', '%' . $ownerUrl . '%');
             });
         }
 
@@ -445,13 +455,13 @@ class BrowseController extends Controller {
         if ($request->get('artist_url')) {
             $artistUrl = $request->get('artist_url');
             $imageQuery->whereHas('artists', function ($query) use ($artistUrl) {
-                $query->where('url', 'LIKE', '%'.$artistUrl.'%');
+                $query->where('url', 'LIKE', '%' . $artistUrl . '%');
             });
         }
         if ($request->get('designer_url')) {
             $designerUrl = $request->get('designer_url');
             $imageQuery->whereHas('designers', function ($query) use ($designerUrl) {
-                $query->where('url', 'LIKE', '%'.$designerUrl.'%');
+                $query->where('url', 'LIKE', '%' . $designerUrl . '%');
             });
         }
         if ($request->get('feature_ids')) {
@@ -505,7 +515,8 @@ class BrowseController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSublist(Request $request, $key) {
+    public function getSublist(Request $request, $key)
+    {
         $query = Character::with('user.rank', 'image.features', 'rarity', 'image.species', 'image.rarity')->myo(0);
         $imageQuery = CharacterImage::with('features', 'rarity', 'species', 'features');
 
@@ -525,7 +536,7 @@ class BrowseController extends Controller {
 
         if ($request->get('name')) {
             $query->where(function ($query) use ($request) {
-                $query->where('characters.name', 'LIKE', '%'.$request->get('name').'%')->orWhere('characters.slug', 'LIKE', '%'.$request->get('name').'%');
+                $query->where('characters.name', 'LIKE', '%' . $request->get('name') . '%')->orWhere('characters.slug', 'LIKE', '%' . $request->get('name') . '%');
             });
         }
         if ($request->get('rarity_id')) {
@@ -590,7 +601,7 @@ class BrowseController extends Controller {
         if ($request->get('owner_url')) {
             $ownerUrl = $request->get('owner_url');
             $query->where(function ($query) use ($ownerUrl) {
-                $query->where('owner_url', 'LIKE', '%'.$ownerUrl.'%');
+                $query->where('owner_url', 'LIKE', '%' . $ownerUrl . '%');
             });
         }
 
@@ -629,7 +640,7 @@ class BrowseController extends Controller {
             }
         }
         if ($request->get('title_id') == 'custom' && $request->get('title_data')) {
-            $imageQuery->where('title_data', 'LIKE', '%'.$request->get('title_data').'%');
+            $imageQuery->where('title_data', 'LIKE', '%' . $request->get('title_data') . '%');
         }
 
         if ($request->get('artist')) {
@@ -647,19 +658,19 @@ class BrowseController extends Controller {
         if ($request->get('artist_url')) {
             $artistUrl = $request->get('artist_url');
             $imageQuery->whereHas('artists', function ($query) use ($artistUrl) {
-                $query->where('url', 'LIKE', '%'.$artistUrl.'%');
+                $query->where('url', 'LIKE', '%' . $artistUrl . '%');
             });
         }
         if ($request->get('designer_url')) {
             $designerUrl = $request->get('designer_url');
             $imageQuery->whereHas('designers', function ($query) use ($designerUrl) {
-                $query->where('url', 'LIKE', '%'.$designerUrl.'%');
+                $query->where('url', 'LIKE', '%' . $designerUrl . '%');
             });
         }
 
         //search theme
-        if($request->get('theme')) {
-            $imageQuery->where('theme', 'LIKE', '%' . $request->get('theme') . '%');    
+        if ($request->get('theme')) {
+            $imageQuery->where('theme', 'LIKE', '%' . $request->get('theme') . '%');
         }
 
         $query->whereIn('id', $imageQuery->pluck('character_id')->toArray());
@@ -712,7 +723,7 @@ class BrowseController extends Controller {
             'sublist'     => $sublist,
             'sublists'    => Sublist::orderBy('sort', 'DESC')->get(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'transformations' => [0 => 'Any '.ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'transformations' => [0 => 'Any ' . ucfirst(__('transformations.transformation'))] + Transformation::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'titles'      => [0 => 'Any Title', 'custom' => 'Custom Title'] + CharacterTitle::orderBy('character_titles.sort', 'DESC')->pluck('title', 'id')->toArray(),
         ]);
     }

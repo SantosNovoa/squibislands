@@ -43,7 +43,7 @@
         @include('user._profile_content', ['user' => $user, 'deactivated' => $user->is_deactivated])
     @endif
 
-<!-- Uncomment this to restore the original character display.
+<!-- original character display
     <h2>
         {{-- <a href="{{ $user->url.'/characters' }}">Characters</a> --}}
         {{-- @if(isset($sublists) && $sublists->count() > 0)

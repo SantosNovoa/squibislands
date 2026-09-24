@@ -1,14 +1,10 @@
 @php
-    // This file represents a common source and definition for assets used in loot_select
-    // While it is not per se as tidy as defining these in the controller(s),
-    // doing so this way enables better compatibility across disparate extensions
     $characterCurrencies = \App\Models\Currency\Currency::where('is_character_owned', 1)->orderBy('sort_character', 'DESC')->pluck('name', 'id');
     $items = \App\Models\Item\Item::orderBy('name')->pluck('name', 'id');
     $pets = \App\Models\Pet\Pet::orderBy('name')->pluck('name', 'id');
     $currencies = \App\Models\Currency\Currency::where('is_user_owned', 1)
         ->orderBy('name')
         ->pluck('name', 'id');
-    $pets = \App\Models\Pet\Pet::orderBy('name')->pluck('name', 'id');
     $weapons = \App\Models\Claymore\Weapon::orderBy('name')->pluck('name', 'id');
     $gears = \App\Models\Claymore\Gear::orderBy('name')->pluck('name', 'id');
     $stats =
@@ -26,6 +22,9 @@
         $themes = \App\Models\Theme::orderBy('name')
             ->where('is_user_selectable', 0)
             ->pluck('name', 'id');
+    }
+    if (isset($showBorders) && $showBorders) {
+        $borders = \App\Models\Border\Border::orderBy('name')->pluck('name', 'id');
     }
     $awards = \App\Models\Award\Award::orderBy('name')->pluck('name', 'id');
 @endphp
@@ -48,7 +47,12 @@
                 <tr class="loot-row">
                     <td>{!! Form::select(
                         'rewardable_type[]',
-                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points'] + ($showLootTables ? ['LootTable' => 'Loot Table'] : []) + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : []) + ($showRecipes ? ['Recipe' => 'Recipe'] : []) + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : []),
+                        ['Item' => 'Item', 'Currency' => 'Currency', 'Award' => ucfirst(__('awards.award')), 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon', 'Exp' => 'Exp', 'Points' => 'Stat Points']
+                        + ($showLootTables ? ['LootTable' => 'Loot Table'] : [])
+                        + ($showRaffles ? ['Raffle' => 'Raffle Ticket'] : [])
+                        + ($showRecipes ? ['Recipe' => 'Recipe'] : [])
+                        + (isset($showThemes) && $showThemes ? ['Theme' => 'Theme'] : [])
+                        + (isset($showBorders) && $showBorders ? ['Border' => 'Border'] : []),
                         $loot->rewardable_type,
                         [
                             'class' => 'form-control reward-type',
@@ -80,6 +84,8 @@
                             {!! Form::text('rewardable_id[]', null, ['class' => 'form-control hide claymore-select', 'placeholder' => 'Enter Reward']) !!}
                         @elseif(isset($showThemes) && $showThemes && $loot->rewardable_type == 'Theme')
                             {!! Form::select('rewardable_id[]', $themes, $loot->rewardable_id, ['class' => 'form-control theme-select selectize', 'placeholder' => 'Select Theme']) !!}
+                        @elseif(isset($showBorders) && $showBorders && $loot->rewardable_type == 'Border')
+                            {!! Form::select('rewardable_id[]', $borders, $loot->rewardable_id, ['class' => 'form-control border-select selectize', 'placeholder' => 'Select Border']) !!}
                         @endif
                     </td>
                     <td>{!! Form::text('quantity[]', $loot->quantity, ['class' => 'form-control']) !!}</td>

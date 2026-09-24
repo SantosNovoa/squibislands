@@ -11,6 +11,7 @@ use App\Models\Character\CharacterImage;
 use App\Models\Character\CharacterCategory;
 use App\Models\Character\CharacterFolder;
 use App\Models\Character\Sublist;
+use App\Models\Border\Border;
 use App\Models\User\UserPrizeLog;
 use App\Models\Claymore\GearCategory;
 use App\Models\Claymore\WeaponCategory;
@@ -733,6 +734,42 @@ class UserController extends Controller {
         return view('home._redeem_logs', [
             'user' => $this->user,
             'logs' => $this->user->getRedeemLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's borders.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserBorders($name)
+    {
+        $default =  Border::base()->active(Auth::user() ?? null)->where('is_default', 1)->get();
+        $admin = Border::base()->where('admin_only', 1)->get();
+        
+        return view('user.borders', [
+            'user' => $this->user,
+            'default' => $default,
+            'admin' => $admin,
+            'logs' => $this->user->getBorderLogs(),
+        ]);
+    }
+
+    /**
+     * Shows a user's border logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserBorderLogs($name)
+    {
+        $user = $this->user;
+
+        return view('user.border_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getBorderLogs(0),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }
