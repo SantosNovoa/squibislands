@@ -53,7 +53,7 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'currencies':
+        case 'currencies': case 'currency':
             if ($namespaced) {
                 return '\App\Models\Currency\Currency';
             } else {
@@ -85,7 +85,7 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'raffle_tickets':
+        case 'raffle_tickets': case 'raffle':
             if ($namespaced) {
                 return '\App\Models\Raffle\Raffle';
             } else {
@@ -93,7 +93,7 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'loot_tables':
+        case 'loot_tables': case 'loottable':
             if ($namespaced) {
                 return '\App\Models\Loot\LootTable';
             } else {
@@ -117,7 +117,7 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'characters':
+        case 'characters': case 'character':
             if ($namespaced) {
                 return '\App\Models\Character\Character';
             } else {
@@ -126,8 +126,11 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'recipes':
-            if($namespaced) return '\App\Models\Recipe\Recipe';
-            else return 'Recipe';
+            if ($namespaced) {
+                return '\App\Models\Recipe\Recipe';
+            } else {
+                return 'Recipe';
+            }
             break;
 
         case 'character_items':
@@ -137,6 +140,7 @@ function getAssetModelString($type, $namespaced = true) {
                 return 'CharacterItem';
             }
             break;
+
         case 'themes':
             if ($namespaced) {
                 return '\App\Models\Theme';
@@ -144,6 +148,7 @@ function getAssetModelString($type, $namespaced = true) {
                 return 'Theme';
             }
             break;
+
         case 'elements':
             if ($namespaced) {
                 return '\App\Models\Element\Element';
@@ -151,7 +156,8 @@ function getAssetModelString($type, $namespaced = true) {
                 return 'Element';
             }
             break;
-            // these are special cases, as they do not specifically have a unique model
+
+        // these are special cases, as they do not specifically have a unique model
         case 'exp':
             return 'Exp';
             break;
@@ -161,8 +167,11 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'borders':
-            if($namespaced) return '\App\Models\Border\Border';
-            else return 'Border';
+            if ($namespaced) {
+                return '\App\Models\Border\Border';
+            } else {
+                return 'Border';
+            }
             break;
     }
 
