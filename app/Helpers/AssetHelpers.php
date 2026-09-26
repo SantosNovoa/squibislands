@@ -18,7 +18,8 @@
  *
  * @return array
  */
-function getAssetKeys($isCharacter = false) {
+function getAssetKeys($isCharacter = false)
+{
     if (!$isCharacter) {
         return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes', 'borders'];
     } else {
@@ -35,9 +36,11 @@ function getAssetKeys($isCharacter = false) {
  *
  * @return string
  */
-function getAssetModelString($type, $namespaced = true) {
+function getAssetModelString($type, $namespaced = true)
+{
     switch ($type) {
-        case 'items': case 'item':
+        case 'items':
+        case 'item':
             if ($namespaced) {
                 return '\App\Models\Item\Item';
             } else {
@@ -46,6 +49,7 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'awards':
+        case 'award':
             if ($namespaced) {
                 return '\App\Models\Award\Award';
             } else {
@@ -53,7 +57,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'currencies': case 'currency':
+        case 'currencies':
+        case 'currency':
             if ($namespaced) {
                 return '\App\Models\Currency\Currency';
             } else {
@@ -61,7 +66,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'pets': case 'pet':
+        case 'pets':
+        case 'pet':
             if ($namespaced) {
                 return '\App\Models\Pet\Pet';
             } else {
@@ -69,7 +75,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'weapons': case 'weapon':
+        case 'weapons':
+        case 'weapon':
             if ($namespaced) {
                 return '\App\Models\Claymore\Weapon';
             } else {
@@ -77,7 +84,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'gears': case 'gear':
+        case 'gears':
+        case 'gear':
             if ($namespaced) {
                 return '\App\Models\Claymore\Gear';
             } else {
@@ -85,7 +93,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'raffle_tickets': case 'raffle':
+        case 'raffle_tickets':
+        case 'raffle':
             if ($namespaced) {
                 return '\App\Models\Raffle\Raffle';
             } else {
@@ -93,7 +102,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'loot_tables': case 'loottable':
+        case 'loot_tables':
+        case 'loottable':
             if ($namespaced) {
                 return '\App\Models\Loot\LootTable';
             } else {
@@ -117,7 +127,8 @@ function getAssetModelString($type, $namespaced = true) {
             }
             break;
 
-        case 'characters': case 'character':
+        case 'characters':
+        case 'character':
             if ($namespaced) {
                 return '\App\Models\Character\Character';
             } else {
@@ -126,6 +137,7 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'recipes':
+        case 'recipe':
             if ($namespaced) {
                 return '\App\Models\Recipe\Recipe';
             } else {
@@ -142,6 +154,7 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'themes':
+        case 'theme':
             if ($namespaced) {
                 return '\App\Models\Theme';
             } else {
@@ -167,6 +180,7 @@ function getAssetModelString($type, $namespaced = true) {
             break;
 
         case 'borders':
+        case 'border':
             if ($namespaced) {
                 return '\App\Models\Border\Border';
             } else {
@@ -185,7 +199,8 @@ function getAssetModelString($type, $namespaced = true) {
  *
  * @return array
  */
-function createAssetsArray($isCharacter = false) {
+function createAssetsArray($isCharacter = false)
+{
     $keys = getAssetKeys($isCharacter);
     $assets = [];
     foreach ($keys as $key) {
@@ -203,7 +218,8 @@ function createAssetsArray($isCharacter = false) {
  *
  * @return array
  */
-function mergeAssetsArrays($first, $second) {
+function mergeAssetsArrays($first, $second)
+{
     $keys = getAssetKeys();
     foreach ($keys as $key) {
         foreach ($second[$key] as $item) {
@@ -222,7 +238,8 @@ function mergeAssetsArrays($first, $second) {
  * @param mixed $asset
  * @param int   $quantity
  */
-function addAsset(&$array, $asset, $quantity = 1) {
+function addAsset(&$array, $asset, $quantity = 1)
+{
     if (!$asset) {
         return;
     }
@@ -247,7 +264,8 @@ function addAsset(&$array, $asset, $quantity = 1) {
  * @param mixed $asset
  * @param int   $quantity
  */
-function removeAsset(&$array, $asset, $quantity = 1) {
+function removeAsset(&$array, $asset, $quantity = 1)
+{
     if (!$asset) {
         return;
     }
@@ -269,7 +287,8 @@ function removeAsset(&$array, $asset, $quantity = 1) {
  *
  * @return array
  */
-function getDataReadyAssets($array, $isCharacter = false) {
+function getDataReadyAssets($array, $isCharacter = false)
+{
     $result = [];
     foreach ($array as $key => $type) {
         if ($type && !isset($result[$key])) {
@@ -300,7 +319,8 @@ function getDataReadyAssets($array, $isCharacter = false) {
  * @param mixed $min_quantity
  * @param mixed $max_quantity
  */
-function addDropAsset(&$array, $asset, $min_quantity = 1, $max_quantity = 1) {
+function addDropAsset(&$array, $asset, $min_quantity = 1, $max_quantity = 1)
+{
     if (!$asset) {
         return;
     }
@@ -320,7 +340,8 @@ function addDropAsset(&$array, $asset, $min_quantity = 1, $max_quantity = 1) {
  *
  * @return array
  */
-function getDataReadyDropAssets($array) {
+function getDataReadyDropAssets($array)
+{
     $result = [];
     foreach ($array as $group => $types) {
         $result[$group] = [];
@@ -352,7 +373,8 @@ function getDataReadyDropAssets($array) {
  *
  * @return array
  */
-function parseDropAssetData($array) {
+function parseDropAssetData($array)
+{
     $result = [];
     foreach ($array as $group => $types) {
         $result[$group] = [];
@@ -384,7 +406,8 @@ function parseDropAssetData($array) {
  *
  * @return array
  */
-function parseAssetData($array) {
+function parseAssetData($array)
+{
     $assets = createAssetsArray();
     foreach ($array as $key => $contents) {
         $model = getAssetModelString($key);
@@ -415,7 +438,8 @@ function parseAssetData($array) {
  *
  * @return array
  */
-function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
+function fillUserAssets($assets, $sender, $recipient, $logType, $data)
+{
     // Roll on any loot tables
     if (isset($assets['loot_tables'])) {
         foreach ($assets['loot_tables'] as $table) {
@@ -514,17 +538,14 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
                 }
             }
         }
-        if($key == 'recipes' && count($contents))
-        {
+        if ($key == 'recipes' && count($contents)) {
             $service = new \App\Services\RecipeService;
-            foreach($contents as $asset)
-                if(!$service->creditRecipe($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
-        }
-        elseif($key == 'borders' && count($contents))
-        {
+            foreach ($contents as $asset)
+                if (!$service->creditRecipe($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
+        } elseif ($key == 'borders' && count($contents)) {
             $service = new \App\Services\BorderService;
-            foreach($contents as $asset)
-                if(!$service->creditBorder($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
+            foreach ($contents as $asset)
+                if (!$service->creditBorder($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
         }
     }
 
@@ -544,7 +565,8 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data) {
  *
  * @return array
  */
-function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $submitter = null) {
+function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $submitter = null)
+{
     if (!Config::get('lorekeeper.extensions.character_reward_expansion.default_recipient') && $recipient->user) {
         $item_recipient = $recipient->user;
     } else {
@@ -611,11 +633,12 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
  *
  * @return string
  */
-function createRewardsString($array) {
+function createRewardsString($array)
+{
     $string = [];
     foreach ($array as $key => $contents) {
         foreach ($contents as $asset) {
-            $string[] = $asset['asset']->displayName.' x'.$asset['quantity'];
+            $string[] = $asset['asset']->displayName . ' x' . $asset['quantity'];
         }
     }
     if (!count($string)) {
@@ -626,7 +649,7 @@ function createRewardsString($array) {
         return implode(', ', $string);
     }
 
-    return implode(', ', array_slice($string, 0, count($string) - 1)).(count($string) > 2 ? ', and ' : ' and ').end($string);
+    return implode(', ', array_slice($string, 0, count($string) - 1)) . (count($string) > 2 ? ', and ' : ' and ') . end($string);
 }
 
 /**
@@ -636,7 +659,8 @@ function createRewardsString($array) {
  * @param mixed $id
  * @param mixed $isCharacter
  */
-function findReward($type, $id, $isCharacter = false) {
+function findReward($type, $id, $isCharacter = false)
+{
     $reward = null;
     switch ($type) {
         case 'Item':
@@ -670,7 +694,8 @@ function findReward($type, $id, $isCharacter = false) {
  *
  * @return array
  */
-function processRewards($rewards, $isCharacter = false) {
+function processRewards($rewards, $isCharacter = false)
+{
     $assets = createAssetsArray($isCharacter);
     foreach ($rewards as $reward) {
         addAsset($assets, $reward->reward, $reward->quantity);
@@ -690,9 +715,20 @@ function processRewards($rewards, $isCharacter = false) {
  *
  * @return array
  */
-function getRewardTypes($showData, $recipient) {
+function getRewardTypes($showData, $recipient)
+{
     if ($recipient == 'User') {
-        return ['Item' => 'Item', 'Currency' => 'Currency'] +
+        return [
+            'Item'     => 'Item',
+            'Currency' => 'Currency',
+            'Award'    => 'Badge',
+            'Pet'      => 'Pet',
+            'Gear'     => 'Gear',
+            'Weapon'   => 'Weapon',
+            'Border'   => 'User Border',
+            'Theme'    => 'Theme',
+            'Recipe'   => 'Recipe',
+        ] +
             (($showData['showLootTables'] ?? false) ? ['LootTable' => 'Loot Table'] : []) +
             (($showData['showRaffles'] ?? false) ? ['Raffle' => 'Raffle Ticket'] : []) +
             (($showData['showCharacters'] ?? false) ? ['Character' => 'Character'] : []);
@@ -714,7 +750,8 @@ function getRewardTypes($showData, $recipient) {
  *
  * @return array
  */
-function getRewardLootData($showData, $recipient = 'User', $useCustomSelectize = false) {
+function getRewardLootData($showData, $recipient = 'User', $useCustomSelectize = false)
+{
     $rewardTypes = getRewardTypes($showData, $recipient);
     $isTradeable = $showData['isTradeable'] ?? false;
 
@@ -748,6 +785,27 @@ function getRewardLootData($showData, $recipient = 'User', $useCustomSelectize =
                         $query->where('allow_user_to_user', 1);
                     }
                 })->orderBy('sort_character', 'DESC');
+                break;
+            case 'Award':
+                $query = App\Models\Award\Award::orderBy('name');
+                break;
+            case 'Pet':
+                $query = App\Models\Pet\Pet::orderBy('name');
+                break;
+            case 'Gear':
+                $query = App\Models\Claymore\Gear::orderBy('name');
+                break;
+            case 'Weapon':
+                $query = App\Models\Claymore\Weapon::orderBy('name');
+                break;
+            case 'Border':
+                $query = App\Models\Border\Border::orderBy('name');
+                break;
+            case 'Theme':
+                $query = App\Models\Theme::orderBy('name');
+                break;
+            case 'Recipe':
+                $query = App\Models\Recipe\Recipe::orderBy('name');
                 break;
             case 'LootTable':
                 $query = App\Models\Loot\LootTable::orderBy('name');
