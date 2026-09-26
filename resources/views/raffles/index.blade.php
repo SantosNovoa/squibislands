@@ -26,13 +26,18 @@
 
                 <ul class="list-group list-group-flush">
                     @foreach ($raffle as $r)
+                        @php
+                            $rHasRewards = hasRewards($r);
+                            $canEnter = $r->allow_entry && !$r->rolled_at;
+                            $hasBody = $r->parsed_description || $rHasRewards || $canEnter;
+                        @endphp
                         <li class="list-group-item">
                             <div class="card">
-                                <div class="card-header h5 row m-0 {{ !$r->parsed_description && !hasRewards($r) ? 'border-bottom-0' : '' }}" data-toggle="collapse" href="#raffle-{{ $r->id }}">
+                                <div class="card-header h5 row m-0 {{ !$hasBody ? 'border-bottom-0' : '' }}" data-toggle="collapse" href="#raffle-{{ $r->id }}">
                                     <div class="col-lg-9 col-12 p-0">
                                         <a href="{{ url('raffles/view/' . $r->id) }}">{{ $r->name }} {{ $r->is_fto ? ' (FTO / Non-Owner Only)' : '' }}</a>
                                         {!! $r->rolled_at ? '<span class="text-muted small">(Rolled ' . pretty_date($r->rolled_at) . ')</span>' : '' !!}
-                                        @if ($r->parsed_description || hasRewards($r))
+                                        @if ($hasBody)
                                             <i class="fas fa-chevron-down float-right mt-1 mr-2"></i>
                                         @endif
                                     </div>
@@ -45,12 +50,12 @@
                                         </div>
                                     @endif
                                 </div>
-                                @if ($r->parsed_description || hasRewards($r))
+                                @if ($hasBody)
                                     <div class="card-body collapse show" id="raffle-{{ $r->id }}">
                                         @if ($r->parsed_description)
                                             {!! $r->parsed_description !!}
                                         @endif
-                                        @if ($r->parsed_description && hasRewards($r))
+                                        @if ($r->parsed_description && $rHasRewards)
                                             <hr>
                                         @endif
                                         @if (getRewards($r, true)->where('data->type', 'winner_reward')->count())
@@ -60,7 +65,7 @@
 
                                                 $grouped = $winnerRewards
                                                     ->groupBy(function ($reward) {
-                                                        return data_get($reward->data, 'position', 1); // or $reward->data['position'] ?? 1
+                                                        return data_get($reward->data, 'position', 1);
                                                     })
                                                     ->sortKeys();
                                             @endphp
@@ -70,13 +75,24 @@
                                                     <div class="card-body">
                                                         <div class="row">
                                                             @foreach ($rewards as $reward)
-                                                                <div class="col-md-3 mt-3 text-center">
-                                                                    @if ($reward->reward->imageUrl)
+                                                                @php
+                                                                    $asset = $reward->reward;
+                                                                    $isCharacter = $asset instanceof \App\Models\Character\Character;
+                                                                    $imageUrl = $isCharacter ? $asset->image?->thumbnailUrl : $asset?->imageUrl;
+                                                                @endphp
+                                                                <div class="col-md-2 mt-3 text-center">
+                                                                    @if ($imageUrl)
                                                                         <div class="mb-2">
-                                                                            <img class="border rounded img-fluid" src="{{ $reward->reward->imageUrl }}" alt="{{ $reward->reward->name }}" />
+                                                                            @if ($isCharacter)
+                                                                                <a href="{{ $asset->url }}">
+                                                                                    <img class="border rounded img-fluid" src="{{ $imageUrl }}" alt="{{ $asset->fullName }}" style="width: 150px; height: 150px;"/>
+                                                                                </a>
+                                                                            @else
+                                                                                <img class="border rounded img-fluid" src="{{ $imageUrl }}" alt="{{ $asset->name }}" style="width: 150px; height: 150px;"/>
+                                                                            @endif
                                                                         </div>
                                                                     @endif
-                                                                    <span class="mr-1">{{ $reward->quantity }}x</span> {!! $reward->reward->displayName !!}
+                                                                    <span class="mr-1">{{ $reward->quantity }}x</span> {!! $asset?->displayName !!}
                                                                 </div>
                                                             @endforeach
                                                         </div>
@@ -84,7 +100,7 @@
                                                 </div>
                                             @endforeach
                                         @endif
-                                        @if ($r->allow_entry && !$r->rolled_at)
+                                        @if ($canEnter)
                                             @if (Auth::user())
                                                 @if ($r->tickets()->where('user_id', Auth::user()->id)->count() >= 1)
                                                     <button class="btn btn-primary float-right" disabled>Already Joined</button>

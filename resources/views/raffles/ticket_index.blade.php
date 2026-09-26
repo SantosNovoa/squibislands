@@ -32,13 +32,24 @@
                 <div class="card-body">
                     <div class="row">
                         @foreach ($rewards as $reward)
-                            <div class="col-md-3 mt-3 text-center">
-                                @if ($reward->reward->imageUrl)
+                            @php
+                                $asset = $reward->reward;
+                                $isCharacter = $asset instanceof \App\Models\Character\Character;
+                                $imageUrl = $isCharacter ? $asset->image?->thumbnailUrl : $asset?->imageUrl;
+                            @endphp
+                            <div class="col-md-2 mt-3 text-center">
+                                @if ($imageUrl)
                                     <div class="mb-2">
-                                        <img class="border rounded img-fluid" src="{{ $reward->reward->imageUrl }}" alt="{{ $reward->reward->name }}" />
+                                        @if ($isCharacter)
+                                            <a href="{{ $asset->url }}">
+                                                <img class="border rounded img-fluid" src="{{ $imageUrl }}" alt="{{ $asset->fullName }}" style="width: 150px; height: 150px;" />
+                                            </a>
+                                        @else
+                                            <img class="border rounded img-fluid" src="{{ $imageUrl }}" alt="{{ $asset->name }}" style="width: 150px; height: 150px;" />
+                                        @endif
                                     </div>
                                 @endif
-                                <span class="mr-1">{{ $reward->quantity }}x</span> {!! $reward->reward->displayName !!}
+                                <span class="mr-1">{{ $reward->quantity }}x</span> {!! $asset?->displayName !!}
                             </div>
                         @endforeach
                     </div>
