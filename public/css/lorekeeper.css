@@ -1740,3 +1740,9 @@ a.text-warning:focus {
 .col-lg-9.col-12.p-0 a {
   color: white;
 }
+
+@media (max-width: 849.98px) {
+    #app {
+        background-size: cover;
+    }
+}
