@@ -398,3 +398,13 @@ Route::group(['prefix' => 'redeem-code', 'namespace' => 'Users'], function() {
     Route::get('/', 'PrizeCodeController@getIndex');
     Route::post('/redeem', 'PrizeCodeController@postRedeemPrize');
 });
+
+/**************************************************************************************************
+    Rewards
+**************************************************************************************************/
+Route::group(['prefix' => 'rewards'], function () {
+    Route::post('/types', 'RewardController@postRewardTypes');
+});
+
+// RAFFLE SELF ENTRY - NEWT
+Route::post('/raffles/enter/{id}', 'RaffleController@selfEnter');

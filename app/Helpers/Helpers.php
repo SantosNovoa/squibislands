@@ -540,3 +540,32 @@ function allAttachments($model) {
 function getDisplayName($model, $id) {
     return $model::find($id)?->displayName;
 }
+
+
+/**
+ * Gets the rewards attached to a certain object.
+ *
+ * @param mixed $object
+ * @param mixed $query
+ *
+ * @return mixed
+ */
+function getRewards($object, $query = false) {
+    $rewards = App\Models\Reward\Reward::where('object_model', get_class($object))->where('object_id', $object->id);
+    if ($query) {
+        return $rewards;
+    }
+
+    return $rewards->get();
+}
+
+/**
+ * Checks if a certain object has any rewards.
+ *
+ * @param mixed $object
+ *
+ * @return bool
+ */
+function hasRewards($object) {
+    return App\Models\Reward\Reward::where('object_model', get_class($object))->where('object_id', $object->id)->exists();
+}

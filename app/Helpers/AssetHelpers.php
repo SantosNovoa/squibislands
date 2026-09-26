@@ -652,3 +652,124 @@ function findReward($type, $id, $isCharacter = false) {
 
     return $reward;
 }
+
+/**
+ * Processes the associated Rewards objects into an asset array.
+ *
+ * @param Illuminate\Database\Eloquent\Collection $rewards
+ * @param bool                                    $isCharacter
+ *
+ * @return array
+ */
+function processRewards($rewards, $isCharacter = false) {
+    $assets = createAssetsArray($isCharacter);
+    foreach ($rewards as $reward) {
+        addAsset($assets, $reward->reward, $reward->quantity);
+    }
+
+    return $assets;
+}
+
+
+
+/**
+ * Gets the valid reward types, based on an array of "showXYZ" values and recipient.
+ * For example, raffle tickets can not be given to characters.
+ *
+ * @param array $showData
+ * @param mixed $recipient
+ *
+ * @return array
+ */
+function getRewardTypes($showData, $recipient) {
+    if ($recipient == 'User') {
+        return ['Item' => 'Item', 'Currency' => 'Currency'] +
+            (($showData['showLootTables'] ?? false) ? ['LootTable' => 'Loot Table'] : []) +
+            (($showData['showRaffles'] ?? false) ? ['Raffle' => 'Raffle Ticket'] : []) +
+            (($showData['showCharacters'] ?? false) ? ['Character' => 'Character'] : []);
+    } elseif ($recipient == 'Character') {
+        return ['Item' => 'Item', 'Currency' => 'Currency'] +
+            (($showData['showLootTables'] ?? false) ? ['LootTable' => 'Loot Table'] : []);
+    } else {
+        throw new Exception('No recipient given.');
+    }
+}
+
+/**
+ * Gets the reward data needed for loot/reward selection blades.
+ * Builds an array keyed to match getRewardTypes, e.g. ['Item' => $items, 'Currency' => $currencies].
+ *
+ * @param array $showData
+ * @param mixed $recipient
+ * @param bool  $useCustomSelectize
+ *
+ * @return array
+ */
+function getRewardLootData($showData, $recipient = 'User', $useCustomSelectize = false) {
+    $rewardTypes = getRewardTypes($showData, $recipient);
+    $isTradeable = $showData['isTradeable'] ?? false;
+
+    $rewardLootData = [];
+
+    foreach ($rewardTypes as $rewardKey => $rewardType) {
+        $query = null;
+
+        switch ($rewardKey) {
+            case 'Item':
+                $query = App\Models\Item\Item::orderBy('name')
+                    ->where(function ($query) use ($isTradeable) {
+                        if ($isTradeable) {
+                            $query->where('allow_transfer', 1);
+                        }
+                    })->where(function ($query) use ($recipient) {
+                        if ($recipient == 'Character') {
+                            $query->whereRelation('category', 'is_character_owned', 1);
+                        }
+                    });
+                break;
+            case 'Currency':
+                $query = App\Models\Currency\Currency::query();
+                if ($recipient == 'Character') {
+                    $query->where('is_character_owned', 1);
+                } elseif ($recipient == 'User') {
+                    $query->where('is_user_owned', 1);
+                }
+                $query->where(function ($query) use ($isTradeable) {
+                    if ($isTradeable) {
+                        $query->where('allow_user_to_user', 1);
+                    }
+                })->orderBy('sort_character', 'DESC');
+                break;
+            case 'LootTable':
+                $query = App\Models\Loot\LootTable::orderBy('name');
+                break;
+            case 'Raffle':
+                $query = App\Models\Raffle\Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name');
+                break;
+            case 'Character':
+                $query = App\Models\Character\Character::myo(0)->orderBy('slug');
+                break;
+        }
+
+        if (!$query) {
+            continue;
+        }
+
+        if ($useCustomSelectize) {
+            $data = $query->get()->mapWithKeys(function ($item) use ($rewardKey) {
+                return [
+                    $item->id => json_encode([
+                        'name'      => $rewardKey == 'Character' ? $item->slug : $item->name,
+                        'image_url' => $item->imageUrl ?? null,
+                    ]),
+                ];
+            });
+        } else {
+            $data = $query->pluck(($rewardKey == 'Character' ? 'slug' : 'name'), 'id')->toArray();
+        }
+
+        $rewardLootData[$rewardKey] = $data;
+    }
+
+    return $rewardLootData;
+}

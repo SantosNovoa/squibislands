@@ -67,7 +67,7 @@ Route::group(['prefix' => 'invitations', 'middleware' => 'power:edit_site_settin
     Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
-Route::group(['prefix' => 'prizecodes', 'middleware' => 'power:edit_site_settings'], function() {
+Route::group(['prefix' => 'prizecodes', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'PrizeCodeController@getIndex');
     Route::get('/create', 'PrizeCodeController@getCreatePrize');
     Route::get('/edit/{id}', 'PrizeCodeController@getEditPrize');
@@ -78,7 +78,7 @@ Route::group(['prefix' => 'prizecodes', 'middleware' => 'power:edit_site_setting
 });
 
 # FILE MANAGER
-Route::group(['prefix' => 'files', 'middleware' => 'power:edit_site_settings'], function() {
+Route::group(['prefix' => 'files', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/{folder?}', 'FileController@getIndex');
 
     Route::post('upload', 'FileController@postUploadFile');
@@ -470,23 +470,23 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('bosses/create', 'BossController@postCreateEditBoss');
     Route::post('bosses/edit/{id?}', 'BossController@postCreateEditBoss');
     Route::post('bosses/delete/{id}', 'BossController@postDeleteBoss');
-     # BORDERS
-     Route::get('border-categories', 'BorderController@getIndex');
-     Route::get('border-categories/create', 'BorderController@getCreateBorderCategory');
-     Route::get('border-categories/edit/{id}', 'BorderController@getEditBorderCategory');
-     Route::get('border-categories/delete/{id}', 'BorderController@getDeleteBorderCategory');
-     Route::post('border-categories/create', 'BorderController@postCreateEditBorderCategory');
-     Route::post('border-categories/edit/{id?}', 'BorderController@postCreateEditBorderCategory');
-     Route::post('border-categories/delete/{id}', 'BorderController@postDeleteBorderCategory');
-     Route::post('border-categories/sort', 'BorderController@postSortBorderCategory');
+    # BORDERS
+    Route::get('border-categories', 'BorderController@getIndex');
+    Route::get('border-categories/create', 'BorderController@getCreateBorderCategory');
+    Route::get('border-categories/edit/{id}', 'BorderController@getEditBorderCategory');
+    Route::get('border-categories/delete/{id}', 'BorderController@getDeleteBorderCategory');
+    Route::post('border-categories/create', 'BorderController@postCreateEditBorderCategory');
+    Route::post('border-categories/edit/{id?}', 'BorderController@postCreateEditBorderCategory');
+    Route::post('border-categories/delete/{id}', 'BorderController@postDeleteBorderCategory');
+    Route::post('border-categories/sort', 'BorderController@postSortBorderCategory');
 
-     Route::get('borders', 'BorderController@getBorderIndex');
-     Route::get('borders/create', 'BorderController@getCreateBorder');
-     Route::get('borders/edit/{id}', 'BorderController@getEditBorder');
-     Route::get('borders/delete/{id}', 'BorderController@getDeleteBorder');
-     Route::post('borders/create', 'BorderController@postCreateEditBorder');
-     Route::post('borders/edit/{id?}', 'BorderController@postCreateEditBorder');
-     Route::post('borders/delete/{id}', 'BorderController@postDeleteBorder');
+    Route::get('borders', 'BorderController@getBorderIndex');
+    Route::get('borders/create', 'BorderController@getCreateBorder');
+    Route::get('borders/edit/{id}', 'BorderController@getEditBorder');
+    Route::get('borders/delete/{id}', 'BorderController@getDeleteBorder');
+    Route::post('borders/create', 'BorderController@postCreateEditBorder');
+    Route::post('borders/edit/{id?}', 'BorderController@postCreateEditBorder');
+    Route::post('borders/delete/{id}', 'BorderController@postDeleteBorder');
 
     Route::get('borders/edit/{border_id}/{type}s/create', 'BorderController@getCreateEditVariant');
     Route::get('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@getCreateEditVariant');
@@ -520,7 +520,7 @@ Route::group(['prefix' => 'news', 'middleware' => 'power:manage_news'], function
 
 
 # FORMS
-Route::group(['prefix' => 'forms', 'middleware' => 'power:edit_pages'], function() {
+Route::group(['prefix' => 'forms', 'middleware' => 'power:edit_pages'], function () {
 
     Route::get('/', 'SiteFormController@getIndex');
     Route::get('create', 'SiteFormController@getCreateSiteForm');
@@ -530,7 +530,6 @@ Route::group(['prefix' => 'forms', 'middleware' => 'power:edit_pages'], function
     Route::post('edit/{id?}', 'SiteFormController@postCreateEditSiteForm');
     Route::post('delete/{id}', 'SiteFormController@postDeleteSiteForm');
     Route::get('results/{id}', 'SiteFormController@getSiteFormResults');
-
 });
 
 
@@ -706,6 +705,8 @@ Route::group(['prefix' => 'raffles', 'middleware' => 'power:manage_raffles'], fu
     Route::post('edit/group/{id?}', 'RaffleController@postCreateEditRaffleGroup');
     Route::get('edit/raffle/{id?}', 'RaffleController@getCreateEditRaffle');
     Route::post('edit/raffle/{id?}', 'RaffleController@postCreateEditRaffle');
+    Route::get('edit/reroll/{id}', 'RaffleController@getRerollTicket');
+    Route::post('edit/reroll/{id}', 'RaffleController@rerollTicket');
 
     Route::get('view/{id}', 'RaffleController@getRaffleTickets');
     Route::post('view/ticket/{id}', 'RaffleController@postCreateRaffleTickets');
@@ -1022,6 +1023,11 @@ Route::group(['prefix' => 'custom-artists', 'middleware' => 'power:edit_ranks'],
     Route::get('/', 'CustomArtistController@getAccess');
     Route::post('grant', 'CustomArtistController@postGrant');
     Route::post('revoke/{id}', 'CustomArtistController@postRevoke');
+});
+
+// REWARDS
+Route::group(['prefix' => 'rewards', 'middleware' => 'power:manage_data'], function () {
+    Route::post('/', 'RewardController@postPopulateRewards');
 });
 
 // // PREMIUM SHOP

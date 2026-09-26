@@ -1736,3 +1736,7 @@ a.text-warning:focus {
 .avatar-border.bottom {
     z-index: -2;
 }
+
+.col-lg-9.col-12.p-0 a {
+  color: white;
+}

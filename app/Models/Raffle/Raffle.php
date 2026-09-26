@@ -11,7 +11,8 @@ class Raffle extends Model {
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'winner_count', 'group_id', 'order', 'ticket_cap',
+        'name', 'is_active', 'winner_count', 'group_id', 'order', 'allow_entry', 'is_fto', 'unordered', 'end_at', 'roll_on_end', 'ticket_cap',
+        'description', 'parsed_description',
     ];
 
     /**
@@ -20,6 +21,7 @@ class Raffle extends Model {
      * @var string
      */
     protected $table = 'raffles';
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -27,6 +29,7 @@ class Raffle extends Model {
      */
     protected $casts = [
         'rolled_at' => 'datetime',
+        'end_at'    => 'datetime',
     ];
 
     /**
@@ -61,6 +64,13 @@ class Raffle extends Model {
      */
     public function group() {
         return $this->belongsTo(RaffleGroup::class, 'group_id');
+    }
+
+    /**
+     * Gets the logs associated with this raffle.
+     */
+    public function logs() {
+        return $this->hasMany(RaffleLog::class);
     }
 
     /**********************************************************************************************
