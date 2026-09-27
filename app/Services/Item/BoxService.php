@@ -87,41 +87,23 @@ class BoxService extends Service {
             // First build the asset table, then prepare it for storage.
             $assets = createAssetsArray();
             foreach ($data['rewardable_type'] as $key => $r) {
-                switch ($r) {
-                    case 'Item':
-                        $type = 'App\Models\Item\Item';
-                        break;
-                    case 'Currency':
-                        $type = 'App\Models\Currency\Currency';
-                        break;
-                    case 'Award':
-                        $type = 'App\Models\Award\Award';
-                        break;
-                    case 'Pet':
-                        $type = 'App\Models\Pet\Pet';
-                        break;
-                    case 'Gear':
-                        $type = 'App\Models\Claymore\Gear';
-                        break;
-                    case 'Weapon':
-                        $type = 'App\Models\Claymore\Weapon';
-                        break;
-                    case 'LootTable':
-                        $type = 'App\Models\Loot\LootTable';
-                        break;
-                    case 'Raffle':
-                        $type = 'App\Models\Raffle\Raffle';
-                        break;
-                    case 'Recipe':
-                        $type = 'App\Models\Recipe\Recipe';
-                        break;
-                    case 'Theme':
-                        $type = 'App\Models\Theme';
-                    case 'Border':
-                        $type = 'App\Models\Border\Border';
-                        break;
+                // Exp/Stat Points have no model ID and break the tag edit page when stored here
+                if (in_array($r, ['Exp', 'Points'])) {
+                    throw new \Exception($r.' rewards are not supported in boxes.');
                 }
-                $asset = $type::find($data['rewardable_id'][$key]);
+
+                // Resolve the reward type to its model using the shared asset helper,
+                // so any type the asset system knows about works here automatically
+                $type = getAssetModelString(strtolower($r));
+                if (!$type || !class_exists($type)) {
+                    throw new \Exception('Unsupported reward type: '.$r);
+                }
+
+                $asset = $type::find($data['rewardable_id'][$key] ?? null);
+                if (!$asset) {
+                    throw new \Exception('Invalid reward selected in row '.($key + 1).' ('.$r.').');
+                }
+
                 addAsset($assets, $asset, $data['quantity'][$key]);
             }
             $assets = getDataReadyAssets($assets);

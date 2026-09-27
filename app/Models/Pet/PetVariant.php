@@ -55,12 +55,22 @@ class PetVariant extends Model {
     **********************************************************************************************/
 
     /**
+     * Gets the variant's full name, e.g. "Shiny Squib".
+     * There is no `name` column, so this is what $variant->name resolves to.
+     *
+     * @return string
+     */
+    public function getNameAttribute() {
+        return trim($this->variant_name.' '.($this->pet?->name ?? ''));
+    }
+
+    /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
     public function getDisplayNameAttribute() {
-        return '<a href="'.$this->pet->idUrl.'" class="display-item">'.$this->name.' '.$this->pet->name.'</a>';
+        return '<a href="'.$this->pet->idUrl.'" class="display-item">'.$this->name.'</a>';
     }
 
     /**
@@ -101,5 +111,14 @@ class PetVariant extends Model {
         }
 
         return asset($this->imageDirectory.'/'.$this->imageFileName);
+    }
+
+    /**
+     * Gets the variant's asset type for asset management.
+     *
+     * @return string
+     */
+    public function getAssetTypeAttribute() {
+        return 'pet_variants';
     }
 }

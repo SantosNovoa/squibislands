@@ -21,7 +21,7 @@
 function getAssetKeys($isCharacter = false)
 {
     if (!$isCharacter) {
-        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes', 'borders'];
+        return ['items', 'currencies', 'pets', 'pet_variants', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes', 'awards', 'user_awards', 'exp', 'points', 'themes', 'borders'];
     } else {
         return ['currencies', 'items', 'character_items', 'loot_tables', 'awards', 'elements', 'exp', 'points'];
     }
@@ -72,6 +72,15 @@ function getAssetModelString($type, $namespaced = true)
                 return '\App\Models\Pet\Pet';
             } else {
                 return 'Pet';
+            }
+            break;
+
+        case 'pet_variants':
+        case 'petvariant':
+            if ($namespaced) {
+                return '\App\Models\Pet\PetVariant';
+            } else {
+                return 'PetVariant';
             }
             break;
 
@@ -477,6 +486,17 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
                     return false;
                 }
             }
+        } elseif ($key == 'pet_variants' && count($contents)) {
+            // A variant is granted as its parent pet, with the variant applied
+            $service = new App\Services\PetManager;
+            foreach ($contents as $asset) {
+                if (!$asset['asset'] || !$asset['asset']->pet) {
+                    return false;
+                }
+                if (!$service->creditPet($sender, $recipient, $logType, $data, $asset['asset']->pet, $asset['quantity'], $asset['asset']->id)) {
+                    return false;
+                }
+            }
         } elseif ($key == 'gears' && count($contents)) {
             $service = new App\Services\Claymore\GearManager;
             foreach ($contents as $asset) {
@@ -526,7 +546,6 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             }
         } elseif ($key == 'points' && count($contents)) {
             $service = new App\Services\Stat\StatManager;
-            dd($data, $contents);
             if (!$service->creditStat($sender, $recipient, $logType, $data['data'], 'none', $contents['quantity'])) {
                 return false;
             }
@@ -674,6 +693,9 @@ function findReward($type, $id, $isCharacter = false)
             break;
         case 'Pet':
             $reward = App\Models\Pet\Pet::find($id);
+            break;
+        case 'PetVariant':
+            $reward = App\Models\Pet\PetVariant::find($id);
             break;
         case 'LootTable':
             $reward = App\Models\Loot\LootTable::find($id);

@@ -4,41 +4,51 @@
         {!! Form::hidden('tag', $tag->tag) !!}
         <p>This item has a selection of prizes inside, but you can only choose one! Please note that you can only select one choice each time you open this box, so if you have multiple and want different choices, you should open them one at a time. This action is not reversible. Are you sure you want to open this box?</p>
         @php
-            // Format information for reward selection
-            // This is a little messy, but works nicely within the modular format of an
-            // item tag, and for this particular purpose
+            // Format information for reward selection.
+            // Option values are "{asset key}-{id}" (e.g. "pet_variants-1"), which is what
+            // ChoiceboxService::act() expects. Any asset type the asset helpers know about
+            // is listed, so new reward types show up here without editing this file.
+            $groupLabels = [
+                'items'          => 'Items',
+                'currencies'     => 'Currencies',
+                'pets'           => 'Pets',
+                'pet_variants'   => 'Pet Variants',
+                'awards'         => ucfirst(__('awards.award')).'s',
+                'gears'          => 'Gear',
+                'weapons'        => 'Weapons',
+                'raffle_tickets' => 'Raffle Tickets',
+                'loot_tables'    => 'Loot Tables',
+                'recipes'        => 'Recipes',
+                'themes'         => 'Themes',
+                'borders'        => 'Borders',
+            ];
+
             $rewardOptions = [];
-            foreach($tag->data as $type=>$group) {
-                switch($type) {
-                    case 'items':
-                        foreach($group as $id=>$quantity) {
-                            $item = App\Models\Item\Item::where('id', $id)->first();
-                            $rewardOptions['Items'][$type.'-'.$id] = $item->name.' x'.$quantity;
-                        }
-                        break;
-                    case 'currencies':
-                        foreach($group as $id=>$quantity) {
-                            $currency = App\Models\Currency\Currency::where('id', $id)->first();
-                            $rewardOptions['Currencies'][$type.'-'.$id] =  $currency->name.' x'.$quantity;
-                        }
-                        break;
-                    case 'raffle_tickets':
-                        foreach($group as $id=>$quantity) {
-                            $raffle = App\Models\Raffle\Raffle::where('id', $id)->first();
-                            $rewardOptions['Raffle Tickets'][$type.'-'.$id] = nl2br(htmlentities($raffle->displayName)).' x'.$quantity;
-                        }
-                        break;
-                    case 'loot_tables':
-                        foreach($group as $id=>$quantity) {
-                            $lootTable = App\Models\Loot\LootTable::where('id', $id)->first();
-                            $rewardOptions['Loot Tables'][$type.'-'.$id] = $lootTable->getRawOriginal('display_name').' x'.$quantity.' (This reward is random)';
-                        }
-                        break;
-                    case 'recipes':
-                        foreach ($group as $id =>$quantity) {
-                            $recipe = App\Models\Recipe\Recipe::where('id', $id)->first();
-                            $rewardOptions['Recipes'][$type.'-'.$id] = $recipe->name.' x'.$quantity;
-                        }
+            foreach ($tag->data as $type => $group) {
+                $model = getAssetModelString($type);
+                if (!$model || !class_exists($model) || !is_array($group)) {
+                    continue; // e.g. exp/points, which can't be offered as a choice
+                }
+
+                $label = $groupLabels[$type] ?? ucwords(str_replace('_', ' ', $type));
+                foreach ($group as $id => $quantity) {
+                    $asset = $model::find($id);
+                    if (!$asset) {
+                        continue; // reward was deleted since the box was set up
+                    }
+
+                    switch ($type) {
+                        case 'raffle_tickets':
+                            $name = nl2br(htmlentities($asset->displayName));
+                            break;
+                        case 'loot_tables':
+                            $name = $asset->getRawOriginal('display_name');
+                            break;
+                        default:
+                            $name = $asset->name;
+                    }
+
+                    $rewardOptions[$label][$type.'-'.$id] = $name.' x'.$quantity.($type == 'loot_tables' ? ' (This reward is random)' : '');
                 }
             }
         @endphp
