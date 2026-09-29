@@ -611,6 +611,7 @@ class DesignUpdateManager extends Service {
                 'transformation_id'             => ($request->character->is_myo_slot && isset($request->character->image->transformation_id)) ? $request->character->image->transformation_id : $request->transformation_id,
                 'transformation_info'           => ($request->character->is_myo_slot && isset($request->character->image->transformation_info)) ? $request->character->image->transformation_info : $request->transformation_info,
                 'transformation_description'    => ($request->character->is_myo_slot && isset($request->character->image->transformation_description)) ? $request->character->image->transformation_description : $request->transformation_description,
+                'theme'                         => $request->theme,
                 'rarity_id'                     => $request->rarity_id,
                 'sort'                          => 0,
             ]);
