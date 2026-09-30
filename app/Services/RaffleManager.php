@@ -9,7 +9,8 @@ use App\Models\User\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class RaffleManager extends Service {
+class RaffleManager extends Service
+{
     /*
     |--------------------------------------------------------------------------
     | Raffle Manager
@@ -27,9 +28,10 @@ class RaffleManager extends Service {
      *
      * @return int
      */
-    public function addTickets($raffle, $data) {
+    public function addTickets($raffle, $data)
+    {
         $count = 0;
-        foreach ($data['user_id'] as $key=> $id) {
+        foreach ($data['user_id'] as $key => $id) {
             if ($user = User::where('id', $id)->first()) {
                 if ($this->addTicket($user, $raffle, $data['ticket_count'][$key])) {
                     $count += $data['ticket_count'][$key];
@@ -53,7 +55,8 @@ class RaffleManager extends Service {
      *
      * @return int
      */
-    public function addTicket($user, $raffle, $count = 1) {
+    public function addTicket($user, $raffle, $count = 1)
+    {
         if (!$user) {
             return 0;
         } elseif (!$raffle) {
@@ -87,7 +90,8 @@ class RaffleManager extends Service {
     }
 
     // enters self into raffle
-    public function selfEnter($raffle, $user) {
+    public function selfEnter($raffle, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -135,7 +139,8 @@ class RaffleManager extends Service {
      *
      * @return bool
      */
-    public function removeTicket($ticket) {
+    public function removeTicket($ticket)
+    {
         if (!$ticket) {
             return null;
         } else {
@@ -157,7 +162,8 @@ class RaffleManager extends Service {
      *
      * @return bool
      */
-    public function rollRaffleGroup($raffleGroup, $updateGroup = true) {
+    public function rollRaffleGroup($raffleGroup, $updateGroup = true)
+    {
         if (!$raffleGroup) {
             return null;
         }
@@ -186,7 +192,8 @@ class RaffleManager extends Service {
      *
      * @return bool
      */
-    public function rollRaffle($raffle, $updateGroup = false) {
+    public function rollRaffle($raffle, $updateGroup = false)
+    {
         DB::beginTransaction();
 
         try {
@@ -227,6 +234,7 @@ class RaffleManager extends Service {
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
+            \Log::error($e);
             $this->setError('error', $e->getMessage());
         }
 
@@ -240,7 +248,8 @@ class RaffleManager extends Service {
      * @param mixed $reason
      * @param mixed $user
      */
-    public function rerollWinner($ticket, $reason, $user) {
+    public function rerollWinner($ticket, $reason, $user)
+    {
         DB::beginTransaction();
 
         try {
@@ -294,12 +303,13 @@ class RaffleManager extends Service {
      * @param mixed $raffle
      * @param mixed $user
      */
-    private function grantEntryRewards($raffle, $user) {
+    private function grantEntryRewards($raffle, $user)
+    {
         $rewards = getRewards($raffle, true)->where('data->type', 'entry_reward')->get();
         if (count($rewards)) {
             // check user hasn't already received rewards
             if ($raffle->logs()->where('user_id', $user->id)->where('type', 'Reward')->exists()) {
-                flash('The user ('.$user->name.') has already received rewards for entering.')->info();
+                flash('The user (' . $user->name . ') has already received rewards for entering.')->info();
 
                 return;
             }
@@ -309,7 +319,7 @@ class RaffleManager extends Service {
             // Logging data
             $logType = 'Raffle Entry Rewards';
             $data = [
-                'data' => 'Received rewards for entering the raffle '.$raffle->name.' (<a href="'.$raffle->url.'">#'.$raffle->id.'</a>)',
+                'data' => 'Received rewards for entering the raffle ' . $raffle->name . ' (<a href="' . $raffle->url . '">#' . $raffle->id . '</a>)',
             ];
 
             // Distribute user rewards
@@ -335,7 +345,8 @@ class RaffleManager extends Service {
      *
      * @return array
      */
-    private function rollWinners($raffle) {
+    private function rollWinners($raffle)
+    {
         $ticketPool = $raffle->tickets;
         $ticketCount = $ticketPool->count();
         $winners = ['ids' => [], 'aliases' => []];
@@ -375,7 +386,7 @@ class RaffleManager extends Service {
             $ticketCount--;
 
             // remove tickets for the same user...I'm unsure how this is going to hold up with 3000 tickets,
-            foreach ($ticketPool as $key=> $ticket) {
+            foreach ($ticketPool as $key => $ticket) {
                 if (($ticket->user_id != null && $ticket->user_id == $winner->user_id) || ($ticket->user_id == null && $ticket->alias == $winner->alias)) {
                     $ticketPool->forget($key);
                 }
@@ -396,7 +407,8 @@ class RaffleManager extends Service {
      *
      * @return bool
      */
-    private function afterRoll($winners, $raffleGroup, $raffle) {
+    private function afterRoll($winners, $raffleGroup, $raffle)
+    {
         // remove any tickets from winners in raffles in the group that aren't completed
         $raffles = $raffleGroup->raffles()->where('is_active', '!=', 2)->where('id', '!=', $raffle->id)->get();
         foreach ($raffles as $r) {
@@ -415,14 +427,15 @@ class RaffleManager extends Service {
      * @param mixed $reason
      * @param mixed $user
      */
-    private function logReroll($ticket, $reason, $user) {
+    private function logReroll($ticket, $reason, $user)
+    {
         DB::beginTransaction();
 
         try {
             $log = RaffleLog::create([
                 'raffle_id' => $ticket->raffle_id,
                 'user_id'   => $user->id,
-                'reason'    => 'Reroll: '.$reason,
+                'reason'    => 'Reroll: ' . $reason,
                 'ticket_id' => $ticket->id,
             ]);
 
@@ -443,11 +456,12 @@ class RaffleManager extends Service {
      *
      * @return bool
      */
-    private function grantWinnerRewards($raffle, $ticket, $user) {
+    private function grantWinnerRewards($raffle, $ticket, $user)
+    {
         // Logging data
         $logType = 'Raffle Winner Reward';
         $data = [
-            'data' => 'Received reward for winning the raffle '.$raffle->name.' (<a href="'.$raffle->url.'">#'.$raffle->id.'</a>)',
+            'data' => 'Received reward for winning the raffle ' . $raffle->name . ' (<a href="' . $raffle->url . '">#' . $raffle->id . '</a>)',
         ];
 
         $position = $ticket->position;

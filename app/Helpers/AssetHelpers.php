@@ -436,6 +436,25 @@ function parseAssetData($array)
 }
 
 /**
+ * Temporary debug helper: logs why fillUserAssets failed.
+ *
+ * @param string     $key
+ * @param array|null $asset
+ * @param mixed|null $service
+ * @param string     $reason
+ */
+function logAssetFailure($key, $asset = null, $service = null, $reason = null)
+{
+    \Log::error('fillUserAssets failed', [
+        'type'     => $key,
+        'asset_id' => (is_array($asset) && isset($asset['asset'])) ? ($asset['asset']->id ?? null) : null,
+        'quantity' => (is_array($asset) && isset($asset['quantity'])) ? $asset['quantity'] : null,
+        'reason'   => $reason,
+        'errors'   => ($service && method_exists($service, 'errors')) ? $service->errors()->getMessages() : null,
+    ]);
+}
+
+/**
  * Distributes the assets in an assets array to the given recipient (user).
  * Loot tables will be rolled before distribution.
  *
@@ -462,6 +481,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\InventoryManager;
             foreach ($contents as $asset) {
                 if (!$service->creditItem($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -469,6 +489,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new \App\Services\AwardCaseManager;
             foreach ($contents as $asset) {
                 if (!$service->creditAward($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -476,6 +497,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\CurrencyManager;
             foreach ($contents as $asset) {
                 if (!$service->creditCurrency($sender, $recipient, $logType, $data['data'], $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -483,6 +505,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\PetManager;
             foreach ($contents as $asset) {
                 if (!$service->creditPet($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -491,9 +514,11 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\PetManager;
             foreach ($contents as $asset) {
                 if (!$asset['asset'] || !$asset['asset']->pet) {
+                    logAssetFailure($key, $asset, null, 'missing variant or parent pet');
                     return false;
                 }
                 if (!$service->creditPet($sender, $recipient, $logType, $data, $asset['asset']->pet, $asset['quantity'], $asset['asset']->id)) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -501,6 +526,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\Claymore\GearManager;
             foreach ($contents as $asset) {
                 if (!$service->creditGear($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -508,6 +534,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\Claymore\WeaponManager;
             foreach ($contents as $asset) {
                 if (!$service->creditWeapon($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -515,6 +542,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\RaffleManager;
             foreach ($contents as $asset) {
                 if (!$service->addTicket($recipient, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -522,6 +550,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new App\Services\InventoryManager;
             foreach ($contents as $asset) {
                 if (!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
@@ -529,42 +558,55 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
             $service = new \App\Services\AwardCaseManager;
             foreach ($contents as $asset) {
                 if (!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
         } elseif ($key == 'characters' && count($contents)) {
             $service = new App\Services\CharacterManager;
             foreach ($contents as $asset) {
-                if (!$service->moveCharacter($asset['asset'], $recipient, $data, $asset['quantity'], $logType)) {
+                if (!$service->moveCharacter($asset['asset'], $recipient, is_array($data) ? ($data['data'] ?? '') : $data, $asset['quantity'], $logType)) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
         } elseif ($key == 'exp' && count($contents)) {
             $service = new App\Services\Stat\ExperienceManager;
             if (!$service->creditExp($sender, $recipient, $logType, $data['data'], $contents['quantity'], false)) {
+                logAssetFailure($key, $contents, $service);
                 return false;
             }
         } elseif ($key == 'points' && count($contents)) {
             $service = new App\Services\Stat\StatManager;
             if (!$service->creditStat($sender, $recipient, $logType, $data['data'], 'none', $contents['quantity'])) {
+                logAssetFailure($key, $contents, $service);
                 return false;
             }
         } elseif ($key == 'themes' && count($contents)) {
             $service = new App\Services\ThemeManager;
             foreach ($contents as $asset) {
                 if (!$service->creditTheme($recipient, $asset['asset'])) {
+                    logAssetFailure($key, $asset, $service);
                     return false;
                 }
             }
         }
         if ($key == 'recipes' && count($contents)) {
             $service = new \App\Services\RecipeService;
-            foreach ($contents as $asset)
-                if (!$service->creditRecipe($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
+            foreach ($contents as $asset) {
+                if (!$service->creditRecipe($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                    logAssetFailure($key, $asset, $service);
+                    return false;
+                }
+            }
         } elseif ($key == 'borders' && count($contents)) {
             $service = new \App\Services\BorderService;
-            foreach ($contents as $asset)
-                if (!$service->creditBorder($sender, $recipient, null, $logType, $data, $asset['asset'])) return false;
+            foreach ($contents as $asset) {
+                if (!$service->creditBorder($sender, $recipient, null, $logType, $data, $asset['asset'])) {
+                    logAssetFailure($key, $asset, $service);
+                    return false;
+                }
+            }
         }
     }
 
