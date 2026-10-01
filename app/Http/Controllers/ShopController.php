@@ -13,6 +13,7 @@ use App\Models\User\UserItem;
 use App\Services\ShopManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 class ShopController extends Controller {
     /*
@@ -96,19 +97,35 @@ class ShopController extends Controller {
         // c&c for multiple stock types
         $stock_types = ShopStock::where('shop_id', $shop->id)->pluck('stock_type')->unique();
         $stocks = [];
-        $allCategories = $categories->keyBy('id');
         $categoriesByType = ['item' => $categories->keyBy('id')];
 
         foreach ($stock_types as $type) {
             $type = strtolower($type);
             $model = getAssetModelString($type);
-            
-            if (!class_exists($model.'Category')) {
-                $stock = $shop->displayStock($model, $type)->where('stock_type', $type)->orderBy('name')->get()->groupBy($type.'_category_id');
-                $stocks[$type] = $stock;
+            if (!$model || !class_exists($model)) {
                 continue;
             }
-            
+
+            $table = (new $model)->getTable();
+            $categoryColumn = $type.'_category_id';
+            $sortColumn = $this->getStockSortColumn($table);
+
+            $query = $shop->displayStock($model, $type)->where('stock_type', $type);
+            if (method_exists($model, 'pet')) {
+                // PetVariant's name accessor reads the parent pet
+                $query->with('pet');
+            }
+
+            // Only group by category if the category model AND column both exist
+            $hasCategory = class_exists($model.'Category') && Schema::hasColumn($table, $categoryColumn);
+
+            if (!$hasCategory) {
+                $stocks[$type] = $query->orderBy($sortColumn)->get()->groupBy(function () {
+                    return '';
+                });
+                continue;
+            }
+
             if (method_exists($model.'Category', 'visible')) {
                 $stock_category = ($model.'Category')::visible(Auth::check() ? Auth::user() : null)->orderBy('sort', 'DESC')->get();
             } else {
@@ -117,10 +134,10 @@ class ShopController extends Controller {
 
             $categoriesByType[$type] = $stock_category->keyBy('id');
 
-            $stock = count($stock_category) ? $shop->displayStock($model, $type)->where('stock_type', $type)
-                ->orderByRaw('FIELD('.$type.'_category_id,'.implode(',', $stock_category->pluck('id')->toArray()).')')
-                ->orderBy('name')->get()->groupBy($type.'_category_id')
-            : $shop->displayStock($model, $type)->where('stock_type', $type)->orderBy('name')->get()->groupBy($type.'_category_id');
+            if (count($stock_category)) {
+                $query->orderByRaw('FIELD('.$table.'.'.$categoryColumn.','.implode(',', $stock_category->pluck('id')->toArray()).')');
+            }
+            $stock = $query->orderBy($sortColumn)->get()->groupBy($categoryColumn);
 
             $stock = $stock->sortBy(function ($item, $key) {
                 return $key == '' ? 1 : 0;
@@ -129,18 +146,33 @@ class ShopController extends Controller {
             $stocks[$type] = $stock;
         }
 
-
-
         return view('shops.shop', [
             'shop'       => $shop,
             'stocks'     => $stocks,
             'items'      => $items, //  v3 items
-            // 'categories' => $categories->keyBy('id'), //  v3 categories
             'categories' => $categoriesByType,
             'shops'      => Shop::where('is_active', 1)->orderBy('sort', 'DESC')->get(),
             'currencies' => Currency::whereIn('id', ShopStock::where('shop_id', $shop->id)->pluck('currency_id')->toArray())->get()->keyBy('id'),
         ]);
     }
+
+    /**
+     * Picks a real column to sort stock by, since not every asset table has `name`.
+     *
+     * @param string $table
+     *
+     * @return string
+     */
+    private function getStockSortColumn($table) {
+        foreach (['name', 'variant_name'] as $column) {
+            if (Schema::hasColumn($table, $column)) {
+                return $table.'.'.$column;
+            }
+        }
+
+        return $table.'.id';
+    }
+
     /**
      * Gets the shop stock modal.
      *
@@ -153,7 +185,7 @@ class ShopController extends Controller {
     public function getShopStock(ShopManager $service, $id, $stockId) {
         $shop = Shop::where('id', $id)->where('is_active', 1)->first();
         $stock = ShopStock::where('id', $stockId)->where('shop_id', $id)->first();
-        if (!$shop) {
+        if (!$shop || !$stock || !$stock->item) {
             abort(404);
         }
 
@@ -161,11 +193,12 @@ class ShopController extends Controller {
         $quantityLimit = 0;
         $userPurchaseCount = 0;
         $purchaseLimitReached = false;
+        $userOwned = null;
         if ($user) {
-            $quantityLimit = $service->getStockPurchaseLimit($stock, Auth::user());
-            $userPurchaseCount = $service->checkUserPurchases($stock, Auth::user());
-            $purchaseLimitReached = $service->checkPurchaseLimitReached($stock, Auth::user());
-            $userOwned = $service->getUserOwned($stock, Auth::user());
+            $quantityLimit = $service->getStockPurchaseLimit($stock, $user);
+            $userPurchaseCount = $service->checkUserPurchases($stock, $user);
+            $purchaseLimitReached = $service->checkPurchaseLimitReached($stock, $user);
+            $userOwned = $service->getUserOwned($stock, $user);
         }
 
         if ($shop->use_coupons && Auth::check()) {
@@ -189,7 +222,7 @@ class ShopController extends Controller {
             'quantityLimit'        => $quantityLimit,
             'userPurchaseCount'    => $userPurchaseCount,
             'purchaseLimitReached' => $purchaseLimitReached,
-            'userOwned'            => $user ? $userOwned : null,
+            'userOwned'            => $userOwned,
         ]);
     }
 

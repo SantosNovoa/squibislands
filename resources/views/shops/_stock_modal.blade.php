@@ -4,11 +4,11 @@
 @else
     <div class="text-center mb-3">
         <div class="mb-1">
-            @if ($stock->item->has_image)
-                <a href="{{ $stock->item->idUrl }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" class="img-fluid"/></a>
+            @if ($stock->item->imageUrl)
+                <a href="{{ $stock->item->idUrl ?? '#' }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" class="img-fluid"/></a>
             @endif
         </div>
-        <div><a href="{{ $stock->item->idUrl }}"><strong>{{ $stock->item->name }}</strong></a></div>
+        <div><a href="{{ $stock->item->idUrl ?? '#' }}"><strong>{{ $stock->item->name }}</strong></a></div>
         <div><strong>Cost: </strong> {!! $stock->currency->display($stock->displayCost) !!}</div>
         @if ($stock->is_limited_stock)
             <div>Stock: {{ $stock->quantity }}</div>
@@ -46,10 +46,17 @@
 
     @if (Auth::check())
         @if (($stock->is_fto && Auth::user()->settings->is_fto) || !$stock->is_fto)
+            @php
+                $isUniqueStock = in_array(strtolower($stock->stock_type), ['border', 'theme', 'recipe']);
+            @endphp
             <h5>
                 Purchase
                 <span class="float-right">
-                    In Inventory: {{ $userOwned }}
+                    @if ($isUniqueStock)
+                        {{ $userOwned ? 'Owned' : 'Not owned' }}
+                    @else
+                        {{ strtolower($stock->stock_type) == 'currency' ? 'Balance' : 'Owned' }}: {{ $userOwned ?? 0 }}
+                    @endif
                 </span>
             </h5>
             @if ($stock->is_limited_stock && $stock->quantity == 0)
@@ -58,6 +65,10 @@
                 <div class="alert alert-warning mb-0">You have already purchased the limit of {{ $stock->purchase_limit }} of this item @if ($stock->purchase_limit_timeframe !== 'lifetime')
                         within the {{ $stock->purchase_limit_timeframe }} reset
                     @endif.</div>
+            @elseif($isUniqueStock && $userOwned)
+                <div class="alert alert-info mb-0">You already own {{ $stock->item->name }}.</div>
+            @elseif($quantityLimit < 1)
+                <div class="alert alert-warning mb-0">You can't purchase any more of this right now.</div>
             @else
                 @if ($stock->purchase_limit)
                     <div class="alert alert-warning mb-3">You have purchased this item {{ $userPurchaseCount }} times @if ($stock->purchase_limit_timeframe !== 'lifetime')

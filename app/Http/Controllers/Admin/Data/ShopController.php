@@ -11,7 +11,7 @@ use App\Models\Shop\ShopStock;
 use App\Services\ShopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class ShopController extends Controller {
     /*
@@ -150,13 +150,11 @@ class ShopController extends Controller {
             abort(404);
         }
 
-        $model = getAssetModelString(strtolower($stock->stock_type));
-
         return view('admin.shops._stock_modal', [
             'shop'       => $stock->shop,
             'stock'      => $stock,
             'currencies' => Currency::orderBy('name')->pluck('name', 'id'),
-            'items'      => $model::orderBy('name')->pluck('name', 'id'),
+            'items'      => $this->getStockTypeOptions($stock->stock_type),
         ]);
     }
 
@@ -169,13 +167,41 @@ class ShopController extends Controller {
         if (!$type) {
             return null;
         }
-        // get base modal from type using asset helper
-        $model = getAssetModelString(strtolower($type));
-        Log::info([$model, $type]);
 
         return view('admin.shops._stock_item', [
-            'items' => $model::orderBy('name')->pluck('name', 'id'),
+            'items' => $this->getStockTypeOptions($type),
         ]);
+    }
+
+    /**
+     * Builds the [id => name] list for a stock type's dropdown.
+     * Handles models without a real `name` column (e.g. PetVariant, whose
+     * name is an accessor over variant_name + parent pet name).
+     *
+     * @param string $type
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    private function getStockTypeOptions($type)
+    {
+        $model = getAssetModelString(strtolower($type));
+        if (!$model || !class_exists($model)) {
+            return collect();
+        }
+
+        $table = (new $model)->getTable();
+
+        if (Schema::hasColumn($table, 'name')) {
+            return $model::orderBy('name')->pluck('name', 'id');
+        }
+
+        // No name column: load models and use the name accessor
+        $query = $model::query();
+        if (method_exists($model, 'pet')) {
+            $query->with('pet');
+        }
+
+        return $query->get()->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)->pluck('name', 'id');
     }
 
     /**

@@ -23,6 +23,14 @@ class ShopManager extends Service {
     */
 
     /**
+     * Stock types a user can only ever own one of.
+     * These are capped at quantity 1 and blocked if already owned.
+     *
+     * @var array
+     */
+    protected $uniqueStockTypes = ['border', 'theme', 'recipe'];
+
+    /**
      * Buys an item from a shop.
      *
      * @param array                 $data
@@ -49,6 +57,21 @@ class ShopManager extends Service {
             $shopStock = ShopStock::where('id', $data['stock_id'])->where('shop_id', $data['shop_id'])->with('currency')->first();
             if (!$shopStock) {
                 throw new \Exception('Invalid item selected.');
+            }
+
+            // Check that the underlying asset still exists (e.g. a deleted border or variant)
+            if (!$shopStock->item) {
+                throw new \Exception('This stock is no longer available.');
+            }
+
+            // One-per-user assets: cap quantity and block repeat purchases before any currency is taken
+            if (in_array(strtolower($shopStock->stock_type), $this->uniqueStockTypes)) {
+                if ($quantity > 1) {
+                    throw new \Exception('You can only purchase one of these.');
+                }
+                if ($this->getUserOwned($shopStock, $user) > 0) {
+                    throw new \Exception('You already own ' . $shopStock->item->name . '.');
+                }
             }
 
             // Check if the item has a quantity, and if it does, check there is enough stock remaining
@@ -226,6 +249,12 @@ class ShopManager extends Service {
     public function getStockPurchaseLimit($shopStock, $user)
     {
         $limit = Config::get('lorekeeper.settings.default_purchase_limit');
+
+        // One-per-user assets can never be bought more than once at a time
+        if (in_array(strtolower($shopStock->stock_type), $this->uniqueStockTypes)) {
+            $limit = $this->getUserOwned($shopStock, $user) > 0 ? 0 : 1;
+        }
+
         if ($shopStock->purchase_limit > 0) {
             $user_purchase_limit = $shopStock->purchase_limit - $this->checkUserPurchases($shopStock, $user);
             if ($user_purchase_limit < $limit) {
@@ -254,6 +283,24 @@ class ShopManager extends Service {
                 return $user->items()->where('item_id', $stock->item_id)->sum('count');
             case 'pet':
                 return $user->pets()->where('pet_id', $stock->item_id)->count();
+            case 'petvariant':
+                if (!$stock->item) {
+                    return 0;
+                }
+
+                return $user->pets()->where('pet_id', $stock->item->pet_id)->where('user_pets.variant_id', $stock->item_id)->count();
+            case 'currency':
+                return DB::table('user_currencies')->where('user_id', $user->id)->where('currency_id', $stock->item_id)->value('quantity') ?? 0;
+            case 'award':
+                return DB::table('user_awards')->where('user_id', $user->id)->where('award_id', $stock->item_id)->whereNull('deleted_at')->sum('count');
+            case 'border':
+                return $user->borders()->where('user_borders.border_id', $stock->item_id)->count();
+            case 'theme':
+                return $user->themes()->where('user_themes.theme_id', $stock->item_id)->count();
+            case 'recipe':
+                return $user->recipes()->where('user_recipes.recipe_id', $stock->item_id)->count();
         }
+
+        return null;
     }
 }

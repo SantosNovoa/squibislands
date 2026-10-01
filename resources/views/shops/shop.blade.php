@@ -35,10 +35,25 @@
         <p>{!! $shop->parsed_description !!}</p>
     </div>
 
+    @php
+        $stockTypeLabels = [
+            'item'       => 'Items',
+            'currency'   => 'Currencies',
+            'award'      => 'Badges',
+            'pet'        => 'Pets',
+            'petvariant' => 'Pet Variants',
+            'gear'       => 'Gear',
+            'weapon'     => 'Weapons',
+            'border'     => 'User Borders',
+            'theme'      => 'Themes',
+            'recipe'     => 'Recipes',
+        ];
+    @endphp
+
     @foreach ($stocks as $type => $stock)
         @if (count($stock))
             <h3>
-                {{ $type . (substr($type, -1) == 's' ? '' : 's') }}
+                {{ $stockTypeLabels[$type] ?? ucfirst($type) . 's' }}
             </h3>
         @endif
         @if (Settings::get('shop_type'))
@@ -55,7 +70,7 @@
                 @endphp
                 <div class="card mb-3 inventory-category">
                     <h5 class="card-header inventory-header">
-                        {!! $category ? '<a href="' . $category->searchUrl . '">' . $visible . $category->name . '</a>' : 'Miscellaneous' !!}
+                        {!! $category ? '<a href="' . ($category->searchUrl ?? '#') . '">' . $visible . $category->name . '</a>' : 'Miscellaneous' !!}
                     </h5>
                     <div class="card-body inventory-body">
                         @foreach ($categoryItems->chunk(4) as $chunk)
@@ -63,7 +78,7 @@
                                 @foreach ($chunk as $item)
                                     <div class="col-sm-3 col-6 text-center inventory-item d-flex flex-column justify-content-end" data-id="{{ $item->pivot->id }}">
                                         <div class="mb-1">
-                                            @if ($item->has_image)
+                                            @if ($item->imageUrl)
                                                 <a href="#" class="inventory-stack"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" style="max-height: 200px;" /></a>
                                             @endif
                                         </div>

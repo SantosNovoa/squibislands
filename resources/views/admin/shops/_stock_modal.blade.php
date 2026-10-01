@@ -9,7 +9,18 @@
         <div class="col-md-6">
             <div class="form-group">
                 {!! Form::label('stock_type', 'Type') !!}
-                {!! Form::select('stock_type', ['Item' => 'Item', 'Pet' => 'Pet', 'Gear' => 'Gear', 'Weapon' => 'Weapon'], $stock->stock_type ?? null, ['class' => 'form-control stock-field', 'placeholder' => 'Select Stock Type', 'id' => 'type']) !!}
+                {!! Form::select('stock_type', [
+                    'Item'       => 'Item',
+                    'Currency'   => 'Currency',
+                    'Award'      => 'Badge',
+                    'Pet'        => 'Pet',
+                    'PetVariant' => 'Pet Variant',
+                    'Gear'       => 'Gear',
+                    'Weapon'     => 'Weapon',
+                    'Border'     => 'User Border',
+                    'Theme'      => 'Theme',
+                    'Recipe'     => 'Recipe',
+                ], $stock->stock_type ?? null, ['class' => 'form-control stock-field', 'placeholder' => 'Select Stock Type', 'id' => 'type']) !!}
             </div>
         </div>
         <div class="col-md-6">
