@@ -8,7 +8,7 @@
                 <div class="mt-2">
                     <h5>
                         {{ $character->displayType }}: <a href="{{ $character->character->url }}">{!! $character->character->slug !!}</a> ・ <span
-                            class="{{ $character->is_open && $character->sales->is_open ? 'text-success' : '' }}">[{{ $character->is_open && $character->sales->is_open ? 'Open' : 'Closed' }}]</span><br />
+                            class="{{ $character->is_open && $character->sales->is_open ? 'text-success' : 'text-danger' }}">[{{ $character->is_open && $character->sales->is_open ? 'Open' : 'Closed' }}]</span><br />
                         <small>
                             {!! $character->image->species->displayName !!} ・ {!! $character->image->rarity->displayName !!}<br />
                         </small>
