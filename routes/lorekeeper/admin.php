@@ -67,6 +67,11 @@ Route::group(['prefix' => 'invitations', 'middleware' => 'power:edit_site_settin
     Route::post('delete/{id}', 'InvitationController@postDeleteKey');
 });
 
+Route::group(['prefix' => 'discord', 'middleware' => 'power:edit_site_settings'], function () {
+    Route::get('/', 'DiscordLinkController@getIndex');
+    Route::post('/', 'DiscordLinkController@postEdit');
+});
+
 Route::group(['prefix' => 'prizecodes', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'PrizeCodeController@getIndex');
     Route::get('/create', 'PrizeCodeController@getCreatePrize');

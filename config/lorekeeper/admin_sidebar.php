@@ -166,7 +166,7 @@ return [
                 'name' => 'Skill Grants',
                 'url'  => 'admin/grants/skills',
             ],
-            [    
+            [
                 'name' => 'Border Grants',
                 'url' => 'admin/grants/borders'
             ],
@@ -408,6 +408,10 @@ return [
             [
                 'name' => 'Theme Manager',
                 'url'  => 'admin/themes',
+            ],
+            [
+                'name' => 'Discord Link',
+                'url'  => 'admin/discord',
             ],
         ],
     ],

@@ -208,9 +208,11 @@
                                 <a class="dropdown-item" href="{{ url('users') }}">
                                     <i class="fa-solid fa-users"></i> Users
                                 </a>
-                                <a class="dropdown-item" href="https://discord.gg/whc3mVZJMp" target="_blank" rel="noopener noreferrer">
-                                    <i class="fa-brands fa-discord"></i> Discord
-                                </a>
+                                @if ($discordUrl = \App\Models\SiteLink::url('discord'))
+                                    <a class="dropdown-item" href="{{ $discordUrl }}">
+                                        <i class="fa-brands fa-discord"></i> Discord
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="https://www.deviantart.com/squibtank">
                                     <i class="fa-brands fa-deviantart"></i> Deviantart
                                 </a>
