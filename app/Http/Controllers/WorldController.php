@@ -1037,7 +1037,7 @@ class WorldController extends Controller
         ]);
     }
 
-    /**
+        /**
      * Gets a specific pet page.
      *
      * @param mixed $id
@@ -1050,8 +1050,6 @@ class WorldController extends Controller
             if (Auth::check() ? !Auth::user()->isStaff : true) {
                 abort(404);
             }
-        } else {
-            $query->sortAlphabetical();
         }
 
         return view('world.pet_page', [
