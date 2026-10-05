@@ -112,7 +112,7 @@
                     <a href="{{ $theme->cssUrl }}"><i class="fas fa-link"></i></a>
                 @endif
                 {!! Form::label('CSS File') !!}
-                <div>{!! Form::file('css') !!}</div>
+                <div>{!! Form::file('css', ['accept' => '.css,text/css']) !!}</div>
                 <div class="text-muted">Only CSS Files. Max file size: 1000 KB.</div>
                 @if ($theme->has_css)
                     <div class="form-check">
@@ -143,7 +143,7 @@
                     <a href="{{ $theme->headerImageUrl }}"><i class="fas fa-link"></i></a>
                 @endif
                 {!! Form::label('Header Image') !!}
-                <div>{!! Form::file('header') !!}</div>
+                <div>{!! Form::file('header', ['accept' => 'image/*']) !!}</div>
                 <div class="text-muted">Header image.</div>
                 @if ($theme->has_header)
                     <div class="form-check">
@@ -162,9 +162,38 @@
         <div class="col-md-4">
             {!! Form::label('Show header image') !!}
             <div class="form-group">
-                {!! Form::checkbox('header_image_display', 1, $theme->themeEditor?->header_image_display == 'inline' ?? 1, ['class' => 'form-check-input form-control', 'data-toggle' => 'toggle']) !!}
+                {!! Form::checkbox('header_image_display', 1, $theme->themeEditor ? $theme->themeEditor->header_image_display == 'inline' : 1, ['class' => 'form-check-input form-control', 'data-toggle' => 'toggle']) !!}
             </div>
         </div>
+    </div>
+
+    <h5>Logo Image</h5>
+    <p>Replaces the site logo (#logo) while this theme is active. Leave blank to use the default logo.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @if ($theme->has_logo)
+                    <a href="{{ $theme->logoUrl }}"><i class="fas fa-link"></i></a>
+                @endif
+                {!! Form::label('Logo Image') !!}
+                <div>{!! Form::file('logo', ['accept' => 'image/png,image/jpeg,image/gif,image/webp']) !!}</div>
+                <div class="text-muted">PNG, JPG, GIF, or WebP. Max file size: 2 MB.</div>
+                @if ($theme->has_logo)
+                    <div class="form-check">
+                        {!! Form::checkbox('remove_logo', 1, false, ['class' => 'form-check-input']) !!}
+                        {!! Form::label('remove_logo', 'Remove current logo', ['class' => 'form-check-label']) !!}
+                    </div>
+                @endif
+            </div>
+        </div>
+        @if ($theme->has_logo)
+            <div class="col-md-6">
+                {!! Form::label('Current Logo') !!}
+                <div class="p-2 border rounded text-center">
+                    <img src="{{ $theme->logoUrl }}" alt="Current logo" style="max-height: 100px; max-width: 100%;">
+                </div>
+            </div>
+        @endif
     </div>
 
     <h5>Background Image</h5>
@@ -177,7 +206,7 @@
                     <a href="{{ $theme->backgroundImageUrl }}"><i class="fas fa-link"></i></a>
                 @endif
                 {!! Form::label('Background Image') !!}
-                <div>{!! Form::file('background') !!}</div>
+                <div>{!! Form::file('background', ['accept' => 'image/*']) !!}</div>
                 <div class="text-muted">Background image.</div>
                 @if ($theme->has_background)
                     <div class="form-check">

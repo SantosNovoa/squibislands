@@ -4,14 +4,31 @@ namespace App\Models;
 
 use App\Models\User\User;
 
-class Theme extends Model {
+class Theme extends Model
+{
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'hash', 'is_default', 'is_active', 'has_css', 'has_header', 'has_background', 'extension', 'extension_background', 'creators', 'prioritize_css', 'link_id', 'link_type', 'is_user_selectable', 'theme_type',
+        'name',
+        'hash',
+        'is_default',
+        'is_active',
+        'has_css',
+        'has_header',
+        'has_background',
+        'has_logo',
+        'extension',
+        'extension_background',
+        'extension_logo',
+        'creators',
+        'prioritize_css',
+        'link_id',
+        'link_type',
+        'is_user_selectable',
+        'theme_type',
     ];
 
     /**
@@ -30,6 +47,8 @@ class Theme extends Model {
         'name'       => 'required|unique:themes|between:3,100',
         'header'     => 'mimes:png,jpg,jpeg,gif,svg',
         'background' => 'mimes:png,jpg,jpeg',
+        'logo'       => 'nullable|mimes:png,jpg,jpeg,gif,webp|max:2048',
+        'css'        => 'nullable|mimes:css,txt|max:1000',
         'active'     => 'nullable|boolean',
         'default'    => 'nullable|boolean',
     ];
@@ -43,6 +62,8 @@ class Theme extends Model {
         'name'       => 'required|between:3,100',
         'header'     => 'mimes:png,jpg,jpeg,gif,svg',
         'background' => 'mimes:png,jpg,jpeg',
+        'logo'       => 'nullable|mimes:png,jpg,jpeg,gif,webp|max:2048',
+        'css'        => 'nullable|mimes:css,txt|max:1000',
         'active'     => 'nullable|boolean',
         'default'    => 'nullable|boolean',
     ];
@@ -51,19 +72,21 @@ class Theme extends Model {
 
         RELATIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Get the users who are using this theme.
      */
-    public function users() {
+    public function users()
+    {
         return $this->hasMany(User::class, 'theme_id');
     }
 
     /**
      * Get the ThemeEditor attached to this theme.
      */
-    public function themeEditor() {
+    public function themeEditor()
+    {
         return $this->hasOne(ThemeEditor::class, 'theme_id');
     }
 
@@ -71,7 +94,7 @@ class Theme extends Model {
 
         SCOPES
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Scope a query to sort themes in alphabetical order.
@@ -81,7 +104,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSortAlphabetical($query, $reverse = false) {
+    public function scopeSortAlphabetical($query, $reverse = false)
+    {
         return $query->orderBy('name', $reverse ? 'DESC' : 'ASC');
     }
 
@@ -92,7 +116,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSortNewest($query) {
+    public function scopeSortNewest($query)
+    {
         return $query->orderBy('id', 'DESC');
     }
 
@@ -103,7 +128,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSortOldest($query) {
+    public function scopeSortOldest($query)
+    {
         return $query->orderBy('id');
     }
 
@@ -114,7 +140,8 @@ class Theme extends Model {
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeVisible($query) {
+    public function scopeVisible($query)
+    {
         return $query->where('is_active', 1);
     }
 
@@ -122,19 +149,20 @@ class Theme extends Model {
 
         ACCESSORS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 
     /**
      * Displays the model's name, linked to its encyclopedia page.
      *
      * @return string
      */
-    public function getDisplayNameAttribute() {
+    public function getDisplayNameAttribute()
+    {
         if (!$this->is_active) {
-            return '<s>'.$this->name.'</a>';
+            return '<s>' . $this->name . '</s>';
         }
         if ($this->is_default) {
-            return $this->name.' (default)';
+            return $this->name . ' (default)';
         } else {
             return $this->name;
         }
@@ -145,7 +173,8 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getCreatorDataAttribute() {
+    public function getCreatorDataAttribute()
+    {
         $creators = json_decode($this->creators, true);
 
         $names = implode(', ', array_keys($creators));
@@ -159,10 +188,11 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getCreatorDisplayNameAttribute() {
+    public function getCreatorDisplayNameAttribute()
+    {
         $names = [];
         foreach (json_decode($this->creators, true) as $name => $url) {
-            $names[] = '<a href="'.$url.'">'.$name.'</a>';
+            $names[] = '<a href="' . $url . '">' . $name . '</a>';
         }
 
         return implode(', ', $names);
@@ -173,7 +203,8 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getImageDirectoryAttribute() {
+    public function getImageDirectoryAttribute()
+    {
         return 'themes';
     }
 
@@ -182,8 +213,9 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getHeaderImageFileNameAttribute() {
-        return $this->id.'-header.'.$this->extension;
+    public function getHeaderImageFileNameAttribute()
+    {
+        return $this->id . '-header.' . $this->extension;
     }
 
     /**
@@ -191,8 +223,19 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getBackgroundImageFileNameAttribute() {
-        return $this->id.'-background.'.$this->extension_background;
+    public function getBackgroundImageFileNameAttribute()
+    {
+        return $this->id . '-background.' . $this->extension_background;
+    }
+
+    /**
+     * Gets the file name of the model's logo image.
+     *
+     * @return string
+     */
+    public function getLogoFileNameAttribute()
+    {
+        return $this->id . '-logo.' . $this->extension_logo;
     }
 
     /**
@@ -200,7 +243,8 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getImagePathAttribute() {
+    public function getImagePathAttribute()
+    {
         return public_path($this->imageDirectory);
     }
 
@@ -209,12 +253,13 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getHeaderImageUrlAttribute() {
+    public function getHeaderImageUrlAttribute()
+    {
         if (!$this->has_header && !$this->themeEditor?->header_image_url) {
             return asset('images/header.png');
         }
 
-        return $this->extension ? asset($this->imageDirectory.'/'.$this->headerImageFileName.'?'.$this->hash) : $this->themeEditor?->header_image_url;
+        return $this->extension ? asset($this->imageDirectory . '/' . $this->headerImageFileName . '?' . $this->hash) : $this->themeEditor?->header_image_url;
     }
 
     /**
@@ -222,12 +267,28 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getBackgroundImageUrlAttribute() {
+    public function getBackgroundImageUrlAttribute()
+    {
         if (!$this->has_background && !$this->themeEditor?->background_image_url) {
             return '';
         }
 
-        return $this->extension_background ? asset($this->imageDirectory.'/'.$this->backgroundImageFileName.'?'.$this->hash) : $this->themeEditor?->background_image_url;
+        return $this->extension_background ? asset($this->imageDirectory . '/' . $this->backgroundImageFileName . '?' . $this->hash) : $this->themeEditor?->background_image_url;
+    }
+
+    /**
+     * Gets the URL of the model's logo image. Returns null when the theme has no logo,
+     * so the layout can fall back to the next theme or the default logo.
+     *
+     * @return string|null
+     */
+    public function getLogoUrlAttribute()
+    {
+        if (!$this->has_logo || !$this->extension_logo) {
+            return null;
+        }
+
+        return asset($this->imageDirectory . '/' . $this->logoFileName . '?' . $this->hash);
     }
 
     /**
@@ -235,8 +296,9 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getCSSFileNameAttribute() {
-        return $this->id.'.css';
+    public function getCSSFileNameAttribute()
+    {
+        return $this->id . '.css';
     }
 
     /**
@@ -244,12 +306,27 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getCSSUrlAttribute() {
+    public function getCSSUrlAttribute()
+    {
         if (!$this->has_css) {
             return null;
         }
 
-        return asset($this->imageDirectory.'/'.$this->CSSFileName.'?'.$this->hash);
+        return asset($this->imageDirectory . '/' . $this->CSSFileName . '?' . $this->hash);
+    }
+
+    /**
+     * Gets the path to the model's css file.
+     *
+     * @return string|null
+     */
+    public function getCSSPathAttribute()
+    {
+        if (!$this->has_css) {
+            return null;
+        }
+
+        return public_path($this->imageDirectory . '/' . $this->CSSFileName);
     }
 
     /**
@@ -257,7 +334,8 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getUserCountAttribute() {
+    public function getUserCountAttribute()
+    {
         return User::where('is_banned', 0)->where('theme_id', $this->id)->count();
     }
 
@@ -266,21 +344,14 @@ class Theme extends Model {
      *
      * @return string
      */
-    public function getAssetTypeAttribute() {
+    public function getAssetTypeAttribute()
+    {
         return 'themes';
-    }
-
-    public function getCSSPathAttribute() {
-        if (!$this->has_css) {
-            return null;
-        }
-
-        return public_path($this->imageDirectory.'/'.$this->CSSFileName);
     }
 
     /**********************************************************************************************
 
         OTHER FUNCTIONS
 
-    **********************************************************************************************/
+     **********************************************************************************************/
 }

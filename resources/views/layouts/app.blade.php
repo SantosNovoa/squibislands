@@ -144,7 +144,7 @@
 <body>
     <div id="app">
         <div class="site-header-image" id="header" style="background-image: url('{{ asset('images/header.png') }}');">
-            <a href="{{ url('/') }}"><img id="logo" class="gelatine" src="{{ asset('images/logo.png') }}"></a>
+            <a href="{{ url('/') }}"><img id="logo" class="gelatine" src="{{ $decoratorTheme?->logoUrl ?? ($conditionalTheme?->logoUrl ?? ($theme?->logoUrl ?? asset('images/logo.png'))) }}" alt="{{ config('lorekeeper.settings.site_name') }}"></a>
         </div>
         @include('layouts._nav')
         {{-- @if (View::hasSection('sidebar'))

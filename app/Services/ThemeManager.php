@@ -52,6 +52,15 @@ class ThemeManager extends Service
                 $data['has_background'] = 0;
             }
 
+            $logo = null;
+            if (isset($data['logo']) && $data['logo']) {
+                $data['has_logo'] = 1;
+                $logo = $data['logo'];
+                unset($data['logo']);
+            } else {
+                $data['has_logo'] = 0;
+            }
+
             $css = null;
             if (isset($data['css']) && $data['css']) {
                 $data['has_css'] = 1;
@@ -77,6 +86,11 @@ class ThemeManager extends Service
                 $theme->extension_background = $background->getClientOriginalExtension();
                 $theme->update();
                 $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, null);
+            }
+            if ($logo) {
+                $theme->extension_logo = $logo->getClientOriginalExtension();
+                $theme->update();
+                $this->handleImage($logo, $theme->imagePath, $theme->logoFileName, null);
             }
 
             if ($css) {
@@ -114,26 +128,36 @@ class ThemeManager extends Service
             $data = $this->populateData($data, $theme);
 
             $header = null;
+            $oldHeader = null;
             if (isset($data['header']) && $data['header']) {
                 if (isset($theme->extension)) {
-                    $old = $theme->headerImageFileName;
-                } else {
-                    $old = null;
+                    $oldHeader = $theme->headerImageFileName;
                 }
                 $data['has_header'] = 1;
                 $header = $data['header'];
                 unset($data['header']);
             }
+
             $background = null;
+            $oldBackground = null;
             if (isset($data['background']) && $data['background']) {
                 if (isset($theme->extension_background)) {
-                    $old = $theme->backgroundImageFileName;
-                } else {
-                    $old = null;
+                    $oldBackground = $theme->backgroundImageFileName;
                 }
                 $data['has_background'] = 1;
                 $background = $data['background'];
                 unset($data['background']);
+            }
+
+            $logo = null;
+            $oldLogo = null;
+            if (isset($data['logo']) && $data['logo']) {
+                if (isset($theme->extension_logo)) {
+                    $oldLogo = $theme->logoFileName;
+                }
+                $data['has_logo'] = 1;
+                $logo = $data['logo'];
+                unset($data['logo']);
             }
 
             $css = null;
@@ -156,12 +180,17 @@ class ThemeManager extends Service
             if ($header) {
                 $theme->extension = $header->getClientOriginalExtension();
                 $theme->update();
-                $this->handleImage($header, $theme->imagePath, $theme->headerImageFileName, $old);
+                $this->handleImage($header, $theme->imagePath, $theme->headerImageFileName, $oldHeader);
             }
             if ($background) {
                 $theme->extension_background = $background->getClientOriginalExtension();
                 $theme->update();
-                $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, $old);
+                $this->handleImage($background, $theme->imagePath, $theme->backgroundImageFileName, $oldBackground);
+            }
+            if ($logo) {
+                $theme->extension_logo = $logo->getClientOriginalExtension();
+                $theme->update();
+                $this->handleImage($logo, $theme->imagePath, $theme->logoFileName, $oldLogo);
             }
 
             if ($css) {
@@ -188,9 +217,7 @@ class ThemeManager extends Service
         DB::beginTransaction();
 
         try {
-            foreach (User::where('theme_id', $theme->id) as $user) {
-                $user->update(['theme_id' => null]);
-            }
+            User::where('theme_id', $theme->id)->update(['theme_id' => null]);
 
             if ($theme->has_header) {
                 $this->deleteImage($theme->imagePath, $theme->headerImageFileName);
@@ -198,10 +225,15 @@ class ThemeManager extends Service
             if ($theme->has_background) {
                 $this->deleteImage($theme->imagePath, $theme->backgroundImageFileName);
             }
-            if ($theme->has_css) {
-                $this->deleteImage($theme->imagePath, $theme->cssFileName);
+            if ($theme->has_logo) {
+                $this->deleteImage($theme->imagePath, $theme->logoFileName);
             }
-            $theme->themeEditor->delete();
+            if ($theme->has_css) {
+                $this->deleteImage($theme->imagePath, $theme->CSSFileName);
+            }
+            if ($theme->themeEditor) {
+                $theme->themeEditor->delete();
+            }
             $theme->delete();
 
             return $this->commitReturn(true);
@@ -308,24 +340,32 @@ class ThemeManager extends Service
         if (isset($data['remove_header']) && isset($theme->extension) && $data['remove_header']) {
             $data['extension'] = null;
             $this->deleteImage($theme->imagePath, $theme->headerImageFileName);
-            unset($data['remove_image']);
             $data['has_header'] = 0;
         }
+        unset($data['remove_header']);
 
         // Remove Background
         if (isset($data['remove_background']) && isset($theme->extension_background) && $data['remove_background']) {
             $data['extension_background'] = null;
             $this->deleteImage($theme->imagePath, $theme->backgroundImageFileName);
-            unset($data['remove_image']);
             $data['has_background'] = 0;
         }
+        unset($data['remove_background']);
+
+        // Remove Logo
+        if (isset($data['remove_logo']) && isset($theme->extension_logo) && $data['remove_logo']) {
+            $data['extension_logo'] = null;
+            $this->deleteImage($theme->imagePath, $theme->logoFileName);
+            $data['has_logo'] = 0;
+        }
+        unset($data['remove_logo']);
 
         // Remove Css
-        if (isset($data['remove_css']) && $data['remove_css']) {
-            $this->deleteImage($theme->imagePath, $theme->cssFileName);
-            unset($data['remove_css']);
+        if (isset($data['remove_css']) && $data['remove_css'] && $theme && $theme->has_css) {
+            $this->deleteImage($theme->imagePath, $theme->CSSFileName);
             $data['has_css'] = 0;
         }
+        unset($data['remove_css']);
 
         if (isset($data['season_link_id'])) {
             $data['link_id'] = $data['season_link_id'];
