@@ -222,7 +222,7 @@ Route::group(['prefix' => 'gallery'], function () {
 
     Route::post('favorite/{id}', 'GalleryController@postFavoriteSubmission');
 
-    Route::get('submit/{id}', 'GalleryController@getNewGallerySubmission');
+    Route::get('submit/{id?}', 'GalleryController@getNewGallerySubmission')->where('id', '[0-9]+');
     Route::get('submit/character/{slug}', 'GalleryController@getCharacterInfo');
     Route::get('edit/{id}', 'GalleryController@getEditGallerySubmission');
     Route::get('queue/{id}', 'GalleryController@getSubmissionLog');

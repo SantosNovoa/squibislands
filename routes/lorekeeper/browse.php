@@ -261,6 +261,7 @@ Route::group(['prefix' => 'gallery'], function () {
     Route::get('{id}', 'GalleryController@getGallery');
     Route::get('view/{id}', 'GalleryController@getSubmission');
     Route::get('view/favorites/{id}', 'GalleryController@getSubmissionFavorites');
+    Route::get('{id}', 'GalleryController@getGallery')->where('id', '[0-9]+');
 });
 
 /**************************************************************************************************

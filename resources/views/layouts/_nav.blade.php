@@ -256,6 +256,9 @@
 
                             <div class="dropdown-menu" aria-labelledby="browseDropdown">
                                 <div class="dropdown-menu-inner">
+                                    <a class="dropdown-item" href="{{ url('gallery/submit') }}">
+                                        <i class="fa-solid fa-images"></i> Gallery
+                                    </a>
                                     <a class="dropdown-item" href="{{ url('submissions/new') }}">
                                         <i class="fa-solid fa-file-arrow-up"></i> Prompt
                                     </a>

@@ -18,7 +18,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
-class GalleryController extends Controller {
+class GalleryController extends Controller
+{
     /*
     |--------------------------------------------------------------------------
     | Gallery Controller
@@ -31,7 +32,8 @@ class GalleryController extends Controller {
     /**
      * Create a new controller instance.
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         View::share('sidebarGalleries', Gallery::whereNull('parent_id')->visible()->sort()->get());
     }
@@ -41,7 +43,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGalleryIndex() {
+    public function getGalleryIndex()
+    {
         $galleries = Gallery::whereNull('parent_id')->active()->sort()->with('children', 'children.submissions', 'submissions')->withCount('submissions', 'children');
 
         return view('galleries.index', [
@@ -59,7 +62,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGallery($id, Request $request) {
+    public function getGallery($id, Request $request)
+    {
         $gallery = Gallery::visible()->where('id', $id)->withCount('submissions')->first();
         if (!$gallery) {
             abort(404);
@@ -70,7 +74,7 @@ class GalleryController extends Controller {
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('gallery_submissions.title', 'LIKE', '%'.$request->get('title').'%');
+                $query->where('gallery_submissions.title', 'LIKE', '%' . $request->get('title') . '%');
             });
         }
 
@@ -123,7 +127,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getAll(Request $request) {
+    public function getAll(Request $request)
+    {
         if (!config('lorekeeper.extensions.show_all_recent_submissions.enable')) {
             abort(404);
         }
@@ -133,7 +138,7 @@ class GalleryController extends Controller {
 
         if ($request->get('title')) {
             $query->where(function ($query) use ($request) {
-                $query->where('gallery_submissions.title', 'LIKE', '%'.$request->get('title').'%');
+                $query->where('gallery_submissions.title', 'LIKE', '%' . $request->get('title') . '%');
             });
         }
         if ($request->get('prompt_id')) {
@@ -179,7 +184,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubmission($id) {
+    public function getSubmission($id)
+    {
         $submission = GallerySubmission::where('id', $id)->with('gallery', 'participants', 'characters')->first();
         if (!$submission) {
             abort(404);
@@ -211,7 +217,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubmissionFavorites($id) {
+    public function getSubmissionFavorites($id)
+    {
         $submission = GallerySubmission::where('id', $id)->withOnly('favorites')->first();
         $favorites = $submission->favorites()->with('user')->get();
 
@@ -228,7 +235,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getSubmissionLog($id) {
+    public function getSubmissionLog($id)
+    {
         $submission = GallerySubmission::where('id', $id)->with('participants')->without('favorites', 'comments')->first();
         if (!$submission) {
             abort(404);
@@ -272,7 +280,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function postSubmissionTotals(Request $request, $id) {
+    public function postSubmissionTotals(Request $request, $id)
+    {
         $submission = GallerySubmission::find($id);
         if (!$submission) {
             abort(404);
@@ -302,7 +311,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserSubmissions(Request $request, $type) {
+    public function getUserSubmissions(Request $request, $type)
+    {
         $submissions = GallerySubmission::userSubmissions(Auth::user())->with('gallery')->without('favorites', 'comments');
         if (!$type) {
             $type = 'Pending';
@@ -323,28 +333,85 @@ class GalleryController extends Controller {
      *
      * @param mixed $id
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
      */
-    public function getNewGallerySubmission(Request $request, $id) {
+    /**
+     * Shows the submit page.
+     *
+     * @param mixed $id
+     *
+     * @return \Illuminate\Contracts\Support\Renderable|\Illuminate\Http\RedirectResponse
+     */
+    public function getNewGallerySubmission(Request $request, $id = null)
+    {
         if (!Auth::check()) {
             abort(404);
         }
-        $gallery = Gallery::find($id);
-        $closed = !Settings::get('gallery_submissions_open');
 
-        $galleryCriteria = GalleryCriterion::where('gallery_id', $id)->pluck('criterion_id')->toArray();
+        $user = Auth::user();
+        $submissionsOpen = Settings::get('gallery_submissions_open');
+        $closed = !$submissionsOpen;
+
+        // Top-level galleries in sidebar order, each followed by its subgalleries
+        $submittable = collect();
+        foreach (Gallery::whereNull('parent_id')->sort()->with('children')->get() as $parent) {
+            $submittable->push($parent);
+            foreach ($parent->children as $child) {
+                $submittable->push($child);
+            }
+        }
+        $submittable = $submittable->filter(fn($g) => $g->canSubmit($submissionsOpen, $user))->values();
+
+        // /gallery/submit with no ID → send them to the first gallery they can submit to
+        if (!$id) {
+            if ($closed) {
+                return redirect('gallery')->with('error', 'Gallery submissions are currently closed.');
+            }
+
+            $first = $submittable->first();
+
+            return $first
+                ? redirect('gallery/submit/' . $first->id)
+                : redirect('gallery')->with('error', 'No galleries are currently open for submissions.');
+        }
+
+        $gallery = Gallery::find($id);
+        if (!$gallery) {
+            abort(404);
+        }
+
+        // Criteria options for a gallery — use the same query as your existing 'criteria' line, with $gallery swapped for $g
+        $criteriaFor = fn($g) => Criterion::active()->whereIn('id', $g->criteria->pluck('criterion_id'))->pluck('name', 'id');
+
+        $optionGalleries = $submittable->push($gallery)->unique('id')->values();
+
+        // Dropdown labels: "Parent › Child" for subgalleries
+        $galleryOptions = $optionGalleries
+            ->mapWithKeys(fn($g) => [$g->id => ($g->parent_id ? $g->parent->name . ' › ' : '') . $g->name])
+            ->toArray();
+
+        // Per-gallery settings the page swaps in when the dropdown changes.
+        // Criteria are sent as [{id, name}] pairs because JS reorders numeric object keys.
+        $galleryConfig = $optionGalleries->mapWithKeys(fn($g) => [$g->id => [
+            'name'      => $g->name,
+            'prompts'   => $g->prompt_selection == 1,
+            'locations' => $g->location_selection == 1,
+            'criteria'  => $criteriaFor($g)->map(fn($name, $cid) => ['id' => $cid, 'name' => $name])->values(),
+        ]]);
 
         return view('galleries.create_edit_submission', [
-            'closed' => $closed,
+            'closed'         => $closed,
+            'gallery'        => $gallery,
+            'submission'     => new GallerySubmission,
+            'galleryOptions' => $galleryOptions,
+            'galleryConfig'  => $galleryConfig,
+            'galleryPage'    => true,
+            'sideGallery'    => $gallery,
         ] + ($closed ? [] : [
-            'gallery'     => $gallery,
-            'submission'  => new GallerySubmission,
-            'prompts'     => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
-            'locations'   => Location::visible()->sortAlphabetical()->get()->sortBy('parent_id')->pluck('styleParent', 'id')->toArray(),
-            'users'       => User::visible()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'galleryPage' => true,
-            'sideGallery' => $gallery,
-            'criteria'    => Criterion::active()->whereIn('id', $galleryCriteria)->orderBy('name')->pluck('name', 'id'),
+            'prompts'   => Prompt::active()->sortAlphabetical()->pluck('name', 'id')->toArray(),
+            'users'     => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
+            'locations' => Location::all()->pluck('name', 'id')->toArray(), // ← keep your existing locations line
+            'criteria'  => $criteriaFor($gallery),
         ]));
     }
 
@@ -355,7 +422,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditGallerySubmission($id) {
+    public function getEditGallerySubmission($id)
+    {
         if (!Auth::check()) {
             abort(404);
         }
@@ -395,7 +463,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCharacterInfo($slug) {
+    public function getCharacterInfo($slug)
+    {
         $character = Character::visible()->where('slug', $slug)->first();
 
         return view('galleries._character', [
@@ -410,7 +479,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getArchiveSubmission($id) {
+    public function getArchiveSubmission($id)
+    {
         $submission = GallerySubmission::find($id);
 
         return view('galleries._archive_submission', [
@@ -426,10 +496,27 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditGallerySubmission(Request $request, GalleryManager $service, $id = null) {
+    public function postCreateEditGallerySubmission(Request $request, GalleryManager $service, $id = null)
+    {
         $id ? $request->validate(GallerySubmission::$updateRules) : $request->validate(GallerySubmission::$createRules);
-        $data = $request->only(['image', 'text', 'title', 'description', 'slug', 'collaborator_id', 'collaborator_data', 'participant_id', 'participant_type', 'gallery_id', 'alert_user', 'prompt_id', 'location_id', 'content_warning',
-        'criterion', 'criterion_id',]);
+        $data = $request->only([
+            'image',
+            'text',
+            'title',
+            'description',
+            'slug',
+            'collaborator_id',
+            'collaborator_data',
+            'participant_id',
+            'participant_type',
+            'gallery_id',
+            'alert_user',
+            'prompt_id',
+            'location_id',
+            'content_warning',
+            'criterion',
+            'criterion_id',
+        ]);
 
         if (!$id && Settings::get('gallery_submissions_reward_currency')) {
             $currencyFormData = $request->only(['criterion']) ?? null;
@@ -460,7 +547,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postArchiveSubmission(Request $request, GalleryManager $service, $id) {
+    public function postArchiveSubmission(Request $request, GalleryManager $service, $id)
+    {
         if ($id && $service->archiveSubmission(GallerySubmission::find($id), Auth::user())) {
             flash('Submission updated successfully.')->success();
         } else {
@@ -480,7 +568,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditCollaborator(Request $request, GalleryManager $service, $id) {
+    public function postEditCollaborator(Request $request, GalleryManager $service, $id)
+    {
         $data = $request->only(['collaborator_data', 'remove_user']);
         if ($service->editCollaborator(GallerySubmission::find($id), $data, Auth::user())) {
             flash('Collaborator info edited successfully.')->success();
@@ -501,7 +590,8 @@ class GalleryController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postFavoriteSubmission(Request $request, GalleryManager $service, $id) {
+    public function postFavoriteSubmission(Request $request, GalleryManager $service, $id)
+    {
         if ($service->favoriteSubmission(GallerySubmission::find($id), Auth::user())) {
             flash('Favorite updated successfully.')->success();
         } else {

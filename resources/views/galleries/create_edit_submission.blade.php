@@ -12,7 +12,11 @@
     ]) !!}
 
     <h1>
-        {{ $submission->id ? 'Edit Submission (#' . $submission->id . ', "' . $submission->displayTitle . '")' : 'Submit to ' . $gallery->name }}
+        @if ($submission->id)
+            Edit Submission (#{{ $submission->id }}, "{{ $submission->displayTitle }}")
+        @else
+            Submit to <span id="galleryHeading">{{ $gallery->name }}</span>
+        @endif
         @if ($submission->id)
             <div class="float-right">
                 @if ($submission->status == 'Accepted')
@@ -22,6 +26,14 @@
             </div>
         @endif
     </h1>
+
+    @if (!$submission->id && !$closed)
+        <div class="form-group">
+            {!! Form::label('gallerySelect', 'Gallery') !!}
+            {!! Form::select('gallery_select', $galleryOptions, $gallery->id, ['class' => 'form-control', 'id' => 'gallerySelect']) !!}
+            <small class="text-muted">Choose which gallery you're submitting to. Switching keeps everything you've entered except criteria you've added.</small>
+        </div>
+    @endif
 
     @if (!$submission->id && ($closed || !$gallery->canSubmit(Settings::get('gallery_submissions_open'), Auth::user())))
         <div class="alert alert-danger">
@@ -85,23 +97,24 @@
                     {!! Form::text('content_warning', $submission->content_warning ?? old('content_warning'), ['class' => 'form-control']) !!}
                 </div>
 
-                @if ($gallery->prompt_selection == 1 && (!$submission->id || Auth::user()->hasPower('manage_submissions')))
-                    <div class="form-group">
+                {{-- On new submissions the prompt field is always rendered and hidden/disabled for galleries that don't use it, so switching galleries can toggle it --}}
+                @if (!$submission->id || ($gallery->prompt_selection == 1 && Auth::user()->hasPower('manage_submissions')))
+                    <div class="form-group {{ $gallery->prompt_selection == 1 ? '' : 'hide' }}" id="promptGroup">
                         {!! Form::label('prompt_id', ($submission->id && Auth::user()->hasPower('manage_submissions') ? '[Admin] ' : '') . 'Prompt (Optional)') !!} {!! add_help(
                             'This <strong>does not</strong> automatically submit to the selected prompt, and you will need to submit to it separately. The prompt selected here will be displayed on the submission page for future reference. You will not be able to edit this after creating the submission.',
                         ) !!}
-                        {!! Form::select('prompt_id', $prompts, $submission->prompt_id ?? old('prompt_id'), ['class' => 'form-control selectize', 'id' => 'prompt', 'placeholder' => 'Select a Prompt']) !!}
+                        {!! Form::select('prompt_id', $prompts, $submission->prompt_id ?? old('prompt_id'), ['class' => 'form-control selectize', 'id' => 'prompt', 'placeholder' => 'Select a Prompt'] + ($gallery->prompt_selection == 1 ? [] : ['disabled' => 'disabled'])) !!}
                     </div>
                 @else
                     {!! $submission->prompt_id ? '<p><strong>Prompt:</strong> ' . $submission->prompt->displayName . '</p>' : '' !!}
                 @endif
 
-                @if ($gallery->location_selection == 1 && (!$submission->id || Auth::user()->hasPower('manage_submissions')))
-                    <div class="form-group">
+                @if (!$submission->id || ($gallery->location_selection == 1 && Auth::user()->hasPower('manage_submissions')))
+                    <div class="form-group {{ $gallery->location_selection == 1 ? '' : 'hide' }}" id="locationGroup">
                         {!! Form::label('location_id', ($submission->id && Auth::user()->hasPower('manage_submissions') ? '[Admin] ' : '') . 'Location (Optional)') !!} {!! add_help(
                             'This <strong>does not</strong> automatically submit to the selected location, and you will need to submit to it separately. The location selected here will be displayed on the submission page for future reference. You will not be able to edit this after creating the submission.',
                         ) !!}
-                        {!! Form::select('location_id', $locations, $submission->location_id, ['class' => 'form-control selectize', 'id' => 'location', 'placeholder' => 'Select a Location']) !!}
+                        {!! Form::select('location_id', $locations, $submission->location_id ?? old('location_id'), ['class' => 'form-control selectize', 'id' => 'location', 'placeholder' => 'Select a Location'] + ($gallery->location_selection == 1 ? [] : ['disabled' => 'disabled'])) !!}
                     </div>
                 @else
                     {!! $submission->location_id ? '<p><strong>Location:</strong> ' . $submission->location->displayName . '</p>' : '' !!}
@@ -123,9 +136,9 @@
                 <h3>Characters</h3>
                 <p>
                     Add the characters included in this piece.
-                    @if ($gallery->criteria)
+                    <span id="currencyNote" class="{{ $gallery->criteria->count() > 0 ? '' : 'hide' }}">
                         This helps the staff processing your submission award currency for it, so be sure to add every character.
-                    @endif
+                    </span>
                 </p>
                 <div id="characters" class="mb-3">
                     @if ($submission->id)
@@ -283,12 +296,14 @@
             @endif
         </div>
 
-        @if ($gallery->criteria->count() > 0 && !$submission->id)
-            <h2 id="criterion-section" class="mt-5">Criteria Rewards <button class="btn  btn-outline-info float-right add-calc" type="button">Add Criterion</a></h2>
-            <p>Criteria can be used in addition to or in replacement of rewards. They take input on what you are turning in for the prompt in order to calculate your final reward.</p>
-            <p>Criteria may populate in with pre-selected minimum requirements for this prompt. </p>
-            <div id="criteria"></div>
-            <div class="mb-4"></div>
+        @if (!$submission->id)
+            <div id="criteriaSection" class="{{ $gallery->criteria->count() > 0 ? '' : 'hide' }}">
+                <h2 id="criterion-section" class="mt-5">Criteria Rewards <button class="btn btn-outline-info float-right add-calc" type="button">Add Criterion</button></h2>
+                <p>Criteria can be used in addition to or in replacement of rewards. They take input on what you are turning in for the prompt in order to calculate your final reward.</p>
+                <p>Criteria may populate in with pre-selected minimum requirements for this prompt. </p>
+                <div id="criteria"></div>
+                <div class="mb-4"></div>
+            </div>
         @endif
 
         @if ($submission->id && Auth::user()->id != $submission->user->id && Auth::user()->hasPower('manage_submissions'))
@@ -367,6 +382,10 @@
                 var $confirmationModal = $('#confirmationModal');
                 var $formSubmit = $('#formSubmit');
                 var $gallerySubmissionForm = $('#gallerySubmissionForm');
+
+                // Gallery currently selected for a new submission (falls back to the page's gallery on edit pages)
+                var $galleryIdInput = $gallerySubmissionForm.find('input[type=hidden][name=gallery_id]');
+                var currentGalleryId = $galleryIdInput.val() || '{{ $gallery->id }}';
 
                 $submitButton.on('click', function(e) {
                     e.preventDefault();
@@ -479,7 +498,7 @@
 
                     if (id) {
                         var form = $(this).closest('.card').find('.form');
-                        form.load("{{ url('criteria/gallery') }}/" + id + "/{{ $gallery->id }}/" + formId, (response, status, xhr) => {
+                        form.load("{{ url('criteria/gallery') }}/" + id + "/" + currentGalleryId + "/" + formId, (response, status, xhr) => {
                             if (status == "error") {
                                 var msg = "Error: ";
                                 console.error(msg + xhr.status + " " + xhr.statusText);
@@ -494,6 +513,74 @@
                 }
 
                 $('.criterion-select').on('change', loadForm);
+
+                /* ---------- Gallery switching (new submissions only) ---------- */
+
+                var galleryConfig = @json($galleryConfig ?? []);
+                var $galleryCrumb = $('.breadcrumb a[href="{{ url('gallery/' . $gallery->id) }}"]');
+
+                // Show/enable or hide/clear/disable a field group (handles selectize if it's been applied)
+                function toggleField(groupId, selectId, enabled) {
+                    var $group = $('#' + groupId);
+                    var el = document.getElementById(selectId);
+                    if (!$group.length || !el) return;
+                    var sz = el.selectize;
+
+                    if (enabled) {
+                        sz ? sz.enable() : $(el).prop('disabled', false);
+                        $group.removeClass('hide');
+                    } else {
+                        if (sz) {
+                            sz.clear();
+                            sz.disable();
+                        } else {
+                            $(el).val('').prop('disabled', true);
+                        }
+                        $group.addClass('hide');
+                    }
+                }
+
+                $('#gallerySelect').on('change', function() {
+                    var id = $(this).val();
+                    var config = galleryConfig[id];
+
+                    // No form on the page (e.g. "You can't submit to this gallery"), or no config: fall back to a reload
+                    if (!$gallerySubmissionForm.length || !config) {
+                        window.location.href = '{{ url('gallery/submit') }}/' + id;
+                        return;
+                    }
+
+                    // Criteria rows belong to the old gallery, so they have to go
+                    var $rows = $('#criteria').children();
+                    if ($rows.length && !confirm("Switching galleries will remove the criteria you've added. Continue?")) {
+                        $(this).val(currentGalleryId);
+                        return;
+                    }
+                    $rows.remove();
+
+                    currentGalleryId = id;
+                    $galleryIdInput.val(id);
+
+                    // Heading, breadcrumb, and URL (so a refresh keeps the selection)
+                    $('#galleryHeading').text(config.name);
+                    $galleryCrumb.text(config.name).attr('href', '{{ url('gallery') }}/' + id);
+                    history.replaceState(null, '', '{{ url('gallery/submit') }}/' + id);
+
+                    // Per-gallery fields
+                    toggleField('promptGroup', 'prompt', config.prompts);
+                    toggleField('locationGroup', 'location', config.locations);
+
+                    // Criteria section + selector options
+                    var hasCriteria = config.criteria.length > 0;
+                    $('#criteriaSection').toggleClass('hide', !hasCriteria);
+                    $('#currencyNote').toggleClass('hide', !hasCriteria);
+
+                    var $template = $('#copy-calc .criterion-select').empty()
+                        .append($('<option>', { value: '', text: 'Select a Criterion to set options' }));
+                    config.criteria.forEach(function(c) {
+                        $template.append($('<option>', { value: c.id, text: c.name }));
+                    });
+                });
             });
         </script>
     @endif
