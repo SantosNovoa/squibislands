@@ -177,6 +177,14 @@ class CharacterTitleService extends Service {
             unset($data['remove_image']);
         }
 
+        // Font colour: null means "use the default" (white)
+        if (isset($data['default_text_colour']) && $data['default_text_colour']) {
+            $data['text_colour'] = null;
+        } elseif (!isset($data['text_colour']) || !$data['text_colour']) {
+            $data['text_colour'] = null;
+        }
+        unset($data['default_text_colour']);
+
         return $data;
     }
 }

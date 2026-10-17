@@ -57,6 +57,17 @@
             @endif
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6 form-group">
+            {!! Form::label('text_colour', 'Font Colour (Optional)') !!} {!! add_help('The colour of the title text on its badge. Leave on default to use white.') !!}
+            @php $rawTextColour = $title->id ? $title->getRawOriginal('text_colour') : null; @endphp
+            {!! Form::color('text_colour', $rawTextColour ?? '#ffffff', ['class' => 'form-control', 'id' => 'textColour']) !!}
+            <div class="form-check mt-1">
+                {!! Form::checkbox('default_text_colour', 1, !$rawTextColour, ['class' => 'form-check-input', 'id' => 'defaultTextColour']) !!}
+                {!! Form::label('defaultTextColour', 'Use default (white)', ['class' => 'form-check-label']) !!}
+            </div>
+        </div>
+    </div>
 
     <div class="form-group">
         {!! Form::label('World Page Image (Optional)') !!} {!! add_help('This image is used only on the world information pages.') !!}
@@ -92,6 +103,7 @@
         <h3>Preview</h3>
         <div class="card mb-3">
             <div class="card-body">
+                <div class="mb-3">Badge: {!! $title->displayTitle([]) !!}</div>
                 @include('world._title_entry', ['imageUrl' => $title->titleImageUrl, 'name' => $title->displayNameFull, 'description' => $title->parsed_description, 'searchCharactersUrl' => $title->searchCharactersUrl])
             </div>
         </div>
@@ -116,6 +128,13 @@
 
                 attachRemoveListener($colourForm.find('.removeColour'));
             });
+
+            // Disable the font colour picker while "use default" is checked
+            function toggleTextColour() {
+                $('#textColour').prop('disabled', $('#defaultTextColour').is(':checked'));
+            }
+            $('#defaultTextColour').on('change', toggleTextColour);
+            toggleTextColour();
 
             $('.removeColour').each(function() {
                 attachRemoveListener($(this));

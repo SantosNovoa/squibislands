@@ -22,6 +22,7 @@ class CharacterTitle extends Model
         'parsed_description',
         'rarity_id',
         'colours',
+        'text_colour',
     ];
 
     /**
@@ -50,6 +51,7 @@ class CharacterTitle extends Model
         'short_title' => 'nullable|unique:character_titles|between:3,25',
         'description' => 'nullable',
         'image'       => 'mimes:png',
+        'text_colour' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
     ];
 
     /**
@@ -62,6 +64,7 @@ class CharacterTitle extends Model
         'short_title' => 'nullable|between:3,25',
         'description' => 'nullable',
         'image'       => 'mimes:png',
+        'text_colour' => ['nullable', 'regex:/^#[0-9a-fA-F]{6}$/'],
     ];
 
     /**********************************************************************************************
@@ -230,6 +233,16 @@ class CharacterTitle extends Model
         return "linear-gradient(to right, {$colours})";
     }
 
+    /**
+     * Returns the font colour for the title badge, defaulting to white.
+     *
+     * @return string
+     */
+    public function getTextColourAttribute($value)
+    {
+        return $value ?: '#ffffff';
+    }
+
     /**********************************************************************************************
 
         OTHER FUNCTIONS
@@ -244,7 +257,7 @@ class CharacterTitle extends Model
      */
     public function displayTitle($data, $padding = true)
     {
-        return '<a href="' . $this->url . '"><span class="badge ' . ($padding ? 'ml-1' : '') . '" style="color: white; background: ' . $this->backgroundColour . ';"' .
+        return '<a href="' . $this->url . '"><span class="badge ' . ($padding ? 'ml-1' : '') . '" style="color: ' . $this->text_colour . ' !important; background: ' . $this->backgroundColour . ';"' .
             (isset($data['full']) ? ' data-toggle="tooltip" title="' . $this->title . '">' . $data['full'] : '>' . $this->title)
             . '</span></a>';
     }
