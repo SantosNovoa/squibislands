@@ -80,12 +80,12 @@
                                     <a class="dropdown-item" href="{{ url('info/squib_design') }}">
                                         <i class="fa-solid fa-paintbrush"></i> Designing
                                     </a>
-                                    <a class="dropdown-item" href="{{ url('info/magic_guide') }}">
-                                        <i class="fa-solid fa-wand-sparkles"></i> Magic
-                                    </a>
                                     <a class="dropdown-item" href="{{ url('info/companions') }}">
                                         <i class="fa-solid fa-paw"></i> Companions
                                     </a>
+                                    {{-- <a class="dropdown-item" href="{{ url('info/magic_guide') }}">
+                                        <i class="fa-solid fa-wand-sparkles"></i> Magic
+                                    </a> --}}
                                 </div>
                                 <div class="dropdown-column">
                                     <h3 class="dropdown-header" style="color: black;font-size: 18px; text-align:center;">Traits</h3>
@@ -153,7 +153,10 @@
                         <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
                             <div class="dropdown-menu-inner">
                                 <a class="dropdown-item" href="{{ url('masterlist') }}">
-                                    <i class="fa-solid fa-fish"></i> Character Masterlist
+                                    <i class="fa-solid fa-fish"></i> Squibs
+                                </a>
+                                <a class="dropdown-item" href="{{ url('sublist/companion_designs') }}">
+                                    <i class="fa-solid fa-paw"></i> Companions
                                 </a>
                                 <a class="dropdown-item" href="{{ url('sublist/npc_designs') }}">
                                     <i class="fa-solid fa-heart"></i> NPCs
@@ -165,7 +168,7 @@
                     @if (Auth::check())
                         <li class="nav-item dropdown">
                             <a id="inventoryDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                <i class="fa-solid fa-gamepad"></i> <span class="nav-text">Activities</span>
+                                <i class="fa-solid fa-gamepad"></i> <span class="nav-text">Play</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="inventoryDropdown">
                                 <div class="dropdown-menu-inner">
@@ -181,9 +184,9 @@
                                     <a class="dropdown-item" href="{{ url('world/bosses') }}">
                                         <i class="fa-solid fa-dice"></i> Bosses
                                     </a>
-                                    <a class="dropdown-item" href="{{ url('crafting') }}">
+                                    {{-- <a class="dropdown-item" href="{{ url('crafting') }}">
                                         <i class="fa-solid fa-hammer"></i> Crafting
-                                    </a>
+                                    </a> --}}
                                     {{-- <div class="dropdown-divider"></div> --}}
                                     <a class="dropdown-item" href="{{ url('shops') }}">
                                         <i class="fa-solid fa-store"></i> Shops
@@ -202,9 +205,6 @@
 
                         <div class="dropdown-menu" aria-labelledby="browseDropdown">
                             <div class="dropdown-menu-inner">
-                                <a class="dropdown-item" href="{{ url('forms') }}">
-                                    <i class="fa-solid fa-clipboard-question"></i> Feedback
-                                </a>
                                 <a class="dropdown-item" href="{{ url('users') }}">
                                     <i class="fa-solid fa-users"></i> Users
                                 </a>
@@ -218,6 +218,9 @@
                                 </a>
                                 <a class="dropdown-item" href="https://toyhou.se/~world/52279.squib-islands">
                                     <i class="fa-solid fa-house"></i> Toyhouse
+                                </a>
+                                <a class="dropdown-item" href="{{ url('forms') }}">
+                                    <i class="fa-solid fa-clipboard-question"></i> Feedback
                                 </a>
                             </div>
                         </div>
