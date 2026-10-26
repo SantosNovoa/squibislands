@@ -73,8 +73,13 @@ return [
         'filename'    => 'logo.png',
     ],
     'background'      => [
-    'name'            => 'Background Image',
-    'description'     => 'The main site background image. JPG format recommended for file size. Recommended minimum size: 1920x1080px.',
-    'filename'        => 'background.jpg',
+        'name'            => 'Background Image',
+        'description'     => 'The main site background image. JPG format recommended for file size. Recommended minimum size: 1920x1080px.',
+        'filename'        => 'background.jpg',
+    ],
+    'literature-default' => [
+        'name'        => 'Literature Default Thumbnail',
+        'description' => 'Shown as the gallery thumbnail for literature submissions that have no image. Best at roughly the same size as other gallery thumbnails.',
+        'filename'    => 'literature-default.png',
     ],
 ];

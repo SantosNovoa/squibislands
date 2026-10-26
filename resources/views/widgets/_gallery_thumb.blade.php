@@ -2,6 +2,12 @@
     <img class="img-thumbnail" src="{{ asset('/images/content_warning.png') }}" alt="Content Warning" />
 @elseif(isset($submission->hash))
     <img class="img-thumbnail" src="{{ $submission->thumbnailUrl }}" alt="Submission thumbnail" />
+@elseif($submission->literatureThumbnailUrl)
+    <div class="mx-auto position-relative d-inline-block">
+        <span class="badge-primary px-2 py-1" style="border-radius:0 0 .5em 0; position:absolute; top:0; left:0; z-index:5;">Literature</span>
+        <img class="img-thumbnail" src="{{ $submission->literatureThumbnailUrl }}" alt="Literature thumbnail for {{ $submission->title }}"
+            style="height:{{ config('lorekeeper.settings.masterlist_thumbnails.height') + 8 }}px; width:220px; object-fit:fill;" />
+    </div>
 @else
     <div class="mx-auto img-thumbnail text-left" style="height:{{ config('lorekeeper.settings.masterlist_thumbnails.height') + 8 }}px; width:{{ config('lorekeeper.settings.masterlist_thumbnails.width') + 4 }}px;">
         <span class="badge-primary px-2 py-1" style="border-radius:0 0 .5em 0; position:absolute; z-index:5;">Literature</span>
