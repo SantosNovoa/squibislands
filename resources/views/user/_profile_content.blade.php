@@ -132,7 +132,7 @@
                     @foreach ($awards as $award)
                         <div class="col-md-3 col-6 profile-inventory-item">
                             @if ($award->imageUrl)
-                                <img src="{{ $award->imageUrl }}" class="img-fluid" data-toggle="tooltip" title="{{ $award->name }}" />
+                                <img src="{{ $award->imageUrl }}" class="img-fluid h-100 object-fit-cover" data-toggle="tooltip" title="{{ $award->name }}" />
                             @else
                                 <p>{{ $award->name }}</p>
                             @endif
