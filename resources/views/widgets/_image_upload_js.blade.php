@@ -1,6 +1,13 @@
 <script>
     $(document).ready(function() {
 
+        // Shared Selectize options ///////////////////////////////////////////////////////////////////
+        // Render dropdowns on <body> so they aren't clipped by .main-content { overflow: hidden }
+
+        var selectizeOpts = {
+            dropdownParent: 'body'
+        };
+
         // Cropper ////////////////////////////////////////////////////////////////////////////////////
 
         var $useCropper = $('#useCropper');
@@ -29,7 +36,7 @@
 
         // Designers and artists //////////////////////////////////////////////////////////////////////
 
-        $('.selectize').selectize();
+        $('.selectize').selectize(selectizeOpts);
         $('.add-designer').on('click', function(e) {
             e.preventDefault();
             addDesignerRow($(this));
@@ -47,7 +54,7 @@
             $trigger.css({
                 visibility: 'hidden'
             });
-            $clone.find('.designer-select').selectize();
+            $clone.find('.designer-select').selectize(selectizeOpts);
         }
 
         $('.add-artist').on('click', function(e) {
@@ -67,19 +74,19 @@
             $trigger.css({
                 visibility: 'hidden'
             });
-            $clone.find('.artist-select').selectize();
+            $clone.find('.artist-select').selectize(selectizeOpts);
         }
 
         // Traits /////////////////////////////////////////////////////////////////////////////////////
 
         @if (config('lorekeeper.extensions.organised_traits_dropdown'))
-            $('.initial.feature-select').selectize({
+            $('.initial.feature-select').selectize($.extend({}, selectizeOpts, {
                 render: {
                     item: featureSelectedRender
                 }
-            });
+            }));
         @else
-            $('.initial.feature-select').selectize();
+            $('.initial.feature-select').selectize(selectizeOpts);
         @endif
         $('#add-feature').on('click', function(e) {
             e.preventDefault();
@@ -100,13 +107,13 @@
                 removeFeatureRow($(this));
             })
             @if (config('lorekeeper.extensions.organised_traits_dropdown'))
-                $clone.find('.feature-select').selectize({
+                $clone.find('.feature-select').selectize($.extend({}, selectizeOpts, {
                     render: {
                         item: featureSelectedRender
                     }
-                });
+                }));
             @else
-                $clone.find('.feature-select').selectize();
+                $clone.find('.feature-select').selectize(selectizeOpts);
             @endif
         }
 
