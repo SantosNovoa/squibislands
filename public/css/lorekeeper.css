@@ -1871,3 +1871,10 @@ a.text-warning:focus {
         background-size: cover;
     }
 }
+
+/* 
+this needs to be changed later to a specific class for the awards but i was too lazy and this works for now
+*/
+.img-fluid.h-100.object-fit-cover {
+  max-height: 210px;
+}
