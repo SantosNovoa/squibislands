@@ -1878,3 +1878,7 @@ this needs to be changed later to a specific class for the awards but i was too 
 .img-fluid.h-100.object-fit-cover {
   max-height: 210px;
 }
+
+.si-shortcut-label {
+  color: #212529 !important;
+}

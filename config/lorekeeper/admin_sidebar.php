@@ -413,6 +413,10 @@ return [
                 'name' => 'Discord Link',
                 'url'  => 'admin/discord',
             ],
+            [
+                'name' => 'Event Banners',
+                'url'  => 'admin/event-banners',
+            ],
         ],
     ],
     'Spotlight' => [

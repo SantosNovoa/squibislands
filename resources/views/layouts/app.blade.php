@@ -243,12 +243,6 @@
                             <div class="pl-1 pr-1">{!! $currency->display($currency->quantity) !!}</div>
                         @endforeach
                     </div>
-                    <a href="{{ url('inventory') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
-                        Inventory <i class="fas fa-arrow-right"></i>
-                    </a> 
-                    <a href="{{ url('dailies') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
-                        Dailies <i class="fas fa-arrow-right"></i>
-                    </a>
                     <a href="{{ url('redeem-code') }}" class="btn btn-primary" style="text-transform: none; color: #fff; font-family: Lato, sans-serif; min-width: 110px;">
                         Codes <i class="fas fa-arrow-right"></i>
                     </a>  

@@ -82,4 +82,24 @@ return [
         'description' => 'Shown as the gallery thumbnail for literature submissions that have no image. Best at roughly the same size as other gallery thumbnails.',
         'filename'    => 'literature-default.png',
     ],
+    'dashboard_dailies' => [
+        'name'        => 'Dashboard: Dailies',
+        'description' => 'Icon for the Dailies shortcut beside Recent News on the dashboard. Square PNG with a transparent background, around 300x300.',
+        'filename'    => 'dashboard_dailies.png',
+    ],
+    'dashboard_shops' => [
+        'name'        => 'Dashboard: Shops',
+        'description' => 'Icon for the Shops shortcut beside Recent News on the dashboard. Square PNG with a transparent background, around 300x300.',
+        'filename'    => 'dashboard_shops.png',
+    ],
+    'dashboard_prompts' => [
+        'name'        => 'Dashboard: Prompts',
+        'description' => 'Icon for the Prompts shortcut beside Recent News on the dashboard. Square PNG with a transparent background, around 300x300.',
+        'filename'    => 'dashboard_prompts.png',
+    ],
+    'dashboard_inventory' => [
+        'name'        => 'Dashboard: Inventory',
+        'description' => 'Icon for the Inventory shortcut beside Recent News on the dashboard. Square PNG with a transparent background, around 300x300.',
+        'filename'    => 'dashboard_inventory.png',
+    ],
 ];

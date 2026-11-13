@@ -1,6 +1,16 @@
 <h1>Welcome, {!! Auth::user()->displayName !!}!</h1>
 
-@include('widgets._news', ['textPreview' => true])
+@include('widgets._event_banner')
+
+<div class="row">
+    <div class="col-lg-8 mb-4 si-news-col">
+    @include('widgets._news', ['textPreview' => true])
+</div>
+    <div class="col-lg-4 mb-4">
+        @include('widgets._dashboard_shortcuts')
+    </div>
+</div>
+
 @include('widgets._sales')
 
 

@@ -72,6 +72,17 @@ Route::group(['prefix' => 'discord', 'middleware' => 'power:edit_site_settings']
     Route::post('/', 'DiscordLinkController@postEdit');
 });
 
+# EVENT BANNERS
+Route::group(['prefix' => 'event-banners', 'middleware' => 'power:edit_site_settings'], function () {
+    Route::get('/', 'EventBannerController@getIndex');
+    Route::post('toggle', 'EventBannerController@postToggle');
+    Route::get('create', 'EventBannerController@getCreateBanner');
+    Route::get('edit/{id}', 'EventBannerController@getEditBanner');
+    Route::post('create', 'EventBannerController@postCreateEditBanner');
+    Route::post('edit/{id}', 'EventBannerController@postCreateEditBanner');
+    Route::post('delete/{id}', 'EventBannerController@postDeleteBanner');
+});
+
 Route::group(['prefix' => 'prizecodes', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'PrizeCodeController@getIndex');
     Route::get('/create', 'PrizeCodeController@getCreatePrize');
