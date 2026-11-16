@@ -123,6 +123,24 @@ class EventBannerService extends Service {
     }
 
     /**
+     * Saves which dashboard shortcuts are shown.
+     *
+     * @param array $active keys of the shortcuts that should be on (unchecked boxes aren't submitted)
+     */
+    public function updateShortcuts($active) {
+        $active = array_keys(array_filter((array) $active));
+
+        foreach (array_keys(config('lorekeeper.dashboard_shortcuts', [])) as $key) {
+            DB::table('site_settings')->updateOrInsert(
+                ['key' => 'dashboard_shortcut_'.$key.'_active'],
+                ['value' => in_array($key, $active) ? 1 : 0]
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Normalises form data. Unchecked checkboxes aren't submitted, so missing = false.
      *
      * @param array $data

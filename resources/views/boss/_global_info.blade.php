@@ -1,64 +1,50 @@
 <h3>Global Boss Information</h3>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-lg-7">
         <div class="card mb-3">
-            <h5 class="mt-3">Leaderboard</h5>
-            @if ($boss->getLeaderboard()->isEmpty())
-                <p>No users have challenged this boss yet.</p>
-            @else
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th width="50%">Username</th>
-                            <th width="50%">Total Damage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            $medals = ['🥇', '🥈', '🥉'];
-                            $medalIndex = 0;
-                        @endphp
-                        @foreach ($boss->getLeaderboard() as $user)
-                            <tr>
-                                <td>{!! $medalIndex < 3 ? $medals[$medalIndex++] : '' !!} {!! $user->user->displayName !!}</td>
-                                <td>{{ $user->total_damage }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
+            <div class="card-body">
+                <h5>Leaderboard</h5>
+                @include('boss._leaderboard', ['boss' => $boss])
+            </div>
         </div>
     </div>
-    <div class="col-md-8">
-        <div class="card">
-            <h5 class="mt-3">Your Damage</h5>
-            @if ($boss->getLogs(Auth::user())->isNotEmpty())
-                <p>
-                    You have dealt {{ $boss->getLogs(Auth::user())->sum('damage') }} damage to this boss.
-                    @if ($boss->getLogs(Auth::user())->sum('damage') > 0)
-                        <br />
-                        That's {{ number_format(($boss->getLogs(Auth::user())->sum('damage') / $boss->logs()->sum('damage')) * 100, 2) }}% of the total damage dealt to this boss!
-                    @endif
-                </p>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th width="80%">Attack Method</th>
-                            <th width="20%">Damage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($boss->getLogs(Auth::user()) as $log)
+    <div class="col-lg-5">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>Your Damage</h5>
+                @php
+                    $userLogs = $boss->getLogs(Auth::user());
+                    $userDamage = $userLogs->sum('damage');
+                    $totalDamage = $boss->logs()->sum('damage');
+                @endphp
+                @if ($userLogs->isNotEmpty())
+                    <p>
+                        You have dealt {{ $userDamage }} damage to this boss.
+                        @if ($userDamage > 0 && $totalDamage > 0)
+                            <br />
+                            That's {{ number_format(($userDamage / $totalDamage) * 100, 2) }}% of the total damage dealt to this boss!
+                        @endif
+                    </p>
+                    <table class="table table-sm">
+                        <thead>
                             <tr>
-                                <td>{{ $log->attackMethodDisplayName }} <span class="text-muted small">({{ $log->data['log'] }})</span></td>
-                                <td>{{ $log->damage }}</td>
+                                <th width="80%">Attack Method</th>
+                                <th width="20%">Damage</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <p>You have not dealt any damage to this boss yet.</p>
-            @endif
+                        </thead>
+                        <tbody>
+                            @foreach ($userLogs as $log)
+                                <tr>
+                                    <td>{{ $log->attackMethodDisplayName }} <span class="text-muted small">({{ $log->data['log'] }})</span></td>
+                                    <td>{{ $log->damage }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <p class="mb-0">You have not dealt any damage to this boss yet.</p>
+                @endif
+            </div>
         </div>
     </div>
 </div>

@@ -173,4 +173,25 @@ class EventBanner extends Model {
 
         return static::visible()->sorted()->get();
     }
+
+    /**
+     * The dashboard shortcuts (config/lorekeeper/dashboard_shortcuts.php) with their on/off state.
+     * A shortcut with no setting row yet (migration not run) counts as active, so nothing vanishes unexpectedly.
+     *
+     * @param bool $activeOnly
+     *
+     * @return \Illuminate\Support\Collection keyed by shortcut key
+     */
+    public static function dashboardShortcuts($activeOnly = true) {
+        $settings = DB::table('site_settings')->where('key', 'like', 'dashboard_shortcut_%_active')->pluck('value', 'key');
+
+        $shortcuts = collect(config('lorekeeper.dashboard_shortcuts', []))->map(function ($shortcut, $key) use ($settings) {
+            $shortcut['key'] = $key;
+            $shortcut['is_active'] = (bool) ($settings['dashboard_shortcut_'.$key.'_active'] ?? 1);
+
+            return $shortcut;
+        });
+
+        return $activeOnly ? $shortcuts->filter(fn ($shortcut) => $shortcut['is_active']) : $shortcuts;
+    }
 }

@@ -17,7 +17,7 @@ class Boss extends Model {
     protected $fillable = [
         'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health',
         'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'hash', 'stage_images', 'attack_methods',
-        'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
+        'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed', 'auto_distribute_rewards', 'daily_button_image',
     ];
 
     /**
@@ -62,8 +62,9 @@ class Boss extends Model {
      * @var array
      */
     public static $updateRules = [
-        'name'              => 'required|between:3,100',
-        'description'       => 'nullable',
+        'name'               => 'required|between:3,100',
+        'description'        => 'nullable',
+        'daily_button_image' => 'nullable|mimes:png,gif,jpg,jpeg,webp',
     ];
 
     /**********************************************************************************************
@@ -239,6 +240,19 @@ class Boss extends Model {
     }
 
     /**
+     * Gets the URL of the daily attack button graphic, if one has been uploaded.
+     *
+     * @return string|null
+     */
+    public function getDailyButtonImageUrlAttribute() {
+        if (!$this->daily_button_image) {
+            return null;
+        }
+
+        return asset($this->imageDirectory.'/'.$this->daily_button_image);
+    }
+
+    /**
      * Gets the news post URL.
      *
      * @return string
@@ -377,19 +391,25 @@ class Boss extends Model {
      * Gets the leaderboard of the top players for this boss.
      *
      * @param mixed|null $limit
+     * @param bool       $all   return every participant, ignoring the limit
      */
-    public function getLeaderboard($limit = null) {
+    public function getLeaderboard($limit = null, $all = false) {
         if (!$limit) {
             $limit = config('lorekeeper.boss_settings.leaderboard_limit');
         }
 
-        return UserBossAttack::where('boss_id', $this->id)
-            ->selectRaw('user_id, SUM(damage) as total_damage')
+        $query = UserBossAttack::with('user')
+            ->where('boss_id', $this->id)
+            ->selectRaw('user_id, SUM(damage) as total_damage, COUNT(*) as attack_count')
             ->having('total_damage', '>', 0)
             ->groupBy('user_id')
-            ->orderBy('total_damage', 'DESC')
-            ->limit($limit)
-            ->get();
+            ->orderBy('total_damage', 'DESC');
+
+        if (!$all) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
     }
 
     /**
@@ -400,6 +420,24 @@ class Boss extends Model {
     public function hasUserParticipated($user) {
         return UserBossAttack::where('user_id', $user->id)
             ->where('boss_id', $this->id)
+            ->exists();
+    }
+
+    /**
+     * Returns whether a user can still use the daily attack today.
+     * Mirrors the check in BossAttackManager::attackDailyLogin().
+     *
+     * @param mixed $user
+     */
+    public function canDailyAttack($user) {
+        if (!$user) {
+            return false;
+        }
+
+        return !UserBossAttack::where('user_id', $user->id)
+            ->where('boss_id', $this->id)
+            ->where('attack_method', 'daily_login')
+            ->whereDate('created_at', now())
             ->exists();
     }
 

@@ -125,6 +125,11 @@
             {!! Form::checkbox('allow_users_to_claim_rewards', 1, $boss->allow_users_to_claim_rewards, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
             {!! Form::label('allow_users_to_claim_rewards', 'Allow Users to Claim Rewards', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If this is checked, users can claim rewards from the boss up to the current threshold.') !!}
         </div>
+        <div class="col-md-12 form-group text-center">
+            {!! Form::checkbox('auto_distribute_rewards', 1, $boss->auto_distribute_rewards, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+            {!! Form::label('auto_distribute_rewards', 'Automatically Send Rewards on Defeat', ['class' => 'form-check-label ml-3']) !!}
+            {!! add_help('When the killing blow lands, every participant is sent the rewards they earned. For per-user bosses, each user is sent their rewards when they win their own battle. Nobody is paid twice, even if claiming is also on.') !!}
+        </div>
     </div>
 
     <hr />
@@ -161,6 +166,26 @@
     {!! Form::close() !!}
 
     @if ($boss->id)
+        <h3>Reward Distribution</h3>
+        <div class="card mb-3">
+            <div class="card-body">
+                <p>
+                    Sends every participant the rewards they've earned so far but haven't received yet, using the same thresholds as claiming.
+                    Anyone who already claimed is skipped, so it's safe to press this more than once.
+                </p>
+                <p class="mb-2">
+                    <strong>{{ $participantCount }}</strong> participant{{ $participantCount == 1 ? '' : 's' }} &middot;
+                    <strong>{{ $rewardedCount }}</strong> ha{{ $rewardedCount == 1 ? 's' : 've' }} received rewards
+                </p>
+                {!! Form::open(['url' => 'admin/data/bosses/distribute/' . $boss->id, 'onsubmit' => "return confirm('Send earned rewards to all " . $participantCount . " participant(s) of this boss?');"]) !!}
+                {!! Form::submit('Send Rewards to All Participants', ['class' => 'btn btn-success', 'disabled' => !$participantCount || !count($boss->rewards) ? true : null]) !!}
+                {!! Form::close() !!}
+
+                <h5 class="mt-4">Participants</h5>
+                @include('boss._leaderboard', ['boss' => $boss])
+            </div>
+        </div>
+
         <h3>Preview</h3>
         <div class="card mb-3">
             <div class="card-body">

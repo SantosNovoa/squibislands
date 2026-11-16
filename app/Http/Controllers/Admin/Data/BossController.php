@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin\Data;
 
 use App\Http\Controllers\Controller;
 use App\Models\Boss\Boss;
+use App\Models\User\UserBossAttack;
+use App\Models\User\UserBossLog;
+use App\Services\BossAttackManager;
 use App\Services\BossService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -75,8 +78,10 @@ class BossController extends Controller {
         });
 
         return view('admin.bosses.create_edit_boss', [
-            'boss'          => $boss,
-            'attackMethods' => $attackMethods,
+            'boss'             => $boss,
+            'attackMethods'    => $attackMethods,
+            'participantCount' => UserBossAttack::where('boss_id', $boss->id)->distinct()->count('user_id'),
+            'rewardedCount'    => UserBossLog::where('boss_id', $boss->id)->distinct()->count('user_id'),
         ]);
     }
 
@@ -94,6 +99,7 @@ class BossController extends Controller {
             'name', 'description', 'remove_image', 'image', 'stage_images', 'stage_image_health', 'old_stage_images', 'is_active', 'start_at', 'end_at',
             'total_health', 'current_health', 'type', 'can_attack_after_defeat', 'is_rewards_only_for_participants', 'attack_methods', 'attack_methods_info',
             'rewardable_type', 'rewardable_id', 'quantity', 'threshold', 'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
+            'auto_distribute_rewards', 'daily_button_image', 'remove_daily_button_image',
         ]);
         if ($id && $service->updateBoss(Boss::find($id), $data, Auth::user())) {
             flash('Boss updated successfully.')->success();
@@ -101,6 +107,33 @@ class BossController extends Controller {
             flash('Boss created successfully.')->success();
 
             return redirect()->to('admin/data/bosses/edit/'.$boss->id);
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Sends every participant the rewards they've earned but haven't received yet.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDistributeRewards(BossAttackManager $service, $id) {
+        $boss = Boss::find($id);
+        if (!$boss) {
+            abort(404);
+        }
+
+        if ($result = $service->distributeRewards($boss, Auth::user())) {
+            flash('Sent rewards to '.$result['recipients'].' participant(s). '.$result['skipped'].' had nothing new to receive.')->success();
+            foreach ($result['failed'] as $name => $error) {
+                flash('Could not send rewards to '.$name.': '.$error)->error();
+            }
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();

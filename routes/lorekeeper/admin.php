@@ -76,6 +76,7 @@ Route::group(['prefix' => 'discord', 'middleware' => 'power:edit_site_settings']
 Route::group(['prefix' => 'event-banners', 'middleware' => 'power:edit_site_settings'], function () {
     Route::get('/', 'EventBannerController@getIndex');
     Route::post('toggle', 'EventBannerController@postToggle');
+    Route::post('shortcuts', 'EventBannerController@postShortcuts');
     Route::get('create', 'EventBannerController@getCreateBanner');
     Route::get('edit/{id}', 'EventBannerController@getEditBanner');
     Route::post('create', 'EventBannerController@postCreateEditBanner');
@@ -486,6 +487,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('bosses/create', 'BossController@postCreateEditBoss');
     Route::post('bosses/edit/{id?}', 'BossController@postCreateEditBoss');
     Route::post('bosses/delete/{id}', 'BossController@postDeleteBoss');
+    Route::post('bosses/distribute/{id}', 'BossController@postDistributeRewards');
     # BORDERS
     Route::get('border-categories', 'BorderController@getIndex');
     Route::get('border-categories/create', 'BorderController@getCreateBorderCategory');

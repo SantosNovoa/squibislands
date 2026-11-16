@@ -605,4 +605,11 @@ return [
         'message' => 'You have received a staff grant of the user border {border_name} from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Borders</a>)',
         'url' => 'user/{recipient_name}/borders'
     ],
+
+    // BOSS_REWARDS_RECEIVED
+    1200 => [
+        'name'    => 'Boss Rewards Received',
+        'message' => 'You have been sent rewards for the boss <strong>{boss_name}</strong>: {rewards}. (<a href="{url}">View Boss</a>)',
+        'url'     => 'world/bosses/{boss_slug}',
+    ],
 ];

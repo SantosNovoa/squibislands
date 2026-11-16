@@ -4,23 +4,24 @@
     Icons come from Site Images (Admin > Site Images) using the keys added to
     config/lorekeeper/image_files.php. Upload square PNGs with transparent backgrounds.
     If an icon hasn't been uploaded yet, a Font Awesome icon is shown in its place.
+    The list lives in config/lorekeeper/dashboard_shortcuts.php; which ones show is set in
+    Admin > Event Banners. The grid sizes itself to however many are on.
 --}}
 @php
-    $shortcuts = [
-        ['key' => 'dashboard_dailies', 'label' => 'Dailies', 'icon' => 'far fa-calendar-check', 'url' => url('dailies')],
-        ['key' => 'dashboard_shops', 'label' => 'Shops', 'icon' => 'fas fa-coins', 'url' => url('shops')],
-        ['key' => 'dashboard_prompts', 'label' => 'Prompts', 'icon' => 'fas fa-pen-nib', 'url' => url('prompts/prompts')],
-        ['key' => 'dashboard_inventory', 'label' => 'Inventory', 'icon' => 'fas fa-box-open', 'url' => url('inventory')],
-    ];
+    $shortcuts = $shortcuts ?? \App\Models\EventBanner::dashboardShortcuts();
+    $count = $shortcuts->count();
+    // lg: 1 column for a single shortcut, otherwise 2 columns with as many rows as needed
+    $lgCols = $count == 1 ? 1 : 2;
+    $lgRows = (int) ceil($count / $lgCols);
 @endphp
 
-<div class="si-shortcuts">
+<div class="si-shortcuts" style="--si-cols: {{ min($count, 4) }}; --si-sm-cols: {{ min($count, 2) }}; --si-lg-cols: {{ $lgCols }}; --si-lg-rows: {{ $lgRows }};">
     @foreach ($shortcuts as $shortcut)
         @php
-            $filename = config('lorekeeper.image_files.' . $shortcut['key'] . '.filename');
+            $filename = config('lorekeeper.image_files.' . $shortcut['image_key'] . '.filename');
             $hasImage = $filename && file_exists(public_path('images/' . $filename));
         @endphp
-        <a href="{{ $shortcut['url'] }}" class="si-shortcut">
+        <a href="{{ url($shortcut['url']) }}" class="si-shortcut">
             <div class="si-shortcut-icon">
                 @if ($hasImage)
                     <img src="{{ asset('images/' . $filename) }}?v={{ filemtime(public_path('images/' . $filename)) }}" alt="">
@@ -40,7 +41,7 @@
         --si-shortcut-label-hover: #041342;
 
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(var(--si-cols, 4), 1fr);
         gap: .75rem .5rem;
     }
 
@@ -124,8 +125,8 @@
             bottom: 0;
             left: 15px;
             right: 15px;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: repeat(var(--si-lg-cols, 2), 1fr);
+            grid-template-rows: repeat(var(--si-lg-rows, 2), 1fr);
             gap: .5rem;
         }
 
@@ -149,7 +150,7 @@
     /* Phones: 2x2 under the news card */
     @media (max-width: 575.98px) {
         .si-shortcuts {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(var(--si-sm-cols, 2), 1fr);
         }
 
         .si-shortcut-icon {

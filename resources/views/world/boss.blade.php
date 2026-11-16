@@ -80,6 +80,10 @@
                                     </div>
                                 @endif
                                 <h3>
+                                    {{ $boss->isActive() ? 'Leaderboard' : 'Final Leaderboard' }}
+                                </h3>
+                                @include('boss._leaderboard', ['boss' => $boss])
+                                <h3>
                                     Rewards
                                     @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
                                         {!! add_help('Some rewards may only be visble at certain health thresholds.') !!}
@@ -91,7 +95,8 @@
                                 @if (!count($boss->rewards))
                                     No rewards.
                                 @else
-                                    @include('boss._boss_rewards', ['boss' => $boss])
+                                    @include('boss._boss_rewards', ['boss' => $boss, 'user' => Auth::user()])
+                                    @include('boss._claim_rewards', ['boss' => $boss])
                                 @endif
                             </div>
                         </div>

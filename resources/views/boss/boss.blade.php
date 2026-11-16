@@ -7,6 +7,16 @@
 @section('content')
     {!! breadcrumbs(['Boss' => 'boss', $boss->displayName => 'boss/' . $boss->name]) !!}
 
+    @php
+        $attackMethods = $boss->attack_methods['methods'] ?? [];
+        // daily attack is featured on its own, so keep it out of the collapsed list
+        $otherAttackMethods = array_values(array_diff($attackMethods, ['daily_login']));
+        $canAttack = $boss->isActive();
+        $showChallenge = $canAttack && count($otherAttackMethods);
+        // per-user bosses don't track current_health, so only global bosses can be "defeated" here
+        $isDefeated = $boss->type == 'Global' && $boss->current_health <= 0 && !$boss->can_attack_after_defeat;
+    @endphp
+
     <div class="container col-lg-10 text-center">
         <div class="card">
             <div class="h1 card-header">
@@ -46,21 +56,24 @@
                         @endif
                     </div>
                 @endif
+                @if ($canAttack && in_array('daily_login', $attackMethods))
+                    @include('boss._daily_attack', ['boss' => $boss])
+                @endif
                 <div class="row mb-3">
-                    @if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat)
+                    @if ($isDefeated)
                         <div class="col-md-12">
                             <div class="alert alert-danger">
                                 <i class="fas fa-exclamation-triangle"></i> This boss has been defeated and cannot be attacked again.
                             </div>
                         </div>
-                    @else
+                    @elseif ($showChallenge)
                         <div class="col-md-3 d-flex">
                             <a class="btn btn-block btn-primary my-auto" data-toggle="collapse" href="#attack-methods" role="button" aria-expanded="false" aria-controls="attack-methods">
                                 Challenge Boss
                             </a>
                         </div>
                     @endif
-                    <div class="col-md-{{ $boss->current_health <= 0 && !$boss->can_attack_after_defeat ? '12' : '9' }}">
+                    <div class="col-md-{{ $showChallenge && !$isDefeated ? '9' : '12' }}">
                         <h3>
                             Rewards
                             @if (!config('lorekeeper.boss_settings.show_rewards_before_threshold'))
@@ -71,30 +84,14 @@
                             No rewards.
                         @else
                             @include('boss._boss_rewards', ['boss' => $boss, 'user' => Auth::user()])
-                            @if ($boss->allow_users_to_claim_rewards)
-                                @if ($boss->is_rewards_only_for_participants && !$boss->hasUserParticipated(Auth::user()))
-                                    <div class="alert alert-danger">
-                                        <i class="fas fa-exclamation-triangle"></i> You must participate in the battle to claim rewards.
-                                    </div>
-                                @else
-                                    @if ($boss->hasUserClaimedRewards(Auth::user()))
-                                        <div class="alert alert-success">
-                                            <i class="fas fa-check"></i> You have already claimed all available rewards.
-                                        </div>
-                                    @else
-                                        {!! Form::open(['url' => 'boss/' . $boss->id . '/claim']) !!}
-                                        {!! Form::submit('Claim Rewards', ['class' => 'btn btn-primary btn-block col-md-8 mx-auto']) !!}
-                                        {!! Form::close() !!}
-                                    @endif
-                                @endif
-                            @endif
+                            @include('boss._claim_rewards', ['boss' => $boss])
                         @endif
                     </div>
                 </div>
                 <div class="collapse" id="attack-methods">
-                    @if ($boss->attack_methods && count($boss->attack_methods['methods']))
+                    @if (count($otherAttackMethods))
                         <h3>Attack Methods</h3>
-                        @foreach ($boss->attack_methods['methods'] as $attackMethod)
+                        @foreach ($otherAttackMethods as $attackMethod)
                             <div class="text-left">
                                 @include('boss._attack_method', ['attackMethod' => $attackMethod, 'boss' => $boss])
                             </div>

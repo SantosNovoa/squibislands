@@ -16,9 +16,22 @@ class EventBannerController extends Controller {
      */
     public function getIndex() {
         return view('admin.event_banners.index', [
-            'banners' => EventBanner::sorted()->get(),
-            'enabled' => EventBanner::isEnabled(),
+            'banners'   => EventBanner::sorted()->get(),
+            'enabled'   => EventBanner::isEnabled(),
+            'shortcuts' => EventBanner::dashboardShortcuts(false),
         ]);
+    }
+
+    /**
+     * Save which dashboard shortcuts are shown.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postShortcuts(Request $request, EventBannerService $service) {
+        $service->updateShortcuts($request->input('shortcuts', []));
+        flash('Dashboard shortcuts updated.')->success();
+
+        return redirect()->back();
     }
 
     /**

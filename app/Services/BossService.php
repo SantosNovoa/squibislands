@@ -54,6 +54,7 @@ class BossService extends Service {
             $boss = Boss::create(Arr::only($data, [
                 'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
                 'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
+                'auto_distribute_rewards',
             ]));
 
             if (!$this->logAdminAction($user, 'Created Boss', 'Created '.$boss->displayName)) {
@@ -105,11 +106,13 @@ class BossService extends Service {
             $boss->update(Arr::only($data, [
                 'name', 'description', 'has_image', 'is_active', 'start_at', 'end_at', 'total_health', 'current_health', 'type', 'can_attack_after_defeat',
                 'is_rewards_only_for_participants', 'hash', 'attack_methods', 'is_staff_only', 'allow_users_to_claim_rewards', 'is_reversed',
+                'auto_distribute_rewards',
             ]));
 
             // we don't need to worry about unset etc here
             // because we're updating after the general data
             $this->processAttackMethods($data, $boss);
+            $this->processDailyButtonImage($data, $boss);
 
             if ($image) {
                 $this->handleImage($image, $boss->imagePath, $boss->imageFileName);
@@ -194,6 +197,9 @@ class BossService extends Service {
         if (!isset($data['is_reversed'])) {
             $data['is_reversed'] = 0;
         }
+        if (!isset($data['auto_distribute_rewards'])) {
+            $data['auto_distribute_rewards'] = 0;
+        }
 
         if (isset($data['remove_image'])) {
             if ($boss && $boss->has_image && $data['remove_image']) {
@@ -238,6 +244,33 @@ class BossService extends Service {
         $boss->update([
             'stage_images' => $imageData,
         ]);
+    }
+
+    /**
+     * Uploads, replaces or removes the graphic for the featured daily attack button.
+     *
+     * @param array                 $data
+     * @param \App\Models\Boss\Boss $boss
+     */
+    private function processDailyButtonImage($data, $boss) {
+        $newImage = $data['daily_button_image'] ?? null;
+        $remove = isset($data['remove_daily_button_image']) && $data['remove_daily_button_image'];
+
+        if (($newImage || $remove) && $boss->daily_button_image) {
+            if (file_exists($boss->imagePath.'/'.$boss->daily_button_image)) {
+                $this->deleteImage($boss->imagePath, $boss->daily_button_image);
+            }
+            $boss->update(['daily_button_image' => null]);
+        }
+
+        if ($newImage) {
+            // keep the original extension so animated gifs stay animated
+            $fileName = $boss->id.'-'.randomString(10).'-daily-button.'.strtolower($newImage->getClientOriginalExtension());
+            if (!$this->handleImage($newImage, $boss->imagePath, $fileName)) {
+                throw new \Exception('Failed to upload the daily attack button image.');
+            }
+            $boss->update(['daily_button_image' => $fileName]);
+        }
     }
 
     /**

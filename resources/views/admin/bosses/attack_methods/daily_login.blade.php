@@ -19,5 +19,21 @@
                 {!! Form::number('attack_methods_info[daily_login][max_damage]', $data['max_damage'] ?? null, ['class' => 'form-control', 'placeholder' => 'Maximum Damage', 'min' => 1]) !!}
             </div>
         </div>
+        <h5>Featured Button Graphic (Optional)</h5>
+        <p>The daily attack is shown as a featured button on the boss page. Upload a graphic to use as the button instead of the default one. PNG, GIF, JPG or WEBP; animated GIFs stay animated.</p>
+        <div class="d-flex align-items-center">
+            @if ($boss->dailyButtonImageUrl)
+                <img src="{{ $boss->dailyButtonImageUrl }}" class="img-thumbnail mr-3" style="max-width: 150px; max-height: 100px; object-fit: contain;" alt="Daily attack button" />
+            @endif
+            <div>
+                {!! Form::file('daily_button_image') !!}
+                @if ($boss->dailyButtonImageUrl)
+                    <div class="form-check mt-2">
+                        {!! Form::checkbox('remove_daily_button_image', 1, false, ['class' => 'form-check-input', 'id' => 'remove_daily_button_image']) !!}
+                        {!! Form::label('remove_daily_button_image', 'Remove current graphic', ['class' => 'form-check-label']) !!}
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </div>

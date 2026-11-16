@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Models\Boss\Boss;
 use App\Models\Currency\Currency;
 use App\Models\Item\Item;
+use App\Models\User\User;
 use App\Models\User\UserBossAttack;
 use App\Models\User\UserBossLog;
 use App\Models\User\UserItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Notifications;
 
 class BossAttackManager extends Service {
     /*
@@ -173,63 +176,15 @@ class BossAttackManager extends Service {
                 throw new \Exception('You cannot claim rewards for this boss.');
             }
 
-            $userBossAttacks = UserBossAttack::where('user_id', $user->id)->where('boss_id', $boss->id)->get();
-            if ($boss->is_rewards_only_for_participants && $userBossAttacks->isEmpty()) {
+            if ($boss->is_rewards_only_for_participants && !$boss->hasUserParticipated($user)) {
                 throw new \Exception('You have not attacked this boss - rewards are only for participants.');
             }
 
-            // get the % of damage done to the boss overall
-            $userBossLog = UserBossLog::where('user_id', $user->id)->where('boss_id', $boss->id)->first();
-            if ($boss->type == 'Global') {
-                $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
-            } else {
-                $damagePercentage = round(($boss->getLogs($user)->sum('damage') / $boss->total_health) * 100);
-            }
-            // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
-            // -1 so 'any' threshold is always valid
-            $bossRewards = $boss->rewards()->where('threshold', '>', $userBossLog?->threshold ?: -1)->where('threshold', '<=', $damagePercentage)->get();
-            if ($bossRewards->isEmpty()) {
+            if (!$assets = $this->grantRewards($boss, $user)) {
                 throw new \Exception('There are no rewards to claim.');
             }
 
-            $assets = createAssetsArray(false);
-            foreach ($bossRewards as $reward) {
-                addAsset($assets, $reward->reward, $reward->quantity);
-            }
-
-            $logType = 'Boss Rewards';
-            $data = [
-                'data' => 'Received rewards for defeating the boss '.$boss->displayName,
-            ];
-            if (!$rewards = fillUserAssets($assets, null, $user, $logType, $data)) {
-                throw new \Exception('Failed to distribute rewards to user.');
-            }
-
             flash('You have received: '.createRewardsString($assets));
-
-            if ($userBossLog) {
-                // we need to make a new $assets since we might only have some of the rewards in the current $assets
-                $dataAssets = createAssetsArray(false);
-                $rewards = $boss->rewards()->where('threshold', '<=', $damagePercentage)->get();
-                foreach ($rewards as $reward) {
-                    addAsset($dataAssets, $reward->reward, $reward->quantity);
-                }
-                $userBossLog->update([
-                    'data' => [
-                        'rewards' => getDataReadyAssets($dataAssets),
-                    ],
-                    'threshold' => $damagePercentage,
-                ]);
-            } else {
-                UserBossLog::create([
-                    'user_id' => $user->id,
-                    'boss_id' => $boss->id,
-                    'data'    => [
-                        'rewards' => getDataReadyAssets($assets),
-                    ],
-                    'threshold' => $damagePercentage,
-                ]);
-            }
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {
@@ -237,6 +192,159 @@ class BossAttackManager extends Service {
         }
 
         return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Staff action: sends every participant the rewards they've earned but not yet received.
+     * Safe to run more than once - users who already claimed are skipped.
+     *
+     * @param Boss       $boss
+     * @param mixed|null $staff
+     *
+     * @return array|bool ['recipients' => int, 'skipped' => int, 'failed' => [username => error]]
+     */
+    public function distributeRewards($boss, $staff = null) {
+        DB::beginTransaction();
+
+        try {
+            if (!$boss->rewards()->count()) {
+                throw new \Exception('This boss has no rewards to send.');
+            }
+
+            $result = $this->distributeToParticipants($boss);
+
+            if ($staff && !$this->logAdminAction($staff, 'Distributed Boss Rewards', 'Sent rewards for '.$boss->displayName.' to '.$result['recipients'].' participant(s)')) {
+                throw new \Exception('Failed to log admin action.');
+            }
+
+            return $this->commitReturn($result);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Grants rewards to every user who has attacked the boss.
+     * Each user gets their own savepoint so one bad reward doesn't undo everyone else's.
+     *
+     * @param Boss $boss
+     *
+     * @return array
+     */
+    private function distributeToParticipants($boss) {
+        $result = ['recipients' => 0, 'skipped' => 0, 'failed' => []];
+
+        $users = User::whereIn('id', UserBossAttack::where('boss_id', $boss->id)->select('user_id')->distinct())->get();
+        foreach ($users as $user) {
+            try {
+                $assets = DB::transaction(function () use ($boss, $user) {
+                    return $this->grantRewards($boss, $user, true);
+                });
+                $assets ? $result['recipients']++ : $result['skipped']++;
+            } catch (\Exception $e) {
+                $result['failed'][$user->name] = $e->getMessage();
+                Log::error('Boss reward distribution failed for user '.$user->id.' on boss '.$boss->id.': '.$e->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Grants any rewards the user has earned but not yet received for this boss.
+     * Shared by user claims, staff distribution and auto-send on defeat, so nobody is paid twice for a threshold.
+     * Expects to be called inside a transaction.
+     *
+     * @param Boss $boss
+     * @param User $user
+     * @param bool $notify send the user a notification (for rewards they didn't claim themselves)
+     *
+     * @return array|null the granted assets, or null if there was nothing new to grant
+     */
+    private function grantRewards($boss, $user, $notify = false) {
+        // get the % of damage done to the boss overall
+        $userBossLog = UserBossLog::where('user_id', $user->id)->where('boss_id', $boss->id)->first();
+        if ($boss->type == 'Global') {
+            $damagePercentage = round((($boss->total_health - $boss->current_health) / $boss->total_health) * 100);
+        } else {
+            $damagePercentage = round(($boss->getLogs($user)->sum('damage') / $boss->total_health) * 100);
+        }
+        // reward thresholds are inverse, so reward threshold of 100 means 0% damage, and 25% means 75% damage
+        // -1 so 'any' threshold is always valid for users who haven't received anything yet
+        // (a stored threshold of 0 is a real claim, so don't let ?: turn it back into -1 and pay out twice)
+        $claimedThreshold = ($userBossLog && $userBossLog->threshold !== null) ? $userBossLog->threshold : -1;
+        $bossRewards = $boss->rewards()->where('threshold', '>', $claimedThreshold)->where('threshold', '<=', $damagePercentage)->get();
+        if ($bossRewards->isEmpty()) {
+            return null;
+        }
+
+        $assets = createAssetsArray(false);
+        foreach ($bossRewards as $reward) {
+            addAsset($assets, $reward->reward, $reward->quantity);
+        }
+
+        $logType = 'Boss Rewards';
+        $data = [
+            'data' => 'Received rewards for defeating the boss '.$boss->displayName,
+        ];
+        if (!$rewards = fillUserAssets($assets, null, $user, $logType, $data)) {
+            throw new \Exception('Failed to distribute rewards to user.');
+        }
+
+        if ($userBossLog) {
+            // we need to make a new $assets since we might only have some of the rewards in the current $assets
+            $dataAssets = createAssetsArray(false);
+            $rewards = $boss->rewards()->where('threshold', '<=', $damagePercentage)->get();
+            foreach ($rewards as $reward) {
+                addAsset($dataAssets, $reward->reward, $reward->quantity);
+            }
+            $userBossLog->update([
+                'data' => [
+                    'rewards' => getDataReadyAssets($dataAssets),
+                ],
+                'threshold' => $damagePercentage,
+            ]);
+        } else {
+            UserBossLog::create([
+                'user_id' => $user->id,
+                'boss_id' => $boss->id,
+                'data'    => [
+                    'rewards' => getDataReadyAssets($assets),
+                ],
+                'threshold' => $damagePercentage,
+            ]);
+        }
+
+        if ($notify) {
+            $this->notifyRewardsReceived($boss, $user, $assets);
+        }
+
+        return $assets;
+    }
+
+    /**
+     * Notifies a user that boss rewards were sent to them.
+     * Uses plain-text reward names since notification data is capped at 1024 characters.
+     *
+     * @param Boss  $boss
+     * @param User  $user
+     * @param array $assets
+     */
+    private function notifyRewardsReceived($boss, $user, $assets) {
+        $rewards = [];
+        foreach ($assets as $contents) {
+            foreach ($contents as $asset) {
+                $rewards[] = e($asset['asset']->name).' x'.$asset['quantity'];
+            }
+        }
+
+        Notifications::create('BOSS_REWARDS_RECEIVED', $user, [
+            'boss_name' => e($boss->name),
+            'boss_slug' => str_replace(' ', '-', $boss->name),
+            'rewards'   => \Illuminate\Support\Str::limit(implode(', ', $rewards), 600),
+        ]);
     }
 
     /**
@@ -249,6 +357,8 @@ class BossAttackManager extends Service {
      * @param mixed $data
      */
     private function attack($boss, $method, $damage, $user, $data) {
+        $wasDefeated = $this->isDefeatedFor($boss, $user);
+
         if ($damage > 0 && $boss->type == 'Global') {
             if ($boss->current_health <= 0 && !$boss->can_attack_after_defeat) {
                 throw new \Exception('This boss has already been defeated.');
@@ -265,6 +375,57 @@ class BossAttackManager extends Service {
             'damage'        => $damage,
             'data'          => $data,
         ]);
+
+        // this attack was the killing blow - send rewards if the boss is set to do so
+        if ($boss->auto_distribute_rewards && !$wasDefeated && $this->isDefeatedFor($boss, $user)) {
+            $this->autoDistributeRewards($boss, $user);
+        }
+    }
+
+    /**
+     * Whether the boss is defeated - globally, or for this user on per-user bosses.
+     *
+     * @param Boss $boss
+     * @param User $user
+     *
+     * @return bool
+     */
+    private function isDefeatedFor($boss, $user) {
+        if ($boss->type == 'Global') {
+            return $boss->current_health <= 0;
+        }
+
+        return UserBossAttack::where('boss_id', $boss->id)->where('user_id', $user->id)->sum('damage') >= $boss->total_health;
+    }
+
+    /**
+     * Sends rewards on defeat. Global bosses pay out every participant; per-user bosses pay the user who won their battle.
+     * Failures are logged rather than thrown so a reward problem never cancels the killing blow.
+     *
+     * @param Boss $boss
+     * @param User $user
+     */
+    private function autoDistributeRewards($boss, $user) {
+        if (!$boss->rewards()->count()) {
+            return;
+        }
+
+        if ($boss->type == 'Global') {
+            $result = $this->distributeToParticipants($boss);
+            foreach ($result['failed'] as $name => $error) {
+                Log::error('Boss auto-distribution: could not reward '.$name.' for boss '.$boss->id.': '.$error);
+            }
+
+            return;
+        }
+
+        try {
+            DB::transaction(function () use ($boss, $user) {
+                return $this->grantRewards($boss, $user, true);
+            });
+        } catch (\Exception $e) {
+            Log::error('Boss auto-distribution failed for user '.$user->id.' on boss '.$boss->id.': '.$e->getMessage());
+        }
     }
 
     /**********************************************************************************************

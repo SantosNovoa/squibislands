@@ -2,13 +2,23 @@
 
 @include('widgets._event_banner')
 
+@php
+    $dashboardShortcuts = \App\Models\EventBanner::dashboardShortcuts();
+@endphp
 <div class="row">
-    <div class="col-lg-8 mb-4 si-news-col">
-    @include('widgets._news', ['textPreview' => true])
-</div>
-    <div class="col-lg-4 mb-4">
-        @include('widgets._dashboard_shortcuts')
-    </div>
+    @if ($dashboardShortcuts->count())
+        <div class="col-lg-8 mb-4 si-news-col">
+            @include('widgets._news', ['textPreview' => true])
+        </div>
+        <div class="col-lg-4 mb-4">
+            @include('widgets._dashboard_shortcuts', ['shortcuts' => $dashboardShortcuts])
+        </div>
+    @else
+        {{-- no shortcuts on: news takes the whole row (its card has its own mb-4) --}}
+        <div class="col-12">
+            @include('widgets._news', ['textPreview' => true])
+        </div>
+    @endif
 </div>
 
 @include('widgets._sales')
