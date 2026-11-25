@@ -6,6 +6,17 @@
         <div @if (count($item->tags)) class="mb-1" @endif><a href="{{ $item->url }}">{{ $item->name }}</a></div>
     </div>
 
+    @if ($item->parsed_description)
+        <div class="mb-2">
+            <a data-toggle="collapse" href="#itemDescription" class="h5">Description <i class="fas fa-caret-down"></i></a>
+            <div class="card collapse show mt-1" id="itemDescription">
+                <div class="card-body">
+                    {!! $item->parsed_description !!}
+                </div>
+            </div>
+        </div>
+    @endif
+
     <h5>Item Variations</h5>
     @if ($user && $user->hasPower('edit_inventories'))
         <p class="alert alert-warning my-2">Note: Your rank allows you to transfer character-bound items.</p>
