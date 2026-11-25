@@ -48,9 +48,14 @@
 
         {!! $prompts->render() !!}
         @foreach ($prompts as $prompt)
+            @php $isPromptLocked = $prompt->parent_id && $prompt->parent && !$prompt->isUnlockedFor(Auth::user()); @endphp
             <div class="card mb-3">
-                <div class="card-body">
-                    @include('prompts._prompt_entry', ['prompt' => $prompt])
+                <div class="card-body" @if ($isPromptLocked) style="opacity: 0.7;" @endif>
+                    @if ($isPromptLocked && !$prompt->is_details_visible && !(Auth::check() && Auth::user()->isStaff))
+                        @include('prompts._prompt_denied_entry', ['prompt' => $prompt])
+                    @else
+                        @include('prompts._prompt_entry', ['prompt' => $prompt])
+                    @endif
                 </div>
             </div>
         @endforeach

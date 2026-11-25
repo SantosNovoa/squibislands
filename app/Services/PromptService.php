@@ -188,6 +188,14 @@ class PromptService extends Service {
                 throw new \Exception('The selected prompt category is invalid.');
             }
 
+            // parent prompt validation
+            if (isset($data['parent_id']) && $data['parent_id'] == 'none') {
+                $data['parent_id'] = null;
+            }
+            if ((isset($data['parent_id']) && $data['parent_id']) && !Prompt::where('id', $data['parent_id'])->exists()) {
+                throw new \Exception('The selected parent prompt is invalid.');
+            }
+
             $data = $this->populateData($data);
 
             $image = null;
@@ -204,7 +212,7 @@ class PromptService extends Service {
                 $data['hide_submissions'] = 0;
             }
 
-            $prompt = Prompt::create(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'staff_only', 'hash', 'level_req']));
+            $prompt = Prompt::create(Arr::only($data, ['prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix', 'hide_submissions', 'staff_only', 'hash', 'level_req', 'parent_id', 'parent_quantity', 'is_details_visible']));
 
             $this->logAdminAction($user, 'Created Prompt', 'Created prompt ' . $prompt->name);
 
@@ -254,6 +262,17 @@ class PromptService extends Service {
                 throw new \Exception('That prefix has already been taken.');
             }
 
+            // parent prompt validation
+            if (isset($data['parent_id']) && $data['parent_id'] == 'none') {
+                $data['parent_id'] = null;
+            }
+            if ((isset($data['parent_id']) && $data['parent_id']) && !Prompt::where('id', $data['parent_id'])->exists()) {
+                throw new \Exception('The selected parent prompt is invalid.');
+            }
+            if (isset($data['parent_id']) && $data['parent_id'] == $prompt->id) {
+                throw new \Exception('A prompt cannot be its own parent.');
+            }
+
             $data = $this->populateData($data, $prompt);
 
             $image = null;
@@ -272,7 +291,8 @@ class PromptService extends Service {
                 'prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 
                 'is_active', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 
                 'has_image', 'prefix', 'hide_submissions', 'staff_only', 'hash', 'level_req',
-                'limit', 'limit_period', 'limit_character'
+                'limit', 'limit_period', 'limit_character',
+                'parent_id', 'parent_quantity', 'is_details_visible',
             ]));
 
             $this->logAdminAction($user, 'Updated Prompt', 'Updated prompt ' . $prompt->name);
@@ -309,6 +329,9 @@ class PromptService extends Service {
             // Check first if the category is currently in use
             if (Submission::where('prompt_id', $prompt->id)->exists()) {
                 throw new \Exception('A submission under this prompt exists. Deleting the prompt will break the submission page - consider setting the prompt to be not active instead.');
+            }
+            if (Prompt::where('parent_id', $prompt->id)->exists()) {
+                throw new \Exception('A prompt currently has this prompt as its parent.');
             }
 
             $prompt->rewards()->delete();
@@ -378,6 +401,12 @@ class PromptService extends Service {
         }
         if (!isset($data['staff_only'])) {
             $data['staff_only'] = 0;
+        }
+        if (!isset($data['is_details_visible'])) {
+            $data['is_details_visible'] = 0;
+        }
+        if (!isset($data['parent_quantity']) || !is_numeric($data['parent_quantity']) || $data['parent_quantity'] < 1) {
+            $data['parent_quantity'] = 1;
         }
         if (!isset($data['level_check'])) {
             $data['level_req'] = null;

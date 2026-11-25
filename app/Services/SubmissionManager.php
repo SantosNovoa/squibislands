@@ -69,6 +69,11 @@ class SubmissionManager extends Service {
                     throw new \Exception('This prompt may only be submitted to by staff members.');
                 }
 
+                // Prompt prerequisite check (from extension)
+                if ($prompt->parent_id && !$prompt->isUnlockedFor($user)) {
+                    throw new \Exception('You must complete '.$prompt->parent_quantity.'x '.$prompt->parent->displayName.' before you can submit to this prompt.');
+                }
+
                 // Level requirement check
                 if ($prompt->level_req) {
                     if (!$user->level || $user->level->current_level < $prompt->level_req) {
@@ -219,6 +224,11 @@ class SubmissionManager extends Service {
                 $prompt = Prompt::active()->where('id', $data['prompt_id'])->with('rewards')->first();
                 if (!$prompt) {
                     throw new \Exception('Invalid prompt selected.');
+                }
+
+                // Prompt prerequisite check (from extension)
+                if ($prompt->parent_id && !$prompt->isUnlockedFor($user)) {
+                    throw new \Exception('You must complete '.$prompt->parent_quantity.'x '.$prompt->parent->displayName.' before you can submit to this prompt.');
                 }
             } else {
                 $prompt = null;

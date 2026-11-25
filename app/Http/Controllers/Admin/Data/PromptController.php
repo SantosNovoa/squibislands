@@ -183,6 +183,7 @@ class PromptController extends Controller {
     public function getCreatePrompt() {
         return view('admin.prompts.create_edit_prompt', [
             'prompt'        => new Prompt,
+            'prompts'       => ['none' => 'No parent'] + Prompt::orderBy('name')->pluck('name', 'id')->toArray(),
             'categories'    => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items'         => Item::orderBy('name')->pluck('name', 'id'),
             'currencies'    => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
@@ -210,6 +211,7 @@ class PromptController extends Controller {
 
         return view('admin.prompts.create_edit_prompt', [
             'prompt'        => $prompt,
+            'prompts'       => ['none' => 'No parent'] + Prompt::where('id', '!=', $prompt->id)->orderBy('name')->pluck('name', 'id')->toArray(),
             'categories'    => ['none' => 'No category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'items'         => Item::orderBy('name')->pluck('name', 'id'),
             'currencies'    => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
@@ -237,6 +239,7 @@ class PromptController extends Controller {
             'criterion_id', 'criterion', 'criterion_currency_id', 'default_criteria',
             'level_req', 'level_check', 'skill_id', 'skill_quantity', 'limit', 'limit_period', 'limit_character',
             'bonus_rewardable_type', 'bonus_rewardable_id', 'bonus_quantity',
+            'parent_id', 'parent_quantity', 'is_details_visible',
         ]);
         if ($id && $service->updatePrompt(Prompt::find($id), $data, Auth::user())) {
             flash('Prompt updated successfully.')->success();

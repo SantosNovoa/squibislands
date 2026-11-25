@@ -86,8 +86,32 @@
                     </tbody>
                 </table>
             @endif
+            @if ($prompt->children->count())
+                <hr>
+                <h4 class="mt-2">Unlocks The Following Prompts:</h4>
+                <div class="row">
+                    @foreach ($prompt->children as $child)
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{!! $child->displayName !!}</h5>
+                                    <p class="card-text">{{ $child->summary }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
         <div class="text-right mt-1">
+            @php $isPromptLocked = $prompt->parent_id && $prompt->parent && !$prompt->isUnlockedFor(Auth::user()); @endphp
+            @if ($prompt->parent_id && $prompt->parent)
+                @if ($isPromptLocked)
+                    <p class="text-danger">You have not unlocked this prompt yet. You must complete {!! $prompt->parent->displayName !!} {{ $prompt->parent_quantity }} {{ $prompt->parent_quantity > 1 ? 'times' : 'time' }}.</p>
+                @else
+                    <p class="text-success">You have unlocked this prompt by completing {!! $prompt->parent->displayName !!} {{ $prompt->parent_quantity }} {{ $prompt->parent_quantity > 1 ? 'times' : 'time' }}.</p>
+                @endif
+            @endif
             @if ($prompt->level_req)
                 <p class="text-danger">This prompt requires you to be at least level {{ $prompt->level_req }}</p>
             @endif
@@ -95,7 +119,7 @@
                 <span class="text-secondary">This prompt has ended.</span>
             @elseif($prompt->start_at && $prompt->start_at->isFuture())
                 <span class="text-secondary">This prompt is not open for submissions yet.</span>
-            @else
+            @elseif (!$isPromptLocked)
                 <a href="{{ url('submissions/new?prompt_id=' . $prompt->id) }}" class="btn btn-primary">Submit Prompt</a>
             @endunless
     </div>

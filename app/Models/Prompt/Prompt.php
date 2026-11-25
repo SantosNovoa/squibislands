@@ -3,6 +3,7 @@
 namespace App\Models\Prompt;
 
 use App\Models\Model;
+use App\Models\Submission\Submission;
 use Carbon\Carbon;
 
 class Prompt extends Model {
@@ -14,7 +15,8 @@ class Prompt extends Model {
     protected $fillable = [
         'prompt_category_id', 'name', 'summary', 'description', 'parsed_description', 'is_active',
         'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'has_image', 'prefix',
-        'hide_submissions', 'staff_only', 'hash', 'level_req', 'limit', 'limit_period', 'limit_character'
+        'hide_submissions', 'staff_only', 'hash', 'level_req', 'limit', 'limit_period', 'limit_character',
+        'parent_id', 'parent_quantity', 'is_details_visible',
     ];
 
     /**
@@ -72,6 +74,27 @@ class Prompt extends Model {
      */
     public function category() {
         return $this->belongsTo(PromptCategory::class, 'prompt_category_id');
+    }
+
+    /**
+     * Get the prompt's parent (prerequisite) prompt.
+     */
+    public function parent() {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * Get the prompts that this prompt unlocks.
+     */
+    public function children() {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /**
+     * Get the submissions for this prompt.
+     */
+    public function submissions() {
+        return $this->hasMany(Submission::class, 'prompt_id');
     }
 
     /**
@@ -250,6 +273,37 @@ class Prompt extends Model {
         OTHER FUNCTIONS
 
     **********************************************************************************************/
+
+    /**
+     * Returns the count of approved submissions for this prompt by a user.
+     *
+     * @param \App\Models\User\User|null $user
+     *
+     * @return int
+     */
+    public function getSubmissionCount($user) {
+        if (!$user) {
+            return 0;
+        }
+
+        return $this->submissions()->where('user_id', $user->id)->where('status', 'Approved')->count();
+    }
+
+    /**
+     * Checks whether a user has completed this prompt's parent enough times to submit to it.
+     * Prompts without a parent are always unlocked.
+     *
+     * @param \App\Models\User\User|null $user
+     *
+     * @return bool
+     */
+    public function isUnlockedFor($user) {
+        if (!$this->parent_id || !$this->parent) {
+            return true;
+        }
+
+        return $this->parent->getSubmissionCount($user) >= ($this->parent_quantity ?? 1);
+    }
 
     /**
      * Checks whether a user has already had a submission to this prompt approved.
