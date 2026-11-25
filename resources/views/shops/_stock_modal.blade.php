@@ -5,7 +5,7 @@
     <div class="text-center mb-3">
         <div class="mb-1">
             @if ($stock->item->imageUrl)
-                <a href="{{ $stock->item->idUrl ?? '#' }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" class="img-fluid"/></a>
+                <a href="{{ $stock->item->idUrl ?? '#' }}"><img src="{{ $stock->item->imageUrl }}" alt="{{ $stock->item->name }}" class="img-fluid" style="max-height: 250px;" /></a>
             @endif
         </div>
         <div><a href="{{ $stock->item->idUrl ?? '#' }}"><strong>{{ $stock->item->name }}</strong></a></div>

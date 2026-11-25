@@ -2,7 +2,7 @@
     <div class="text-center">Invalid stack selected.</div>
 @else
     <div class="text-center">
-        <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" alt="{{ $item->name }}" /></a></div>
+        <div class="mb-1"><a href="{{ $item->url }}"><img src="{{ $item->imageUrl }}" class="img-fluid" style="max-height: 250px;" alt="{{ $item->name }}" /></a></div>
         <div @if (count($item->tags)) class="mb-1" @endif><a href="{{ $item->url }}">{{ $item->name }}</a></div>
     </div>
 

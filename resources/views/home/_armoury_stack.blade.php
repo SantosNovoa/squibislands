@@ -3,7 +3,7 @@
 @else
     <div class="text-center">
         <div class="mb-1"><a href="{{ $stack->equipment->url }}">
-                <img src="{{ $stack->imageUrl }}" /></a>
+                <img src="{{ $stack->imageUrl }}" class="img-fluid" style="max-height: 250px;" alt="{{ $stack->equipment->name }}" /></a>
         </div>
         <div class="mb-1"><a href="{{ $stack->equipment->url }}">{{ $stack->equipment->name }}</a></div>
     </div>

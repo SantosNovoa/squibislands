@@ -4,7 +4,7 @@
     <div class="text-center">
         <div class="mb-1">
             <a href="{{ $stack->pet->url }}">
-                <img class="img-fluid" src="{{ $stack->pet->variantImage($stack->id) }}" style="width:50%;" />
+                <img class="img-fluid" src="{{ $stack->pet->variantImage($stack->id) }}" style="max-height: 250px;" alt="{{ $stack->pet->name }}" />
             </a>
         </div>
         <div class="mb-1"><a href="{{ $stack->pet->url }}">{{ $stack->pet->name }}</a></div>

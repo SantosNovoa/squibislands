@@ -3,7 +3,7 @@
 @else
     <div class="text-center">
         @if ($award->has_image)
-            <div class="mb-1"><a href="{{ $award->idUrl }}"><img src="{{ $award->imageUrl }}" alt="{{ $award->name }}" /></a></div>
+            <div class="mb-1"><a href="{{ $award->idUrl }}"><img src="{{ $award->imageUrl }}" class="img-fluid" style="max-height: 250px;" alt="{{ $award->name }}" /></a></div>
         @endif
         <a href="{{ $award->idUrl }}">{{ $award->name }}</a>
     </div>
