@@ -187,4 +187,5 @@ class Notification extends Model {
     public const DIRECT_MESSAGE_RECEIVED = 1005;
     public const BORDER_GRANT                      = 1106;
     public const BOSS_REWARDS_RECEIVED = 1200;
+    public const USER_SHOP_ITEM_SOLD = 1104; // User Shops
 }

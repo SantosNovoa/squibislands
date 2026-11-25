@@ -79,6 +79,9 @@ class AddSiteSettings extends Command {
         
         $this->addSiteSetting('claymore_cooldown', 0, 'Number of days to add to the cooldown timer when a pet/weapon/gear is attached.');
 
+        // User Shops extension
+        $this->addSiteSetting('user_shop_limit', 1, 'Number of user shops that a user can make in total set to 0 to allow infinite shops.');
+
         $this->addSiteSetting('featured_character', 1, 'ID of the currently featured character.');
 
         $this->addSiteSetting('stamina_per_object', 15, 'Max stamina per user / character. May take a bit for every user / character to reflect this change.');

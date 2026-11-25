@@ -612,4 +612,11 @@ return [
         'message' => 'You have been sent rewards for the boss <strong>{boss_name}</strong>: {rewards}. (<a href="{url}">View Boss</a>)',
         'url'     => 'world/bosses/{boss_slug}',
     ],
+
+    // USER_SHOP_ITEM_SOLD
+    1104 => [
+        'name' => 'Shop Item Sold',
+        'message' => 'You have sold a {item_name} from <a href="{url}">{shop_name}</a> and have been credited {currency_quantity} {currency_name}.',
+        'url' => 'user-shops/shop/{shop_id}'
+    ],
 ];

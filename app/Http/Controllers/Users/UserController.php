@@ -32,6 +32,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
+use App\Models\Shop\UserShop;
+
 class UserController extends Controller {
     /*
     |--------------------------------------------------------------------------
@@ -770,6 +772,23 @@ class UserController extends Controller {
         return view('user.border_logs', [
             'user' => $this->user,
             'logs' => $this->user->getBorderLogs(0),
+            'sublists' => Sublist::orderBy('sort', 'DESC')->get()
+        ]);
+    }
+
+    /**
+     * Shows a user's characters.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserShops($name)
+    {
+        $shops = UserShop::visible()->where('user_id', $this->user->id);
+
+        return view('user.shops', [
+            'user' => $this->user,
+            'shops' => $shops->orderBy('sort', 'DESC')->get(),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get()
         ]);
     }

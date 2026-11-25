@@ -94,6 +94,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/redeem-logs', 'UserController@getUserRedeemLogs');
 
     Route::get('{name}/border-logs', 'UserController@getUserBorderLogs');
+    Route::get('{name}/shops', 'UserController@getUserShops');
 });
 
 # STAFF TEAM

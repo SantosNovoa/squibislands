@@ -13,6 +13,7 @@ use App\Models\Claymore\WeaponLog;
 use App\Models\Comment\CommentLike;
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
+use App\Models\Shop\UserShopLog;
 use App\Models\Gallery\GalleryCollaborator;
 use App\Models\Gallery\GalleryFavorite;
 use App\Models\Gallery\GallerySubmission;
@@ -416,6 +417,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function borderBottomLayer()
     {
         return $this->belongsTo('App\Models\Border\Border', 'bottom_border_id');
+    }
+
+    /**
+     * Get the user's rank data.
+     */
+    public function shops()
+    {
+        return $this->hasMany('App\Models\Shop\UserShop', 'user_id');
     }
 
     /**********************************************************************************************
@@ -1217,6 +1226,20 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return $query->paginate(30);
         }
+    }
+
+    /**
+     * Get the user's shop purchase logs.
+     *
+     * @param  int  $limit
+     * @return \Illuminate\Support\Collection|\Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getUserShopLogs($limit = 10)
+    {
+        $user = $this;
+        $query = UserShopLog::where('user_id', $this->id)->with('shop')->with('item')->with('currency')->orderBy('id', 'DESC');
+        if($limit) return $query->take($limit)->get();
+        else return $query->paginate(30);
     }
 
     /**

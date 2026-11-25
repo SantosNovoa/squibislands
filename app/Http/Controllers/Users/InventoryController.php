@@ -9,6 +9,7 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterItem;
 use App\Models\Item\Item;
 use App\Models\Item\ItemCategory;
+use App\Models\Shop\UserShop;
 use App\Models\Submission\Submission;
 use App\Models\Trade;
 use App\Models\User\User;
@@ -16,6 +17,8 @@ use App\Models\User\UserItem;
 use App\Services\InventoryManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use App\Models\Shop\UserShopStock;
 
 class InventoryController extends Controller {
     /*
@@ -182,6 +185,10 @@ class InventoryController extends Controller {
             $characters = Character::where('user_id', $user->id)->orderBy('slug', 'ASC')->get();
             $characterItems = CharacterItem::whereIn('character_id', $characters->pluck('id')->toArray())->where('item_id', $item->id)->where('count', '>', 0)->get();
 
+             // search the user's shops
+            $shops = UserShop::where('user_id', $user->id)->orderBy('name', 'ASC')->get();
+            $shopItems = UserShopStock::whereIn('user_shop_id', $shops->pluck('id')->toArray())->where('item_id', $item->id)->where('quantity', '>', 0)->get();
+
             // Gather hold locations
             $designUpdates = CharacterDesignUpdate::where('user_id', $user->id)->whereNotNull('data')->get();
             $trades = Trade::where('sender_id', $user->id)->orWhere('recipient_id', $user->id)->get();
@@ -197,6 +204,8 @@ class InventoryController extends Controller {
             'designUpdates'  => $item ? $designUpdates : null,
             'trades'         => $item ? $trades : null,
             'submissions'    => $item ? $submissions : null,
+            'shopItems'      => $item ? $shopItems : null,
+            'shops'          => $item ? $shops : null,
         ]);
     }
 
@@ -377,6 +386,44 @@ class InventoryController extends Controller {
             flash('Item used successfully.')->success();
         } elseif (!$stacks->first()->item->hasTag($tag)) {
             flash('Invalid action selected.')->error();
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
+    /**
+     * Shows the user's quickstock page (User Shops extension).
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getQuickstock() {
+        $inventory = UserItem::with('item')->whereNull('deleted_at')->where('count', '>', '0')->where('user_id', Auth::user()->id)->get();
+
+        return view('home.quickstock', [
+            'user'        => Auth::user(),
+            'item_filter' => Item::orderBy('name')->released()->get()->keyBy('id'),
+            'items'       => Item::orderBy('name')->released()->pluck('name', 'id'),
+            'inventory'   => $inventory,
+            'page'        => 'quickstock',
+            'categories'  => ItemCategory::orderBy('sort', 'DESC')->get(),
+            'shopOptions' => UserShop::where('user_id', '=', Auth::user()->id)->pluck('name', 'id'),
+        ]);
+    }
+
+    /**
+     * Transfers items to a user shop (User Shops extension).
+     *
+     * @param App\Services\InventoryManager $service
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postQuickstock(Request $request, InventoryManager $service) {
+        if ($service->quickstockItems($request->only(['stack_id', 'stack_quantity']), Auth::user(), UserShop::where('id', $request->get('shop_id'))->where('user_id', Auth::user()->id)->first())) {
+            flash('Item transferred successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
