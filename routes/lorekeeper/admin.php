@@ -611,6 +611,14 @@ Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'pow
     Route::post('borders', 'GrantController@postBorders');
 });
 
+// EVENT SETTINGS (Event Tools extension)
+Route::group(['prefix' => 'event-settings', 'middleware' => 'power:edit_inventories'], function () {
+    Route::get('/', 'EventController@getEventSettings');
+    Route::get('clear', 'EventController@getClearEventCurrency');
+    Route::post('clear', 'EventController@postClearEventCurrency');
+    Route::post('teams', 'EventController@postEventTeams');
+});
+
 // PETS
 Route::group(['prefix' => 'pets', 'middleware' => 'power:edit_inventories'], function () {
     Route::post('pet/{id}', 'Data\PetController@postEditPetDrop');

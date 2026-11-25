@@ -68,6 +68,19 @@
                     <div class="col-8">{{ $user->profile->pronouns }}</div>
                 </div>
             @endif
+            @if (Settings::get('event_teams') && $user->settings->team)
+                <div class="row no-gutters col-sm-6">
+                    <div class="col-4"><h5>Team</h5></div>
+                    <div class="col-8">
+                        <a href="{{ url('event-tracking') }}">
+                            @if ($user->settings->team->has_image)
+                                <img src="{{ $user->settings->team->imageUrl }}" class="mw-100" style="max-height: 1.5em;" alt="{{ $user->settings->team->name }}" />
+                            @endif
+                            {{ $user->settings->team->name }}
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>

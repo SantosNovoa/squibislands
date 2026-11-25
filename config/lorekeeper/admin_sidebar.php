@@ -135,6 +135,10 @@ return [
                 'url'  => 'admin/grants/items',
             ],
             [
+                'name' => 'Event Settings',
+                'url'  => 'admin/event-settings',
+            ],
+            [
                 'name' => 'Award Grants',
                 'url'  => 'admin/grants/awards',
             ],

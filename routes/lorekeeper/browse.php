@@ -212,6 +212,11 @@ Route::group(['prefix' => 'shops'], function () {
     Route::get('{id}/{stockId}', 'ShopController@getShopStock')->where(['id' => '[0-9]+', 'stockId' => '[0-9]+']);
 });
 
+// Event Tools extension
+Route::group(['prefix' => 'event-tracking'], function () {
+    Route::get('/', 'EventController@getEventTracking');
+});
+
 Route::group(['prefix' => __('dailies.dailies')], function() {
     Route::get('/', 'DailyController@getIndex');
     Route::get('{id}', 'DailyController@getDaily')->where(['id' => '[0-9]+']);
