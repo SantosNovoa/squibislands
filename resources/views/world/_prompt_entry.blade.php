@@ -52,6 +52,7 @@
                     </tbody>
                 </table>
             @endif
+            @include('prompts._first_time_rewards_table', ['prompt' => $prompt])
             <hr>
             <h4>Skill Rewards</h4>
             <table class="table table-sm mb-0">

@@ -78,7 +78,14 @@ class Prompt extends Model {
      * Get the rewards attached to this prompt.
      */
     public function rewards() {
-        return $this->hasMany(PromptReward::class, 'prompt_id');
+        return $this->hasMany(PromptReward::class, 'prompt_id')->where('is_first_time', 0);
+    }
+
+    /**
+     * Get the bonus rewards granted the first time a user completes this prompt.
+     */
+    public function firstTimeRewards() {
+        return $this->hasMany(PromptReward::class, 'prompt_id')->where('is_first_time', 1);
     }
 
     /**
@@ -236,6 +243,32 @@ class Prompt extends Model {
      */
     public function scopeSortEnd($query, $reverse = false) {
         return $query->orderBy('end_at', $reverse ? 'DESC' : 'ASC');
+    }
+
+    /**********************************************************************************************
+
+        OTHER FUNCTIONS
+
+    **********************************************************************************************/
+
+    /**
+     * Checks whether a user has already had a submission to this prompt approved.
+     *
+     * @param \App\Models\User\User|int $user
+     * @param int|null                  $excludeSubmissionId submission to ignore (e.g. the one being approved)
+     *
+     * @return bool
+     */
+    public function hasBeenCompletedBy($user, $excludeSubmissionId = null) {
+        $userId = is_object($user) ? $user->id : $user;
+
+        return \App\Models\Submission\Submission::where('prompt_id', $this->id)
+            ->where('user_id', $userId)
+            ->where('status', 'Approved')
+            ->when($excludeSubmissionId, function ($query) use ($excludeSubmissionId) {
+                $query->where('id', '!=', $excludeSubmissionId);
+            })
+            ->exists();
     }
 
     /**********************************************************************************************

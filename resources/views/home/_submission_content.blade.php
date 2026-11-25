@@ -157,6 +157,41 @@
     </div>
 @endif
 
+@if (isset($submission->data['first_time_rewards']) && $submission->data['first_time_rewards'])
+    <div class="card mb-3">
+        <div class="card-header h2">First Completion Bonus</div>
+        <div class="card-body">
+            <table class="table table-sm">
+                <thead class="thead-light">
+                    <tr>
+                        <th width="70%">Bonus Reward</th>
+                        <th width="30%">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (parseAssetData($submission->data['first_time_rewards']) as $key => $type)
+                        @if (in_array($key, ['exp', 'points']))
+                            @if (isset($type['quantity']) && $type['quantity'])
+                                <tr>
+                                    <td>{{ $key == 'exp' ? 'EXP' : 'Stat Points' }}</td>
+                                    <td>{{ $type['quantity'] }}</td>
+                                </tr>
+                            @endif
+                        @else
+                            @foreach ($type as $asset)
+                                <tr>
+                                    <td>{!! $asset['asset'] ? $asset['asset']->displayName : 'Deleted Asset' !!}</td>
+                                    <td>{{ $asset['quantity'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endif
+
 <div class="card mb-3">
     <div class="card-header h2">Characters</div>
     <div class="card-body">

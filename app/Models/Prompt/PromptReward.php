@@ -20,7 +20,16 @@ class PromptReward extends Model {
      * @var array
      */
     protected $fillable = [
-        'prompt_id', 'rewardable_type', 'rewardable_id', 'quantity',
+        'prompt_id', 'rewardable_type', 'rewardable_id', 'quantity', 'is_first_time',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_first_time' => 'boolean',
     ];
 
     /**

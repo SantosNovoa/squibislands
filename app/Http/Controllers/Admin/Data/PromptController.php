@@ -235,7 +235,8 @@ class PromptController extends Controller {
         $data = $request->only([
             'name', 'prompt_category_id', 'summary', 'description', 'start_at', 'end_at', 'hide_before_start', 'hide_after_end', 'is_active', 'rewardable_type', 'rewardable_id', 'quantity', 'image', 'remove_image', 'prefix', 'hide_submissions', 'staff_only',
             'criterion_id', 'criterion', 'criterion_currency_id', 'default_criteria',
-            'level_req', 'level_check', 'skill_id', 'skill_quantity', 'limit', 'limit_period', 'limit_character'
+            'level_req', 'level_check', 'skill_id', 'skill_quantity', 'limit', 'limit_period', 'limit_character',
+            'bonus_rewardable_type', 'bonus_rewardable_id', 'bonus_quantity',
         ]);
         if ($id && $service->updatePrompt(Prompt::find($id), $data, Auth::user())) {
             flash('Prompt updated successfully.')->success();

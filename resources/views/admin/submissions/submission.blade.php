@@ -130,6 +130,17 @@
 
         <h2 class="mt-4">Rewards</h2>
         @include('widgets._loot_select', ['loots' => $submission->rewards, 'showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+        @if (isset($firstTimeBonus) && $firstTimeBonus)
+            <div class="alert alert-success">
+                <strong>First completion!</strong> This is {!! $submission->user->displayName !!}'s first approved submission to this prompt, so they will also receive the First Completion Bonus on approval:
+                <ul class="mb-0 mt-1">
+                    @foreach ($firstTimeBonus as $reward)
+                        <li>{!! $reward->reward ? $reward->reward->displayName : $reward->rewardable_type !!} &times; {{ $reward->quantity }}</li>
+                    @endforeach
+                </ul>
+                <small>Bonus rewards are set on the prompt and aren't edited here.</small>
+            </div>
+        @endif
         @if ($submission->prompt_id)
             <div class="mb-3">
                 <h2>Skill Rewards</h2>

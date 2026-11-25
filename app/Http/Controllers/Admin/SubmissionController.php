@@ -83,8 +83,16 @@ class SubmissionController extends Controller {
             }
         }
 
+        // First completion bonus preview for staff (only relevant while pending)
+        $firstTimeBonus = null;
+        if ($prompt && $submission->status == 'Pending' && $prompt->firstTimeRewards->count()
+            && !$prompt->hasBeenCompletedBy($submission->user_id, $submission->id)) {
+            $firstTimeBonus = $prompt->firstTimeRewards;
+        }
+
         return view('admin.submissions.submission', [
             'submission'       => $submission,
+            'firstTimeBonus'   => $firstTimeBonus,
             'inventory'        => $inventory,
             'rewardsData'      => isset($submission->data['rewards']) ? parseAssetData($submission->data['rewards']) : null,
             'itemsrow'         => Item::all()->keyBy('id'),

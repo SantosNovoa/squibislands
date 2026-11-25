@@ -554,6 +554,27 @@ class SubmissionManager extends Service {
                 throw new \Exception('Failed to distribute rewards to user.');
             }
 
+            // First completion bonus: granted only if the user has never had a submission to this prompt approved before
+            $firstTimeRewards = null;
+            if ($submission->prompt_id && $submission->prompt && $submission->prompt->firstTimeRewards->count()
+                && !$submission->prompt->hasBeenCompletedBy($submission->user_id, $submission->id)) {
+                $bonusRewards = createAssetsArray();
+                foreach ($submission->prompt->firstTimeRewards as $bonusReward) {
+                    if (in_array($bonusReward->rewardable_type, ['Exp', 'Points'])) {
+                        addAsset($bonusRewards, $bonusReward->rewardable_type, $bonusReward->quantity);
+                    } else {
+                        addAsset($bonusRewards, $bonusReward->reward, $bonusReward->quantity);
+                    }
+                }
+
+                if (!$bonusRewards = fillUserAssets($bonusRewards, $user, $submission->user, 'Prompt First Completion Bonus', [
+                    'data' => 'Received first completion bonus for submission (<a href="'.$submission->viewUrl.'">#'.$submission->id.'</a>)',
+                ])) {
+                    throw new \Exception('Failed to distribute first completion bonus rewards to user.');
+                }
+                $firstTimeRewards = getDataReadyAssets($bonusRewards);
+            }
+
             // Retrieve all reward IDs for characters
             $currencyIds = [];
             $itemIds = [];
@@ -694,6 +715,7 @@ class SubmissionManager extends Service {
                     'gallery_submission_id' => $submission->data['gallery_submission_id'] ?? null,
                     'skills'                => $skills ?? null,
                     'bosses'                => $submissionBosses,
+                    'first_time_rewards'    => $firstTimeRewards,
                 ]), // list of rewards
             ]);
 

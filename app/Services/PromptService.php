@@ -213,6 +213,7 @@ class PromptService extends Service {
             }
 
             $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $prompt);
+            $this->populateFirstTimeRewards(Arr::only($data, ['bonus_rewardable_type', 'bonus_rewardable_id', 'bonus_quantity']), $prompt);
             (new CriterionService)->populateCriteria(Arr::only($data, ['criterion_id', 'criterion', 'criterion_currency_id', 'default_criteria']), $prompt, PromptCriterion::class);
 
             $this->populateSkills(Arr::only($data, ['skill_id', 'skill_quantity']), $prompt);
@@ -281,6 +282,7 @@ class PromptService extends Service {
             }
 
             $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $prompt);
+            $this->populateFirstTimeRewards(Arr::only($data, ['bonus_rewardable_type', 'bonus_rewardable_id', 'bonus_quantity']), $prompt);
             (new CriterionService)->populateCriteria(Arr::only($data, ['criterion_id', 'criterion', 'criterion_currency_id', 'default_criteria']), $prompt, PromptCriterion::class);
 
             $this->populateSkills(Arr::only($data, ['skill_id', 'skill_quantity']), $prompt);
@@ -310,6 +312,7 @@ class PromptService extends Service {
             }
 
             $prompt->rewards()->delete();
+            $prompt->firstTimeRewards()->delete();
             if ($prompt->has_image) {
                 $this->deleteImage($prompt->imagePath, $prompt->imageFileName);
             }
@@ -413,6 +416,41 @@ class PromptService extends Service {
                     'rewardable_type' => $type,
                     'rewardable_id'   => $data['rewardable_id'][$key] ?? null,
                     'quantity'        => $data['quantity'][$key],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Processes user input for creating/updating prompt first-time (bonus) rewards.
+     * These are granted only on a user's first approved submission to the prompt.
+     *
+     * @param array  $data
+     * @param Prompt $prompt
+     */
+    private function populateFirstTimeRewards($data, $prompt) {
+        // Clear the old bonus rewards...
+        $prompt->firstTimeRewards()->delete();
+
+        if (isset($data['bonus_rewardable_type'])) {
+            foreach ($data['bonus_rewardable_type'] as $key => $type) {
+                if (!$type) {
+                    continue;
+                }
+                $rewardableId = $data['bonus_rewardable_id'][$key] ?? null;
+                if ($rewardableId == 'none') {
+                    $rewardableId = null;
+                }
+                $quantity = $data['bonus_quantity'][$key] ?? 1;
+                if (!is_numeric($quantity) || $quantity < 1) {
+                    throw new \Exception('First completion bonus rewards must have a quantity of at least 1.');
+                }
+                PromptReward::create([
+                    'prompt_id'       => $prompt->id,
+                    'rewardable_type' => $type,
+                    'rewardable_id'   => $rewardableId,
+                    'quantity'        => (int) $quantity,
+                    'is_first_time'   => 1,
                 ]);
             }
         }

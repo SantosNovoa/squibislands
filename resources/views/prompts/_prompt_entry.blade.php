@@ -56,6 +56,7 @@
                     </tbody>
                 </table>
             @endif
+            @include('prompts._first_time_rewards_table', ['prompt' => $prompt])
             <hr>
             <h4>Skills</h4>
             @if (!count($prompt->skills))

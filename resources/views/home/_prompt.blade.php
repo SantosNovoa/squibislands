@@ -57,6 +57,7 @@
                 @endforeach
             </tbody>
         </table>
+        @include('prompts._first_time_rewards_table', ['prompt' => $prompt, 'showEligibility' => !(isset($staffView) && $staffView)])
         <hr>
         <h4>Default Skill Rewards</h4>
         <table class="table table-sm mb-0">

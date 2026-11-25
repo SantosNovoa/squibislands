@@ -169,6 +169,10 @@
 
     <hr class="w-70">
 
+    @include('admin.prompts._first_time_rewards')
+
+    <hr class="w-70">
+
     <h3>Skill Rewards</h3>
     <p>Skills are rewarded to focus characters. These are the default rewards, however, they can be modified on approval.</p>
     <div class="form-group">
@@ -226,6 +230,13 @@
 @section('scripts')
     @parent
     @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true])
+    @include('admin.prompts._first_time_rewards_js', [
+        'bonusRewards' => $prompt->firstTimeRewards->map(fn ($reward) => [
+            'type'     => $reward->rewardable_type,
+            'id'       => $reward->rewardable_id,
+            'quantity' => $reward->quantity,
+        ])->values(),
+    ])
     @include('widgets._datetimepicker_js')
     <script>
         $(document).ready(function() {
