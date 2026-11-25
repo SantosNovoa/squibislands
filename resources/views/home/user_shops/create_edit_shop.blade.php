@@ -74,7 +74,7 @@
             </div>
             {!! Form::close() !!}
         @else
-            <div class="alert alert-warning text-center">Add stock to your shop from your inventory.</div>
+            <div class="alert alert-warning text-center">Add stock to your shop from your inventory using <a href="{{ url('inventory/quickstock') }}">Quickstock</a>.</div>
         @endif
 
         <hr>
@@ -88,8 +88,10 @@
         </div>
 
         <div class="text-center">
-            <img src="{{ $shop->shopImageUrl }}" style="max-width: 200px !important; max-height: 200px !important;"
-                alt="{{ $shop->name }}" />
+            @if ($shop->has_image)
+                <img src="{{ $shop->shopImageUrl }}" style="max-width: 200px !important; max-height: 200px !important;"
+                    alt="{{ $shop->name }}" />
+            @endif
             <p>{!! $shop->parsed_description !!}</p>
         </div>
     @endif
