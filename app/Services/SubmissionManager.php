@@ -6,11 +6,14 @@ use App\Facades\Notifications;
 use App\Facades\Settings;
 use App\Models\Award\Award;
 use App\Models\Character\Character;
+use App\Models\Claymore\Gear;
+use App\Models\Claymore\Weapon;
 use App\Models\Boss\Boss;
 use App\Models\Criteria\Criterion;
 use App\Models\Currency\Currency;
 use App\Models\Element\Element;
 use App\Models\Item\Item;
+use App\Models\Pet\Pet;
 use App\Models\Loot\LootTable;
 use App\Models\Prompt\Prompt;
 use App\Models\Raffle\Raffle;
@@ -22,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use App\Models\Recipe\Recipe;
+use App\Models\Skill\Skill;
 use Illuminate\Support\Facades\Auth;
 
 class SubmissionManager extends Service {
