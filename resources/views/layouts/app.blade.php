@@ -50,6 +50,14 @@
     <script src="{{ asset('js/bootstrap4-toggle.min.js') }}"></script>
     <script src="{{ asset('js/tinymce.min.js') }}"></script>
     <script src="{{ asset('js/jquery.tinymce.min.js') }}"></script>
+    <script>
+        // Turn on the browser's built-in spell check for every TinyMCE editor on the site.
+        // contextmenu: false lets right-click show the browser's spelling suggestions instead of TinyMCE's menu.
+        tinymce.overrideDefaults({
+            browser_spellcheck: true,
+            contextmenu: false,
+        });
+    </script>
     <script src="{{ asset('js/lightbox.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap-colorpicker.min.js') }}"></script>
     <script src="{{ asset('js/bs-custom-file-input.min.js') }}"></script>
