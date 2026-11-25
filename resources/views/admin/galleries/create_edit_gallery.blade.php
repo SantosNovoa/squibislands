@@ -98,6 +98,7 @@
     </p>
     <div id="criteria">
         @foreach ($gallery->criteria as $criterion)
+            @continue(!$criterion->criterion)
             <div class="card p-3 mb-2 pl-0">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <a class="col-1 p-0" data-toggle="collapse" href="#collapsable-{{ $criterion->id }}">

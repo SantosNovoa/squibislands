@@ -278,6 +278,11 @@ class CriterionService extends Service {
                 $this->deleteCriterionStep($step);
             }
 
+            // Remove references so prompts, galleries and defaults don't point at a deleted criterion
+            \App\Models\Prompt\PromptCriterion::where('criterion_id', $criterion->id)->delete();
+            \App\Models\Gallery\GalleryCriterion::where('criterion_id', $criterion->id)->delete();
+            DefaultCriteria::where('criterion_id', $criterion->id)->delete();
+
             $criterion->delete();
 
             return $this->commitReturn(true);
@@ -334,6 +339,9 @@ class CriterionService extends Service {
             foreach (array_filter($data['default_criteria']) as $key => $toggle) {
                 $default = CriterionDefault::find($key);
                 foreach ($default->criteria as $criterion) {
+                    if (!$criterion->criterion) {
+                        continue;
+                    }
                     $relationshipClass::create([
                         // so it can be prompt_id or gallery_id
                         strtolower(class_basename($entity)).'_id' => $entity->id,
