@@ -102,4 +102,19 @@ return [
         'description' => 'Icon for the Inventory shortcut beside Recent News on the dashboard. Square PNG with a transparent background, around 300x300.',
         'filename'    => 'dashboard_inventory.png',
     ],
+    'shops_user_shops' => [
+        'name'        => 'Shops: User Shops',
+        'description' => 'Tile linking to the user shop index, shown under the shop list on the Shops page. Same size as the other shop images.',
+        'filename'    => 'shops_user_shops.png',
+    ],
+    'shops_my_shop' => [
+        'name'        => 'Shops: My Shop',
+        'description' => 'Tile linking to the viewer\'s own user shop, shown under the shop list on the Shops page. Same size as the other shop images.',
+        'filename'    => 'shops_my_shop.png',
+    ],
+    'shops_supporter_shop' => [
+        'name'        => 'Shops: Supporter Shop',
+        'description' => 'Wide banner linking to the Supporter (premium) Shop, shown at the bottom of the Shops page. PNG, around 3:1 (e.g. 900x300).',
+        'filename'    => 'shops_supporter_shop.png',
+    ],
 ];

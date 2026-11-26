@@ -191,21 +191,6 @@
                                     <a class="dropdown-item" href="{{ url('shops') }}">
                                         <i class="fa-solid fa-store"></i> Shops
                                     </a>
-                                    @if (Auth::user()->shops()->count() && Settings::get('user_shop_limit') == 1)
-                                        <a class="dropdown-item" href="{{ Auth::user()->shops()->first()->editUrl }}">
-                                            <i class="fa-solid fa-shop"></i> My Shop
-                                        </a>
-                                    @else
-                                        <a class="dropdown-item" href="{{ url('user-shops') }}">
-                                            <i class="fa-solid fa-shop"></i> My Shops
-                                        </a>
-                                    @endif
-                                    <a class="dropdown-item" href="{{ url('user-shops/shop-index') }}">
-                                        <i class="fa-solid fa-shop"></i> All User Shops
-                                    </a>
-                                    <a class="dropdown-item" href="{{ url('premium-shop') }}">
-                                        <i class="fa-solid fa-credit-card"></i> Premium Shop
-                                    </a>
                                 </div>
                             </div>
                         </li>

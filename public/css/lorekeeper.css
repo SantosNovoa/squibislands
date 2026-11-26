@@ -1219,6 +1219,11 @@ tr.accountbound {
     font-weight: bold;
 }
 
+/* shop hub (user shops / my shop / supporter shop) */
+.shops-divider {
+    margin: 1.5rem 0;
+}
+
 /* shop modal thumbnail */
 .text-center.mb-3 .mb-1 img.img-fluid {
     max-height: 200px;
