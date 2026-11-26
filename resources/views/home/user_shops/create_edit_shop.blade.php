@@ -29,7 +29,7 @@
     <div class="form-group">
         {!! Form::label('Shop Image (Optional)') !!} {!! add_help('This image is used on the shop index and on the shop page as a header.') !!}
         <div>{!! Form::file('image') !!}</div>
-        <div class="text-muted">Recommended size: None (Choose a standard size for all shop images)</div>
+        <div class="text-muted">Recommended size: 400px wide</div>
         @if ($shop->has_image)
             <div class="form-check">
                 {!! Form::checkbox('remove_image', 1, false, ['class' => 'form-check-input']) !!}
