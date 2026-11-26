@@ -305,6 +305,10 @@ return [
                 'name' => 'User Borders',
                 'url' => 'admin/data/borders'
             ],
+            [
+                'name' => 'Advent Calendars',
+                'url' => 'admin/data/advent-calendars'
+            ],
         ]
     ],
     'WorldExpansion' => [
