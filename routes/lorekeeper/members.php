@@ -442,3 +442,12 @@ Route::group(['prefix' => 'rewards'], function () {
 
 // RAFFLE SELF ENTRY - NEWT
 Route::post('/raffles/enter/{id}', 'RaffleController@selfEnter');
+
+/**************************************************************************************************
+    Advent Calendars
+**************************************************************************************************/
+
+Route::group(['prefix' => 'advent-calendars'], function() {
+    Route::get('{id}', 'AdventController@getAdvent');
+    Route::post('{id}', 'AdventController@postClaimPrize');
+});
