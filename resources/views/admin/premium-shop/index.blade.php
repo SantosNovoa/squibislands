@@ -1,11 +1,11 @@
 @extends('admin.layout')
 
-@section('admin-title') Premium Shop @endsection
+@section('admin-title') Supporter Shop @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Premium Shop' => 'admin/data/premium-shop']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Supporter Shop' => 'admin/data/premium-shop']) !!}
 
-    <h1>Premium Shop</h1>
+    <h1>Supporter Shop</h1>
 
     <div class="text-right mb-3">
         <a href="{{ url('admin/data/premium-shop/create') }}" class="btn btn-primary">Add Product</a>

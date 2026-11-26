@@ -99,7 +99,7 @@ class PremiumShopService extends Service
 
             // Grant rewards to user
             if (!fillUserAssets($rewards, null, $user, 'Premium Shop Purchase', [
-                'data' => 'Purchased ' . $product->name . ' from the Premium Shop.',
+                'data' => 'Purchased ' . $product->name . ' from the Supporter Shop.',
             ])) {
                 throw new \Exception('Failed to distribute rewards.');
             }

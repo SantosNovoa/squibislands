@@ -1,9 +1,9 @@
 @extends('admin.layout')
 
-@section('admin-title') Premium Shop Purchases @endsection
+@section('admin-title') Supporter Shop Purchases @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Premium Shop' => 'admin/data/premium-shop', 'Purchases' => 'admin/data/premium-shop/purchases']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Supporter Shop' => 'admin/data/premium-shop', 'Purchases' => 'admin/data/premium-shop/purchases']) !!}
 
     <h1>Purchase History</h1>
 

@@ -1,5 +1,5 @@
 <ul>
-    <li class="sidebar-header"><a href="{{ url('premium-shop') }}" class="card-link">Premium Shop</a></li>
+    <li class="sidebar-header"><a href="{{ url('premium-shop') }}" class="card-link">Supporter Shop</a></li>
     @if (Auth::check())
         <li class="sidebar-section">
             <div class="sidebar-section-header">History</div>

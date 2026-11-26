@@ -1,13 +1,13 @@
 @extends('premium-shop.layout')
 
 @section('title')
-    Premium Shop
+    Supporter Shop
 @endsection
 
 @section('content')
-    {!! breadcrumbs(['Premium Shop' => 'premium-shop']) !!}
+    {!! breadcrumbs(['Supporter Shop' => 'premium-shop']) !!}
 
-    <h1>Premium Shop</h1>
+    <h1>Supporter Shop</h1>
     <p>Purchase items and currency using real money. Payments are processed securely by Stripe.</p>
 
     @if (!$products->count())

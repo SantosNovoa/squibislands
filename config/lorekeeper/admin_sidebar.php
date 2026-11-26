@@ -257,7 +257,7 @@ return [
                 'url'  => 'admin/data/shops',
             ],
             [
-                'name' => 'Premium Shop',
+                'name' => 'Supporter Shop',
                 'url'  => 'admin/data/premium-shop'
             ],
             [

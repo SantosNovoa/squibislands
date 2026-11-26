@@ -3,7 +3,7 @@
 @section('title') Purchase Complete @endsection
 
 @section('content')
-    {!! breadcrumbs(['Premium Shop' => 'premium-shop', 'Purchase Complete' => 'premium-shop/complete']) !!}
+    {!! breadcrumbs(['Supporter Shop' => 'premium-shop', 'Purchase Complete' => 'premium-shop/complete']) !!}
 
     <div class="text-center py-5">
         <h1>Thank You!</h1>

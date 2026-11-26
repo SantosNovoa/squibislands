@@ -3,7 +3,7 @@
 @section('admin-title') Delete Product @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Premium Shop' => 'admin/premium-shop', 'Delete Product' => 'admin/premium-shop/delete/' . $product->id]) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Supporter Shop' => 'admin/premium-shop', 'Delete Product' => 'admin/premium-shop/delete/' . $product->id]) !!}
 
     <h1>Delete Product</h1>
 

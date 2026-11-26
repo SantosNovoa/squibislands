@@ -5,7 +5,7 @@
 @endsection
 
 @section('admin-content')
-    {!! breadcrumbs(['Admin Panel' => 'admin', 'Premium Shop' => 'admin/data/premium-shop', ($product->id ? 'Edit' : 'Create') . ' Product' => $product->id ? 'admin/data/premium-shop/edit/' . $product->id : 'admin/data/premium-shop/create']) !!}
+    {!! breadcrumbs(['Admin Panel' => 'admin', 'Supporter Shop' => 'admin/data/premium-shop', ($product->id ? 'Edit' : 'Create') . ' Product' => $product->id ? 'admin/data/premium-shop/edit/' . $product->id : 'admin/data/premium-shop/create']) !!}
 
     <h1>{{ $product->id ? 'Edit' : 'Create' }} Product</h1>
 
