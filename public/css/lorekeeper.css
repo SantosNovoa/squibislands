@@ -1234,10 +1234,16 @@ tr.accountbound {
     padding-left: 2.1rem;
 }
 .selectize-control.character-search .character-search-icon {
+    /* full-height flex box so the glyph centers on the text, not on its line-height.
+       top is pulled up because the selectize wrapper is taller than the visible input */
     position: absolute;
     left: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
+    top: -0.5rem;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    font-size: 0.9rem;
     z-index: 2;
     color: #adb5bd;
     pointer-events: none;
