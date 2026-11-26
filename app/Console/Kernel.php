@@ -49,6 +49,8 @@ class Kernel extends ConsoleKernel
             ->everyMinute();
         $schedule->command('change-feature')
             ->yearly();
+        $schedule->command('change-fetch-item')
+            ->hourly();
     }
 
     /**

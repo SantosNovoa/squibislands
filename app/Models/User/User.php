@@ -47,6 +47,8 @@ use App\Models\User\UserRecipeLog;
 use App\Models\User\UserBorder;
 use App\Models\User\UserBorderLog;
 use App\Models\Border\Border;
+use App\Models\FetchQuest\FetchQuest;
+use App\Models\FetchQuest\FetchLog;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -1499,4 +1501,50 @@ class User extends Authenticatable implements MustVerifyEmail
         return $styling . $avatar . '</div>';
     }
 
+    /**
+     * Check if user completed the fetch
+     *
+     * @return int
+     */
+    public function fetchCooldown($id)
+    {
+        $setting = Settings::get('fetch_timer_global');
+        if($setting){
+            //if timer is global
+            //fetch most recent log and use that timer
+            $log = FetchLog::where('user_id', $this->id)->orderBy('id', 'DESC')
+                ->first();
+            // If there is no log, by default, the cooldown is null
+            if(!$log) return null;
+    
+            //use timer of that log's fetch
+            $timer = $log->created_at->addMinutes($log->fetch->cooldown);
+            // If the cooldown would already be up, it is null
+            if($timer <= Carbon::now()) return null;
+            // Otherwise, calculate the remaining time
+            return $timer;
+    
+            return null;
+        }else{
+            $fetch = FetchQuest::where('id', $id)->first();
+            // Fetch log for most recent fetch quest that matches this fetch quest
+            //this way each fetch can have its own CD
+            //this will also allow implementation of other things such as pets to be turned in in the future maybe since originally it only checked items
+            //i forgot to say it last time, but this bit of code comes from merc's donation shop! thank you so much merc! <3
+            $log = FetchLog::where('user_id', $this->id)
+                ->where('fetch_id', $fetch->id)
+                ->orderBy('id', 'DESC')
+                ->first();
+            // If there is no log, by default, the cooldown is null
+            if(!$log) return null;
+    
+            $timer = $log->created_at->addMinutes($fetch->cooldown);
+            // If the cooldown would already be up, it is null
+            if($timer <= Carbon::now()) return null;
+            // Otherwise, calculate the remaining time
+            return $timer;
+    
+            return null;
+        }
+    }
 }

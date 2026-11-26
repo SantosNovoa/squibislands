@@ -184,6 +184,9 @@
                                     <a class="dropdown-item" href="{{ url('world/bosses') }}">
                                         <i class="fa-solid fa-dice"></i> Bosses
                                     </a>
+                                    <a class="dropdown-item" href="{{ url('fetch') }}">
+                                        <i class="fa-solid fa-scroll"></i> Fetch Quests
+                                    </a>
                                     {{-- <a class="dropdown-item" href="{{ url('crafting') }}">
                                         <i class="fa-solid fa-hammer"></i> Crafting
                                     </a> --}}

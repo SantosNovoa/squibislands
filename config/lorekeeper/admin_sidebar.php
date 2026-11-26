@@ -309,6 +309,10 @@ return [
                 'name' => 'Advent Calendars',
                 'url' => 'admin/data/advent-calendars'
             ],
+            [
+                'name' => 'Fetch Quests',
+                'url' => 'admin/data/fetch-quests'
+            ],
         ]
     ],
     'WorldExpansion' => [
