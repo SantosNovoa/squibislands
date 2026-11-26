@@ -521,6 +521,15 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('advent-calendars/create', 'AdventController@postCreateEditAdvent');
     Route::post('advent-calendars/edit/{id?}', 'AdventController@postCreateEditAdvent');
     Route::post('advent-calendars/delete/{id}', 'AdventController@postDeleteAdvent');
+
+    # FETCH QUESTS
+    Route::get('fetch-quests', 'FetchQuestController@getFetchQuestIndex');
+    Route::get('fetch-quests/create', 'FetchQuestController@getCreateFetchQuest');
+    Route::get('fetch-quests/edit/{id}', 'FetchQuestController@getEditFetchQuest');
+    Route::get('fetch-quests/delete/{id}', 'FetchQuestController@getDeleteFetchQuest');
+    Route::post('fetch-quests/create', 'FetchQuestController@postCreateEditFetchQuest');
+    Route::post('fetch-quests/edit/{id?}', 'FetchQuestController@postCreateEditFetchQuest');
+    Route::post('fetch-quests/delete/{id}', 'FetchQuestController@postDeleteFetchQuest');
 });
 
 // PAGES

@@ -451,3 +451,12 @@ Route::group(['prefix' => 'advent-calendars'], function() {
     Route::get('{id}', 'AdventController@getAdvent');
     Route::post('{id}', 'AdventController@postClaimPrize');
 });
+
+/**************************************************************************************************
+    Fetch Quests
+**************************************************************************************************/
+Route::group(['prefix' => 'fetch'], function() {
+    Route::get('/', 'FetchQuestController@getIndex');
+    Route::get('/new/{id}', 'FetchQuestController@getFetchQuest');
+    Route::post('/new/{id}', 'FetchQuestController@postFetchQuest');
+});

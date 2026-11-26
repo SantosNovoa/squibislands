@@ -79,6 +79,9 @@ class AddSiteSettings extends Command {
         
         $this->addSiteSetting('claymore_cooldown', 0, 'Number of days to add to the cooldown timer when a pet/weapon/gear is attached.');
 
+        // Fetch Quests extension
+        $this->addSiteSetting('fetch_timer_global', 1, 'Does completing one fetch quest lock you out of all other ones? 0 = no, 1 = yes. Uses the most recent completed fetch for the timer.');
+
         // User Shops extension
         $this->addSiteSetting('user_shop_limit', 1, 'Number of user shops that a user can make in total set to 0 to allow infinite shops.');
 
