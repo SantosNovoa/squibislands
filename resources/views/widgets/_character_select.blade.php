@@ -16,14 +16,14 @@
             <div class="row">
                 <div class="col-md-2 align-items-stretch d-flex">
                     <div class="d-flex text-center align-items-center">
-                        <div class="character-image-blank">Enter character code.</div>
+                        <div class="character-image-blank">Pick a character.</div>
                         <div class="character-image-loaded hide"></div>
                     </div>
                 </div>
                 <div class="col-md-10">
                     <div class="form-group">
                         {!! Form::label('slug[]', 'Character Code') !!}
-                        {!! Form::select('slug[]', $characters, null, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
+                        {!! Form::select('slug[]', $characters, null, ['class' => 'form-control character-code', 'placeholder' => 'Search by code or name...']) !!}
                     </div>
                     <div class="form-group col-6">
                         {!! Form::label('character-is-focus[]', 'Focus Character?', ['class' => 'form-check-label mr-2 character-is-focus']) !!}

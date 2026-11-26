@@ -6,8 +6,20 @@
         var $characters = $('#characters');
         var count = 0;
 
+        // Make character dropdowns searchable. Only <select>s: the admin submission view uses a
+        // text input + datalist for the character code, and selectize breaks that (see 609debf18).
+        // A magnifying glass on the left shows the box can be typed into (styled in lorekeeper.css).
+        function makeCharacterSearchable(node) {
+            node.find('select.character-code').each(function() {
+                var control = $(this).selectize()[0].selectize;
+                control.$wrapper.addClass('character-search')
+                    .prepend('<i class="fa-solid fa-magnifying-glass character-search-icon" aria-hidden="true"></i>');
+            });
+        }
+
         $('#characters .submission-character').each(function(index) {
             attachListeners($(this));
+            makeCharacterSearchable($(this));
         });
 
         $addCharacter.on('click', function(e) {
@@ -16,7 +28,7 @@
             attachListeners($clone);
             attachRewardTypeListener($clone.find('.character-rewardable-type'));
             $characters.append($clone);
-            // $clone.find('.character-code').selectize();
+            makeCharacterSearchable($clone);
             count++;
         });
 

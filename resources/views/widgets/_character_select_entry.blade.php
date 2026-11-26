@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-2 align-items-stretch d-flex">
                 <div class="d-flex text-center align-items-center">
-                    <div class="character-image-blank hide">Enter character code.</div>
+                    <div class="character-image-blank hide">Pick a character.</div>
                     <div class="character-image-loaded">
                         @include('home._character', ['character' => $character->character ? $character->character : $character])
                     </div>
@@ -24,7 +24,7 @@
             <div class="col-md-10">
                 <div class="form-group">
                     {!! Form::label('slug[]', 'Character Code') !!}
-                    {!! Form::select('slug[]', $characters, $character->character ? $character->character->slug : $character->slug, ['class' => 'form-control character-code', 'placeholder' => 'Select Character']) !!}
+                    {!! Form::select('slug[]', $characters, $character->character ? $character->character->slug : $character->slug, ['class' => 'form-control character-code', 'placeholder' => 'Search by code or name...']) !!}
                 </div>
                 @if (isset($submission))
                     <div class="form-group col-6">

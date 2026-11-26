@@ -1229,6 +1229,20 @@ tr.accountbound {
     max-height: 200px;
 }
 
+/* searchable character picker on submission forms (js/_character_select_js) */
+.selectize-control.character-search .selectize-input {
+    padding-left: 2.1rem;
+}
+.selectize-control.character-search .character-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: #adb5bd;
+    pointer-events: none;
+}
+
 /* TRADES ****************************************************************************************/
 .trade-offer .currency-item {
     background-color: transparent;
