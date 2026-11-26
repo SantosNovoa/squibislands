@@ -23,7 +23,7 @@
     @if ($fetch->fetchItem)
         @if ($fetch->fetchItem->imageUrl)
             <div>
-                <a href="{{ $fetch->fetchItem->url }}"><img src="{{ $fetch->fetchItem->imageUrl }}" /></a>
+                <a href="{{ $fetch->fetchItem->url }}"><img src="{{ $fetch->fetchItem->imageUrl }}" style="max-width: 150px; max-height: 150px;" alt="{{ $fetch->fetchItem->name }}" /></a>
             </div>
         @endif
         <div class="mt-1">
@@ -72,6 +72,9 @@
             <a href="#" class="btn btn-sm btn-primary submit-fetch" data-id="{{ $fetch->id }}"></i>Lend a
                 Hand!</a>
         </div>
+    @elseif(!$fetch->fetchItem)
+        {{-- no item rolled yet (the hourly change-fetch-item command hasn't run since this quest was made) --}}
+        <p class="text-muted"><i>Check back soon for a new request!</i></p>
     @elseif(Auth::user()->fetchCooldown($fetch->id))
         <i>You can complete this again {!! pretty_date(Auth::user()->fetchCooldown($fetch->id)) !!}.</i>
     @else

@@ -136,6 +136,9 @@
         'loots' => $fetchquest->rewards,
         'showLootTables' => true,
         'showRaffles' => true,
+        'showRecipes' => true,
+        'showThemes' => true,
+        'showBorders' => true,
     ])
 
     <div class="row">
@@ -207,6 +210,9 @@
         'raffles' => $raffles,
         'showLootTables' => true,
         'showRaffles' => true,
+        'showRecipes' => true,
+        'showThemes' => true,
+        'showBorders' => true,
     ])
 
     <div id="exceptionRowData" class="hide">
@@ -240,7 +246,7 @@
 
 @section('scripts')
     @parent
-    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
+    @include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true, 'showRecipes' => true, 'showThemes' => true, 'showBorders' => true])
 
     <script>
         $(document).ready(function() {

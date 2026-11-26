@@ -20,7 +20,8 @@ return [
             'Cylunny' => 'https://toyhou.se/cylunny',
         ]),
         'version' => '2.0.1', 
-
+    ],
+    
     'fetch_quests' => [
         'key' => 'fetch_quests',
         'wiki_key' => 'Fetch Quests',
