@@ -94,7 +94,7 @@ class FetchQuestController extends Controller
     {
         $id ? $request->validate(FetchQuest::$updateRules) : $request->validate(FetchQuest::$createRules);
         $data = $request->only([
-            'name', 'questgiver_name', 'description', 'is_active', 'image', 'has_image', 'cooldown', 'fetch_item', 'fetch_category',
+            'name', 'questgiver_name', 'questgiver_url', 'description', 'is_active', 'image', 'has_image', 'cooldown', 'fetch_item', 'fetch_category',
             'exception_type', 'exception_id', 'currency_id', 'reward_min_min', 'reward_min_max', 'reward_max_min', 'reward_max_max', 'rewardable_type', 'rewardable_id', 'quantity',
         ]);
         if ($id && $service->updateFetchQuest(FetchQuest::find($id), $data, Auth::user())) {

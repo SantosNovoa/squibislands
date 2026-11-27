@@ -12,7 +12,7 @@ class FetchQuest extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'questgiver_name', 'description', 'parsed_description', 'is_active', 'has_image', 'cooldown', 'fetch_item', 'fetch_category', 'exceptions', 'currency_id', 'extras',
+        'name', 'questgiver_name', 'questgiver_url', 'description', 'parsed_description', 'is_active', 'has_image', 'cooldown', 'fetch_item', 'fetch_category', 'exceptions', 'currency_id', 'extras',
     ];
 
     /**
@@ -29,6 +29,7 @@ class FetchQuest extends Model
      */
     public static $createRules = [
         'name' => 'required|between:3,100',
+        'questgiver_url' => ['nullable', 'max:255', 'regex:/^(https?:\/\/|\/)\S*$/i'],
     ];
 
     /**
@@ -38,6 +39,7 @@ class FetchQuest extends Model
      */
     public static $updateRules = [
         'name' => 'required|between:3,100',
+        'questgiver_url' => ['nullable', 'max:255', 'regex:/^(https?:\/\/|\/)\S*$/i'],
     ];
 
     /**********************************************************************************************
@@ -137,9 +139,19 @@ class FetchQuest extends Model
     }
 
     /**
-     * Get the extras attribute as an associative array.
+     * Get the questgiver's link, if one is set.
      *
-     * @return array
+     * @return string|null
+     */
+    public function getQuestgiverLinkAttribute()
+    {
+        // site paths like /world/npcs/3 go through url(), full links are used as-is
+        if (!$this->questgiver_url) return null;
+        return str_starts_with($this->questgiver_url, '/') ? url($this->questgiver_url) : $this->questgiver_url;
+    }
+
+    /**
+     * Get the extras attribute as an associative array.
      */
     public function getExtrasAttribute()
     {

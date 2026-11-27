@@ -34,6 +34,10 @@
         {!! Form::label('Questgiver Name') !!}{!! add_help('Optional. Who is giving the quest?') !!}
         {!! Form::text('questgiver_name', $fetchquest->questgiver_name, ['class' => 'form-control']) !!}
     </div>
+    <div class="form-group">
+        {!! Form::label('Questgiver Link (Optional)') !!}{!! add_help('Makes the questgiver\'s name on the quest card a link, e.g. to their NPC page. Use a site path like /world/npcs/3 or a full https:// link.') !!}
+        {!! Form::text('questgiver_url', $fetchquest->questgiver_url, ['class' => 'form-control', 'placeholder' => '/world/...']) !!}
+    </div>
 
     <div class="row">
         @if ($fetchquest->has_image)
