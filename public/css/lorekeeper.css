@@ -8,7 +8,7 @@
     name to a new value, for example:
 
         :root {
-            --accent-navy: rgba(90, 20, 60, 0.8);
+            --accent-primary: rgba(90, 20, 60, 0.8);
             --font-heading: "Fredoka", serif;
         }
 
@@ -47,13 +47,13 @@
     --main-content-glow: rgba(118, 173, 224, 0.692); /* soft inner glow around the main area and sidebar boxes */
     --panel-bg: rgba(222, 243, 255, 0.9); /* cards, comments, lists and log tables */
 
-    /* Dark blue accent. The three below use it unless a theme gives them their own colour */
-    --accent-navy: rgba(7, 31, 109, 0.8);
-    --sidebar-header-bg: var(--accent-navy); /* sidebar box titles */
-    --sidebar-active-bg: var(--accent-navy); /* the sidebar link for the page you're on */
-    --clock-bg: var(--accent-navy); /* the clock under the header */
-    /* Mobile header bar (no transparency) */
-    --accent-navy-solid: rgb(7, 31, 109);
+    /* Main accent colour. Changing it changes the three below, unless a theme sets them itself */
+    --accent-primary: rgba(7, 31, 109, 0.8);
+    --sidebar-header-bg: var(--accent-primary); /* sidebar box titles */
+    --sidebar-active-bg: var(--accent-primary); /* the sidebar link for the page you're on */
+    --clock-bg: var(--accent-primary); /* the clock under the header */
+    /* The accent without transparency, for the mobile header bar */
+    --accent-primary-solid: rgb(7, 31, 109);
 
     /* Sidebar links */
     --sidebar-link-color: rgba(0, 0, 0, 0.4);
@@ -698,7 +698,7 @@ nav {
         top: 3.4rem;
         z-index: 4;
         width: 100%;
-        background-color: var(--accent-navy-solid) !important;
+        background-color: var(--accent-primary-solid) !important;
     }
 
     #headerNav {
