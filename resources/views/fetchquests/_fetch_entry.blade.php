@@ -1,4 +1,5 @@
-<div class="col-md-6 col-6 mb-3 text-center ">
+<div class="col-md-6 col-12 mb-4">
+<div class="fetch-card h-100 p-3 text-center">
     @if (Auth::check() && Auth::user()->hasPower('edit_data'))
         <a data-toggle="tooltip" title="[ADMIN] Edit Fetch Quest"
             href="{{ url('admin/data/fetch-quests/edit/') . '/' . $fetch->id }}" class="mb-2 float-right"><i
@@ -9,12 +10,18 @@
     </div>
     @if ($fetch->has_image)
         <div class="shop-image">
-            <img src="{{ $fetch->imageUrl }}" style="max-width:50%;" alt="{{ $fetch->name }}" />
+            <img src="{{ $fetch->imageUrl }}" class="fetch-questgiver-image" alt="{{ $fetch->name }}" />
         </div>
     @endif
 
 
-    <h3> {{ $fetch->questgiver_name ? $fetch->questgiver_name : '' }} </h3>
+    <h3>
+        @if ($fetch->questgiver_name && $fetch->questgiverLink)
+            <a href="{{ $fetch->questgiverLink }}">{{ $fetch->questgiver_name }}</a>
+        @else
+            {{ $fetch->questgiver_name ?? '' }}
+        @endif
+    </h3>
     <div class="shop-text mt-1">
         {!! $fetch->parsed_description !!}
     </div>
@@ -23,7 +30,7 @@
     @if ($fetch->fetchItem)
         @if ($fetch->fetchItem->imageUrl)
             <div>
-                <a href="{{ $fetch->fetchItem->url }}"><img src="{{ $fetch->fetchItem->imageUrl }}" style="max-width: 150px; max-height: 150px;" alt="{{ $fetch->fetchItem->name }}" /></a>
+                <a href="{{ $fetch->fetchItem->url }}"><img src="{{ $fetch->fetchItem->imageUrl }}" class="fetch-item-image" alt="{{ $fetch->fetchItem->name }}" /></a>
             </div>
         @endif
         <div class="mt-1">
@@ -68,7 +75,7 @@
                 !Auth::user()->fetchCooldown($fetch->id) &&
                 $fetch->fetchItem) ||
             ($fetch->rewards && !Auth::user()->fetchCooldown($fetch->id) && $fetch->fetchItem))
-        <div class="text-right">
+        <div class="text-center">
             <a href="#" class="btn btn-sm btn-primary submit-fetch" data-id="{{ $fetch->id }}"></i>Lend a
                 Hand!</a>
         </div>
@@ -81,8 +88,7 @@
         <p class="text-danger">Something went wrong. Please contact an admin.</p>
     @endif
 </div>
-
-
+</div>
 
 <script>
     $(document).ready(function() {

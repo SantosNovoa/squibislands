@@ -1249,6 +1249,26 @@ tr.accountbound {
     pointer-events: none;
 }
 
+/* FETCH QUESTS **********************************************************************************/
+.fetch-card {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+}
+/* same-size boxes on every quest card, whatever the uploaded image's shape (cropped to fill) */
+.fetch-questgiver-image {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+}
+/* wanted item: fixed box, whole item visible */
+.fetch-item-image {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
 /* TRADES ****************************************************************************************/
 .trade-offer .currency-item {
     background-color: transparent;
