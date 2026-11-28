@@ -12,7 +12,7 @@ class FetchQuest extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'questgiver_name', 'questgiver_url', 'description', 'parsed_description', 'is_active', 'has_image', 'cooldown', 'fetch_item', 'fetch_category', 'exceptions', 'currency_id', 'extras',
+        'name', 'questgiver_name', 'questgiver_url', 'description', 'parsed_description', 'is_active', 'has_image', 'cooldown', 'fetch_item', 'fetch_quantity', 'fetch_category', 'exceptions', 'currency_id', 'extras',
     ];
 
     /**
@@ -72,6 +72,15 @@ class FetchQuest extends Model
     public function rewards()
     {
         return $this->hasMany('App\Models\FetchQuest\FetchReward');
+    }
+
+    /**
+     * Get the items an admin has chosen for this quest to ask for.
+     * When any are set, the hourly roll only picks from these instead of a random item.
+     */
+    public function wantedItems()
+    {
+        return $this->hasMany(FetchQuestItem::class, 'fetch_quest_id');
     }
 
     /**
@@ -169,6 +178,48 @@ class FetchQuest extends Model
      *
      * @return string
      */
+    /**
+     * Rolls a new wanted item and amount from this quest's chosen items.
+     * Avoids repeating the current item when there's more than one to choose from.
+     * Does nothing (returns false) if no items have been chosen.
+     *
+     * @return bool
+     */
+    public function rollWantedItem()
+    {
+        $choices = $this->wantedItems()->whereHas('item')->get();
+        if (!$choices->count()) {
+            return false;
+        }
+
+        $pool = $choices->count() > 1 ? $choices->where('item_id', '!=', $this->fetch_item)->values() : $choices;
+        if (!$pool->count()) {
+            $pool = $choices;
+        }
+        $choice = $pool[mt_rand(0, $pool->count() - 1)];
+
+        $min = max(1, (int) $choice->min_quantity);
+        $max = max($min, (int) $choice->max_quantity);
+
+        $this->fetch_item = $choice->item_id;
+        $this->fetch_quantity = mt_rand($min, $max);
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Checks whether the current fetch item/amount still matches the chosen items (e.g. after an admin edit).
+     *
+     * @return bool
+     */
+    public function currentFetchMatchesWantedItems()
+    {
+        $choice = $this->wantedItems->where('item_id', $this->fetch_item)->first();
+
+        return $choice && $this->fetch_quantity >= $choice->min_quantity && $this->fetch_quantity <= $choice->max_quantity;
+    }
+
     public function fetchRewards()
     {
         if (!$this->rewards()) {

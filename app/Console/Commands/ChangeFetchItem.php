@@ -43,6 +43,16 @@ class ChangeFetchItem extends Command
         //fetch all fetch quests so we can update them
         $fetches = FetchQuest::all();
         foreach ($fetches as $fetch) {
+            // If an admin has chosen specific items for this quest, only roll from those (with their amount ranges)
+            if ($fetch->wantedItems()->count()) {
+                if (!$fetch->rollWantedItem()) {
+                    $this->warn('Fetch quest #'.$fetch->id.' ('.$fetch->name.') has no valid wanted items; skipping.');
+                    continue;
+                }
+                $this->rollCurrencyRange($fetch);
+                continue;
+            }
+
             //fetch the items
             //if category set, fish through that category
             //if none, pull from all items onsite
@@ -92,24 +102,33 @@ class ChangeFetchItem extends Command
                 }
             }
 
-            //randomize currency max/min if all set. otherwise ignore
-            if (isset($fetch->extras['reward_min_min']) && isset($fetch->extras['reward_min_max']) && isset($fetch->extras['reward_max_min']) && isset($fetch->extras['reward_max_max'])) {
-                //start with rand the min
-                $roll2 = mt_rand($fetch->extras['reward_min_min'], $fetch->extras['reward_min_max']);
-                //rand the max
-                $roll3 = mt_rand($fetch->extras['reward_max_min'], $fetch->extras['reward_max_max']);
-                //set the value.
-                $fetch->current_min = $roll2;
-                $fetch->current_max = $roll3;
-                $fetch->save();
+            $this->rollCurrencyRange($fetch);
 
-            }
-
-            //set the current requested item as the result
+            //set the current requested item as the result (random items are always asked for one at a time)
             $fetch->fetch_item = $result;
+            $fetch->fetch_quantity = 1;
             $fetch->save();
 
         }
 
+    }
+
+    /**
+     * Randomizes the quest's current currency reward range, if all four reward settings are set.
+     *
+     * @param FetchQuest $fetch
+     */
+    private function rollCurrencyRange($fetch)
+    {
+        if (isset($fetch->extras['reward_min_min']) && isset($fetch->extras['reward_min_max']) && isset($fetch->extras['reward_max_min']) && isset($fetch->extras['reward_max_max'])) {
+            //start with rand the min
+            $roll2 = mt_rand($fetch->extras['reward_min_min'], $fetch->extras['reward_min_max']);
+            //rand the max
+            $roll3 = mt_rand($fetch->extras['reward_max_min'], $fetch->extras['reward_max_max']);
+            //set the value.
+            $fetch->current_min = $roll2;
+            $fetch->current_max = $roll3;
+            $fetch->save();
+        }
     }
 }

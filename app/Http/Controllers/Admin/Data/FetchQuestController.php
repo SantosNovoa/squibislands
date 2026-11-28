@@ -96,6 +96,7 @@ class FetchQuestController extends Controller
         $data = $request->only([
             'name', 'questgiver_name', 'questgiver_url', 'description', 'is_active', 'image', 'has_image', 'cooldown', 'fetch_item', 'fetch_category',
             'exception_type', 'exception_id', 'currency_id', 'reward_min_min', 'reward_min_max', 'reward_max_min', 'reward_max_max', 'rewardable_type', 'rewardable_id', 'quantity',
+            'wanted_item_id', 'wanted_min', 'wanted_max',
         ]);
         if ($id && $service->updateFetchQuest(FetchQuest::find($id), $data, Auth::user())) {
             flash('Fetch Quest updated successfully.')->success();

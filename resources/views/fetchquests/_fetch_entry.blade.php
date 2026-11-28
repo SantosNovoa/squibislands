@@ -34,7 +34,7 @@
             </div>
         @endif
         <div class="mt-1">
-            <a href="{{ $fetch->fetchItem->url }}" class="h5 mb-0"> {{ $fetch->fetchItem->name }}</a>
+            <a href="{{ $fetch->fetchItem->url }}" class="h5 mb-0">{{ $fetch->fetch_quantity > 1 ? $fetch->fetch_quantity . ' × ' : '' }}{{ $fetch->fetchItem->name }}</a>
         </div>
     @else
         <p> {{ $fetch->questgiver_name ? $fetch->questgiver_name . ' isn\'t looking for anything yet.' : 'There is no fetch item.' }}

@@ -145,6 +145,39 @@
         'showBorders' => true,
     ])
 
+    <h3>Wanted Items</h3>
+    <p>
+        Choose the items this quest asks for, and how many. Each hour the quest picks one of these items and an amount between its min and max
+        (with one item listed, the quest always asks for that item). <strong>When any wanted items are set, the category and exceptions below are ignored.</strong>
+        Leave this empty to keep picking a random item.
+    </p>
+    @if ($fetchquest->id && $fetchquest->fetchItem)
+        <p class="text-muted">Currently asking for: <strong>{{ $fetchquest->fetch_quantity }} &times; {{ $fetchquest->fetchItem->name }}</strong></p>
+    @endif
+    <div class="text-right mb-3">
+        <a href="#" class="btn btn-outline-info" id="addWantedItem">Add Wanted Item</a>
+    </div>
+    <table class="table table-sm" id="wantedItemTable">
+        <thead>
+            <tr>
+                <th width="50%">Item</th>
+                <th width="20%">Min Amount</th>
+                <th width="20%">Max Amount</th>
+                <th width="10%"></th>
+            </tr>
+        </thead>
+        <tbody id="wantedItemTableBody">
+            @foreach ($fetchquest->wantedItems as $wanted)
+                <tr class="wanted-item-row">
+                    <td>{!! Form::select('wanted_item_id[]', $items, $wanted->item_id, ['class' => 'form-control wanted-item-select selectize', 'placeholder' => 'Select Item']) !!}</td>
+                    <td>{!! Form::number('wanted_min[]', $wanted->min_quantity, ['class' => 'form-control', 'min' => 1, 'max' => 999]) !!}</td>
+                    <td>{!! Form::number('wanted_max[]', $wanted->max_quantity, ['class' => 'form-control', 'min' => 1, 'max' => 999]) !!}</td>
+                    <td class="text-right"><a href="#" class="btn btn-danger remove-wanted-item-button">Remove</a></td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
     <div class="row">
         <div class="col-md-8">
             <div class="form-group">
@@ -218,6 +251,17 @@
         'showThemes' => true,
         'showBorders' => true,
     ])
+
+    <table class="hide">
+        <tbody id="wantedItemRowData">
+            <tr class="wanted-item-row">
+                <td>{!! Form::select('wanted_item_id[]', $items, null, ['class' => 'form-control wanted-item-select', 'placeholder' => 'Select Item']) !!}</td>
+                <td>{!! Form::number('wanted_min[]', 1, ['class' => 'form-control', 'min' => 1, 'max' => 999]) !!}</td>
+                <td>{!! Form::number('wanted_max[]', 1, ['class' => 'form-control', 'min' => 1, 'max' => 999]) !!}</td>
+                <td class="text-right"><a href="#" class="btn btn-danger remove-wanted-item-button">Remove</a></td>
+            </tr>
+        </tbody>
+    </table>
 
     <div id="exceptionRowData" class="hide">
         <table class="table table-sm">
@@ -305,6 +349,19 @@
                     $(this).parent().parent().remove();
                 });
             }
+            // Wanted items
+            $('#wantedItemTableBody .selectize').selectize();
+            $('#addWantedItem').on('click', function(e) {
+                e.preventDefault();
+                var $clone = $('#wantedItemRowData .wanted-item-row').first().clone();
+                $('#wantedItemTableBody').append($clone);
+                $clone.find('.wanted-item-select').selectize();
+            });
+            $('#wantedItemTableBody').on('click', '.remove-wanted-item-button', function(e) {
+                e.preventDefault();
+                $(this).closest('tr').remove();
+            });
+
             $('.delete-fetchquest-button').on('click', function(e) {
                 e.preventDefault();
                 loadModal("{{ url('admin/data/fetch-quests/delete') }}/{{ $fetchquest->id }}",

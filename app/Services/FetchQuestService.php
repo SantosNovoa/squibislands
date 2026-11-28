@@ -3,6 +3,7 @@
 use App\Models\FetchQuest\FetchException;
 use App\Models\FetchQuest\FetchLog;
 use App\Models\FetchQuest\FetchQuest;
+use App\Models\FetchQuest\FetchQuestItem;
 use App\Models\FetchQuest\FetchReward;
 use App\Models\Item\Item;
 use App\Models\User\User;
@@ -44,14 +45,36 @@ class FetchQuestService extends Service
                 throw new \Exception("This fetch quest doesn't have an item to fetch yet. Check back soon!");
             }
 
-            $stack = UserItem::where([['user_id', $user->id], ['item_id', $fetch->fetchItem->id], ['count', '>', 0]])->first();
+            // How many the quest is asking for (random-item quests always ask for 1)
+            $required = max(1, (int) $fetch->fetch_quantity);
 
-            if (!$stack) {
-                throw new \Exception("You don't have the item to complete this quest.");
+            // Only count items that aren't held in a trade, design update or submission
+            $stacks = UserItem::where([['user_id', $user->id], ['item_id', $fetch->fetchItem->id], ['count', '>', 0]])->with('item')->get()
+                ->filter(function ($stack) {
+                    return $stack->availableQuantity > 0;
+                });
+            $available = $stacks->sum(function ($stack) {
+                return $stack->availableQuantity;
+            });
+
+            if ($available < $required) {
+                throw new \Exception($required > 1
+                    ? 'You need '.$required.' '.$fetch->fetchItem->name.' to complete this quest, but you only have '.$available.' available.'
+                    : "You don't have the item to complete this quest.");
             }
 
-            if (!(new InventoryManager())->debitStack($user, 'Turned in for Fetch Quest', ['data' => ''], $stack, 1)) {
-                throw new \Exception('Failed to turn in quest.');
+            // Take the required amount, spread across stacks if needed
+            $remaining = $required;
+            $inventoryManager = new InventoryManager();
+            foreach ($stacks as $stack) {
+                if ($remaining <= 0) {
+                    break;
+                }
+                $take = min($remaining, $stack->availableQuantity);
+                if (!$inventoryManager->debitStack($user, 'Turned in for Fetch Quest', ['data' => ''], $stack, $take)) {
+                    throw new \Exception('Failed to turn in quest.');
+                }
+                $remaining -= $take;
             }
 
             //successful turnin, so we credit the reward
@@ -177,6 +200,7 @@ class FetchQuestService extends Service
             $fetchquest = FetchQuest::create($data);
             $this->populateExceptions($data, $fetchquest);
             $this->populateRewards($data, $fetchquest);
+            $this->populateWantedItems($data, $fetchquest);
 
             //add the rewards
             $fetchquest->update([
@@ -224,6 +248,7 @@ class FetchQuestService extends Service
             $fetchquest->update($data);
             $this->populateExceptions($data, $fetchquest);
             $this->populateRewards($data, $fetchquest);
+            $this->populateWantedItems($data, $fetchquest);
 
             $fetchquest->update([
                 'extras' => json_encode([
@@ -299,7 +324,9 @@ class FetchQuestService extends Service
             DB::table('fetch_log')
                 ->where('fetch_id', $fetchquest->id)
                 ->delete();
-            $fetchquest->exceptions->delete();
+            $fetchquest->exceptions()->delete();
+            $fetchquest->rewards()->delete();
+            $fetchquest->wantedItems()->delete();
             $fetchquest->delete();
 
             return $this->commitReturn(true);
@@ -329,6 +356,58 @@ class FetchQuestService extends Service
                     'exception_id' => $data['exception_id'][$key],
                 ]);
             }
+        }
+    }
+
+    /**
+     * Saves the items an admin has chosen for the quest to ask for, each with a min/max amount.
+     * If the quest's current request no longer matches, a new one is rolled right away.
+     *
+     * @param array      $data
+     * @param FetchQuest $fetch
+     */
+    private function populateWantedItems($data, $fetch)
+    {
+        $fetch->wantedItems()->delete();
+
+        if (isset($data['wanted_item_id'])) {
+            foreach ($data['wanted_item_id'] as $key => $itemId) {
+                if (!$itemId) {
+                    continue;
+                }
+                if (!Item::where('id', $itemId)->exists()) {
+                    throw new \Exception('One of the wanted items is invalid.');
+                }
+
+                $min = $data['wanted_min'][$key] ?? 1;
+                $max = $data['wanted_max'][$key] ?? $min;
+                foreach ([$min, $max] as $amount) {
+                    if (!is_numeric($amount) || (int) $amount != $amount || (int) $amount < 1 || (int) $amount > 999) {
+                        throw new \Exception('Wanted item amounts must be whole numbers from 1 to 999.');
+                    }
+                }
+                if ((int) $max < (int) $min) {
+                    throw new \Exception('A wanted item\'s max amount can\'t be lower than its min amount.');
+                }
+
+                FetchQuestItem::create([
+                    'fetch_quest_id' => $fetch->id,
+                    'item_id'        => $itemId,
+                    'min_quantity'   => (int) $min,
+                    'max_quantity'   => (int) $max,
+                ]);
+            }
+        }
+
+        $fetch->load('wantedItems');
+        if ($fetch->wantedItems->count()) {
+            // Roll now if the current request isn't one of the chosen items/amounts (e.g. new quest, or the list changed)
+            if (!$fetch->fetch_item || !$fetch->currentFetchMatchesWantedItems()) {
+                $fetch->rollWantedItem();
+            }
+        } elseif ($fetch->fetch_quantity != 1) {
+            // Back to random items, which are always asked for one at a time
+            $fetch->update(['fetch_quantity' => 1]);
         }
     }
 
