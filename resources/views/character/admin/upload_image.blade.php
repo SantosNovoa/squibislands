@@ -181,6 +181,11 @@
     <script>
         $(document).ready(function() {
 
+            // Render Selectize dropdowns on <body> so they aren't clipped by .main-content { overflow: hidden }
+            var selectizeOpts = {
+                dropdownParent: 'body'
+            };
+
             // Cropper ////////////////////////////////////////////////////////////////////////////////////
 
             var $useCropper = $('#useCropper');
@@ -209,7 +214,7 @@
 
             // Designers and artists //////////////////////////////////////////////////////////////////////
 
-            $('.selectize').selectize();
+            $('.selectize').selectize(selectizeOpts);
             $('.add-designer').on('click', function(e) {
                 e.preventDefault();
                 addDesignerRow($(this));
@@ -224,7 +229,7 @@
                     e.preventDefault();
                     addDesignerRow($(this));
                 })
-                $clone.find('.designer-select').selectize();
+                $clone.find('.designer-select').selectize(selectizeOpts);
                 $trigger.css({
                     visibility: 'hidden'
                 });
@@ -244,7 +249,7 @@
                     e.preventDefault();
                     addArtistRow($(this));
                 })
-                $clone.find('.artist-select').selectize();
+                $clone.find('.artist-select').selectize(selectizeOpts);
                 $trigger.css({
                     visibility: 'hidden'
                 });
@@ -271,13 +276,13 @@
                     removeFeatureRow($(this));
                 })
                 @if (config('lorekeeper.extensions.organised_traits_dropdown'))
-                    $clone.find('.feature-select').selectize({
+                    $clone.find('.feature-select').selectize($.extend({}, selectizeOpts, {
                         render: {
                             item: featureSelectedRender
                         }
-                    });
+                    }));
                 @else
-                    $clone.find('.feature-select').selectize();
+                    $clone.find('.feature-select').selectize(selectizeOpts);
                 @endif
             }
 

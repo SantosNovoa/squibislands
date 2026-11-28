@@ -280,6 +280,20 @@ main > .row {
     position: relative;
 }
 
+/* Let pop-out dropdowns (selectize etc.) show past the bottom of the content box instead of being cut off,
+   while still clipping anything too wide on the sides. Browsers without overflow: clip keep the rule above. */
+@supports (overflow-x: clip) {
+    .main-content {
+        overflow: visible;
+        overflow-x: clip;
+    }
+
+    /* keep the grain texture rounded now that the box no longer clips it */
+    .main-content::before {
+        border-radius: inherit;
+    }
+}
+
 /* Grainy texture over the main content area and the sidebar boxes */
 .main-content::before,
 .sidebar-section::before {
