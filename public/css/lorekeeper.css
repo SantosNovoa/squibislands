@@ -1702,12 +1702,12 @@ tr.accountbound {
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 0.25rem;
 }
-/* same-size boxes on every quest card, whatever the uploaded image's shape (cropped to fill) */
+/* same-size 300x300 box on every quest card, whatever the uploaded image's shape (whole image shown) */
 .fetch-questgiver-image {
     width: 100%;
     max-width: 300px;
     height: 300px;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
 }
 /* wanted item: fixed box, whole item visible */
