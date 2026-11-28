@@ -53,6 +53,27 @@
     @elseif(isset($fetch->extras['reward_min_min']) && isset($fetch->extras['reward_max_min']) && $fetch->fetchCurrency)
         <div>{!! $fetch->fetchCurrency->display($fetch->extras['reward_min_min']) !!} - {!! $fetch->fetchCurrency->display($fetch->extras['reward_max_min']) !!}</div>
     @endif
+    @if ($fetch->rewards->count())
+        {{-- one of these is picked at random when the quest is turned in --}}
+        @php $hasCurrencyReward = isset($fetch->extras['reward_min_min']) && isset($fetch->extras['reward_max_min']) && $fetch->fetchCurrency; @endphp
+        <div class="mt-1 mb-2">
+            @if ($fetch->rewards->count() > 1)
+                <div class="text-muted small">{{ $hasCurrencyReward ? 'Plus one of:' : 'One of:' }}</div>
+            @elseif ($hasCurrencyReward)
+                <div class="text-muted small">Plus:</div>
+            @endif
+            @foreach ($fetch->rewards as $reward)
+                <div>
+                    {{ $reward->quantity > 1 ? $reward->quantity . ' × ' : '' }}
+                    @if ($reward->reward)
+                        {!! $reward->reward->displayName ?? e($reward->reward->name) !!}
+                    @else
+                        {{ $reward->rewardable_type }}
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endif
     @if ($fetch->cooldown)
         <p><strong>Cooldown:</strong> {{ $fetch->cooldown }} minutes. </p>
     @else
