@@ -405,6 +405,11 @@ class FetchQuestService extends Service
             if (!$fetch->fetch_item || !$fetch->currentFetchMatchesWantedItems()) {
                 $fetch->rollWantedItem();
             }
+        } elseif (!$fetch->fetch_item || !$fetch->currentFetchMatchesRandomRules()) {
+            // Random items: roll now if there's no item yet, or the current one no longer fits the category/exceptions
+            if (!$fetch->rollRandomItem()) {
+                throw new \Exception('No items fit this quest\'s category and exceptions, so it has nothing to ask for. Items must be released and transferable.');
+            }
         } elseif ($fetch->fetch_quantity != 1) {
             // Back to random items, which are always asked for one at a time
             $fetch->update(['fetch_quantity' => 1]);

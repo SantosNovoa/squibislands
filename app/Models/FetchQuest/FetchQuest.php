@@ -2,6 +2,7 @@
 
 namespace App\Models\FetchQuest;
 
+use App\Models\Item\Item;
 use App\Models\Model;
 
 class FetchQuest extends Model
@@ -206,6 +207,70 @@ class FetchQuest extends Model
         $this->save();
 
         return true;
+    }
+
+    /**
+     * Items a random (no wanted items) roll can pick from: released, transferable items
+     * in the quest's category if one is set, minus any exceptions.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function randomItemQuery()
+    {
+        $query = Item::where('allow_transfer', 1)->released();
+
+        foreach ($this->exceptions()->get() as $exception) {
+            switch ($exception->exception_type) {
+                case 'Item':
+                    $query->where('id', '<>', $exception->exception_id);
+                    break;
+                case 'ItemCategory':
+                    $query->where('item_category_id', '<>', $exception->exception_id);
+                    break;
+            }
+        }
+        if ($this->fetch_category) {
+            $query->where('item_category_id', $this->fetch_category);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Rolls a new random item (asked for one at a time), avoiding the current item when there's a choice.
+     * Returns false if no item fits the category/exceptions.
+     *
+     * @return bool
+     */
+    public function rollRandomItem()
+    {
+        $ids = $this->randomItemQuery()->pluck('id');
+        if (!$ids->count()) {
+            return false;
+        }
+
+        $pool = $ids->count() > 1 ? $ids->reject(function ($id) {
+            return $id == $this->fetch_item;
+        })->values() : $ids;
+        if (!$pool->count()) {
+            $pool = $ids;
+        }
+
+        $this->fetch_item = $pool[mt_rand(0, $pool->count() - 1)];
+        $this->fetch_quantity = 1;
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Checks whether the current fetch item still fits the quest's category/exceptions (e.g. after an admin edit).
+     *
+     * @return bool
+     */
+    public function currentFetchMatchesRandomRules()
+    {
+        return $this->fetch_item && $this->randomItemQuery()->where('id', $this->fetch_item)->exists();
     }
 
     /**

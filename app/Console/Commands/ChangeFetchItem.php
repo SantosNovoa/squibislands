@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\FetchQuest\FetchQuest;
-use App\Models\Item\Item;
 use Illuminate\Console\Command;
 
 class ChangeFetchItem extends Command
@@ -53,61 +52,14 @@ class ChangeFetchItem extends Command
                 continue;
             }
 
-            //fetch the items
-            //if category set, fish through that category
-            //if none, pull from all items onsite
-            //filter through both and remove everything in the "exception" list as well
-
-            $query = Item::where('allow_transfer', 1)->released();
-
-            if ($fetch->exceptions->count()) {
-                foreach ($fetch->exceptions as $exception) {
-                    switch ($exception->exception_type) {
-                        case 'Item':
-                            $query->where('id', '<>', $exception->exception_id);
-                            break;
-                        case 'ItemCategory':
-                            $query->where('item_category_id', '<>', $exception->exception_id);
-                            break;
-                    }
-                }
-            }
-            if ($fetch->fetch_category) {
-                $query->where('item_category_id', $fetch->fetch_category);
-            }
-            if (!$query->count()) {
+            // Otherwise pick a random item from the category (or all items), minus exceptions
+            if (!$fetch->rollRandomItem()) {
                 // skip this quest instead of stopping the whole run, so the other quests still roll
                 $this->warn('Fetch quest #'.$fetch->id.' ('.$fetch->name.') has no items to select from; skipping.');
                 continue;
             }
 
-            $items = $query->get();
-            //randomly select an item
-            $totalWeight = $items->count();
-            $roll = mt_rand(0, $totalWeight - 1);
-            $result = $items[$roll]->id;
-
-            //if the result = the current item set as the fetch, reroll until it is a new one
-            //(for anyone reading, it's possible to get stuck in an infinite loop if not enough items are available)
-            //reroll a max number of times before just letting it pick the same item again
-            $setting = $fetch->fetch_item;
-            $count = 0;
-            while ($result == $setting) {
-                $roll = mt_rand(0, $totalWeight - 1);
-                $result = $items[$roll]->id;
-                $count++;
-                if($count == 10) {
-                    $result = $setting;
-                    break;
-                }
-            }
-
             $this->rollCurrencyRange($fetch);
-
-            //set the current requested item as the result (random items are always asked for one at a time)
-            $fetch->fetch_item = $result;
-            $fetch->fetch_quantity = 1;
-            $fetch->save();
 
         }
 
